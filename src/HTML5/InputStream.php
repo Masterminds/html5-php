@@ -1,4 +1,5 @@
 <?php
+namespace HTML5;
 
 /*
 
@@ -29,7 +30,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // /* */ indicates verbatim text from the HTML 5 specification
 // // indicates regular comments
 
-class HTML5_InputStream {
+class InputStream {
     /**
      * The string data we're parsing.
      */

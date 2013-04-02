@@ -1,4 +1,5 @@
 <?php
+namespace HTML5;
 
 /*
 
@@ -33,7 +34,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // all flags are in hyphenated form
 
-class HTML5_Tokenizer {
+class Tokenizer {
     /**
      * Points to an InputStream object.
      */
@@ -85,8 +86,8 @@ class HTML5_Tokenizer {
      * @param $data Data to parse
      */
     public function __construct($data, $builder = null) {
-        $this->stream = new HTML5_InputStream($data);
-        if (!$builder) $this->tree = new HTML5_TreeBuilder;
+        $this->stream = new InputStream($data);
+        if (!$builder) $this->tree = new TreeBuilder;
         else $this->tree = $builder;
         $this->content_model = self::PCDATA;
     }
@@ -2208,13 +2209,13 @@ class HTML5_Tokenizer {
                 row with that number in the first column, and return a
                 character token for the Unicode character given in the
                 second column of that row. */
-                $new_codepoint = HTML5_Data::getRealCodepoint($codepoint);
+                $new_codepoint = Data::getRealCodepoint($codepoint);
                 if ($new_codepoint) {
                     $this->emitToken(array(
                         'type' => self::PARSEERROR,
                         'data' => 'illegal-windows-1252-entity'
                     ));
-                    return HTML5_Data::utf8chr($new_codepoint);
+                    return Data::utf8chr($new_codepoint);
                 } else {
                     /* Otherwise, if the number is greater than 0x10FFFF, then 
                      * this is a parse error. Return a U+FFFD REPLACEMENT 
@@ -2253,7 +2254,7 @@ class HTML5_Tokenizer {
                             'data' => 'illegal-codepoint-for-numeric-entity'
                         ));
                     }
-                    return HTML5_Data::utf8chr($codepoint);
+                    return Data::utf8chr($codepoint);
                 }
             }
 
@@ -2267,7 +2268,7 @@ class HTML5_Tokenizer {
             // What we actually do here is consume as much as we can while it
             // matches the start of one of the identifiers in the first column.
 
-            $refs = HTML5_Data::getNamedCharacterReferences();
+            $refs = Data::getNamedCharacterReferences();
             
             // Get the longest string which is the start of an identifier
             // ($chars) as well as the longest identifier which matches ($id)
@@ -2342,7 +2343,7 @@ class HTML5_Tokenizer {
             /* Otherwise, return a character token for the character
             corresponding to the character reference name (as given
             by the second column of the named character references table). */
-            return HTML5_Data::utf8chr($codepoint) . substr($chars, strlen($id));
+            return Data::utf8chr($codepoint) . substr($chars, strlen($id));
         }
     }
 

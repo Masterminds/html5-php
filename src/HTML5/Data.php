@@ -1,9 +1,14 @@
 <?php
 
+namespace HTML5;
+
 // warning: this file is encoded in UTF-8!
 
-class HTML5_Data
-{
+
+/**
+ * Character data.
+ */
+class Data {
 
     // at some point this should be moved to a .ser file. Another
     // possible optimization is to give UTF-8 bytes, not Unicode
@@ -61,6 +66,8 @@ class HTML5_Data
     }
 
     public static function getNamedCharacterReferences() {
+      // Danger Will Robinson: This will prevent the opcode cache from 
+      // caching the entity references.
         if (!self::$namedCharacterReferences) {
             self::$namedCharacterReferences = unserialize(
                 file_get_contents(dirname(__FILE__) . '/named-character-references.ser'));

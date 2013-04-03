@@ -2,6 +2,6 @@
   "name": "technosophos/html5",
   "description": "An HTML5 parser and serializer.",
   "autoload": {
-    "psr-0": {"html5": "src"}
+    "psr-0": {"HTML5": "src"}
   }
 }

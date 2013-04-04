@@ -3159,6 +3159,8 @@ class TreeBuilder {
         }
 
     private function insertElement($token, $append = true) {
+      // MPB: FIXME: This does not work with non-HTML namespaces where 
+      // the name is not an lname, but a name with a prefix.
         $el = $this->dom->createElementNS(self::NS_HTML, $token['name']);
 
         if (!empty($token['attr'])) {

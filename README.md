@@ -11,6 +11,7 @@ create a newer version and are working to add the following features:
 - Support for PHP namespace [done]
 - Composer support [in progress]
 - Interoperability with QueryPath [not started]
+- Add non-HTML namespace support to parser.
 
 ## Thanks to...
 

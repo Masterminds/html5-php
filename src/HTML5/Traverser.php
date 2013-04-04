@@ -12,6 +12,7 @@ namespace HTML5;
  */
 class Traverser {
 
+  // TODO: Refactor this into an element mask.
   static $block_elements = array(
     'html' => 1,
     'body' => 1,
@@ -36,6 +37,17 @@ class Traverser {
     'th' => 1,
     'td' => 1,
     //'form' => 1,
+  );
+
+  // TODO: Refactor this into an element mask.
+  static $literal_elements = array(
+    'style' => 1,
+    'script' => 1,
+    'xmp' => 1,
+    'iframe' => 1,
+    'noembed' => 1,
+    'noframes' => 1,
+    'plaintext' => 1,
   );
 
   protected $dom;
@@ -98,7 +110,7 @@ class Traverser {
         $this->element($node);
         break;
       case XML_TEXT_NODE:
-        $this->wr($node->wholeText);
+        $this->text($node);
         break;
       case XML_CDATA_SECTION_NODE:
         $this->cdata($node);
@@ -139,6 +151,17 @@ class Traverser {
     }
   }
 
+  protected function text($ele) {
+    if ($this->isLiteral($ele)) {
+      $this->wr($ele->wholeText);
+      return;
+    }
+
+    // FIXME: This probably needs some flags set.
+    $this->wr(htmlentities($ele->wholeText));
+
+  }
+
   protected function cdata($ele) {
     $this->wr('<![CDATA[')->wr($ele->wholeText)->wr(']]>');
   }
@@ -158,12 +181,14 @@ class Traverser {
   }
 
   protected function openTag($ele) {
+    // FIXME: Needs support for SVG, MathML, and namespaced XML.
     $this->wr('<')->wr($ele->tagName);
     $this->attrs($ele);
     $this->wr('>');
   }
 
   protected function attrs($ele) {
+    // FIXME: Needs support for xml, xmlns, xlink, and namespaced elements.
     if (!$ele->hasAttributes()) {
       return $this;
     }
@@ -179,6 +204,7 @@ class Traverser {
   }
 
   protected function closeTag($ele) {
+    // FIXME: Needs support for SVG, MathML, and namespaced XML.
     $this->wr('</')->wr($ele->tagName)->wr('>');
   }
 
@@ -204,6 +230,14 @@ class Traverser {
    */
   protected function isBlock($name) {
     return isset(self::$block_elements[$name]);
+  }
+
+  protected function isLiteral($element) {
+    if (!$element->parentNode) {
+      return FALSE;
+    }
+    return isset(self::$literal_elements[$element->parentNode->tagName]);
+
   }
 
 }

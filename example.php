@@ -4,12 +4,19 @@ require "vendor/autoload.php";
 
 
 $html = <<< 'HERE'
-  <html><head><title>TEST</title></head>
+  <html>
+  <head>
+  <title>TEST</title>
+  <script language="javascript">
+  if (2 > 1) { alert("Math wins."); }
+  </script>
+  </head>
   <body id='foo'>
   <!-- This space intentionally left blank. -->
   <section class="section-a pretty" id="bar1">
   <h1>Hello World</h1><p>This is a test of the HTML5 parser.</p>
   <hr>
+  &amp; Nobody nowhere.
   </section>
   <![CDATA[Because we can.]]>
   </body></html>

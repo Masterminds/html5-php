@@ -7,8 +7,8 @@ the work of a previous (but seemingly abandoned) PHP parser. Beginning
 with the [original source](https://code.google.com/p/html5lib/source/checkout), we have
 create a newer version and are working to add the following features:
 
-- An HTML5 serializer [not started]
-- Support for PHP namespace [in progress]
+- An HTML5 serializer [in progress; early alpha]
+- Support for PHP namespace [done]
 - Composer support [in progress]
 - Interoperability with QueryPath [not started]
 

@@ -18,7 +18,9 @@ $html = <<< 'HERE'
   <hr>
   &amp; Nobody nowhere.
   </section>
+  <test xmlns:foo="http://example.com/foo">TEST</test>
   <![CDATA[Because we can.]]>
+  &copy;
   </body></html>
 HERE;
 

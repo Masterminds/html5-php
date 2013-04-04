@@ -50,6 +50,35 @@ class Traverser {
     'plaintext' => 1,
   );
 
+  /**
+   * Unary elements.
+   * HTML5 section 8.3:
+   * If current node is an 
+   * area, base, basefont, bgsound, br, col, command, embed, frame, hr, img,
+   * input, keygen, link, meta, param, source, track or wbr element, then
+   * continue on to the next child node at this point.
+   */
+  static $unary_elements = array(
+    'area' => 1,
+    'base' => 1,
+    'basefont' => 1,
+    'bgsound' => 1,
+    'br' => 1,
+    'col' => 1,
+    'command' => 1,
+    'embed' => 1,
+    'frame' => 1,
+    'hr' => 1,
+    'img' => 1,
+  );
+
+  /** Namespaces that should be treated as "local" to HTML5. */
+  static $local_ns = array(
+    'http://www.w3.org/1999/xhtml' => 'html',
+    'http://www.w3.org/1998/Math/MathML' => 'mathml',
+    'http://www.w3.org/2000/svg' => 'svg',
+  );
+
   protected $dom;
   protected $out;
   protected $pretty = TRUE;
@@ -133,6 +162,13 @@ class Traverser {
     $name = $ele->tagName;
     $block = $this->pretty && $this->isBlock($name);
 
+    // Per spec:
+    // If the element has a declared namespace in the HTML, MathML or
+    // SVG namespaces, we use the lname instead of the tagName.
+    if ($this->isLocalElement($ele)) {
+      $name = $ele->localName;
+    }
+
     // TODO: Really need to fix the spacing.
     // Add a newline for a block element.
     if ($block) $this->nl();
@@ -158,7 +194,7 @@ class Traverser {
     }
 
     // FIXME: This probably needs some flags set.
-    $this->wr(htmlentities($ele->wholeText));
+    $this->wr($this->enc($ele->wholeText));
 
   }
 
@@ -199,7 +235,13 @@ class Traverser {
     $len = $map->length;
     for ($i = 0; $i < $len; ++$i) {
       $node = $map->item($i);
-      $this->wr(' ')->wr($node->name)->wr('="')->wr($node->value)->wr('"');
+      $val = $this->enc($node->value);
+
+      // XXX: The spec says that we need to ensure that anything in
+      // the XML, XMLNS, or XLink NS's should use the canonical
+      // prefix. It seems that DOM does this for us already, but there
+      // may be exceptions.
+      $this->wr(' ')->wr($node->name)->wr('="')->wr($val)->wr('"');
     }
   }
 
@@ -218,11 +260,23 @@ class Traverser {
     return $this;
   }
 
+  protected function enc($text) {
+    $flags = ENT_QUOTES;
+
+    // TODO: Verify on PHP 5.4 that this works as desired.
+    if (defined('ENT_HTML5')) {
+      $flags = ENT_HTML5|ENT_SUBSTITUTE;
+    }
+    $ret = htmlentities($text, $flags, 'UTF-8');
+    //if ($ret != $text) printf("Replaced [%s] with [%s]", $text, $ret);
+    return $ret;
+  }
+
   /**
    * Is an unary tag.
    */
   protected function isUnary($name) {
-    return FALSE;
+    return isset(self::$unary_elements[$name]);
   }
 
   /**
@@ -237,6 +291,15 @@ class Traverser {
       return FALSE;
     }
     return isset(self::$literal_elements[$element->parentNode->tagName]);
+
+  }
+
+  protected function isLocalElement($ele) {
+    $uri = $ele->namespaceURI;
+    if (empty($uri)) {
+      return FALSE;
+    }
+    return isset(self::$local_ns[$uri]);
 
   }
 

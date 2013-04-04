@@ -32,16 +32,39 @@ class Serializer {
   /**
    * Save to a file.
    *
-   * @param string $filename
-   *   The full name to the file. This will overwrite the contents of 
+   * @param mixed $filename
+   *   A file handle resource or the 
+   *   full name to the file. This will overwrite the contents of 
    *   any file that it finds.
    */
   public function save($filename) {
+    $close = TRUE;
+    if (is_resource($filename)) {
+      $file = $filename;
+      $close = FALSE;
+     }
+    else {
+      $file = fopen($filename, 'w');
+    }
+    $trav = new Traverser($this->dom, $file);
+
+    $trav->walk();
+
+    if ($close) {
+      fclose($file);
+    }
   }
 
   /**
    * Return the DOM as an HTML5 string.
    */
   public function saveHTML() {
+    // We buffer into a temp-file backed memory map. This may or may not be
+    // faster than writing directly to a string, but it makes the interface
+    // consistant and will keep memory consumption lower (2MB max for the file
+    // buffer).
+    $stream = fopen('php://temp');
+    $this->save($stream);
+    return stream_get_contents($stream, -1, 0);
   }
 }

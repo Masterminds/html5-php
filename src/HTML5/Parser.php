@@ -2,7 +2,7 @@
 namespace HTML5;
 
 /**
- * Outwards facing interface for HTML5.
+ * Outwards facing API for HTML5.
  */
 class Parser
 {
@@ -12,7 +12,7 @@ class Parser
      * @param $builder Custom builder implementation
      * @return Parsed HTML as DOMDocument
      */
-    static public function parse($text, $builder = null) {
+    public static function parse($text, $builder = null) {
         $tokenizer = new Tokenizer($text, $builder);
         $tokenizer->parse();
         return $tokenizer->save();
@@ -24,9 +24,10 @@ class Parser
      * @param $builder Custom builder implementation
      * @return Parsed HTML as DOMDocument
      */
-    static public function parseFragment($text, $context = null, $builder = null) {
+    public static function parseFragment($text, $context = null, $builder = null) {
         $tokenizer = new Tokenizer($text, $builder);
         $tokenizer->parseFragment($context);
         return $tokenizer->save();
     }
+
 }

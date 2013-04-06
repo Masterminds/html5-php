@@ -63,7 +63,7 @@ class Serializer {
     // faster than writing directly to a string, but it makes the interface
     // consistant and will keep memory consumption lower (2MB max for the file
     // buffer).
-    $stream = fopen('php://temp');
+    $stream = fopen('php://temp', 'w');
     $this->save($stream);
     return stream_get_contents($stream, -1, 0);
   }

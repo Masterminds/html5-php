@@ -15,6 +15,7 @@ namespace HTML5;
  */
 class Serializer {
   protected $dom;
+  protected $pretty = TRUE;
 
   /**
    * Create a serializer.
@@ -24,9 +25,13 @@ class Serializer {
    *
    * @param DOMNode $dom
    *   A DOMNode-like object. Typically, a DOMDocument should be passed.
+   * @param boolean $format
+   *   If true, this will format the output (e.g. add indentation). If FALSE, then
+   *   little or no formatting will be done.
    */
-  public function __construct($dom) {
+  public function __construct($dom, $format = TRUE) {
     $this->dom = $dom;
+    $this->pretty = $format;
   }
 
   /**
@@ -47,6 +52,7 @@ class Serializer {
       $file = fopen($filename, 'w');
     }
     $trav = new Traverser($this->dom, $file);
+    $trav->formatOutput($this->pretty);
 
     $trav->walk();
 

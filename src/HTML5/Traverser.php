@@ -100,6 +100,25 @@ class Traverser {
   }
 
   /**
+   * Determine whether output should be formatted.
+   *
+   * IMPORTANT: Neither option will GUARANTEE that the spacing of the output
+   * will exactly match the spacing of an origin document. The HTML5 specification
+   * does not require any such behavior.
+   *
+   * Semantically (according to the HTML5 spec's definition), either flag
+   * will produce an identical document. (Insignificant 
+   * whitespace does not impact semantics).
+   *
+   * @param boolean $useFormatting
+   *   If TRUE (default) output will be formatted. If FALSE,
+   *   the little or no formatting is done.
+   */
+  public function formatOutput($useFormatting = TRUE) {
+    $this->pretty = $useFormatting;
+  }
+
+  /**
    * Tell the traverser to walk the DOM.
    *
    * @return resource $out

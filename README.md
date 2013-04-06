@@ -54,8 +54,9 @@ The `$dom` created by the parser is a full `DOMDocument` object. And the
 
 ## Notes on Serialized Formats
 
-The serializer (`save()`, `saveHTML()`) follows the section 8.9 of the
-HTML 5.0 spec. So tags are serialized according to these rules:
+The serializer (`save()`, `saveHTML()`) follows the 
+[section 8.9 of the HTML 5.0 spec] (http://www.w3.org/TR/2012/CR-html5-20121217/syntax.html#serializing-html-fragments).
+So tags are serialized according to these rules:
 
 - A tag with children: <foo>CHILDREN</foo>
 - A tag that cannot have content: <foo> (no closing tag)

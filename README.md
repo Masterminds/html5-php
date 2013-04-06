@@ -37,14 +37,14 @@ $html = <<< 'HERE'
 HERE;
 
 // Parse the document. $dom is a DOMDocument.
-$dom = \HTML5::parse($html);
+$dom = HTML5::parse($html);
 
 
 // Render it as HTML5:
-print \HTML5::saveHTML($dom);
+print HTML5::saveHTML($dom);
 
 // Or save it to a file:
-\HTML5::save('out.html');
+HTML5::save('out.html');
 
 ?>
 ```

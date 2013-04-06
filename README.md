@@ -58,9 +58,9 @@ The serializer (`save()`, `saveHTML()`) follows the
 [section 8.9 of the HTML 5.0 spec] (http://www.w3.org/TR/2012/CR-html5-20121217/syntax.html#serializing-html-fragments).
 So tags are serialized according to these rules:
 
-- A tag with children: <foo>CHILDREN</foo>
-- A tag that cannot have content: <foo> (no closing tag)
-- A tag that could have content, but doesn't: <foo></foo>
+- A tag with children: &lt;foo&gt;CHILDREN&lt;/foo&gt;
+- A tag that cannot have content: &lt;foo&gt; (no closing tag)
+- A tag that could have content, but doesn't: &lt;foo&gt;&lt;/foo&gt;
 
 ## Thanks to...
 

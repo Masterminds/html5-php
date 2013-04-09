@@ -52,6 +52,23 @@ class InputStream {
   public $errors = array();
 
   /**
+   * Create a new InputStream wrapper.
+   *
+   * @param $data Data to parse
+   */
+  public function __construct($data, $encoding = 'UTF-8') {
+
+    $data = $this->convertToUTF8($data, $encoding);
+    $this->checkForIllegalCodepoints($data);
+
+    $data = $this->replaceLinefeeds($data);
+
+    $this->data = $data;
+    $this->char = 0;
+    $this->EOF  = strlen($data);
+  }
+
+  /**
    * Convert data from the given encoding to UTF-8.
    *
    * This has not yet been tested with charactersets other than UTF-8. 
@@ -80,12 +97,18 @@ class InputStream {
     // implementation is heavily non-conforming, so it's been
     // omitted.
     if (function_exists('iconv') && $encoding != 'auto') {
-      // non-conforming
+      // iconv has the following behaviors:
+      // - Overlong representations are ignored.
+      // - Beyond Plane 16 is replaced with a lower char.
+      // - Incomplete sequences generate a warning.
       $data = @iconv($encoding, 'UTF-8//IGNORE', $data);
     }
     // MPB: Testing the newer mb_convert_encoding(). This might need
     // to be removed again.
     elseif (function_exists('mb_convert_encoding')) {
+      // mb library has the following behaviors:
+      // - UTF-16 surrogates result in FALSE.
+      // - Overlongs and outside Plane 16 result in empty strings.
       $data = mb_convert_encoding($data, 'UTF-8', $encoding);
     }
     else {
@@ -177,22 +200,6 @@ class InputStream {
     }
   }
 
-  /**
-   * Create a new InputStream wrapper.
-   *
-   * @param $data Data to parse
-   */
-  public function __construct($data, $encoding = 'UTF-8') {
-
-    $data = $this->convertToUTF8($data, $encoding);
-    $data = $this->replaceLinefeeds($data);
-
-    $this->checkForIllegalCodepoints($data);
-
-    $this->data = $data;
-    $this->char = 0;
-    $this->EOF  = strlen($data);
-  }
 
   /**
    * Returns the current line that the tokenizer is at.

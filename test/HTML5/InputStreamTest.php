@@ -21,6 +21,13 @@ class InputStreamTest extends TestCase {
     $this->assertEquals(1, $s->columnOffset());
     $s->char();
     $this->assertEquals(2, $s->columnOffset());
+    $s->char();
+    $this->assertEquals(3, $s->columnOffset());
+    $s->char(); // LF
+    $this->assertEquals(0, $s->columnOffset());
+    $canary = $s->char(); // d
+    $this->assertEquals('d', $canary);
+    $this->assertEquals(1, $s->columnOffset());
 
     $s = new InputStream("abc");
     $this->assertEquals(0, $s->columnOffset());
@@ -30,16 +37,115 @@ class InputStreamTest extends TestCase {
     $this->assertEquals(2, $s->columnOffset());
   }
 
+  public function testCountChars() {
+    $res = InputStream::countChars('abc');
+    $this->assertEquals(3, $res);
+
+    $res = InputStream::countChars("abc\ndef");
+    $this->assertEquals(7, $res);
+
+    $res = InputStream::countChars("abc\ndef☃");
+    $this->assertEquals(8, $res);
+  }
+
   public function testCurrentLine() {
-    $txt = "1\n2";
+    $txt = "1\n2\n\n\n\n3";
     $stream = new InputStream($txt);
     $this->assertEquals(1, $stream->currentLine());
 
-    // Advance
+    // Advance over 1 and LF
     $stream->char(); $stream->char();
+    // Now should be line2, value 2:
+    $canary = $stream->char();
     $this->assertEquals(2, $stream->currentLine());
+    $this->assertEquals('2', $canary);
+
+
+    // Advance over 4x LF
+    $stream->char(); $stream->char();
+    $stream->char(); $stream->char();
+    $this->assertEquals(6, $stream->currentLine());
+    $this->assertEquals('3', $stream->char());
+
+    // Make sure it doesn't do 7.
+    $this->assertEquals(6, $stream->currentLine());
   }
 
+  public function testRemainingChars() {
+    $text = "abcd";
+    $s = new InputStream($text);
+    $this->assertEquals($text, $s->remainingChars());
+
+    $text = "abcd";
+    $s = new InputStream($text);
+    $s->char(); // Pop one.
+    $this->assertEquals('bcd', $s->remainingChars());
+
+  }
+
+  public function testCharsUnitl() {
+    $text = "abcdefffffffghi";
+    $s = new InputStream($text);
+    $this->assertEquals('', $s->charsUntil('a'));
+    // Pointer at 'a', moves 2 to 'c'
+    $this->assertEquals('ab', $s->charsUntil('w', 2));
+
+    // Pointer at 'c', moves to first 'f'
+    $this->assertEquals('cde', $s->charsUntil('fzxv'));
+
+    // Only get five 'f's
+    $this->assertEquals('fffff', $s->charsUntil('g', 5));
+
+    // Get just the last two 'f's
+    $this->assertEquals('ff', $s->charsUntil('g'));
+
+    // This should scan to the end.
+    $this->assertEquals('ghi', $s->charsUntil('w', 9));
+
+  }
+
+  public function testCharsWhile() {
+    $text = "abcdefffffffghi";
+    $s = new InputStream($text);
+
+    $this->assertEquals('ab', $s->charsWhile('ba'));
+
+    $this->assertEquals('', $s->charsWhile('a'));
+    $this->assertEquals('cde', $s->charsWhile('cdeba'));
+    $this->assertEquals('ff', $s->charsWhile('f', 2));
+    $this->assertEquals('fffff', $s->charsWhile('f'));
+    $this->assertEquals('g', $s->charsWhile('fg'));
+    $this->assertEquals('hi', $s->charsWhile('fghi', 99));
+
+  }
+
+  public function testUnget() {
+    $text = "abc";
+    $s = new InputStream($text);
+    $s->unget(); // Should do nothing.
+    $s->char(); // Advance.
+    $this->assertEquals('bc', $s->remainingChars());
+
+    $text = "abc";
+    $s = new InputStream($text);
+    $s->char(); $s->char();
+    $s->unget(); $s->unget();
+    $this->assertEquals('abc', $s->remainingChars());
+
+    // Right now we are starting from EOF.
+    $this->assertFalse($s->remainingChars());
+    $s->unget();
+    $this->assertEquals('c', $s->remainingChars());
+
+    // Apparently, the lib was designed to do this. So we test it to 
+    // make sure it doesn't break. Not sure why it's doing this, though.
+    $s->char(); // pop 'c'
+    $s->char(); // One past EOF
+    $s->unget(); // this does not reverse at all.
+    $s->unget(); // this does not reverse at all.
+    $s->unget(); // this does not reverse at all.
+    $this->assertFalse($s->remainingChars());
+  }
 
   public function testBOM() {
 

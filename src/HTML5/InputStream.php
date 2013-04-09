@@ -209,15 +209,12 @@ class InputStream {
    * Returns the current line that the tokenizer is at.
    */
   public function currentLine() {
-    // Check the string isn't empty
-    if($this->EOF) {
-      // Add one to $this->char because we want the number for the next
-      // byte to be processed.
-      return substr_count($this->data, "\n", 0, min($this->char, $this->EOF)) + 1;
-    } else {
-      // If the string is empty, we are on the first line (sorta).
+    if (empty($this->EOF) || $this->char == 0) {
       return 1;
     }
+    // Add one to $this->char because we want the number for the next
+    // byte to be processed.
+    return substr_count($this->data, "\n", 0, min($this->char, $this->EOF)) + 1;
   }
 
   /**
@@ -229,45 +226,65 @@ class InputStream {
 
   /**
    * Returns the current column of the current line that the tokenizer is at.
+   *
+   * Newlines are column 0. The first char after a newline is column 1.
+   *
+   * @return int
+   *   The column number.
    */
   public function columnOffset() {
-    throw new \Exception($this->char);
+
+    // Short circuit for the first char.
+    if ($this->char == 0) {
+      return 0;
+    }
     // strrpos is weird, and the offset needs to be negative for what we
     // want (i.e., the last \n before $this->char). This needs to not have
     // one (to make it point to the next character, the one we want the
     // position of) added to it because strrpos's behaviour includes the
     // final offset byte.
-    $lastLine = strrpos($this->data, "\n", $this->char - 1 - strlen($this->data));
+    $backwardFrom = $this->char - 1 - strlen($this->data);
+    $lastLine = strrpos($this->data, "\n", $backwardFrom);
 
     // However, for here we want the length up until the next byte to be
     // processed, so add one to the current byte ($this->char).
-    if($lastLine !== false) {
+    if ($lastLine !== FALSE) {
       $findLengthOf = substr($this->data, $lastLine + 1, $this->char - 1 - $lastLine);
-    } else {
+    }
+    else {
+      // After a newline.
       $findLengthOf = substr($this->data, 0, $this->char);
     }
 
+    return self::countChars($findLengthOf);
+  }
+
+  /**
+   * Count the number of characters in a string.
+   *
+   * UTF-8 aware. This will try (in order) iconv,
+   * MB, libxml, and finally a custom counter.
+   *
+   * @todo Move this to a general utility class.
+   */
+  public static function countChars($string) {
     // Get the length for the string we need.
-    // MPB: This seems like excessive branching given that (a) inconv
-    // and mb are elsewhere assumed to be loaded, (b) libxml is 
-    // required, and (c) the third and fourth methods are not guaranteed 
-    // to be compatible with assumptions made elsewhere in the 
-    // InputStream.
-    if(extension_loaded('iconv')) {
-      return iconv_strlen($findLengthOf, 'utf-8');
-    } elseif(extension_loaded('mbstring')) {
-      return mb_strlen($findLengthOf, 'utf-8');
-    } elseif(extension_loaded('xml')) {
+    if(function_exists('iconv_strlen')) {
+      return iconv_strlen($string, 'utf-8');
+    }
+    elseif(function_exists('mb_strlen')) {
+      return mb_strlen($string, 'utf-8');
+    }
+    elseif(function_exists('utf8_decod')) {
       // MPB: Will this work? Won't certain decodes lead to two chars 
       // extrapolated out of 2-byte chars?
-      return strlen(utf8_decode($findLengthOf));
-    } else {
-      $count = count_chars($findLengthOf);
-      // 0x80 = 0x7F - 0 + 1 (one added to get inclusive range)
-      // 0x33 = 0xF4 - 0x2C + 1 (one added to get inclusive range)
-      return array_sum(array_slice($count, 0, 0x80)) +
-           array_sum(array_slice($count, 0xC2, 0x33));
+      return strlen(utf8_decode($string));
     }
+    $count = count_chars($string);
+    // 0x80 = 0x7F - 0 + 1 (one added to get inclusive range)
+    // 0x33 = 0xF4 - 0x2C + 1 (one added to get inclusive range)
+    return array_sum(array_slice($count, 0, 0x80)) +
+         array_sum(array_slice($count, 0xC2, 0x33));
   }
 
   /**
@@ -293,60 +310,88 @@ class InputStream {
 
   /**
    * Get all characters until EOF.
+   *
+   * This reads to the end of the file, and sets the read marker at the 
+   * end of the file.
+   *
    * @note This performs bounds checking
    */
   public function remainingChars() {
-    if($this->char < $this->EOF) {
+    if ($this->char < $this->EOF) {
       $data = substr($this->data, $this->char);
       $this->char = $this->EOF;
       return $data;
     }
-    return false;
+    return FALSE;
   }
 
   /**
+   * Read to a particular match (or until $max bytes are consumed).
+   *
+   * This operates on byte sequences, not characters.
+   *
    * Matches as far as possible until we reach a certain set of bytes
    * and returns the matched substring.
-   * @param $bytes Bytes to match.
+   *
+   * @param string $bytes
+   *   Bytes to match.
+   * @param int $max
+   *   Maximum number of bytes to scan.
+   * @return mixed
+   *   Index or FALSE if no match is found. You should use strong 
+   *   equality when checking the result, since index could be 0.
    */
   public function charsUntil($bytes, $max = null) {
-    if ($this->char < $this->EOF) {
-      if ($max === 0 || $max) {
-        $len = strcspn($this->data, $bytes, $this->char, $max);
-      } else {
-        $len = strcspn($this->data, $bytes, $this->char);
-      }
-      $string = (string) substr($this->data, $this->char, $len);
-      $this->char += $len;
-      return $string;
+    if ($this->char >= $this->EOF) {
+      return FALSE;
     }
-    return false;
+
+    if ($max === 0 || $max) {
+      $len = strcspn($this->data, $bytes, $this->char, $max);
+    }
+    else {
+      $len = strcspn($this->data, $bytes, $this->char);
+    }
+
+    $string = (string) substr($this->data, $this->char, $len);
+    $this->char += $len;
+    return $string;
   }
 
   /**
+   * Returns the string so long as $bytes matches.
+   *
    * Matches as far as possible with a certain set of bytes
    * and returns the matched substring.
-   * @param $bytes Bytes to match.
+   *
+   * @param string $bytes
+   *   A mask of bytes to match. If ANY byte in this mask matches the 
+   *   current char, the pointer advances and the char is part of the 
+   *   substring.
+   * @param int $max
+   *   The max number of chars to read.
    */
   public function charsWhile($bytes, $max = null) {
-    if ($this->char < $this->EOF) {
-      if ($max === 0 || $max) {
-        $len = strspn($this->data, $bytes, $this->char, $max);
-      } else {
-        $len = strspn($this->data, $bytes, $this->char);
-      }
-      $string = (string) substr($this->data, $this->char, $len);
-      $this->char += $len;
-      return $string;
+    if ($this->char >= $this->EOF) {
+      return FALSE;
     }
-    return false;
+
+    if ($max === 0 || $max) {
+      $len = strspn($this->data, $bytes, $this->char, $max);
+    }
+    else {
+      $len = strspn($this->data, $bytes, $this->char);
+    }
+    $string = (string) substr($this->data, $this->char, $len);
+    $this->char += $len;
+    return $string;
   }
 
   /**
    * Unconsume one character.
    */
   public function unget() {
-    if ($this->char <= $this->EOF) {
+    if ($this->char > 0 && $this->char <= $this->EOF) {
       $this->char--;
     }
   }

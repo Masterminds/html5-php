@@ -6,7 +6,40 @@ use \HTML5\InputStream;
 require_once 'TestCase.php';
 
 class InputStreamTest extends TestCase {
-  const INVALID = "\xEF\xBF\xBD";
+
+  public function testChar() {
+    $s = new InputStream("abc");
+    $this->assertEquals('a', $s->char());
+    $this->assertEquals('b', $s->char());
+    $this->assertEquals('c', $s->char());
+  }
+
+  public function testColumnOffset() {
+    $s = new InputStream("abc\ndef\n");
+    $this->assertEquals(0, $s->columnOffset());
+    $s->char();
+    $this->assertEquals(1, $s->columnOffset());
+    $s->char();
+    $this->assertEquals(2, $s->columnOffset());
+
+    $s = new InputStream("abc");
+    $this->assertEquals(0, $s->columnOffset());
+    $s->char();
+    $this->assertEquals(1, $s->columnOffset());
+    $s->char();
+    $this->assertEquals(2, $s->columnOffset());
+  }
+
+  public function testCurrentLine() {
+    $txt = "1\n2";
+    $stream = new InputStream($txt);
+    $this->assertEquals(1, $stream->currentLine());
+
+    // Advance
+    $stream->char(); $stream->char();
+    $this->assertEquals(2, $stream->currentLine());
+  }
+
 
   public function testBOM() {
 

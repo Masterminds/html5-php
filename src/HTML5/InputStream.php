@@ -27,8 +27,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 // Some conventions:
-// /* */ indicates verbatim text from the HTML 5 specification
-// // indicates regular comments
+// - /* */ indicates verbatim text from the HTML 5 specification
+//   MPB: Not sure which version of the spec. Moving from HTML5lib to 
+//   HTML5-PHP, I have been using this version:
+//   http://www.w3.org/TR/2012/CR-html5-20121217/Overview.html#contents
+//
+// - // indicates regular comments
 
 class InputStream {
   /**
@@ -204,7 +208,7 @@ class InputStream {
   /**
    * Returns the current line that the tokenizer is at.
    */
-  public function getCurrentLine() {
+  public function currentLine() {
     // Check the string isn't empty
     if($this->EOF) {
       // Add one to $this->char because we want the number for the next
@@ -217,9 +221,17 @@ class InputStream {
   }
 
   /**
+   * @deprecated
+   */
+  public function getCurrentLine() {
+    return currentLine();
+  }
+
+  /**
    * Returns the current column of the current line that the tokenizer is at.
    */
-  public function getColumnOffset() {
+  public function columnOffset() {
+    throw new \Exception($this->char);
     // strrpos is weird, and the offset needs to be negative for what we
     // want (i.e., the last \n before $this->char). This needs to not have
     // one (to make it point to the next character, the one we want the
@@ -236,11 +248,18 @@ class InputStream {
     }
 
     // Get the length for the string we need.
+    // MPB: This seems like excessive branching given that (a) inconv
+    // and mb are elsewhere assumed to be loaded, (b) libxml is 
+    // required, and (c) the third and fourth methods are not guaranteed 
+    // to be compatible with assumptions made elsewhere in the 
+    // InputStream.
     if(extension_loaded('iconv')) {
       return iconv_strlen($findLengthOf, 'utf-8');
     } elseif(extension_loaded('mbstring')) {
       return mb_strlen($findLengthOf, 'utf-8');
     } elseif(extension_loaded('xml')) {
+      // MPB: Will this work? Won't certain decodes lead to two chars 
+      // extrapolated out of 2-byte chars?
       return strlen(utf8_decode($findLengthOf));
     } else {
       $count = count_chars($findLengthOf);
@@ -252,13 +271,24 @@ class InputStream {
   }
 
   /**
-   * Retrieve the currently consume character.
+   * @deprecated
+   */
+  public function getColumnOffset() {
+    return $this->columnOffset();
+  }
+
+  /**
+   * Retrieve the currently consumed character.
    * @note This performs bounds checking
    */
   public function char() {
-    return ($this->char++ < $this->EOF)
-      ? $this->data[$this->char - 1]
-      : false;
+    // MPB: This appears to advance the pointer, which is not the same
+    // as "retrieving the currently consumed character". Calling char() 
+    // twice will return two different results.
+    if ($this->char++ < $this->EOF) {
+      return $this->data[$this->char - 1];
+    }
+    return FALSE;
   }
 
   /**
@@ -270,9 +300,8 @@ class InputStream {
       $data = substr($this->data, $this->char);
       $this->char = $this->EOF;
       return $data;
-    } else {
-      return false;
     }
+    return false;
   }
 
   /**
@@ -290,9 +319,8 @@ class InputStream {
       $string = (string) substr($this->data, $this->char, $len);
       $this->char += $len;
       return $string;
-    } else {
-      return false;
     }
+    return false;
   }
 
   /**
@@ -310,9 +338,8 @@ class InputStream {
       $string = (string) substr($this->data, $this->char, $len);
       $this->char += $len;
       return $string;
-    } else {
-      return false;
     }
+    return false;
   }
 
   /**

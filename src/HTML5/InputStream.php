@@ -52,10 +52,9 @@ class InputStream {
   public $errors = array();
 
   /**
-   * @param $data Data to parse
+   * Convert data from the given encoding to UTF-8.
    */
-  public function __construct($data) {
-
+  protected function convertToUTF8($data, $encoding = 'UTF-8') {
     /* Given an encoding, the bytes in the input stream must be
     converted to Unicode characters for the tokeniser, as
     described by the rules for that encoding, except that the
@@ -72,13 +71,26 @@ class InputStream {
     // We previously had an mbstring implementation here, but that
     // implementation is heavily non-conforming, so it's been
     // omitted.
-    if (extension_loaded('iconv')) {
+    if (function_exists('iconv') && $encoding != 'auto') {
       // non-conforming
       $data = @iconv('UTF-8', 'UTF-8//IGNORE', $data);
-    } else {
+    // MPB: Testing the newer mb_convert_encoding().
+    }
+    elseif (function_exists('mb_convert_encoding')) {
+      $data = mb_convert_encoding($data, 'UTF-8', $encoding);
+
+    }
+    else {
       // we can make a conforming native implementation
       throw new Exception('Not implemented, please install mbstring or iconv');
     }
+  }
+
+  /**
+   * @param $data Data to parse
+   */
+  public function __construct($data) {
+
 
     /* One leading U+FEFF BYTE ORDER MARK character must be
     ignored if any are present. */
@@ -102,19 +114,12 @@ class InputStream {
     to LF characters. Thus, newlines in HTML DOMs are represented
     by LF characters, and there are never any CR characters in the
     input to the tokenization stage. */
-    $data = str_replace(
-      array(
-        "\0",
-        "\r\n",
-        "\r"
-      ),
-      array(
-        "\xEF\xBF\xBD",
-        "\n",
-        "\n"
-      ),
-      $data
+    $crlfTable = array(
+        "\0" =>  "\xEF\xBF\xBD",
+        "\r\n" => "\n",
+        "\r" => "\n",
     );
+    $data = strtr($data, $crlfTable);
 
     /* Any occurrences of any characters in the ranges U+0001 to
     U+0008, U+000B,  U+000E to U+001F,  U+007F  to U+009F,

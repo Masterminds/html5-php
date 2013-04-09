@@ -53,6 +53,14 @@ class InputStream {
 
   /**
    * Convert data from the given encoding to UTF-8.
+   *
+   * This has not yet been tested with charactersets other than UTF-8. 
+   * It should work with ISO-8859-1/-13 and standard Latin Win charsets.
+   *
+   * @param string $data
+   *   The data to convert.
+   * @param string $encoding
+   *   A valid encoding. Examples: http://www.php.net/manual/en/mbstring.supported-encodings.php
    */
   protected function convertToUTF8($data, $encoding = 'UTF-8') {
     /* Given an encoding, the bytes in the input stream must be
@@ -73,24 +81,17 @@ class InputStream {
     // omitted.
     if (function_exists('iconv') && $encoding != 'auto') {
       // non-conforming
-      $data = @iconv('UTF-8', 'UTF-8//IGNORE', $data);
-    // MPB: Testing the newer mb_convert_encoding().
+      $data = @iconv($encoding, 'UTF-8//IGNORE', $data);
     }
+    // MPB: Testing the newer mb_convert_encoding(). This might need
+    // to be removed again.
     elseif (function_exists('mb_convert_encoding')) {
       $data = mb_convert_encoding($data, 'UTF-8', $encoding);
-
     }
     else {
       // we can make a conforming native implementation
       throw new Exception('Not implemented, please install mbstring or iconv');
     }
-  }
-
-  /**
-   * @param $data Data to parse
-   */
-  public function __construct($data) {
-
 
     /* One leading U+FEFF BYTE ORDER MARK character must be
     ignored if any are present. */
@@ -98,15 +99,13 @@ class InputStream {
       $data = substr($data, 3);
     }
 
-    /* All U+0000 NULL characters in the input must be replaced
-    by U+FFFD REPLACEMENT CHARACTERs. Any occurrences of such
-    characters is a parse error. */
-    for ($i = 0, $count = substr_count($data, "\0"); $i < $count; $i++) {
-      $this->errors[] = array(
-        'type' => HTML5_Tokenizer::PARSEERROR,
-        'data' => 'null-character'
-      );
-    }
+    return $data;
+  }
+
+  /**
+   * Replace linefeed characters according to the spec.
+   */
+  protected function replaceLinefeeds($data) {
     /* U+000D CARRIAGE RETURN (CR) characters and U+000A LINE FEED
     (LF) characters are treated specially. Any CR characters
     that are followed by LF characters must be removed, and any
@@ -119,7 +118,28 @@ class InputStream {
         "\r\n" => "\n",
         "\r" => "\n",
     );
-    $data = strtr($data, $crlfTable);
+    return strtr($data, $crlfTable);
+  }
+
+  /**
+   * Checks for Unicode code points that are not valid in a document.
+   *
+   * This stores a parse error for each error that is found.
+   */
+  protected function checkForIllegalCodepoints($data) {
+    if (!function_exists('preg_match_all')) {
+      throw \Exception('The PCRE library is not loaded or is not available.');
+    }
+
+    /* All U+0000 NULL characters in the input must be replaced
+    by U+FFFD REPLACEMENT CHARACTERs. Any occurrences of such
+    characters is a parse error. */
+    for ($i = 0, $count = substr_count($data, "\0"); $i < $count; $i++) {
+      $this->errors[] = array(
+        'type' => Tokenizer::PARSEERROR,
+        'data' => 'null-character'
+      );
+    }
 
     /* Any occurrences of any characters in the ranges U+0001 to
     U+0008, U+000B,  U+000E to U+001F,  U+007F  to U+009F,
@@ -132,33 +152,42 @@ class InputStream {
     U+10FFFF are parse errors. (These are all control characters
     or permanently undefined Unicode characters.) */
     // Check PCRE is loaded.
-    if (extension_loaded('pcre')) {
-      $count = preg_match_all(
-        '/(?:
-          [\x01-\x08\x0B\x0E-\x1F\x7F] # U+0001 to U+0008, U+000B,  U+000E to U+001F and U+007F
-        |
-          \xC2[\x80-\x9F] # U+0080 to U+009F
-        |
-          \xED(?:\xA0[\x80-\xFF]|[\xA1-\xBE][\x00-\xFF]|\xBF[\x00-\xBF]) # U+D800 to U+DFFFF
-        |
-          \xEF\xB7[\x90-\xAF] # U+FDD0 to U+FDEF
-        |
-          \xEF\xBF[\xBE\xBF] # U+FFFE and U+FFFF
-        |
-          [\xF0-\xF4][\x8F-\xBF]\xBF[\xBE\xBF] # U+nFFFE and U+nFFFF (1 <= n <= 10_{16})
-        )/x',
-        $data,
-        $matches
+    $count = preg_match_all(
+      '/(?:
+        [\x01-\x08\x0B\x0E-\x1F\x7F] # U+0001 to U+0008, U+000B,  U+000E to U+001F and U+007F
+      |
+        \xC2[\x80-\x9F] # U+0080 to U+009F
+      |
+        \xED(?:\xA0[\x80-\xFF]|[\xA1-\xBE][\x00-\xFF]|\xBF[\x00-\xBF]) # U+D800 to U+DFFFF
+      |
+        \xEF\xB7[\x90-\xAF] # U+FDD0 to U+FDEF
+      |
+        \xEF\xBF[\xBE\xBF] # U+FFFE and U+FFFF
+      |
+        [\xF0-\xF4][\x8F-\xBF]\xBF[\xBE\xBF] # U+nFFFE and U+nFFFF (1 <= n <= 10_{16})
+      )/x',
+      $data,
+      $matches
+    );
+    for ($i = 0; $i < $count; $i++) {
+      $this->errors[] = array(
+        'type' => Tokenizer::PARSEERROR,
+        'data' => 'invalid-codepoint'
       );
-      for ($i = 0; $i < $count; $i++) {
-        $this->errors[] = array(
-          'type' => HTML5_Tokenizer::PARSEERROR,
-          'data' => 'invalid-codepoint'
-        );
-      }
-    } else {
-      // XXX: Need non-PCRE impl, probably using substr_count
     }
+  }
+
+  /**
+   * Create a new InputStream wrapper.
+   *
+   * @param $data Data to parse
+   */
+  public function __construct($data, $encoding = 'UTF-8') {
+
+    $data = $this->convertToUTF8($data, $encoding);
+    $data = $this->replaceLinefeeds($data);
+
+    $this->checkForIllegalCodepoints($data);
 
     $this->data = $data;
     $this->char = 0;

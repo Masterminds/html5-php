@@ -1,15 +1,17 @@
 <?php
+namespace HTML5\Tests;
 
-require_once dirname(__FILE__) . '/../autorun.php';
+use \HTML5\Parser;
 
-class HTML5_ParserTest extends UnitTestCase
-{
-    public function testParse() {
-        $result = HTML5_Parser::parse('<html><body></body></html>');
-        $this->assertIsA($result, 'DOMDocument');
-    }
-    public function testParseFragment() {
-        $result = HTML5_Parser::parseFragment('<b>asdf</b> foo');
-        $this->assertIsA($result, 'DOMNodeList');
-    }
+require_once 'TestCase.php';
+
+class ParserTest extends TestCase {
+  public function testParse() {
+    $result = Parser::parse('<html><body></body></html>');
+    $this->assertTrue($result instanceof \DOMDocument);
+  }
+  public function testParseFragment() {
+    $result = Parser::parseFragment('<b>asdf</b> foo');
+    $this->assertTrue($result instanceof \DOMNodeList);
+  }
 }

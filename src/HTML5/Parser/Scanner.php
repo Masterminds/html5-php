@@ -135,4 +135,38 @@ class Scanner {
   public function getNumeric() {
     return $this->is->charsWhile('0123456789');
   }
+
+  /**
+   * Returns the current line that is being consumed.
+   *
+   * @return int
+   *   The current line number.
+   */
+  public function currentLine() {
+    return $this->is->currentLine();
+  }
+
+  /**
+   * Returns the current column of the current line that the tokenizer is at.
+   *
+   * Newlines are column 0. The first char after a newline is column 1.
+   *
+   * @return int
+   *   The column number.
+   */
+  public function columnOffset() {
+    return $this->is->columnOffset();
+  }
+
+  /**
+   * Get all characters until EOF.
+   *
+   * This consumes characters until the EOF.
+   *
+   * @return int
+   *   The number of characters remaining.
+   */
+  public function remainingChars() {
+    return $this->is->remainingChars();
+  }
 }

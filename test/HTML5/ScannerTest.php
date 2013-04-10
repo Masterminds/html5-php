@@ -5,7 +5,7 @@
  */
 namespace HTML5\Tests;
 
-use \HTML5\InputStream;
+use \HTML5\Parser\StringInputStream;
 use \HTML5\Parser\Scanner;
 
 require_once 'TestCase.php';
@@ -16,14 +16,14 @@ class ScannerTest extends TestCase {
    * A canary test to make sure the basics are setup and working.
    */
   public function testConstruct() {
-    $is = new InputStream("abc");
+    $is = new StringInputStream("abc");
     $s = new Scanner($is);
 
     $this->assertInstanceOf('\HTML5\Parser\Scanner', $s);
   }
 
   public function testNext() {
-    $s = new Scanner(new InputStream("abc"));
+    $s = new Scanner(new StringInputStream("abc"));
 
     $this->assertEquals('a', $s->next());
     $this->assertEquals('b', $s->next());
@@ -31,7 +31,7 @@ class ScannerTest extends TestCase {
   }
 
   public function testPosition() {
-    $s = new Scanner(new InputStream("abc"));
+    $s = new Scanner(new StringInputStream("abc"));
 
     $this->assertEquals(0, $s->position());
 
@@ -40,7 +40,7 @@ class ScannerTest extends TestCase {
   }
 
   public function testPeek() {
-    $s = new Scanner(new InputStream("abc"));
+    $s = new Scanner(new StringInputStream("abc"));
 
     // The scanner is currently pointed before a.
     $this->assertEquals('b', $s->peek());
@@ -50,21 +50,21 @@ class ScannerTest extends TestCase {
   }
 
   public function testCurrent() {
-    $s = new Scanner(new InputStream("abc"));
+    $s = new Scanner(new StringInputStream("abc"));
 
     // Before scanning the string begins the current is empty.
-    $this->assertEquals('', $s->current());
+    $this->assertEquals('a', $s->current());
 
     $c = $s->next();
-    $this->assertEquals($c, $s->current());
+    $this->assertEquals('b', $s->current());
 
     // Test movement through the string.
     $c = $s->next();
-    $this->assertEquals($c, $s->current());
+    $this->assertEquals('c', $s->current());
   }
 
   public function testUnconsume() {
-    $s = new Scanner(new InputStream("abcdefghijklmnopqrst"));
+    $s = new Scanner(new StringInputStream("abcdefghijklmnopqrst"));
 
     // Get initial position.
     $s->next();
@@ -82,20 +82,17 @@ class ScannerTest extends TestCase {
     $this->assertEquals($start, $s->position());
   }
 
-  // public function testGetHex() {
-  //   $s = new Scanner(new InputStream("abcdef%mnop*"));
+  public function testGetHex() {
+    $s = new Scanner(new StringInputStream("ab13ck45DE*"));
 
-  //   $s->next();
+    $this->assertEquals('ab13c', $s->getHex());
 
-  //   $this->assertEquals('bcdef', $s->getHex());
-
-  //   echo $s->next(); echo $s->next(); echo $s->position(); echo $s->getHex();
-
-  //   //$this->assertEquals('mnop', $s->getHex());
-  // }
+    $s->next();
+    $this->assertEquals('45DE', $s->getHex());
+  }
   
   public function testGetAsciiAlpha() {
-    $s = new Scanner(new InputStream("abcdef1%mnop*"));
+    $s = new Scanner(new StringInputStream("abcdef1%mnop*"));
 
     $this->assertEquals('abcdef', $s->getAsciiAlpha());
 
@@ -106,7 +103,7 @@ class ScannerTest extends TestCase {
   }
 
   public function testGetAsciiAlphaNum() {
-    $s = new Scanner(new InputStream("abcdef1ghpo#mn94op"));
+    $s = new Scanner(new StringInputStream("abcdef1ghpo#mn94op"));
 
     $this->assertEquals('abcdef1ghpo', $s->getAsciiAlphaNum());
 
@@ -116,7 +113,7 @@ class ScannerTest extends TestCase {
   }
 
   public function testGetNumeric() {
-    $s = new Scanner(new InputStream("1784a 45 9867 #"));
+    $s = new Scanner(new StringInputStream("1784a 45 9867 #"));
 
     $this->assertEquals('1784', $s->getNumeric());
 

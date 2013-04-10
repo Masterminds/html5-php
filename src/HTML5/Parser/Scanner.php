@@ -18,7 +18,7 @@ class Scanner {
   /**
    * Create a new Scanner.
    *
-   * @param \HTML5\InputStream $input
+   * @param \HTML5\Parser\InputStream $input
    *   An InputStream to be scanned.
    */
   public function __construct($input) {
@@ -36,10 +36,7 @@ class Scanner {
   }
 
   /**
-   * Take a peek at the character after the next character in the data.
-   *
-   * For example, you start scanning the string abc. The pointer is before a.
-   * When you start peek() will return b while next() will return a.
+   * Take a peek at the next character in the data.
    *
    * @return string
    *   The next character.
@@ -86,15 +83,13 @@ class Scanner {
   }
 
   /**
-   * Get the next group of that is a hex value.
+   * Get the next group of that contains hex characters.
    *
    * Note, along with getting the characters the pointer in the data will be
    * moved as well.
-   *
-   * @todo There is a potential for many false positives with this method. Make it more accurate.
    * 
    * @return string
-   *   The next group that is a hex value.
+   *   The next group that is hex characters.
    */
   public function getHex() {
     return $this->is->charsWhile(self::CHARS_HEX);

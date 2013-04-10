@@ -15,27 +15,67 @@ class Scanner {
   protected $char;
   protected $is;
 
+  /**
+   * Create a new Scanner.
+   *
+   * @param \HTML5\InputStream $input
+   *   An InputStream to be scanned.
+   */
   public function __construct($input) {
     $this->is = $input;
   }
 
+  /**
+   * Get the current position.
+   *
+   * @return int
+   *   The current intiger byte position.
+   */
   public function position() {
     return $this->is->position();
   }
 
+  /**
+   * Take a peek at the next character in the data.
+   *
+   * @return string
+   *   The next character.
+   */
   public function peek() {
     return $this->is->peek();
   }
 
+  /**
+   * Get the next character.
+   * 
+   * Note: This advances the pointer.
+   *
+   * @return string
+   *   The next character.
+   */
   public function next() {
     $this->char = $this->is->char();
     return $this->char;
   }
 
+  /**
+   * Get the current character.
+   *
+   * Note, this does not advance the pointer.
+   * 
+   * @return string
+   *   The current character.
+   */
   public function current() {
     return $this->char;
   }
 
+  /**
+   * Unconsume some of the data. This moves the data pointer backwards.
+   *
+   * @param  int $howMany
+   *   The number of characters to move the pointer back.
+   */
   public function unconsume($howMany = 1) {
     for ($i = 0; $i < $howMany; ++$i) {
       $this->is->unconsume();

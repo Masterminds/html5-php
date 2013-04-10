@@ -54,8 +54,4 @@ class Scanner {
   public function getNumeric() {
     $this->charsWhile('0123456789');
   }
-
-
-}
-class ParseError extends Exception {
 }

@@ -17,18 +17,30 @@ class Tokenizer {
   }
 
   /**
+   * Main entry point.
+   */
+  public function parse() {
+    while ($this->consumeData()) {
+      $this->scanner->next();
+    }
+  }
+
+  /**
    * 8.2.4.1
    */
-  public function consumeData() {
-    // Scan a token
-    $this->scanner->next();
+  protected function consumeData() {
     // Character Ref
     $this->characterReference();
 
     // TagOpen
     // Null
     // EOF
+    if ($this->scanner->current() === FALSE) {
+      $this->events->eof();
+      return FALSE;
+    }
     // Character
+    return TRUE;
   }
 
   /**

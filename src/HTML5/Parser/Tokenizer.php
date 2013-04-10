@@ -99,7 +99,7 @@ class Tokenizer {
       return '&';
     }
 
-    throw new ParseException("Expected &ENTITY;, got &ENTITY (no trailing ;)");
+    throw new ParseError("Expected &ENTITY;, got &ENTITY (no trailing ;)");
 
   }
 

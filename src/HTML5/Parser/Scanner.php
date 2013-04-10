@@ -68,7 +68,10 @@ class Scanner {
    *   The current character.
    */
   public function current() {
-    return $this->is->current();
+    if ($this->is->valid()) {
+      return $this->is->current();
+    }
+    return FALSE;
   }
 
   /**

@@ -121,4 +121,34 @@ class ScannerTest extends \HTML5\Tests\TestCase {
     $s->next();
     $this->assertEquals('45', $s->getNumeric());
   }
+
+  public function testCurrentLine() {
+    $s = new Scanner(new StringInputStream("1784a\n45\n9867 #\nThis is a test."));
+
+    $this->assertEquals(1, $s->currentLine());
+
+    // Move to the next line.
+    $s->getAsciiAlphaNum(); $s->next();
+    $this->assertEquals(2, $s->currentLine());
+  }
+
+  public function testColumnOffset() {
+    $s = new Scanner(new StringInputStream("1784a a\n45 9867 #\nThis is a test."));
+
+    // Move the pointer to the space.
+    $s->getAsciiAlphaNum();
+    $this->assertEquals(5, $s->columnOffset());
+
+    // We move the pointer ahead. There must be a better way to do this.
+    $s->next(); $s->next(); $s->next(); $s->next(); $s->next(); $s->next();
+    $this->assertEquals(3, $s->columnOffset());
+  }
+
+  public function testRemainingChars() {
+    $string = "\n45\n9867 #\nThis is a test.";
+    $s = new Scanner(new StringInputStream("1784a\n45\n9867 #\nThis is a test."));
+
+    $s->getAsciiAlphaNum();
+    $this->assertEquals($string, $s->remainingChars());
+  }
 }

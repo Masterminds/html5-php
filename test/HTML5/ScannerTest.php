@@ -82,17 +82,14 @@ class ScannerTest extends TestCase {
     $this->assertEquals($start, $s->position());
   }
 
-  // public function testGetHex() {
-  //   $s = new Scanner(new InputStream("abcdef%mnop*"));
+  public function testGetHex() {
+    $s = new Scanner(new InputStream("ab13ck45DE*"));
 
-  //   $s->next();
+    $this->assertEquals('ab13c', $s->getHex());
 
-  //   $this->assertEquals('bcdef', $s->getHex());
-
-  //   echo $s->next(); echo $s->next(); echo $s->position(); echo $s->getHex();
-
-  //   //$this->assertEquals('mnop', $s->getHex());
-  // }
+    $s->next();
+    $this->assertEquals('45DE', $s->getHex());
+  }
   
   public function testGetAsciiAlpha() {
     $s = new Scanner(new InputStream("abcdef1%mnop*"));

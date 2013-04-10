@@ -86,15 +86,13 @@ class Scanner {
   }
 
   /**
-   * Get the next group of that is a hex value.
+   * Get the next group of that contains hex characters.
    *
    * Note, along with getting the characters the pointer in the data will be
    * moved as well.
-   *
-   * @todo There is a potential for many false positives with this method. Make it more accurate.
    * 
    * @return string
-   *   The next group that is a hex value.
+   *   The next group that is hex characters.
    */
   public function getHex() {
     return $this->is->charsWhile(self::CHARS_HEX);

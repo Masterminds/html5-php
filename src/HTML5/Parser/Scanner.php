@@ -18,7 +18,7 @@ class Scanner {
   /**
    * Create a new Scanner.
    *
-   * @param \HTML5\InputStream $input
+   * @param \HTML5\Parser\InputStream $input
    *   An InputStream to be scanned.
    */
   public function __construct($input) {
@@ -36,10 +36,7 @@ class Scanner {
   }
 
   /**
-   * Take a peek at the character after the next character in the data.
-   *
-   * For example, you start scanning the string abc. The pointer is before a.
-   * When you start peek() will return b while next() will return a.
+   * Take a peek at the next character in the data.
    *
    * @return string
    *   The next character.

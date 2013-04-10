@@ -61,5 +61,11 @@ class EventStack implements EventHandler {
     $this->store('eof');
   }
 
+  public function parseError($msg, $line, $col) {
+    throw new EventStackParseError(sprintf("%s (line %d, col %d)", $msg, $line, $col));
+  }
 
+
+}
+class EventStackParseError extends \Exception {
 }

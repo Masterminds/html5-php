@@ -82,6 +82,12 @@ class Tokenizer {
     $this->text .= $str;
   }
 
+  protected function parseError($msg) {
+    $line = $this->scanner->currentLine();
+    $col = $this->scanner->columnOffset();
+    $this->events->parseError($msg, $line, $col);
+  }
+
   /**
    * Consume a character and make a move.
    * HTML5 8.2.4.1
@@ -147,7 +153,9 @@ class Tokenizer {
         $tok = $this->scanner->next(); // Consume x
         $hex = $this->scanner->getHex();
         if (empty($hex)) {
-          throw new ParseError("Expected &#xHEX;, got &#x" . $tok);
+          //throw new ParseError("Expected &#xHEX;, got &#x" . $tok);
+          $this->parseError("Expected &#xHEX;, got &#x" . $tok);
+          return;
         }
         $entity = CharacterReference::lookupHex($hex);
       }
@@ -156,7 +164,9 @@ class Tokenizer {
       else {
         $numeric = $this->scanner->getNumeric();
         if (empty($numeric)) {
-          throw ParseError("Expected &#DIGITS;, got $#" . $tok);
+          //throw ParseError("Expected &#DIGITS;, got $#" . $tok);
+          $this->parseError("Expected &#DIGITS;, got $#" . $tok);
+          return;
         }
         $entity = CharacterReference::lookupDecimal($numeric);
       }
@@ -166,6 +176,9 @@ class Tokenizer {
       // [a-zA-Z0-9]+;
       $cname = $this->scanner->getAsciiAlpha();
       $entity = CharacterReference::lookupName($cname);
+      if ($entity == NULL) {
+          $this->parseError("No match in entity table for " . $entity);
+      }
 
     }
     // The scanner has advanced the cursor for us.
@@ -185,7 +198,8 @@ class Tokenizer {
       return;
     }
 
-    throw new ParseError("Expected &ENTITY;, got &ENTITY (no trailing ;) " . $tok);
+    //throw new ParseError("Expected &ENTITY;, got &ENTITY (no trailing ;) " . $tok);
+    $this->parseError("Expected &ENTITY;, got &ENTITY (no trailing ;) " . $tok);
 
   }
 

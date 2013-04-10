@@ -76,7 +76,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
   }
 
   /**
-   * @expectedException \HTML5\Parser\ParseError
+   * @expectedException \HTML5\Parser\EventStackParseError
    */
   public function testBrokenCharacterReference() {
     // Test with broken charref

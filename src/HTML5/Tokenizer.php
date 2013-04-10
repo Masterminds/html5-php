@@ -87,8 +87,9 @@ class Tokenizer {
    */
   public function __construct($data, $builder = null) {
     $this->stream = new InputStream($data);
-    if (!$builder) $this->tree = new TreeBuilder;
-    else $this->tree = $builder;
+
+    $this->tree = empty($builder) ? new TreeBuilder() : $builder;
+
     $this->content_model = self::PCDATA;
   }
 

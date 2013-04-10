@@ -390,9 +390,20 @@ class InputStream {
   /**
    * Unconsume one character.
    */
-  public function unget() {
+  public function unconsume() {
     if ($this->char > 0 && $this->char <= $this->EOF) {
       $this->char--;
     }
+  }
+  public function unget() {
+    $this->unconsume();
+  }
+
+  public function peek() {
+    return $this->data[$this->char + 1];
+  }
+
+  public function position() {
+    return $this->char;
   }
 }

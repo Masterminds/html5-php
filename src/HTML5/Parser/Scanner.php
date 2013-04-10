@@ -36,7 +36,10 @@ class Scanner {
   }
 
   /**
-   * Take a peek at the next character in the data.
+   * Take a peek at the character after the next character in the data.
+   *
+   * For example, you start scanning the string abc. The pointer is before a.
+   * When you start peek() will return b while next() will return a.
    *
    * @return string
    *   The next character.

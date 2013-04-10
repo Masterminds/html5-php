@@ -16,7 +16,11 @@ foreach ($json as $name => $obj) {
 }
 
 print '<?php
-$entities = ';
+namespace HTML5;
+/** Entity lookup tables. This class is automatically generated. */
+class Entities {
+  public static $byName = ';
 var_export($table);
-print ';';
+print ';
+}' . PHP_EOL;
 //print serialize($table);

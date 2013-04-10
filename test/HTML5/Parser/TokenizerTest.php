@@ -1,8 +1,9 @@
 <?php
 namespace HTML5\Parser;
 require __DIR__ . '/../TestCase.php';
+require 'EventStack.php';
 
-class TokenizerTest extends TestCase {
+class TokenizerTest extends \HTML5\Tests\TestCase {
   protected function createTokenizer($string) {
     $eventHandler = new EventStack();
     $stream = new StringInputStream($string);

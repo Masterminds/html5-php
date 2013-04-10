@@ -1,6 +1,5 @@
 <?php
 namespace HTML5\Parser;
-require __DIR__ . '/../TestCase.php';
 
 class EventStack implements EventHandler {
   protected $stack;
@@ -27,7 +26,7 @@ class EventStack implements EventHandler {
     );
   }
 
-  public function doctype($name, $publicId, $systemID, $quirks) {
+  public function doctype($name, $publicId, $systemID, $quirks = FALSE) {
     $args = func_get_args();
     $this->store('doctype', $args);
   }

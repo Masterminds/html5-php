@@ -1,6 +1,26 @@
 <?php
 namespace HTML5\Parser;
 
+/**
+ * The HTML5 tokenizer.
+ *
+ * The tokenizer's role is reading data from the scanner and gathering it into
+ * semantic units. From the tokenizer, data is emitted to an event handler,
+ * which may (for example) create a DOM tree.
+ *
+ * The HTML5 specification has a detailed explanation of tokenizing HTML5. We
+ * follow that specification to the maximum extent that we can. If you find
+ * a discrepancy that is not documented, please file a bug and/or submit a
+ * patch.
+ *
+ * This tokenizer is implemented as a recursive descent parser.
+ *
+ * Within the API documentation, you may see references to the specific section
+ * of the HTML5 spec that the code attempts to reproduce. Example: 8.2.4.1.
+ * This refers to section 8.2.4.1 of the HTML5 CR specification.
+ *
+ * @see http://www.w3.org/TR/2012/CR-html5-20121217/
+ */
 class Tokenizer {
   protected $scanner;
   protected $events;
@@ -11,6 +31,19 @@ class Tokenizer {
    */
   protected $text = '';
 
+  /**
+   * Create a new tokenizer.
+   *
+   * Typically, parsing a document involves creating a new tokenizer, giving
+   * it a scanner (input) and an event handler (output), and then calling
+   * the Tokenizer::parse() method.`
+   *
+   * @param \HTML5\Parser\Scanner $scanner
+   *   A scanner initialized with an input stream.
+   * @param \HTML5\Parser\EventHandler $eventHandler
+   *   An event handler, initialized and ready to receive
+   *   events.
+   */
   public function __construct($scanner, $eventHandler) {
     $this->scanner = $scanner;
     $this->events = $eventHandler;
@@ -26,16 +59,45 @@ class Tokenizer {
   }
 
   /**
-   * 8.2.4.1
+   * Send a TEXT event with the contents of the text buffer.
+   *
+   * This emits an EventHandler::text() event with the current contents of the
+   * temporary text buffer. (The buffer is used to group as much PCDATA
+   * as we can instead of emitting lots and lots of TEXT events.)
+   */
+  protected function flushText() {
+    if (empty($this->text)) {
+      return;
+    }
+    $this->events->text($this->text);
+    $this->text = '';
+  }
+
+  /**
+   * Add text to the temporary buffer.
+   *
+   * @see flushText()
+   */
+  protected function buffer($str) {
+    $this->text .= $str;
+  }
+
+  /**
+   * Consume a character and make a move.
+   * HTML5 8.2.4.1
    */
   protected function consumeData() {
+
     // Character Ref
     $this->characterReference();
 
     // TagOpen
     // Null
+
     // EOF
     if ($this->scanner->current() === FALSE) {
+      // Flush any trailing text, and then throw an EOF.
+      $this->flushText();
       $this->events->eof();
       return FALSE;
     }
@@ -44,21 +106,25 @@ class Tokenizer {
   }
 
   /**
-   * 8.2.4.2
+   * Handle character references (aka entities).
+   *
+   * HTML5 8.2.4.2
+   *
+   * @param boolean $inAttribute
+   *   Set to TRUE if the text is inside of an attribute value.
+   *   FALSE otherwise.
    */
-  protected function characterReference($inAttr = FALSE) {
-    if ($this->tok == '&') {
-      $this->tok = $this->scanner->next();
-      $$this->text .= $this->consumeCharacterReference($inAttr);
-    }
-  }
+  protected function characterReference($inAttribute = FALSE) {
 
-  protected function consumeCharacterReference($inAttribute = FALSE) {
+    if ($this->scanner->current() != '&') {
+      return;
+    }
+    $tok = $this->scanner->next();
     $entity = '';
     $start = $this->scanner->position();
 
     // Whitespace: Ignore
-    switch ($this->tok) {
+    switch ($tok) {
     case NULL:
     case "\t":
     case "\n":
@@ -68,50 +134,57 @@ class Tokenizer {
     case '<':
       // Don't consume; just return. Spec says return nothing, but I 
       // think we have to append '&' to the string.
-      return '&';
+      $this->buffer('&');
+      return;
     case '#':
       // Consume and read a number
-      $this->tok = $this->scanner->next();
+      $tok = $this->scanner->next();
+
+      // Hexidecimal encoding.
       // X[0-9a-fA-F]+;
       // x[0-9a-fA-F]+;
-      if ($this->tok == 'x' || $this->tok == 'X') {
+      if ($tok == 'x' || $tok == 'X') {
         $hex = $this->scanner->getHex();
-        $this->tok = $this->scanner->current();
         if (empty($hex)) {
-          throw ParseError("Expected &#xHEX;, got &#x" . $this->tok);
+          throw ParseError("Expected &#xHEX;, got &#x" . $tok);
         }
-        $entity = hexdec($hex);
+        $entity = CharacterReference::lookupHex($hex);
       }
+      // Decimal encoding.
       // [0-9]+;
       else {
-        $entity = $this->scanner->getNumeric();
-        $this->tok = $this->scanner->current();
+        $numeric = $this->scanner->getNumeric();
         if (empty($numeric)) {
-          throw ParseError("Expected &#DIGITS;, got $#" . $this->tok);
+          throw ParseError("Expected &#DIGITS;, got $#" . $tok);
         }
+        $entity = CharacterReference::lookupDecimal($numeric);
       }
       break;
     default:
       // Attempt to consume a string up to a ';'.
       // [a-zA-Z0-9]+;
-      $entity = $this->scanner->getAsciiAlpha();
-      $this->tok = $this->scanner->current();
+      $cname = $this->scanner->getAsciiAlpha();
+      $entity = CharacterReference::lookupName($cname);
 
     }
+    // The scanner has advanced the cursor for us.
+    $tok = $this->scanner->current();
 
     // We have an entity. We're done here.
-    if ($this->tok == ';') {
-      return $entity;
+    if ($tok == ';') {
+      $this->buffer($entity);
+      return;
     }
 
     // If in an attribute, then failing to match ; means unconsume the 
     // entire string. Otherwise, failure to match is an error.
     if ($inAttribute) {
       $this->scanner->unconsume($this->scanner->position() - $start);
-      return '&';
+      $this->buffer('&');
+      return;
     }
 
-    throw new ParseError("Expected &ENTITY;, got &ENTITY (no trailing ;)");
+    throw new ParseError("Expected &ENTITY;, got &ENTITY (no trailing ;) " . $tok);
 
   }
 

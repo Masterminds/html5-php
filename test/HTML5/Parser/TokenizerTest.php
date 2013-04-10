@@ -19,6 +19,37 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
 
     $tok->parse();
 
-    $this->assertEquals(0, $events->Depth());
+    $this->assertEquals(1, $events->Depth());
+    $this->assertEquals('eof', $e1['name']);
+  }
+
+  public function testWhitespace() {
+    $spaces = '    ';
+    list($tok, $events) = $this->createTokenizer($spaces);
+
+    $tok->parse();
+
+    $this->assertEquals(2, $events->depth());
+
+    $e1 = $events->get(0);
+
+    $this->assertEquals('text', $e1['name']);
+    $this->assertEquals($spaces, $e1['data'][0]);
+  }
+
+  public function testCharacterReference() {
+    $str = '&amp;';
+    list($tok, $events) = $this->createTokenizer($str);
+
+    $tok->parse();
+    $this->assertEquals(2, $events->depth());
+    $e1 = $events->get(0);
+
+    $this->assertEquals('&', $e1['data'][0]);
+
+    // Test with hex charref
+    // Test with decimal charref
+    // Test with broken charref
+    // Test with stand-alone ampersand
   }
 }

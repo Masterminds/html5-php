@@ -1,6 +1,10 @@
 <?php
 namespace HTML5\Parser;
 
+/**
+ * This testing class gathers events from a parser and builds a stack of events.
+ * It is useful for checking the output of a tokenizer.
+ */
 class EventStack implements EventHandler {
   protected $stack;
 
@@ -19,8 +23,12 @@ class EventStack implements EventHandler {
     return count($this->stack);
   }
 
+  public function get($index) {
+    return $this->stack[$index];
+  }
+
   protected function store($event, $data = NULL) {
-    $stack[] = array(
+    $this->stack[] = array(
       'name' => $event,
       'data' => $data,
     );
@@ -45,7 +53,8 @@ class EventStack implements EventHandler {
   }
 
   public function text($cdata) {
-    $this->store('character', array($cdata));
+    fprintf(STDOUT, "Received TEXT event with: " . $cdata);
+    $this->store('text', array($cdata));
   }
 
   public function eof() {

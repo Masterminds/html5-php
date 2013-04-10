@@ -11,7 +11,7 @@ interface EventHandler {
   public function startTag($name, $attributes = array(), $selfClosing = FALSE);
   public function endTag($name);
   public function comment($cdata);
-  public function character($cdata);
+  public function text($cdata);
   public function eof();
 
   // Do we need...

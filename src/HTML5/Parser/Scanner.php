@@ -11,8 +11,6 @@ class Scanner {
   const CHARS_ALNUM = 'abcdefAghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890';
   const CHARS_ALPHA = 'abcdefAghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-
-  protected $char;
   protected $is;
 
   /**
@@ -32,7 +30,7 @@ class Scanner {
    *   The current intiger byte position.
    */
   public function position() {
-    return $this->is->position();
+    return $this->is->key();
   }
 
   /**
@@ -54,8 +52,11 @@ class Scanner {
    *   The next character.
    */
   public function next() {
-    $this->char = $this->is->char();
-    return $this->char;
+    $this->is->next();
+    if ($this->is->valid()) {
+      return $this->is->current();
+    }
+    return FALSE;
   }
 
   /**
@@ -67,7 +68,7 @@ class Scanner {
    *   The current character.
    */
   public function current() {
-    return $this->char;
+    return $this->is->current();
   }
 
   /**
@@ -77,9 +78,7 @@ class Scanner {
    *   The number of characters to move the pointer back.
    */
   public function unconsume($howMany = 1) {
-    for ($i = 0; $i < $howMany; ++$i) {
-      $this->is->unconsume();
-    }
+    $this->is->unconsume($howMany);
   }
 
   /**

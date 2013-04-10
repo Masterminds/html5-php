@@ -25,7 +25,6 @@ class ScannerTest extends TestCase {
   public function testNext() {
     $s = new Scanner(new StringInputStream("abc"));
 
-    $this->assertEquals('a', $s->next());
     $this->assertEquals('b', $s->next());
     $this->assertEquals('c', $s->next());
   }
@@ -42,7 +41,7 @@ class ScannerTest extends TestCase {
   public function testPeek() {
     $s = new Scanner(new StringInputStream("abc"));
 
-    // The scanner is currently pointed before a.
+
     $this->assertEquals('b', $s->peek());
 
     $s->next();

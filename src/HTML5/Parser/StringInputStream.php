@@ -269,16 +269,40 @@ class StringInputStream implements InputStream {
   }
 
   /**
-   * Retrieve the currently consumed character.
-   * @note This performs bounds checking
+   * Get the current character.
+   * 
+   * @return string
+   *   The current character.
    */
-  public function char() {
-    // MPB: This appears to advance the pointer, which is not the same
-    // as "retrieving the currently consumed character". Calling char() 
-    // twice will return two different results.
-    if ($this->char++ < $this->EOF) {
-      return $this->data[$this->char - 1];
+  public function current() {
+    return $this->data[$this->char];
+  }
+
+  /**
+   * Advance the pointer. This is part of the Iterator interface.
+   */
+  public function next() {
+    $this->char++;
+  }
+
+  /**
+   * Rewind to the start of the string.
+   */
+  public function rewind() {
+    $this->char = 0;
+  }
+
+  /**
+   * Is the current pointer location valid.
+   *
+   * @return bool
+   *   Is the current pointer location valid.
+   */
+  public function valid() {
+    if ($this->char < $this->EOF) {
+      return TRUE;
     }
+
     return FALSE;
   }
 
@@ -362,22 +386,26 @@ class StringInputStream implements InputStream {
   }
 
   /**
-   * Unconsume one character.
+   * Unconsume characters.
+   *
+   * @param int $howMany
+   *   The number of characters to unconsume.
    */
-  public function unconsume() {
-    if ($this->char > 0 && $this->char <= $this->EOF) {
-      $this->char--;
+  public function unconsume($howMany = 1) {
+    if (($this->char - $howMany) >= 0) {
+      $this->char = $this->char - $howMany;
     }
-  }
-  public function unget() {
-    $this->unconsume();
   }
 
   public function peek() {
-    return $this->data[$this->char + 1];
+    if (($this->char + 1) <= $this->EOF) {
+      return $this->data[$this->char + 1];
+    }
+
+    return FALSE;
   }
 
-  public function position() {
+  public function key() {
     return $this->char;
   }
 }

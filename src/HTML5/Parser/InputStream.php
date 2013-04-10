@@ -4,12 +4,12 @@ namespace HTML5\Parser;
 /**
  * Interface for stream readers.
  */
-interface InputStream {
+interface InputStream extends \Iterator {
 
   /**
    * Returns the current line that is being consumed.
    *
-   * TODO: Move this to the tokenizer.
+   * TODO: Move this to the scanner.
    */
   public function currentLine();
 
@@ -18,17 +18,12 @@ interface InputStream {
    *
    * Newlines are column 0. The first char after a newline is column 1.
    *
-   * @TODO Move this to the tokenizer.
+   * @TODO Move this to the scanner.
    *
    * @return int
    *   The column number.
    */
   public function columnOffset();
-
-  /**
-   * Retrieve the currently consumed character.
-   */
-  public function char();
 
   /**
    * Get all characters until EOF.
@@ -74,16 +69,14 @@ interface InputStream {
 
   /**
    * Unconsume one character.
+   *
+   * @param  int $howMany
+   *   The number of characters to move the pointer back.
    */
-  public function unconsume();
+  public function unconsume($howMany = 1);
 
   /**
    * Retrieve the next character without advancing the pointer.
    */
   public function peek();
-
-  /**
-   * Get the position of the reader.
-   */
-  public function position();
 }

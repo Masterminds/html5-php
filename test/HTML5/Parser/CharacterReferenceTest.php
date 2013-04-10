@@ -14,6 +14,8 @@ class CharacterReferenceTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('>', CharacterReference::lookupName('gt'));
     $this->assertEquals('"', CharacterReference::lookupName('quot'));
     $this->assertEquals('∌', CharacterReference::lookupName('NotReverseElement'));
+
+    $this->assertNull(CharacterReference::lookupName('StinkyCheese'));
   }
 
   public function testLookupHex() {
@@ -34,5 +36,6 @@ class CharacterReferenceTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('Σ', CharacterReference::lookupDecimal(931));
     $this->assertEquals('Σ', CharacterReference::lookupDecimal('0931'));
   }
+
 
 }

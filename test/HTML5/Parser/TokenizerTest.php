@@ -14,10 +14,18 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     );
   }
 
+  public function parse($string) {
+    list($tok, $events) = $this->createTokenizer($string);
+    $tok->parse();
+
+    return $events;
+  }
+
   public function testParse() {
     list($tok, $events) = $this->createTokenizer('');
 
     $tok->parse();
+    $e1 = $events->get(0);
 
     $this->assertEquals(1, $events->Depth());
     $this->assertEquals('eof', $e1['name']);
@@ -39,17 +47,40 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
 
   public function testCharacterReference() {
     $str = '&amp;';
-    list($tok, $events) = $this->createTokenizer($str);
+    $events = $this->parse($str);
 
-    $tok->parse();
     $this->assertEquals(2, $events->depth());
     $e1 = $events->get(0);
 
     $this->assertEquals('&', $e1['data'][0]);
 
     // Test with hex charref
+    $str = '&#x003c;';
+    $events = $this->parse($str);
+    $e1 = $events->get(0);
+    $this->assertEquals('<', $e1['data'][0]);
+
     // Test with decimal charref
-    // Test with broken charref
+    $str = '&#38;';
+    $events = $this->parse($str);
+    $e1 = $events->get(0);
+    $this->assertEquals('&', $e1['data'][0]);
+
     // Test with stand-alone ampersand
+    $str = '& ';
+    $events = $this->parse($str);
+    $e1 = $events->get(0);
+    $this->assertEquals('&', $e1['data'][0][0]);
+
+
+  }
+
+  /**
+   * @expectedException \HTML5\Parser\ParseError
+   */
+  public function testBrokenCharacterReference() {
+    // Test with broken charref
+    $str = '&foo';
+    $events = $this->parse($str);
   }
 }

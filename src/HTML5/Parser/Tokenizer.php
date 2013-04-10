@@ -144,9 +144,10 @@ class Tokenizer {
       // X[0-9a-fA-F]+;
       // x[0-9a-fA-F]+;
       if ($tok == 'x' || $tok == 'X') {
+        $tok = $this->scanner->next(); // Consume x
         $hex = $this->scanner->getHex();
         if (empty($hex)) {
-          throw ParseError("Expected &#xHEX;, got &#x" . $tok);
+          throw new ParseError("Expected &#xHEX;, got &#x" . $tok);
         }
         $entity = CharacterReference::lookupHex($hex);
       }

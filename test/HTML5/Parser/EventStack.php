@@ -53,7 +53,7 @@ class EventStack implements EventHandler {
   }
 
   public function text($cdata) {
-    fprintf(STDOUT, "Received TEXT event with: " . $cdata);
+    //fprintf(STDOUT, "Received TEXT event with: " . $cdata);
     $this->store('text', array($cdata));
   }
 

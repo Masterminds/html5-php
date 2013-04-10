@@ -19,9 +19,8 @@ class CharacterReference {
    *   The character sequence. In UTF-8 this may be more than one byte.
    */
   public static function lookupName($name) {
-    $char = Entities::$byName[$name];
-
-    return $char;
+    // Do we really want to return NULL here? or FFFD
+    return isset(Entities::$byName[$name]) ? Entities::$byName[$name] : NULL;
   }
 
   /**

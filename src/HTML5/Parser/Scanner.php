@@ -36,7 +36,10 @@ class Scanner {
   }
 
   /**
-   * Take a peek at the next character in the data.
+   * Take a peek at the character after the next character in the data.
+   *
+   * For example, you start scanning the string abc. The pointer is before a.
+   * When you start peek() will return b while next() will return a.
    *
    * @return string
    *   The next character.
@@ -82,16 +85,57 @@ class Scanner {
     }
   }
 
+  /**
+   * Get the next group of that is a hex value.
+   *
+   * Note, along with getting the characters the pointer in the data will be
+   * moved as well.
+   *
+   * @todo There is a potential for many false positives with this method. Make it more accurate.
+   * 
+   * @return string
+   *   The next group that is a hex value.
+   */
   public function getHex() {
-    $this->charsWhile(self::CHARS_HEX);
+    return $this->is->charsWhile(self::CHARS_HEX);
   }
+
+  /**
+   * Get the next group of characters that are ASCII Alpha characters.
+   *
+   * Note, along with getting the characters the pointer in the data will be
+   * moved as well.
+   * 
+   * @return string
+   *   The next group of ASCII alpha characters.
+   */
   public function getAsciiAlpha() {
-    $this->charsWhile(self::CHARS_ALPHA);
+    return $this->is->charsWhile(self::CHARS_ALPHA);
   }
+
+  /**
+   * Get the next group of characters that are ASCII Alpha characters and numbers.
+   *
+   * Note, along with getting the characters the pointer in the data will be
+   * moved as well.
+   * 
+   * @return string
+   *   The next group of ASCII alpha characters and numbers.
+   */
   public function getAsciiAlphaNum() {
-    $this->charsWhile(self::CHARS_ALNUM);
+    return $this->is->charsWhile(self::CHARS_ALNUM);
   }
+
+  /**
+   * Get the next group of numbers.
+   *
+   * Note, along with getting the characters the pointer in the data will be
+   * moved as well.
+   * 
+   * @return string
+   *   The next group of numbers.
+   */
   public function getNumeric() {
-    $this->charsWhile('0123456789');
+    return $this->is->charsWhile('0123456789');
   }
 }

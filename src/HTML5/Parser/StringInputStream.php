@@ -206,7 +206,6 @@ class StringInputStream implements InputStream {
     }
   }
 
-
   /**
    * Returns the current line that the tokenizer is at.
    */

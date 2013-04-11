@@ -70,7 +70,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $str = '& ';
     $events = $this->parse($str);
     $e1 = $events->get(0);
-    $this->assertEquals('&', $e1['data'][0][0]);
+    $this->assertEquals('&', $e1['data'][0][0], "Stand-alone &");
 
 
   }

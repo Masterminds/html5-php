@@ -31,6 +31,9 @@ class Tokenizer {
    */
   protected $text = '';
 
+  // When this goes to false, the parser stops.
+  protected $carryOn = TRUE;
+
   /**
    * Create a new tokenizer.
    *
@@ -53,9 +56,12 @@ class Tokenizer {
    * Main entry point.
    */
   public function parse() {
-    while ($this->consumeData()) {
-      $this->scanner->next();
+    $p = 0;
+    do {
+      $p = $this->scanner->position();
+      $this->consumeData();
     }
+    while ($this->carryOn);
   }
 
   /**
@@ -93,22 +99,43 @@ class Tokenizer {
    * HTML5 8.2.4.1
    */
   protected function consumeData() {
-
     // Character Ref
-    $this->characterReference();
+    $this->characterReference() ||
+      $this->tagOpen() ||
+      $this->eof() ||
+      $this->characterData();
 
-    // TagOpen
-    // Null
+    return $this->carryOn;
+  }
 
-    // EOF
-    if ($this->scanner->current() === FALSE) {
-      // Flush any trailing text, and then throw an EOF.
-      $this->flushText();
-      $this->events->eof();
+  /**
+   * This buffers the current token as character data.
+   */
+  protected function characterData() {
+    $tok = $this->scanner->current();
+
+    // This should never happen...
+    if ($tok === FALSE) {
       return FALSE;
     }
-    // Character
+    // Null
+    if ($tok == "\00") {
+      $this->parseError("Received NULL character.");
+    }
+    $this->buffer($tok);
+    $this->scanner->next();
     return TRUE;
+  }
+
+  protected function eof() {
+    if ($this->scanner->current() === FALSE) {
+      //fprintf(STDOUT, "EOF");
+      $this->flushText();
+      $this->events->eof();
+      $this->carryOn = FALSE;
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
@@ -122,9 +149,12 @@ class Tokenizer {
    */
   protected function characterReference($inAttribute = FALSE) {
 
+    // If it fails this, it's definitely not an entity.
     if ($this->scanner->current() != '&') {
-      return;
+      return FALSE;
     }
+
+    // Next char after &.
     $tok = $this->scanner->next();
     $entity = '';
     $start = $this->scanner->position();
@@ -140,8 +170,7 @@ class Tokenizer {
     case '<':
       // Don't consume; just return. Spec says return nothing, but I 
       // think we have to append '&' to the string.
-      $this->buffer('&');
-      return;
+      return FALSE;
     case '#':
       // Consume and read a number
       $tok = $this->scanner->next();
@@ -155,7 +184,7 @@ class Tokenizer {
         if (empty($hex)) {
           //throw new ParseError("Expected &#xHEX;, got &#x" . $tok);
           $this->parseError("Expected &#xHEX;, got &#x" . $tok);
-          return;
+          return FALSE;
         }
         $entity = CharacterReference::lookupHex($hex);
       }
@@ -166,7 +195,7 @@ class Tokenizer {
         if (empty($numeric)) {
           //throw ParseError("Expected &#DIGITS;, got $#" . $tok);
           $this->parseError("Expected &#DIGITS;, got $#" . $tok);
-          return;
+          return FALSE;
         }
         $entity = CharacterReference::lookupDecimal($numeric);
       }
@@ -187,7 +216,8 @@ class Tokenizer {
     // We have an entity. We're done here.
     if ($tok == ';') {
       $this->buffer($entity);
-      return;
+      $this->scanner->next();
+      return TRUE;
     }
 
     // If in an attribute, then failing to match ; means unconsume the 
@@ -195,12 +225,25 @@ class Tokenizer {
     if ($inAttribute) {
       $this->scanner->unconsume($this->scanner->position() - $start);
       $this->buffer('&');
-      return;
+      return FALSE;
     }
 
     //throw new ParseError("Expected &ENTITY;, got &ENTITY (no trailing ;) " . $tok);
     $this->parseError("Expected &ENTITY;, got &ENTITY (no trailing ;) " . $tok);
 
+  }
+
+  /**
+   * 8.2.4.8
+   */
+  protected function tagOpen() {
+    // ! -> markup declaration
+    // / -> end tagopen
+    // a-zA-Z -> tagname
+    // ? -> parse error
+    // -> Anything else is a parse error
+    //fprintf(STDOUT, '+');
+    return FALSE;
   }
 
   protected function rcdata() {
@@ -234,16 +277,6 @@ class Tokenizer {
     // -> Character data
   }
 
-  /**
-   * 8.2.4.8
-   */
-  protected function tagOpen() {
-    // ! -> markup declaration
-    // / -> end tagopen
-    // a-zA-Z -> tagname
-    // ? -> parse error
-    // -> Anything else is a parse error
-  }
 
   /**
    * 8.2.4.9

@@ -103,7 +103,7 @@ class Tokenizer {
   protected function eof() {
     if ($this->scanner->current() === FALSE) {
       //fprintf(STDOUT, "EOF");
-      $this->flushText();
+      $this->flushBuffer();
       $this->events->eof();
       $this->carryOn = FALSE;
       return TRUE;
@@ -157,7 +157,7 @@ class Tokenizer {
         $hex = $this->scanner->getHex();
         if (empty($hex)) {
           //throw new ParseError("Expected &#xHEX;, got &#x" . $tok);
-          $this->parseError("Expected &#xHEX;, got &#x" . $tok);
+          $this->parseError("Expected &#xHEX;, got &#x%s", $tok);
           return FALSE;
         }
         $entity = CharacterReference::lookupHex($hex);
@@ -168,7 +168,7 @@ class Tokenizer {
         $numeric = $this->scanner->getNumeric();
         if (empty($numeric)) {
           //throw ParseError("Expected &#DIGITS;, got $#" . $tok);
-          $this->parseError("Expected &#DIGITS;, got $#" . $tok);
+          $this->parseError("Expected &#DIGITS;, got $#%s", $tok);
           return FALSE;
         }
         $entity = CharacterReference::lookupDecimal($numeric);
@@ -180,7 +180,7 @@ class Tokenizer {
       $cname = $this->scanner->getAsciiAlpha();
       $entity = CharacterReference::lookupName($cname);
       if ($entity == NULL) {
-          $this->parseError("No match in entity table for " . $entity);
+          $this->parseError("No match in entity table for '%s'", $entity);
       }
 
     }
@@ -203,7 +203,7 @@ class Tokenizer {
     }
 
     //throw new ParseError("Expected &ENTITY;, got &ENTITY (no trailing ;) " . $tok);
-    $this->parseError("Expected &ENTITY;, got &ENTITY (no trailing ;) " . $tok);
+    $this->parseError("Expected &ENTITY;, got &ENTITY%s (no trailing ;) ", $tok);
 
   }
 
@@ -218,7 +218,7 @@ class Tokenizer {
     $this->scanner->next();
 
     return $this->markupDeclaration() ||
-      $this->endTagOpen() ||
+      $this->endTag() ||
       $this->tagName() ||
       $this->processingInstruction() ||
       // This always returns false.
@@ -269,9 +269,10 @@ class Tokenizer {
 
 
   /**
+   * Consume an end tag.
    * 8.2.4.9
    */
-  protected function endTagOpen() {
+  protected function endTag() {
     if ($this->scanner->current() != '/') {
       return FALSE;
     }
@@ -282,20 +283,47 @@ class Tokenizer {
     // EOF -> parse error
     // -> parse error
     if (!ctype_alpha($tok)) {
-      $this->parseError("Expected tag name, got " . $tok);
+      $this->parseError("Expected tag name, got '%s'", $tok);
       if ($tok == "\0" || $tok === FALSE) {
         return FALSE;
       }
-      return $this->bogusComment();
+      return $this->bogusComment('</');
     }
 
-    return $this->tagName();
+    $name = $this->scanner->charsUntil("\n\f \t>");
+    // Trash whitespace.
+    $this->scanner->charsWhile("\n\f \t");
+
+    if ($this->scanner->current() != '>') {
+      $this->parseError("Expected >, got '%s'", $this->scanner->current());
+      // We just trash stuff until we get to the next tag close.
+      $this->scanner->charsUntil('>');
+    }
+
+    $this->events->endTag($name);
+    $this->scanner->next();
+    return TRUE;
+
   }
 
   /**
    * 8.2.4.10
    */
   protected function tagName() {
+    $name = $this->scanner->current();
+    $tok = $this->scanner->next();
+    switch ($tok) {
+    case "\n":
+    case "\t":
+    case "\f":
+    case ' ':
+      return $this->beforeAttribute();
+    case '/':
+      return $this->selfClosingTag();
+    case '>':
+
+
+    }
     return FALSE;
     // tab, lf, ff, space -> before attr name
     // / -> self-closing tag
@@ -411,21 +439,31 @@ class Tokenizer {
   /**
    * Consume malformed markup as if it were a comment.
    * 8.2.4.44
+   *
+   * The spec requires that the ENTIRE tag-like thing be enclosed inside of
+   * the comment. So this will generate comments like:
+   *
+   * &lt;!--&lt/+foo&gt;--&gt;
+   *
+   * @param string $leading
+   *   Prepend any leading characters. This essentially
+   *   negates the need to backtrack, but it's sort of
+   *   a hack.
    */
-  protected function bogusComment() {
+  protected function bogusComment($leading = '') {
 
     // TODO: This can be done more efficiently when the
     // scanner exposes a readUntil() method.
-    $comment = '';
+    $comment = $leading;
     $tok = $this->scanner->current();
     do {
       $comment .= $tok;
       $tok = $this->scanner->next();
-      fprintf(STDOUT, "> %s\n", $tok);
-    } while ($tok !== FALSE || $tok != '>');
+    } while ($tok !== FALSE && $tok != '>');
 
     $this->flushBuffer();
-    $this->events->comment($comment);
+    $this->events->comment($comment . $tok);
+    $this->scanner->next();
 
     return TRUE;
   }
@@ -504,7 +542,7 @@ class Tokenizer {
    * temporary text buffer. (The buffer is used to group as much PCDATA
    * as we can instead of emitting lots and lots of TEXT events.)
    */
-  protected function flushText() {
+  protected function flushBuffer() {
     if (empty($this->text)) {
       return;
     }
@@ -515,7 +553,7 @@ class Tokenizer {
   /**
    * Add text to the temporary buffer.
    *
-   * @see flushText()
+   * @see flushBuffer()
    */
   protected function buffer($str) {
     $this->text .= $str;
@@ -528,6 +566,13 @@ class Tokenizer {
    * characters.
    */
   protected function parseError($msg) {
+    $args = func_get_args();
+
+    if (count($args) > 1) {
+      array_shift($args);
+      $msg = vsprintf($msg, $args);
+    }
+
     $line = $this->scanner->currentLine();
     $col = $this->scanner->columnOffset();
     $this->events->parseError($msg, $line, $col);

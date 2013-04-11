@@ -64,7 +64,7 @@ class EventStack implements EventHandler {
   public function parseError($msg, $line, $col) {
     //throw new EventStackParseError(sprintf("%s (line %d, col %d)", $msg, $line, $col));
     //$this->store(sprintf("%s (line %d, col %d)", $msg, $line, $col));
-    $this->store('comment', func_get_args());
+    $this->store('error', func_get_args());
   }
 
 

@@ -13,6 +13,9 @@ class Scanner {
 
   protected $is;
 
+  // Flipping this to TRUE will give minisculely more debugging info.
+  public $debug = FALSE;
+
   /**
    * Create a new Scanner.
    *
@@ -54,6 +57,7 @@ class Scanner {
   public function next() {
     $this->is->next();
     if ($this->is->valid()) {
+      if ($this->debug) fprintf(STDOUT, "> %s\n", $this->is->current());
       return $this->is->current();
     }
     return FALSE;
@@ -137,6 +141,15 @@ class Scanner {
   }
 
   /**
+   * Consume whitespace.
+   *
+   * Whitespace in HTML5 is: formfeed, tab, newline, space.
+   */
+  public function whitespace() {
+    return $this->is->charsWhile("\n\t\f ");
+  }
+
+  /**
    * Returns the current line that is being consumed.
    *
    * @return int
@@ -144,6 +157,13 @@ class Scanner {
    */
   public function currentLine() {
     return $this->is->currentLine();
+  }
+
+  public function charsUntil($mask) {
+    return $this->is->charsUntil($mask);
+  }
+  public function charsWhile($mask) {
+    return $this->is->charsWhile($mask);
   }
 
   /**

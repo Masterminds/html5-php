@@ -65,7 +65,14 @@ class StringInputStream implements InputStream {
   public function __construct($data, $encoding = 'UTF-8') {
 
     $data = $this->convertToUTF8($data, $encoding);
-    $this->checkForIllegalCodepoints($data);
+
+    // There is good reason to question whether it makes sense to
+    // do this here, since most of these checks are done during
+    // parsing, and since this check doesn't actually *do* anything.
+    $e = UTF8Utils::checkForIllegalCodepoints($data);
+    if (!empty($e)) {
+      throw new ParseError("UTF-8 encoding issues: " . implode(', ', $e));
+    }
 
     $data = $this->replaceLinefeeds($data);
 

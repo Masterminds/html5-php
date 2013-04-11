@@ -60,38 +60,10 @@ class Tokenizer {
     do {
       $p = $this->scanner->position();
       $this->consumeData();
+
+      // FIXME: Add infinite loop protection.
     }
     while ($this->carryOn);
-  }
-
-  /**
-   * Send a TEXT event with the contents of the text buffer.
-   *
-   * This emits an EventHandler::text() event with the current contents of the
-   * temporary text buffer. (The buffer is used to group as much PCDATA
-   * as we can instead of emitting lots and lots of TEXT events.)
-   */
-  protected function flushText() {
-    if (empty($this->text)) {
-      return;
-    }
-    $this->events->text($this->text);
-    $this->text = '';
-  }
-
-  /**
-   * Add text to the temporary buffer.
-   *
-   * @see flushText()
-   */
-  protected function buffer($str) {
-    $this->text .= $str;
-  }
-
-  protected function parseError($msg) {
-    $line = $this->scanner->currentLine();
-    $col = $this->scanner->columnOffset();
-    $this->events->parseError($msg, $line, $col);
   }
 
   /**
@@ -119,9 +91,10 @@ class Tokenizer {
       return FALSE;
     }
     // Null
-    if ($tok == "\00") {
+    if ($tok === "\00") {
       $this->parseError("Received NULL character.");
     }
+    // fprintf(STDOUT, "Writing '%s'", $tok);
     $this->buffer($tok);
     $this->scanner->next();
     return TRUE;
@@ -170,6 +143,7 @@ class Tokenizer {
     case '<':
       // Don't consume; just return. Spec says return nothing, but I 
       // think we have to append '&' to the string.
+      $this->buffer('&');
       return FALSE;
     case '#':
       // Consume and read a number
@@ -237,13 +211,29 @@ class Tokenizer {
    * 8.2.4.8
    */
   protected function tagOpen() {
-    // ! -> markup declaration
-    // / -> end tagopen
-    // a-zA-Z -> tagname
-    // ? -> parse error
-    // -> Anything else is a parse error
-    //fprintf(STDOUT, '+');
-    return FALSE;
+    if ($this->scanner->current() != '<') {
+      return FALSE;
+    }
+
+    $this->scanner->next();
+
+    return $this->markupDeclaration() ||
+      $this->endTagOpen() ||
+      $this->tagName() ||
+      $this->processingInstruction() ||
+      // This always returns false.
+      $this->parseError("Illegal tag opening") ||
+      $this->characterData();
+  }
+
+  protected function markupDeclaration() {
+    if ($this->scanner->current() != '!') {
+      return FALSE;
+    }
+
+    $tok = $this->scanner->next();
+    // FINISH
+    return TRUE;
   }
 
   protected function rcdata() {
@@ -282,16 +272,31 @@ class Tokenizer {
    * 8.2.4.9
    */
   protected function endTagOpen() {
+    if ($this->scanner->current() != '/') {
+      return FALSE;
+    }
+    $tok = $this->scanner->next();
+
     // a-zA-Z -> tagname
     // > -> parse error
     // EOF -> parse error
     // -> parse error
+    if (!ctype_alpha($tok)) {
+      $this->parseError("Expected tag name, got " . $tok);
+      if ($tok == "\0" || $tok === FALSE) {
+        return FALSE;
+      }
+      return $this->bogusComment();
+    }
+
+    return $this->tagName();
   }
 
   /**
    * 8.2.4.10
    */
   protected function tagName() {
+    return FALSE;
     // tab, lf, ff, space -> before attr name
     // / -> self-closing tag
     // > -> current tag is done, data-state
@@ -402,10 +407,29 @@ class Tokenizer {
   }
   protected function selfCloseingStartTag() {
   }
+
+  /**
+   * Consume malformed markup as if it were a comment.
+   * 8.2.4.44
+   */
   protected function bogusComment() {
+
+    // TODO: This can be done more efficiently when the
+    // scanner exposes a readUntil() method.
+    $comment = '';
+    $tok = $this->scanner->current();
+    do {
+      $comment .= $tok;
+      $tok = $this->scanner->next();
+      fprintf(STDOUT, "> %s\n", $tok);
+    } while ($tok !== FALSE || $tok != '>');
+
+    $this->flushBuffer();
+    $this->events->comment($comment);
+
+    return TRUE;
   }
-  protected function markupDeclarationOpen() {
-  }
+
   protected function commentStart() {
   }
   protected function commentStartDash() {
@@ -454,7 +478,60 @@ class Tokenizer {
   }
 
 
+  // ================================================================
+  // Non-HTML5
+  // ================================================================
+  /**
+   * Handle a processing instruction.
+   *
+   * XML processing instructions are supposed to be ignored in HTML5,
+   * treated as "bogus comments". However, since we're not a user
+   * agent, we allow them. We consume until ?> and then issue a 
+   * EventListener::processingInstruction() event.
+   */
+  protected function processingInstruction() {
+  }
 
 
+  // ================================================================
+  // UTILITY FUNCTIONS
+  // ================================================================
+
+  /**
+   * Send a TEXT event with the contents of the text buffer.
+   *
+   * This emits an EventHandler::text() event with the current contents of the
+   * temporary text buffer. (The buffer is used to group as much PCDATA
+   * as we can instead of emitting lots and lots of TEXT events.)
+   */
+  protected function flushText() {
+    if (empty($this->text)) {
+      return;
+    }
+    $this->events->text($this->text);
+    $this->text = '';
+  }
+
+  /**
+   * Add text to the temporary buffer.
+   *
+   * @see flushText()
+   */
+  protected function buffer($str) {
+    $this->text .= $str;
+  }
+
+  /**
+   * Emit a parse error.
+   *
+   * A parse error always returns FALSE because it never consumes any 
+   * characters.
+   */
+  protected function parseError($msg) {
+    $line = $this->scanner->currentLine();
+    $col = $this->scanner->columnOffset();
+    $this->events->parseError($msg, $line, $col);
+    return FALSE;
+  }
 
 }

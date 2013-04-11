@@ -83,4 +83,12 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $str = '&foo';
     $events = $this->parse($str);
   }
+
+  public function testBogusComment() {
+    $str = '</+this is a bogus comment. +>';
+    $events = $this->parse($str);
+    $e1 = $events->get(0);
+    $this->assertEquals('comment', $e1['name']);
+    $this->assertEquals($str, $e1['data'][0]);
+  }
 }

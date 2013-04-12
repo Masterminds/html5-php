@@ -235,8 +235,18 @@ class Tokenizer {
 
     // Comment:
     if ($tok == '-' && $this->scanner->peek() == '-') {
+      $this->scanner->next(); // Consume the other '-'
+      $this->scanner->next(); // Next char.
+      return $this->comment();
     }
+    elseif($tok == 'D') {
+    }
+    elseif($tok == '[') {
+    }
+
     // FINISH
+    $this->parseError("Expected <!--, <![CDATA[, or <!DOCTYPE. Got <!%s", $tok);
+    $this->bogusComment('<!');
     return TRUE;
   }
 
@@ -472,10 +482,11 @@ class Tokenizer {
     return TRUE;
   }
 
-  protected function commentStart() {
-  }
-  protected function commentStartDash() {
-  }
+  /**
+   * Read a comment.
+   *
+   * Expects the first tok to be inside of the comment.
+   */
   protected function comment() {
     $tok = $this->scanner->current();
     $comment = '';
@@ -504,17 +515,18 @@ class Tokenizer {
   }
 
   protected function isCommentEnd() {
+    // EOF
+    if($this->scanner->current() === FALSE) {
+      // Hit the end.
+      $this->parseError("Unexpected EOF in a comment.");
+      return TRUE;
+    }
+
     // If it doesn't start with -, not the end.
     if($this->scanner->current() != '-') {
       return FALSE;
     }
 
-    // EOF
-    if($this->scanner->Current() === FALSE) {
-      // Hit the end.
-      $this->events->parseError("Unexpected EOF in a comment.");
-      return TRUE;
-    }
 
     // Advance one, and test for '->'
     if ($this->scanner->next() == '-'

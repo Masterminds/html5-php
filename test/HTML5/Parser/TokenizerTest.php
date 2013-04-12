@@ -87,13 +87,18 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
   }
 
   public function testBogusComment() {
-    $str = '</+this is a bogus comment. +>';
-    $events = $this->parse($str . '   ');
-    $e0 = $events->get(0);
-    $this->assertEquals('error', $e0['name']);
-    $e1 = $events->get(1);
-    $this->assertEquals('comment', $e1['name']);
-    $this->assertEquals($str, $e1['data'][0]);
+    $bogus = array(
+      '</+this is a bogus comment. +>',
+      '<!+this is a bogus comment. !>',
+    );
+    foreach ($bogus as $str) {
+      $events = $this->parse($str . '   ');
+      $e0 = $events->get(0);
+      $this->assertEquals('error', $e0['name']);
+      $e1 = $events->get(1);
+      $this->assertEquals('comment', $e1['name']);
+      $this->assertEquals($str, $e1['data'][0]);
+    }
   }
 
   public function testEndTag() {
@@ -162,19 +167,27 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       '<!-- --$i -->' => ' --$i ',
       '<!----$i-->' => '--$i',
       '<!-- 1 > 0 -->' => ' 1 > 0 ',
-      '<!--
-      Hello World.
-      -->' => "\nHello World\n",
+      "<!--\nHello World.\na-->" => "\nHello World.\na",
       '<!-- <!-- -->' => ' <!-- ',
     );
+    foreach ($good as $test => $expected) {
+      $events = $this->parse($test);
+      $e1 = $events->get(0);
+      $this->assertEquals('comment', $e1['name'], 'Expected a comment for ' . $test);
+      $this->assertEquals($expected, $e1['data'][0]);
+    }
+
     $fail = array(
       '<!-->' => '',
       '<!--Hello' => 'Hello',
+      "<!--\0Hello" => UTF8Utils::FFFD . 'Hello',
     );
+    foreach ($fail as $test => $expected) {
+      $events = $this->parse($test);
+      $e0 = $events->get(0);
+      $this->assertEquals('error', $e0['name'], 'Expected an error for ' . $test . print_r($events, TRUE));
 
-    foreach ($good as $test => $expected) {
-      $events = $this->parse($good);
-      $e1 = $events->get(0);
+      $e1 = $events->get(1);
       $this->assertEquals('comment', $e1['name'], 'Expected a comment for ' . $test);
       $this->assertEquals($expected, $e1['data'][0]);
     }

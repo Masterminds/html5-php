@@ -292,7 +292,7 @@ class Tokenizer {
 
     $name = $this->scanner->charsUntil("\n\f \t>");
     // Trash whitespace.
-    $this->scanner->charsWhile("\n\f \t");
+    $this->scanner->whitespace();
 
     if ($this->scanner->current() != '>') {
       $this->parseError("Expected >, got '%s'", $this->scanner->current());

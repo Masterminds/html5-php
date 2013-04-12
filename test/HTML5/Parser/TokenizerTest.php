@@ -102,6 +102,8 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       '</test>' => 'test',
       '</test 
       >' => 'test',
+      '</thisIsTheTagThatDoesntEndItJustGoesOnAndOnMyFriend>' =>
+        'thisIsTheTagThatDoesntEndItJustGoesOnAndOnMyFriend',
       // See 8.2.4.10, which requires this and does not say error.
       '</a<b>' => 'a<b', 
     );
@@ -114,12 +116,12 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     }
 
 
+    // Recoverable failures
     $fail = array(
       '</a class="monkey">' => 'a',
       '</a <b>' => 'a',
-      '</ a>' => 'a',
-      '</>' => '',
-      '</ >' => '',
+      '</a <b <c>' => 'a',
+      '</a is the loneliest letter>' => 'a',
     );
     foreach ($fail as $test => $result) {
       $events = $this->parse($test);
@@ -129,6 +131,24 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       // Should have tried to parse anyway.
       $e1 = $events->get(1);
       $this->assertEquals('endTag', $e1['name'], "Parsing $test expects resolution to $result." . print_r($events, TRUE));
+      $this->assertEquals($result, $e1['data'][0], "Parse end tag " . $test);
+      $this->assertEquals(3, $events->depth());
+    }
+
+    // BogoComments
+    $comments = array(
+      '</>' => '</>',
+      '</ >' => '</ >',
+      '</ a>' => '</ a>',
+    );
+    foreach ($comments as $test => $result) {
+      $events = $this->parse($test);
+      // Should have triggered an error.
+      $e0 = $events->get(0);
+      $this->assertEquals('error', $e0['name'], "Parsing $test expects a leading error." . print_r($events, TRUE));
+      // Should have tried to parse anyway.
+      $e1 = $events->get(1);
+      $this->assertEquals('comment', $e1['name'], "Parsing $test expects comment." . print_r($events, TRUE));
       $this->assertEquals($result, $e1['data'][0], "Parse end tag " . $test);
       $this->assertEquals(3, $events->depth());
     }

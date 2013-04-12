@@ -90,6 +90,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $bogus = array(
       '</+this is a bogus comment. +>',
       '<!+this is a bogus comment. !>',
+      '<!DOCTYEP foo bar>',
     );
     foreach ($bogus as $str) {
       $events = $this->parse($str . '   ');

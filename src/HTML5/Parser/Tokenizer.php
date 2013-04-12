@@ -539,6 +539,17 @@ class Tokenizer {
     return FALSE;
   }
   protected function doctype() {
+    if ($this->scanner->current() != 'D') {
+      return FALSE;
+    }
+    // Check that string is DOCTYPE
+    $chars = $this->scanner->charsWhile("DOCTYPE");
+    if ($chars != 'DOCTYPE') {
+      $this->parseError('Expected DOCTYPE, got %s', $chars);
+      return $this->bogusComment('<!' .  $chars);
+    }
+
+    // Now we need to parse the DOCTYPE.
   }
   protected function beforeDoctype() {
   }

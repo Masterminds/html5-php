@@ -232,6 +232,10 @@ class Tokenizer {
     }
 
     $tok = $this->scanner->next();
+
+    // Comment:
+    if ($tok == '-' && $this->scanner->peek() == '-') {
+    }
     // FINISH
     return TRUE;
   }
@@ -473,12 +477,54 @@ class Tokenizer {
   protected function commentStartDash() {
   }
   protected function comment() {
+    $tok = $this->scanner->current();
+    $comment = '';
+
+    // <!-->. Emit an empty comment because 8.2.4.46 says to.
+    if ($tok == '>') {
+      // Parse error. Emit the comment token.
+      $this->parseError("Expected comment data, got '>'");
+      $this->events->comment('');
+      $this->scanner->next();
+      return TRUE;
+    }
+
+    // Replace NULL with the replacement char.
+    if ($tok == "\0") {
+      $tok = UTF8Utils::FFFD;
+    }
+    while (!$this->isCommentEnd()) {
+      $comment .= $tok;
+      $tok = $this->scanner->next();
+    }
+
+    $this->events->comment($comment);
+    $this->scanner->next();
+    return TRUE;
   }
-  protected function commentEndDash() {
-  }
-  protected function commentEnd() {
-  }
-  protected function commentEndBangState() {
+
+  protected function isCommentEnd() {
+    // If it doesn't start with -, not the end.
+    if($this->scanner->current() != '-') {
+      return FALSE;
+    }
+
+    // EOF
+    if($this->scanner->Current() === FALSE) {
+      // Hit the end.
+      $this->events->parseError("Unexpected EOF in a comment.");
+      return TRUE;
+    }
+
+    // Advance one, and test for '->'
+    if ($this->scanner->next() == '-'
+        && $this->scanner->peek() == '>') {
+      $this->scanner->next(); // Consume the last '>'
+      return TRUE;
+    }
+    // Unread '-';
+    $this->scanner->unconsume(1);
+    return FALSE;
   }
   protected function doctype() {
   }

@@ -31,6 +31,10 @@ namespace HTML5\Parser;
  */
 class UTF8Utils {
   /**
+   * The Unicode replacement character..
+   */
+  const FFFD = "\xEF\xBF\xBD";
+  /**
    * Count the number of characters in a string.
    *
    * UTF-8 aware. This will try (in order) iconv,

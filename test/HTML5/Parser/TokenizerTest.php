@@ -122,6 +122,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       '</a <b>' => 'a',
       '</a <b <c>' => 'a',
       '</a is the loneliest letter>' => 'a',
+      '</a' => 'a',
     );
     foreach ($fail as $test => $result) {
       $events = $this->parse($test);
@@ -152,5 +153,23 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       $this->assertEquals($result, $e1['data'][0], "Parse end tag " . $test);
       $this->assertEquals(3, $events->depth());
     }
+  }
+
+  public function testComment() {
+    $good = array(
+      '<!-- 1 > 0 -->' => ' 1 > 0 ',
+      '<!-- --$i -->' => ' --$i ',
+      '<!----$i-->' => '--$i',
+      '<!-- 1 > 0 -->' => ' 1 > 0 ',
+      '<!--
+      Hello World.
+      -->' => "\nHello World\n",
+      '<!-- <!-- -->' => ' <!-- ',
+    );
+    $fail = array(
+      '<!-->' => '',
+      '<!--Hello' => 'Hello',
+    );
+    $this->assertFalse(TRUE);
   }
 }

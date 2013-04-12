@@ -157,6 +157,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
 
   public function testComment() {
     $good = array(
+      '<!--easy-->' => 'easy',
       '<!-- 1 > 0 -->' => ' 1 > 0 ',
       '<!-- --$i -->' => ' --$i ',
       '<!----$i-->' => '--$i',
@@ -170,6 +171,13 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       '<!-->' => '',
       '<!--Hello' => 'Hello',
     );
-    $this->assertFalse(TRUE);
+
+    foreach ($good as $test => $expected) {
+      $events = $this->parse($good);
+      $e1 = $events->get(0);
+      $this->assertEquals('comment', $e1['name'], 'Expected a comment for ' . $test);
+      $this->assertEquals($expected, $e1['data'][0]);
+    }
+
   }
 }

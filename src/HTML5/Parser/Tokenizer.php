@@ -242,11 +242,13 @@ class Tokenizer {
       $this->scanner->next(); // Next char.
       return $this->comment();
     }
+    // Doctype
     elseif($tok == 'D') {
-      $this->doctype();
+      return $this->doctype();
     }
+    // CDATA section
     elseif($tok == '[') {
-      $this->cdataSection();
+      return $this->cdataSection();
     }
 
     // FINISH
@@ -450,6 +452,9 @@ class Tokenizer {
       $tok = $this->scanner->next();
     }
     while (!$this->isCdataClose());
+
+    $this->scanner->next(); // consume >
+    $this->scanner->next(); // Next char after >
 
     $this->events->cdata($cdata);
     return TRUE;

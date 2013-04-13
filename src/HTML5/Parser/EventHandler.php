@@ -39,6 +39,6 @@ interface EventHandler {
   public function parseError($msg, $line, $col);
 
   // Do we need...
-  // public function cdata();
+  public function cdata($data);
   // public function processorInstruction();
 }

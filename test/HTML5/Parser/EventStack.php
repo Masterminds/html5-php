@@ -52,6 +52,10 @@ class EventStack implements EventHandler {
     $this->store('comment', array($cdata));
   }
 
+  public function cdata($data) {
+    $this->store('cdata', func_get_args());
+  }
+
   public function text($cdata) {
     //fprintf(STDOUT, "Received TEXT event with: " . $cdata);
     $this->store('text', array($cdata));

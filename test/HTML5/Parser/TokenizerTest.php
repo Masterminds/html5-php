@@ -90,10 +90,17 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $bogus = array(
       '</+this is a bogus comment. +>',
       '<!+this is a bogus comment. !>',
+      '<!D OCTYPE foo bar>',
       '<!DOCTYEP foo bar>',
+      '<![CADATA[ TEST ]]>',
+      '<![CDATA Hello ]]>',
+      '<![CDATA[ Hello [[>',
+      '<!CDATA[[ test ]]>',
+      '<![CDATA[',
+      '<![CDATA[hellooooo hello',
     );
     foreach ($bogus as $str) {
-      $events = $this->parse($str . '   ');
+      $events = $this->parse($str);
       $e0 = $events->get(0);
       $this->assertEquals('error', $e0['name']);
       $e1 = $events->get(1);
@@ -182,6 +189,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       '<!-->' => '',
       '<!--Hello' => 'Hello',
       "<!--\0Hello" => UTF8Utils::FFFD . 'Hello',
+      '<!--' => '',
     );
     foreach ($fail as $test => $expected) {
       $events = $this->parse($test);
@@ -193,5 +201,30 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       $this->assertEquals($expected, $e1['data'][0]);
     }
 
+  }
+
+  public function testCDATASection() {
+    $good = array(
+      '<![CDATA[ This is a test. ]]>' => ' This is a test. ',
+      '<![CDATA[CDATA]]>' => 'CDATA',
+      '<![CDATA[ ]] > ]]>' => ' ]] > ',
+      '<![CDATA[ ]]>' => ' ',
+    );
+    foreach ($good as $test => $expects) {
+      $events = $this->parse($test);
+      $e1 = $events->get(0);
+      $this->assertEquals('cdata', $e1['name'], "CDATA section for " . $test . print_r($events, TRUE));
+      $this->assertEquals($expects, $e1['data'][0], "CDATA section for " . $test);
+    }
+  }
+
+  public function testText() {
+    $good = array(
+      'a<br>b',
+      '<a>test</a>',
+      'a<![[ test ]]>b',
+      'a&amp;b',
+    );
+    $this->markTestIncomplete("Need tag parsing first.");
   }
 }

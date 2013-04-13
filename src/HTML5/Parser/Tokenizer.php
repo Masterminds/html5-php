@@ -215,6 +215,9 @@ class Tokenizer {
       return FALSE;
     }
 
+    // Any buffered text data can go out now.
+    $this->flushBuffer();
+
     $this->scanner->next();
 
     return $this->markupDeclaration() ||
@@ -240,8 +243,10 @@ class Tokenizer {
       return $this->comment();
     }
     elseif($tok == 'D') {
+      $this->doctype();
     }
     elseif($tok == '[') {
+      $this->cdataSection();
     }
 
     // FINISH
@@ -249,38 +254,6 @@ class Tokenizer {
     $this->bogusComment('<!');
     return TRUE;
   }
-
-  protected function rcdata() {
-    // Ampersand
-    // <
-    // Null
-    // EOF
-    // Character
-  }
-
-  protected function rawtext() {
-    // < is a literal
-    // NULL is an error
-    // EOF
-    // Character data
-  }
-
-  protected function scriptData() {
-    // < is a literal
-    // NULL is an error
-    // EOF
-    // Character data
-  }
-
-  /**
-   * 8.2.4.7
-   */
-  protected function plaintext() {
-    // NULL -> parse error
-    // EOF -> eof
-    // -> Character data
-  }
-
 
   /**
    * Consume an end tag.
@@ -346,6 +319,190 @@ class Tokenizer {
     // EOF -> parse error
     // -> append to tagname
   }
+
+
+  /**
+   * Consume malformed markup as if it were a comment.
+   * 8.2.4.44
+   *
+   * The spec requires that the ENTIRE tag-like thing be enclosed inside of
+   * the comment. So this will generate comments like:
+   *
+   * &lt;!--&lt/+foo&gt;--&gt;
+   *
+   * @param string $leading
+   *   Prepend any leading characters. This essentially
+   *   negates the need to backtrack, but it's sort of
+   *   a hack.
+   */
+  protected function bogusComment($leading = '') {
+
+    // TODO: This can be done more efficiently when the
+    // scanner exposes a readUntil() method.
+    $comment = $leading;
+    $tok = $this->scanner->current();
+    do {
+      $comment .= $tok;
+      $tok = $this->scanner->next();
+    } while ($tok !== FALSE && $tok != '>');
+
+    $this->flushBuffer();
+    $this->events->comment($comment . $tok);
+    $this->scanner->next();
+
+    return TRUE;
+  }
+
+  /**
+   * Read a comment.
+   *
+   * Expects the first tok to be inside of the comment.
+   */
+  protected function comment() {
+    $tok = $this->scanner->current();
+    $comment = '';
+
+    // <!-->. Emit an empty comment because 8.2.4.46 says to.
+    if ($tok == '>') {
+      // Parse error. Emit the comment token.
+      $this->parseError("Expected comment data, got '>'");
+      $this->events->comment('');
+      $this->scanner->next();
+      return TRUE;
+    }
+
+    // Replace NULL with the replacement char.
+    if ($tok == "\0") {
+      $tok = UTF8Utils::FFFD;
+    }
+    while (!$this->isCommentEnd()) {
+      $comment .= $tok;
+      $tok = $this->scanner->next();
+    }
+
+    $this->events->comment($comment);
+    $this->scanner->next();
+    return TRUE;
+  }
+
+  protected function isCommentEnd() {
+    // EOF
+    if($this->scanner->current() === FALSE) {
+      // Hit the end.
+      $this->parseError("Unexpected EOF in a comment.");
+      return TRUE;
+    }
+
+    // If it doesn't start with -, not the end.
+    if($this->scanner->current() != '-') {
+      return FALSE;
+    }
+
+
+    // Advance one, and test for '->'
+    if ($this->scanner->next() == '-'
+        && $this->scanner->peek() == '>') {
+      $this->scanner->next(); // Consume the last '>'
+      return TRUE;
+    }
+    // Unread '-';
+    $this->scanner->unconsume(1);
+    return FALSE;
+  }
+  protected function doctype() {
+    if ($this->scanner->current() != 'D') {
+      return FALSE;
+    }
+    // Check that string is DOCTYPE
+    $chars = $this->scanner->charsWhile("DOCTYPE");
+    if ($chars != 'DOCTYPE') {
+      $this->parseError('Expected DOCTYPE, got %s', $chars);
+      return $this->bogusComment('<!' .  $chars);
+    }
+
+    // Now we need to parse the DOCTYPE.
+  }
+
+  /**
+   * Handle a CDATA section.
+   */
+  protected function cdataSection() {
+    if ($this->scanner->current() != '[') {
+      return FALSE;
+    }
+    $cdata = '';
+    $this->scanner->next();
+
+    $chars = $this->scanner->charsWhile('CDAT');
+    if ($chars != 'CDATA' || $this->scanner->current() != '[') {
+      $this->parseError('Expected [CDATA[, got %s', $chars);
+      return $this->bogusComment('<![' . $chars);
+    }
+
+    $tok = $this->scanner->next();
+    do {
+      if ($tok === FALSE) {
+        $this->parseError('Unexpected EOF inside CDATA.');
+        $this->bogusComment('<![CDATA[' . $cdata);
+        return TRUE;
+      }
+      $cdata .= $tok;
+      $tok = $this->scanner->next();
+    }
+    while (!$this->isCdataClose());
+
+    $this->events->cdata($cdata);
+    return TRUE;
+
+  }
+  /**
+   * Check whether the parser has reached the end of a CDATA section.
+   */
+  protected function isCdataClose() {
+    $tok = $this->scanner->current();
+    if ($tok != ']') {
+      return FALSE;
+    }
+    $tok = $this->scanner->next();
+    if ($tok == ']' && $this->scanner->peek() == '>') {
+      return TRUE;
+    }
+    // Unconsume one char and return.
+    $this->scanner->unconsume();
+    return FALSE;
+  }
+
+  protected function rcdata() {
+    // Ampersand
+    // <
+    // Null
+    // EOF
+    // Character
+  }
+
+  protected function rawtext() {
+    // < is a literal
+    // NULL is an error
+    // EOF
+    // Character data
+  }
+
+  protected function scriptData() {
+    // < is a literal
+    // NULL is an error
+    // EOF
+    // Character data
+  }
+
+  /**
+   * 8.2.4.7
+   */
+  protected function plaintext() {
+    // NULL -> parse error
+    // EOF -> eof
+    // -> Character data
+  }
+
 
   /**
    * 8.2.4.11
@@ -449,108 +606,6 @@ class Tokenizer {
   }
   protected function selfCloseingStartTag() {
   }
-
-  /**
-   * Consume malformed markup as if it were a comment.
-   * 8.2.4.44
-   *
-   * The spec requires that the ENTIRE tag-like thing be enclosed inside of
-   * the comment. So this will generate comments like:
-   *
-   * &lt;!--&lt/+foo&gt;--&gt;
-   *
-   * @param string $leading
-   *   Prepend any leading characters. This essentially
-   *   negates the need to backtrack, but it's sort of
-   *   a hack.
-   */
-  protected function bogusComment($leading = '') {
-
-    // TODO: This can be done more efficiently when the
-    // scanner exposes a readUntil() method.
-    $comment = $leading;
-    $tok = $this->scanner->current();
-    do {
-      $comment .= $tok;
-      $tok = $this->scanner->next();
-    } while ($tok !== FALSE && $tok != '>');
-
-    $this->flushBuffer();
-    $this->events->comment($comment . $tok);
-    $this->scanner->next();
-
-    return TRUE;
-  }
-
-  /**
-   * Read a comment.
-   *
-   * Expects the first tok to be inside of the comment.
-   */
-  protected function comment() {
-    $tok = $this->scanner->current();
-    $comment = '';
-
-    // <!-->. Emit an empty comment because 8.2.4.46 says to.
-    if ($tok == '>') {
-      // Parse error. Emit the comment token.
-      $this->parseError("Expected comment data, got '>'");
-      $this->events->comment('');
-      $this->scanner->next();
-      return TRUE;
-    }
-
-    // Replace NULL with the replacement char.
-    if ($tok == "\0") {
-      $tok = UTF8Utils::FFFD;
-    }
-    while (!$this->isCommentEnd()) {
-      $comment .= $tok;
-      $tok = $this->scanner->next();
-    }
-
-    $this->events->comment($comment);
-    $this->scanner->next();
-    return TRUE;
-  }
-
-  protected function isCommentEnd() {
-    // EOF
-    if($this->scanner->current() === FALSE) {
-      // Hit the end.
-      $this->parseError("Unexpected EOF in a comment.");
-      return TRUE;
-    }
-
-    // If it doesn't start with -, not the end.
-    if($this->scanner->current() != '-') {
-      return FALSE;
-    }
-
-
-    // Advance one, and test for '->'
-    if ($this->scanner->next() == '-'
-        && $this->scanner->peek() == '>') {
-      $this->scanner->next(); // Consume the last '>'
-      return TRUE;
-    }
-    // Unread '-';
-    $this->scanner->unconsume(1);
-    return FALSE;
-  }
-  protected function doctype() {
-    if ($this->scanner->current() != 'D') {
-      return FALSE;
-    }
-    // Check that string is DOCTYPE
-    $chars = $this->scanner->charsWhile("DOCTYPE");
-    if ($chars != 'DOCTYPE') {
-      $this->parseError('Expected DOCTYPE, got %s', $chars);
-      return $this->bogusComment('<!' .  $chars);
-    }
-
-    // Now we need to parse the DOCTYPE.
-  }
   protected function beforeDoctype() {
   }
   protected function doctypeName() {
@@ -580,8 +635,6 @@ class Tokenizer {
   protected function afterDoctypeSystemId() {
   }
   protected function bogusDoctype() {
-  }
-  protected function cdataSection() {
   }
 
 

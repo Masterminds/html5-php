@@ -4,25 +4,32 @@ require __DIR__ . '/../TestCase.php';
 require 'EventStack.php';
 
 class TokenizerTest extends \HTML5\Tests\TestCase {
-  protected function createTokenizer($string, $debug = FALSE) {
-    $eventHandler = new EventStack();
-    $stream = new StringInputStream($string);
-    $scanner = new Scanner($stream);
-
-    $scanner->debug = $debug;
-
-    return array(
-      new Tokenizer($scanner, $eventHandler),
-      $eventHandler,
-    );
+  // ================================================================
+  // Additional assertions.
+  // ================================================================
+  /**
+   * Tests that an event matches both the event type and the expected value.
+   *
+   * @param string $type
+   *   Expected event type.
+   * @param string $expects
+   *   The value expected in $event['data'][0].
+   */
+  public function assertEventEquals($type, $expects, $event) {
+    $this->assertEquals($type, $event['name'], "Event $type for " . print_r($event, TRUE));
+    $this->assertEquals($expects, $event['data'][0], "Event $type should equal $expects: " . print_r($event, TRUE));
   }
 
-  public function parse($string, $debug = FALSE) {
-    list($tok, $events) = $this->createTokenizer($string, $debug);
-    $tok->parse();
-
-    return $events;
+  /**
+   * Assert that a given event is 'error'.
+   */
+  public function assertEventError($event) {
+    $this->assertEquals('error', $event['name'], "Expected error for event: " . print_r($event, TRUE));
   }
+
+  // ================================================================
+  // Utility functions.
+  // ================================================================
 
   public function testParse() {
     list($tok, $events) = $this->createTokenizer('');
@@ -75,10 +82,6 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $e1 = $events->get(0);
     $this->assertEquals('&', $e1['data'][0][0], "Stand-alone &");
 
-
-  }
-
-  public function testBrokenCharacterReference() {
     // Test with broken charref
     $str = '&foo';
     $events = $this->parse($str);
@@ -101,11 +104,8 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     );
     foreach ($bogus as $str) {
       $events = $this->parse($str);
-      $e0 = $events->get(0);
-      $this->assertEquals('error', $e0['name']);
-      $e1 = $events->get(1);
-      $this->assertEquals('comment', $e1['name']);
-      $this->assertEquals($str, $e1['data'][0]);
+      $this->assertEventError($events->get(0));
+      $this->assertEventEquals('comment', $str, $events->get(1));
     }
   }
 
@@ -123,11 +123,8 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     foreach ($succeed as $test => $result) {
       $events = $this->parse($test);
       $this->assertEquals(2, $events->depth());
-      $e1 = $events->get(0);
-      $this->assertEquals('endTag', $e1['name'], "Parsing $test expects $result.");
-      $this->assertEquals($result, $e1['data'][0], "Parse end tag " . $test);
+      $this->assertEventEquals('endTag', $result, $events->get(0));
     }
-
 
     // Recoverable failures
     $fail = array(
@@ -139,14 +136,11 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     );
     foreach ($fail as $test => $result) {
       $events = $this->parse($test);
-      // Should have triggered an error.
-      $e0 = $events->get(0);
-      $this->assertEquals('error', $e0['name'], "Parsing $test expects a leading error." . print_r($events, TRUE));
-      // Should have tried to parse anyway.
-      $e1 = $events->get(1);
-      $this->assertEquals('endTag', $e1['name'], "Parsing $test expects resolution to $result." . print_r($events, TRUE));
-      $this->assertEquals($result, $e1['data'][0], "Parse end tag " . $test);
       $this->assertEquals(3, $events->depth());
+      // Should have triggered an error.
+      $this->assertEventError($events->get(0));
+      // Should have tried to parse anyway.
+      $this->assertEventEquals('endTag', $result, $events->get(1));
     }
 
     // BogoComments
@@ -157,14 +151,13 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     );
     foreach ($comments as $test => $result) {
       $events = $this->parse($test);
-      // Should have triggered an error.
-      $e0 = $events->get(0);
-      $this->assertEquals('error', $e0['name'], "Parsing $test expects a leading error." . print_r($events, TRUE));
-      // Should have tried to parse anyway.
-      $e1 = $events->get(1);
-      $this->assertEquals('comment', $e1['name'], "Parsing $test expects comment." . print_r($events, TRUE));
-      $this->assertEquals($result, $e1['data'][0], "Parse end tag " . $test);
       $this->assertEquals(3, $events->depth());
+
+      // Should have triggered an error.
+      $this->assertEventError($events->get(0));
+
+      // Should have tried to parse anyway.
+      $this->assertEventEquals('comment', $result, $events->get(1));
     }
   }
 
@@ -180,9 +173,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     );
     foreach ($good as $test => $expected) {
       $events = $this->parse($test);
-      $e1 = $events->get(0);
-      $this->assertEquals('comment', $e1['name'], 'Expected a comment for ' . $test);
-      $this->assertEquals($expected, $e1['data'][0]);
+      $this->assertEventEquals('comment', $expected, $events->get(0));
     }
 
     $fail = array(
@@ -193,12 +184,9 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     );
     foreach ($fail as $test => $expected) {
       $events = $this->parse($test);
-      $e0 = $events->get(0);
-      $this->assertEquals('error', $e0['name'], 'Expected an error for ' . $test . print_r($events, TRUE));
-
-      $e1 = $events->get(1);
-      $this->assertEquals('comment', $e1['name'], 'Expected a comment for ' . $test);
-      $this->assertEquals($expected, $e1['data'][0]);
+      $this->assertEquals(3, $events->depth());
+      $this->assertEventError($events->get(0));
+      $this->assertEventEquals('comment', $expected, $events->get(1));
     }
 
   }
@@ -212,9 +200,8 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     );
     foreach ($good as $test => $expects) {
       $events = $this->parse($test);
-      $e1 = $events->get(0);
-      $this->assertEquals('cdata', $e1['name'], "CDATA section for " . $test . print_r($events, TRUE));
-      $this->assertEquals($expects, $e1['data'][0], "CDATA section for " . $test);
+      $this->assertEquals(2, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
+      $this->assertEventEquals('cdata', $expects, $events->get(0));
     }
   }
 
@@ -226,5 +213,28 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       'a&amp;b',
     );
     $this->markTestIncomplete("Need tag parsing first.");
+  }
+
+  // ================================================================
+  // Utility functions.
+  // ================================================================
+  protected function createTokenizer($string, $debug = FALSE) {
+    $eventHandler = new EventStack();
+    $stream = new StringInputStream($string);
+    $scanner = new Scanner($stream);
+
+    $scanner->debug = $debug;
+
+    return array(
+      new Tokenizer($scanner, $eventHandler),
+      $eventHandler,
+    );
+  }
+
+  public function parse($string, $debug = FALSE) {
+    list($tok, $events) = $this->createTokenizer($string, $debug);
+    $tok->parse();
+
+    return $events;
   }
 }

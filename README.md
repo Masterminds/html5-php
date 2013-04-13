@@ -70,7 +70,30 @@ syntax checking.
 The unit tests exercise each piece of the API, and every public function
 is well-documented.
 
-## Notes on Serialized Formats
+### Parser Design
+
+The parser is designed as follows:
+
+- The `InputStream` portion handles direct I/O.
+- The `Scanner` handles scanning on behalf of the parser.
+- The `Tokenizer` requests data off of the scanner, parses it, clasifies
+it, and sends it to an `EventHandler`. It is a *recursive descent parser.*
+- The `EventHandler` receives notifications and data for each specific
+semantic event that occurs during tokenization.
+- The `DOMBuilder` is an `EventHandler` that listens for tokenizing
+events and builds a document tree (`DOMDocument`) based on the events.
+
+### Serializer Design
+
+The serializer takes a data structure (the `DOMDocument`) and transforms
+it into a character representation -- an HTML5 document.
+
+The serializer is broken into two parts:
+
+- The `Traverser`, which is a special-purpose tree walker. It visits
+each node and transforms it into a string.
+- The `Serializer` manages the `Traverser` and stores the resultant data
+in the correct place.
 
 The serializer (`save()`, `saveHTML()`) follows the 
 [section 8.9 of the HTML 5.0 spec] (http://www.w3.org/TR/2012/CR-html5-20121217/syntax.html#serializing-html-fragments).

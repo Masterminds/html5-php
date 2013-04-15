@@ -422,7 +422,35 @@ class Tokenizer {
       return $this->bogusComment('<!' .  $chars);
     }
 
-    // Now we need to parse the DOCTYPE.
+    $this->scanner->whitespace();
+    $tok = $this->scanner->current();
+
+    // EOF: die.
+    if ($tok === FALSE) {
+      $this->events->doctype('html5','','', TRUE);
+      return $this->eof();
+    }
+
+    $doctypeName = '';
+
+    // NULL char: convert.
+    if ($tok === "\0") {
+      $this->parseError("Unexpected NULL character in DOCTYPE.");
+      $doctypeName .= UTF8::FFFD;
+      $tok = $this->scanner->next();
+    }
+
+    $stop = " \n\f>";
+    $doctypeName = $this->scanner->charsUntil($stop);
+    // Lowercase ASCII, replace \0 with FFFD
+    $doctypeName = strtolower(strtr($doctypeName, "\0", UTF8Utils::FFFD));
+
+    // If FALSE, emit a parse error.
+
+    // Get pub and sys IDs
+
+    // If >, end doctype
+
   }
 
   /**

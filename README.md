@@ -116,3 +116,8 @@ html5lib project.
 
 This software is released under the MIT license. The original html5lib
 library was also released under the MIT license.
+
+See LICENSE.txt
+
+Certain files contain copyright assertions by specific individuals
+involved with html5lib. Those have been retained where appropriate.

@@ -34,7 +34,7 @@ class EventStack implements EventHandler {
     );
   }
 
-  public function doctype($name, $publicId, $systemID, $quirks = FALSE) {
+  public function doctype($name, $type = 0, $id = NULL, $quirks = FALSE) {
     $args = func_get_args();
     $this->store('doctype', $args);
   }

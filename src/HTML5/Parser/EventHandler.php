@@ -7,10 +7,23 @@ namespace HTML5\Parser;
  * See HTML5 spec section 8.2.4
  */
 interface EventHandler {
+  const DOCTYPE_NONE = 0;
+  const DOCTYPE_PUBLIC = 1;
+  const DOCTYPE_SYSTEM = 2;
   /**
    * A doctype declaration.
+   *
+   * @param string $name
+   *   The name of the root element.
+   * @param int $idType
+   *   One of DOCTYPE_NONE, DOCTYPE_PUBLIC, or DOCTYPE_SYSTEM.
+   * @param string $id
+   *   The identifier. For DOCTYPE_PUBLIC, this is the public ID. If DOCTYPE_SYSTEM,
+   *   then this is a system ID.
+   * @param boolean $quirks
+   *   Indicates whether the builder should enter quirks mode.
    */
-  public function doctype($name, $publicID, $systemID, $quirks = FALSE);
+  public function doctype($name, $idType = 0, $id = NULL, $quirks = FALSE);
   /**
    * A start tag.
    */

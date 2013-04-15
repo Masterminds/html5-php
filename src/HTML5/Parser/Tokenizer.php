@@ -244,7 +244,7 @@ class Tokenizer {
     }
     // Doctype
     elseif($tok == 'D') {
-      return $this->doctype();
+      return $this->doctype('');
     }
     // CDATA section
     elseif($tok == '[') {
@@ -411,6 +411,15 @@ class Tokenizer {
     $this->scanner->unconsume(1);
     return FALSE;
   }
+
+  /**
+   * Parse a DOCTYPE.
+   *
+   * Parse a DOCTYPE declaration. This method has strong bearing on whether or
+   * not Quirksmode is enabled on the event handler.
+   *
+   * @todo This method is a little long. Should probably refactor.
+   */
   protected function doctype() {
     if ($this->scanner->current() != 'D') {
       return FALSE;
@@ -427,7 +436,7 @@ class Tokenizer {
 
     // EOF: die.
     if ($tok === FALSE) {
-      $this->events->doctype('html5','','', TRUE);
+      $this->events->doctype('html5',EventHandler::DOCTYPE_NONE,'', TRUE);
       return $this->eof();
     }
 
@@ -445,13 +454,87 @@ class Tokenizer {
     // Lowercase ASCII, replace \0 with FFFD
     $doctypeName = strtolower(strtr($doctypeName, "\0", UTF8Utils::FFFD));
 
-    // If FALSE, emit a parse error.
+    $tok = $this->scanner->current();
 
-    // Get pub and sys IDs
+    // If FALSE, emit a parse error, DOCTYPE, and return.
+    if ($tok === FALSE) {
+      $this->parseError('Unexpected EOF in DOCTYPE declaration.');
+      $this->events->doctype($doctypeName, EventHandler::DOCTYPE_NONE, NULL, TRUE);
+      return TRUE;
+    }
 
-    // If >, end doctype
+    // Short DOCTYPE, like <!DOCTYPE html>
+    if ($tok == '>') {
+      $this->events->doctype($doctypeName);
+      $this->scanner->next();
+      return TRUE;
+    }
+
+    $pub = strtoupper($this->scanner->getAsciiAlpha());
+    $white = strlen($this->scanner->whitespace());
+    $tok = $this->scanner->current();
+
+    // Get ID, and flag it as pub or system.
+    if (($pub == 'PUBLIC' || $pub == 'SYSTEM') && $white > 0) {
+      // Get the sys ID.
+      $type = $pub == 'PUBLIC' ? EventHandler::DOCTYPE_PUBLIC : EventHandler::DOCTYPE_SYSTEM;
+      $id = $this->quotedString("\0>");
+      if ($id === FALSE) {
+        $this->events->doctype($doctypeName, $type, $pub, FALSE);
+        return FALSE;
+      }
+
+      // Well-formed complete DOCTYPE.
+      $this->scanner->whitespace();
+      if ($this->scanner->current() == '>') {
+        $this->events->doctype($doctypeName, $type, $id, FALSE);
+        return TRUE;
+      }
+
+      // If we get here, we have <!DOCTYPE foo PUBLIC "bar" SOME_JUNK
+      // Throw away the junk, parse error, quirks mode, return TRUE.
+      $this->scanner->charsUntil(">");
+      $this->parseError("Malformed DOCTYPE.");
+      $this->events->doctype($doctypeName, $type, $id, TRUE);
+      return TRUE;
+    }
+
+    // Else it's a bogus DOCTYPE.
+    // Consume to > and trash.
+    $this->scanner->charsUntil('>');
+
+    $this->parseError("Expected PUBLIC or SYSTEM. Got %s%s.", $pub);
+    $this->events->doctype($doctypeName, 0, NULL, TRUE);
+    return TRUE;
 
   }
+
+  /**
+   * Utility for reading a quoted string.
+   *
+   * @param string $stopchars
+   *   Characters (in addition to a close-quote) that should stop the string.
+   *   E.g. sometimes '>' is higher precedence than '"' or "'".
+   * @return mixed
+   *   String if one is found (quotations omitted)
+   */
+  protected function quotedString($stopchars) {
+    $tok = $this->scanner->current();
+    if ($tok == '"' || "'") {
+      $this->scanner->next();
+      $ret = $this->scanner->charsUntil($tok . $stopchars);
+      if ($this->scanner->current() == $tok) {
+        $this->scanner->next();
+      }
+      else {
+        // Parse error because no close quote.
+        $this->parseError("Expected %s, got %s", $tok, $this->scanner->current());
+      }
+      return $ret;
+    }
+    return FALSE;
+  }
+
 
   /**
    * Handle a CDATA section.

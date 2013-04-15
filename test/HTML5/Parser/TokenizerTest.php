@@ -17,7 +17,12 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
    */
   public function assertEventEquals($type, $expects, $event) {
     $this->assertEquals($type, $event['name'], "Event $type for " . print_r($event, TRUE));
-    $this->assertEquals($expects, $event['data'][0], "Event $type should equal $expects: " . print_r($event, TRUE));
+    if (is_array($expects)) {
+      $this->assertEquals($expects, $event['data'], "Event $type should equal $expects: " . print_r($event, TRUE));
+    }
+    else {
+      $this->assertEquals($expects, $event['data'][0], "Event $type should equal $expects: " . print_r($event, TRUE));
+    }
   }
 
   /**
@@ -202,6 +207,50 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       $events = $this->parse($test);
       $this->assertEquals(2, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
       $this->assertEventEquals('cdata', $expects, $events->get(0));
+    }
+  }
+
+  public function testDoctype() {
+    $good = array(
+      '<!DOCTYPE html>' => array('html', 0, NULL, FALSE),
+      "<!DOCTYPE\nhtml>" => array('html', 0, NULL, FALSE),
+      "<!DOCTYPE\fhtml>" => array('html', 0, NULL, FALSE),
+      '<!DOCTYPE html PUBLIC "foo bar">' => array('html', EventStack::DOCTYPE_PUBLIC, 'foo bar', FALSE),
+      "<!DOCTYPE html PUBLIC 'foo bar'>" => array('html', EventStack::DOCTYPE_PUBLIC, 'foo bar', FALSE),
+      '<!DOCTYPE      html      PUBLIC     "foo bar"    >' => array('html', EventStack::DOCTYPE_PUBLIC, 'foo bar', FALSE),
+      "<!DOCTYPE html \nPUBLIC\n'foo bar'>" => array('html', EventStack::DOCTYPE_PUBLIC, 'foo bar', FALSE),
+      '<!DOCTYPE html SYSTEM "foo bar">' => array('html', EventStack::DOCTYPE_SYSTEM, 'foo bar', FALSE),
+      "<!DOCTYPE html SYSTEM 'foo bar'>" => array('html', EventStack::DOCTYPE_SYSTEM, 'foo bar', FALSE),
+      '<!DOCTYPE      html      SYSTEM "foo/bar"    >' => array('html', EventStack::DOCTYPE_SYSTEM, 'foo/bar', FALSE),
+      "<!DOCTYPE html \nSYSTEM\n'foo bar'>" => array('html', EventStack::DOCTYPE_SYSTEM, 'foo bar', FALSE),
+    );
+
+    foreach ($good as $test => $expects) {
+      $events = $this->parse($test);
+      $this->assertEquals(2, $events->depth(), "Counting events for '$test'");
+      $this->assertEventEquals('doctype', $expects, $events->get(0));
+    }
+
+    $bad = array(
+      '<!DOCTYPE>' => array(NULL, EventStack::DOCTYPE_NONE, NULL, TRUE),
+      '<!DOCTYPE    >' => array(NULL, EventStack::DOCTYPE_NONE, NULL, TRUE),
+      '<!DOCTYPE  foo' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
+      '<!DOCTYPE foo PUB' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
+      '<!DOCTYPE foo PUB>' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
+      '<!DOCTYPE  foo PUB "Looks good">' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
+      '<!DOCTYPE  foo SYSTME "Looks good"' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
+      '<!DOCTYPE foo PUBLIC' => array('foo', EventStack::DOCTYPE_PUBLIC, NULL, TRUE),
+      '<!DOCTYPE  foo PUBLIC>' => array('foo', EventStack::DOCTYPE_PUBLIC, NULL, TRUE),
+      '<!DOCTYPE foo SYSTEM' => array('foo', EventStack::DOCTYPE_SYSTEM, NULL, TRUE),
+      '<!DOCTYPE  foo SYSTEM>' => array('foo', EventStack::DOCTYPE_SYSTEM, NULL, TRUE),
+      '<!DOCTYPE html SYSTEM "foo bar"' => array('html', EventStack::DOCTYPE_SYSTEM, 'foo bar', TRUE),
+      '<!DOCTYPE html SYSTEM "foo bar" more stuff>' => array('html', EventStack::DOCTYPE_SYSTEM, 'foo bar', TRUE),
+    );
+    foreach ($bad as $test => $expects) {
+      $events = $this->parse($test);
+      $this->assertEquals(3, $events->depth(), "Counting events for '$test'");
+      $this->assertEventError($events->get(0));
+      $this->assertEventEquals('doctype', $expects, $events->get(1));
     }
   }
 

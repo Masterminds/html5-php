@@ -227,7 +227,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
 
     foreach ($good as $test => $expects) {
       $events = $this->parse($test);
-      $this->assertEquals(2, $events->depth(), "Counting events for '$test'");
+      $this->assertEquals(2, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
       $this->assertEventEquals('doctype', $expects, $events->get(0));
     }
 
@@ -239,16 +239,20 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       '<!DOCTYPE foo PUB>' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
       '<!DOCTYPE  foo PUB "Looks good">' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
       '<!DOCTYPE  foo SYSTME "Looks good"' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
-      '<!DOCTYPE foo PUBLIC' => array('foo', EventStack::DOCTYPE_PUBLIC, NULL, TRUE),
-      '<!DOCTYPE  foo PUBLIC>' => array('foo', EventStack::DOCTYPE_PUBLIC, NULL, TRUE),
-      '<!DOCTYPE foo SYSTEM' => array('foo', EventStack::DOCTYPE_SYSTEM, NULL, TRUE),
-      '<!DOCTYPE  foo SYSTEM>' => array('foo', EventStack::DOCTYPE_SYSTEM, NULL, TRUE),
+
+      // Can't tell whether these are ids or ID types, since the context is chopped.
+      '<!DOCTYPE foo PUBLIC' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
+      '<!DOCTYPE  foo PUBLIC>' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
+      '<!DOCTYPE foo SYSTEM' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
+      '<!DOCTYPE  foo SYSTEM>' => array('foo', EventStack::DOCTYPE_NONE, NULL, TRUE),
+
       '<!DOCTYPE html SYSTEM "foo bar"' => array('html', EventStack::DOCTYPE_SYSTEM, 'foo bar', TRUE),
       '<!DOCTYPE html SYSTEM "foo bar" more stuff>' => array('html', EventStack::DOCTYPE_SYSTEM, 'foo bar', TRUE),
     );
     foreach ($bad as $test => $expects) {
       $events = $this->parse($test);
-      $this->assertEquals(3, $events->depth(), "Counting events for '$test'");
+      //fprintf(STDOUT, $test . PHP_EOL);
+      $this->assertEquals(3, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
       $this->assertEventError($events->get(0));
       $this->assertEventEquals('doctype', $expects, $events->get(1));
     }

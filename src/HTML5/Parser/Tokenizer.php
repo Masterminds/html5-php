@@ -465,10 +465,18 @@ class Tokenizer {
 
     // Short DOCTYPE, like <!DOCTYPE html>
     if ($tok == '>') {
+      // DOCTYPE without a name.
+      if (strlen($doctypeName) == 0) {
+        $this->parseError("Expected a DOCTYPE name. Got nothing.");
+        $this->events->doctype($doctypeName, 0, NULL, TRUE);
+        $this->scanner->next();
+        return TRUE;
+      }
       $this->events->doctype($doctypeName);
       $this->scanner->next();
       return TRUE;
     }
+    $this->scanner->whitespace();
 
     $pub = strtoupper($this->scanner->getAsciiAlpha());
     $white = strlen($this->scanner->whitespace());
@@ -484,10 +492,18 @@ class Tokenizer {
         return FALSE;
       }
 
+      // Premature EOF.
+      if ($this->scanner->current() === FALSE) {
+        $this->parseError("Unexpected EOF in DOCTYPE");
+        $this->events->doctype($doctypeName, $type, $id, TRUE);
+        return TRUE;
+      }
+
       // Well-formed complete DOCTYPE.
       $this->scanner->whitespace();
       if ($this->scanner->current() == '>') {
         $this->events->doctype($doctypeName, $type, $id, FALSE);
+        $this->scanner->next();
         return TRUE;
       }
 
@@ -496,6 +512,7 @@ class Tokenizer {
       $this->scanner->charsUntil(">");
       $this->parseError("Malformed DOCTYPE.");
       $this->events->doctype($doctypeName, $type, $id, TRUE);
+      $this->scanner->next();
       return TRUE;
     }
 
@@ -503,8 +520,9 @@ class Tokenizer {
     // Consume to > and trash.
     $this->scanner->charsUntil('>');
 
-    $this->parseError("Expected PUBLIC or SYSTEM. Got %s%s.", $pub);
+    $this->parseError("Expected PUBLIC or SYSTEM. Got %s.", $pub);
     $this->events->doctype($doctypeName, 0, NULL, TRUE);
+    $this->scanner->next();
     return TRUE;
 
   }

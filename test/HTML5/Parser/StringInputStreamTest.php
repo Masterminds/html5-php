@@ -5,7 +5,7 @@ use \HTML5\Parser\StringInputStream;
 
 require_once __DIR__ . '/../TestCase.php';
 
-class InputStreamTest extends \HTML5\Tests\TestCase {
+class StringInputStreamTest extends \HTML5\Tests\TestCase {
 
   /**
    * A canary test to make sure the basics are setup and working.

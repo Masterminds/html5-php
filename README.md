@@ -45,7 +45,7 @@ $dom = HTML5::parse($html);
 print HTML5::saveHTML($dom);
 
 // Or save it to a file:
-HTML5::save('out.html');
+HTML5::save($dom, 'out.html');
 
 ?>
 ```

@@ -296,30 +296,75 @@ class Tokenizer {
   }
 
   /**
+   * Consume a tag name and body.
    * 8.2.4.10
    */
   protected function tagName() {
-    $name = $this->scanner->current();
-    $tok = $this->scanner->next();
-    switch ($tok) {
-    case "\n":
-    case "\t":
-    case "\f":
-    case ' ':
-      return $this->beforeAttribute();
-    case '/':
-      return $this->selfClosingTag();
-    case '>':
-
-
+    $tok = $this->scanner->current();
+    if (!ctype_alpha($tok)) {
+      return FALSE;
     }
+
+    // We know this is at least one char.
+    $name = strtolower($this->scanner->charsUntil("/> \n\f\t"));
+    $attributes = array();
+    $selfClose = FALSE;
+
+    do {
+      $this->attributes($attributes);
+      $this->scanner->whitespace();
+    }
+    while (!$this->isTagEnd($selfClose));
+
+    $this->events->startTag($name, $attributes, $selfClose);
+    // Should we do this? What does this buy that selfClose doesn't?
+    if ($selfClose) {
+      $this->events->endTag($name);
+    }
+
+    $this->scanner->next();
+
+    return TRUE;
+  }
+
+  protected function isTagEnd(&$selfClose) {
+    $tok = $this->scanner->current();
+    if ($tok == '/') {
+      $this->scanner->next();
+      $this->scanner->whitespace();
+      if ($this->scanner->current() == '>') {
+        $selfClose = TRUE;
+        $this->scanner->next();
+        return TRUE;
+      }
+      // Basically, we skip the / token and go on.
+      // See 8.2.4.43.
+      $this->parseError("Unexpected '%s' inside of a tag.", $this->scanner->current());
+      return FALSE;
+    }
+
+    if ($this->scanner->current() == '>') {
+      return TRUE;
+    }
+    if ($this->scanner->current() === FALSE) {
+      $this->parseError("Unexpected EOF inside of tag.");
+      return TRUE;
+    }
+
     return FALSE;
-    // tab, lf, ff, space -> before attr name
-    // / -> self-closing tag
-    // > -> current tag is done, data-state
-    // NULL parse error
-    // EOF -> parse error
-    // -> append to tagname
+  }
+
+
+  /**
+   * Parse attributes from inside of a tag.
+   */
+  protected function attributes(&$attributes) {
+    $tok = $this->scanner->current();
+    if ($tok == '/' || $tok == '>') {
+      return array();
+    }
+
+    return array();
   }
 
 

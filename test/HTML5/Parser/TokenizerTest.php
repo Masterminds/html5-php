@@ -273,6 +273,50 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     }
   }
 
+  /**
+   * This tests just simple tags.
+   */
+  public function testSimpleTags() {
+    $open = array(
+      '<foo>' => 'foo',
+      '<foo >' => 'foo',
+      "<foo\n\n\n\n>" => 'foo',
+      '<foo:bar>' => 'foo:bar',
+    );
+    foreach ($open as $test => $expects) {
+      $events = $this->parse($test);
+      $this->assertEquals(2, $events->depth(), "Counting events for '$test'" . print_r($events, TRUE));
+      $this->assertEventEquals('startTag', $expects, $events->get(0));
+    }
+    $selfClose= array(
+      '<foo/>' => 'foo',
+      '<foo />' => 'foo',
+      "<foo\n\n\n\n/>" => 'foo',
+      '<foo:bar/>' => 'foo:bar',
+    );
+    foreach ($selfClose as $test => $expects) {
+      $events = $this->parse($test);
+      $this->assertEquals(3, $events->depth(), "Counting events for '$test'" . print_r($events, TRUE));
+      $this->assertEventEquals('startTag', $expects, $events->get(0));
+      $this->assertEventEquals('endTag', $expects, $events->get(1));
+    }
+
+    $bad = array(
+      '<foo' => 'foo',
+      '<foo ' => 'foo',
+      '<foo/' => 'foo',
+      '<foo /' => 'foo',
+    );
+
+    foreach ($bad as $test => $expects) {
+      $events = $this->parse($test);
+      //fprintf(STDOUT, $test . PHP_EOL);
+      $this->assertEquals(3, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
+      $this->assertEventError($events->get(0));
+      $this->assertEventEquals('startTag', $expects, $events->get(1));
+    }
+  }
+
   public function testText() {
     $good = array(
       'a<br>b',

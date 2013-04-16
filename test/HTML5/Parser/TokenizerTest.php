@@ -106,6 +106,8 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       '<!CDATA[[ test ]]>',
       '<![CDATA[',
       '<![CDATA[hellooooo hello',
+      '<? Hello World ?>',
+      '<? Hello World',
     );
     foreach ($bogus as $str) {
       $events = $this->parse($str);
@@ -255,6 +257,19 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       $this->assertEquals(3, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
       $this->assertEventError($events->get(0));
       $this->assertEventEquals('doctype', $expects, $events->get(1));
+    }
+  }
+
+  public function testProcessorInstruction() {
+    $good = array(
+      '<?hph ?>' => 'hph',
+      '<?hph echo "Hello World"; ?>' => array('hph', 'echo "Hello World"; '), 
+      "<?hph \necho 'Hello World';\n?>" => array('hph', "echo 'Hello World';\n"), 
+    );
+    foreach ($good as $test => $expects) {
+      $events = $this->parse($test);
+      $this->assertEquals(2, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
+      $this->assertEventEquals('pi', $expects, $events->get(0));
     }
   }
 

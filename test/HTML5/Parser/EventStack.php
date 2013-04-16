@@ -71,6 +71,9 @@ class EventStack implements EventHandler {
     $this->store('error', func_get_args());
   }
 
+  public function processingInstruction($name, $data = NULL) {
+    $this->store('pi', func_get_args());
+  }
 
 }
 class EventStackParseError extends \Exception {

@@ -222,8 +222,8 @@ class Tokenizer {
 
     return $this->markupDeclaration() ||
       $this->endTag() ||
-      $this->tagName() ||
       $this->processingInstruction() ||
+      $this->tagName() ||
       // This always returns false.
       $this->parseError("Illegal tag opening") ||
       $this->characterData();
@@ -784,6 +784,38 @@ class Tokenizer {
    * EventListener::processingInstruction() event.
    */
   protected function processingInstruction() {
+    if ($this->scanner->current() != '?') {
+      return FALSE;
+    }
+
+    $tok = $this->scanner->next();
+    $procName = $this->scanner->getAsciiAlpha();
+    $white = strlen($this->scanner->whitespace());
+
+    // If not a PI, send to bogusComment.
+    if (strlen($procName) == 0 || $white == 0 || $this->scanner->current() == FALSE) {
+      $this->parseError("Expected processing instruction name, got $tok");
+      $this->bogusComment('<?' . $tok . $procName);
+      return TRUE;
+    }
+
+    $data = '';
+    while ($this->scanner->current() != '?' && $this->scanner->peek() != '>') {
+      $data .= $this->scanner->current();
+
+      $tok = $this->scanner->next();
+      if ($tok === FALSE) {
+        $this->parseError("Unexpected EOF in processing instruction.");
+        $this->events->processingInstruction($procName, $data);
+        return TRUE;
+      }
+
+    }
+
+    $this->scanner->next(); // >
+    $this->scanner->next(); // Next token.
+    $this->events->processingInstruction($procName, $data);
+    return TRUE;
   }
 
 

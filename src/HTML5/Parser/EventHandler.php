@@ -51,7 +51,22 @@ interface EventHandler {
    */
   public function parseError($msg, $line, $col);
 
-  // Do we need...
+  /**
+   * A CDATA section.
+   *
+   * @param string $data
+   *   The unparsed character data.
+   */
   public function cdata($data);
-  // public function processorInstruction();
+  /**
+   * This is a holdover from the XML spec.
+   *
+   * While user agents don't get PIs, server-side does.
+   *
+   * @param string $name
+   *   The name of the processor (e.g. 'php').
+   * @param string $data
+   *   The unparsed data.
+   */
+  public function processingInstruction($name, $data = NULL);
 }

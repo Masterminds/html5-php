@@ -33,19 +33,7 @@ class Traverser {
    * input, keygen, link, meta, param, source, track or wbr element, then
    * continue on to the next child node at this point.
    */
-  static $unary_elements = array(
-    'area' => 1,
-    'base' => 1,
-    'basefont' => 1,
-    'bgsound' => 1,
-    'br' => 1,
-    'col' => 1,
-    'command' => 1,
-    'embed' => 1,
-    'frame' => 1,
-    'hr' => 1,
-    'img' => 1,
-  );
+  static $unary_elements = 'area|base|basefont|bgsound|br|col|command|embed|frame|hr|img';
 
   /** Namespaces that should be treated as "local" to HTML5. */
   static $local_ns = array(
@@ -268,9 +256,15 @@ class Traverser {
 
   /**
    * Is an unary tag.
+   *
+   * @param string $name
+   *   The name of the element to test.
+   *
+   * @return bool
+   *   True if Unary and false otherwise.
    */
   protected function isUnary($name) {
-    return isset(self::$unary_elements[$name]);
+    return (bool)preg_match('/^(' . self::$unary_elements . ')$/i', $name);
   }
 
   /**

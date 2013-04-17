@@ -38,7 +38,7 @@ class TraverserTest extends \HTML5\Tests\TestCase {
       $this->assertTrue($method->invoke($t, $block), 'Block test failed on: ' . $block);
 
       // Also test the uppercase version.
-      $this->assertTrue($method->invoke($t, strtoupper($block)), 'Block test failed on: ' . $block);
+      $this->assertTrue($method->invoke($t, strtoupper($block)), 'Block test failed on: ' . strtoupper($block));
     }
 
     $nonblocks = array('span', 'a', 'img');
@@ -46,7 +46,32 @@ class TraverserTest extends \HTML5\Tests\TestCase {
       $this->assertFalse($method->invoke($t, $tag),  'Block test failed on: ' . $tag);
 
       // Also test the uppercase version.
-      $this->assertFalse($method->invoke($t, strtoupper($tag)),  'Block test failed on: ' . $tag);
+      $this->assertFalse($method->invoke($t, strtoupper($tag)),  'Block test failed on: ' . strtoupper($tag));
+    }
+  }
+
+  public function testIsUnary() {
+    $elements = array( 'area', 'base', 'basefont', 'bgsound', 'br', 'col',
+      'command', 'embed', 'frame', 'hr', 'img',
+    );
+
+    // Mocking the required input because there is no checking.
+    $t = new Traverser('', '');
+    $method = $this->getProtectedMethod('isUnary');
+
+    foreach ($elements as $element) {
+      $this->assertTrue($method->invoke($t, $element), 'Unary test failed on: ' . $element);
+
+      // Also test the uppercase version.
+      $this->assertTrue($method->invoke($t, strtoupper($element)), 'Unary test failed on: ' . strtoupper($element));
+    }
+
+    $nonblocks = array('span', 'a', 'div');
+    foreach ($nonblocks as $tag) {
+      $this->assertFalse($method->invoke($t, $tag),  'Unary test failed on: ' . $tag);
+
+      // Also test the uppercase version.
+      $this->assertFalse($method->invoke($t, strtoupper($tag)),  'Unary test failed on: ' . strtoupper($tag));
     }
   }
 

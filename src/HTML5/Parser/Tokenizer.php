@@ -371,6 +371,16 @@ class Tokenizer {
     return array();
   }
 
+  protected function attribute() {
+    $name = $this->scanner->charsUntil("/>= '\"\n\f\t");
+    $val = $this->attributeValue();
+    return array($name, $value);
+  }
+
+  protected function attributeValue() {
+    return '';
+  }
+
 
   /**
    * Consume malformed markup as if it were a comment.

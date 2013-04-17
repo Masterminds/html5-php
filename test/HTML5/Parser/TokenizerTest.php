@@ -279,6 +279,8 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
   public function testSimpleTags() {
     $open = array(
       '<foo>' => 'foo',
+      '<FOO>' => 'foo',
+      '<fOO>' => 'foo',
       '<foo >' => 'foo',
       "<foo\n\n\n\n>" => 'foo',
       '<foo:bar>' => 'foo:bar',
@@ -290,6 +292,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     }
     $selfClose= array(
       '<foo/>' => 'foo',
+      '<FOO/>' => 'foo',
       '<foo />' => 'foo',
       "<foo\n\n\n\n/>" => 'foo',
       '<foo:bar/>' => 'foo:bar',

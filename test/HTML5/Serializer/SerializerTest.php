@@ -3,9 +3,9 @@
 
 namespace HTML5\Tests;
 
-use \HTML5\Serializer;
+use \HTML5\Serializer\Serializer;
 
-require_once 'TestCase.php';
+require_once __DIR__ . '/../TestCase.php';
 
 /**
  * Test the Serializer.
@@ -13,14 +13,14 @@ require_once 'TestCase.php';
  * These tests are all dependent upon the parser. So if the parser
  * fails, the results of the serializer tests may not be conclusive.
  */
-class SerializerTest extends TestCase {
+class SerializerTest extends \HTML5\Tests\TestCase {
 
   /**
    * Parse and serialize a string.
    */
   protected function cycle($html) {
     $dom = \HTML5::parse($html);
-    $ser = new \HTML5\Serializer($dom, FALSE);
+    $ser = new Serializer($dom, FALSE);
     $out = $ser->saveHTML();
 
     return $out;
@@ -32,7 +32,7 @@ class SerializerTest extends TestCase {
     $dom = \HTML5::parse($html);
     $this->assertTrue($dom instanceof \DOMDocument, "Canary");
 
-    $ser = new \HTML5\Serializer($dom, FALSE);
+    $ser = new Serializer($dom, FALSE);
     $out = $ser->saveHTML();
 
     $this->assertTrue(count($out) >= count($html), 'Byte counts');
@@ -47,7 +47,7 @@ class SerializerTest extends TestCase {
     $dom = \HTML5::parse($html);
     $this->assertTrue($dom instanceof \DOMDocument, "Canary");
 
-    $ser = new \HTML5\Serializer($dom, FALSE);
+    $ser = new Serializer($dom, FALSE);
     $out = fopen("php://temp", "w");
     $ser->save($out);
 

@@ -310,7 +310,6 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
 
     foreach ($bad as $test => $expects) {
       $events = $this->parse($test);
-      //fprintf(STDOUT, $test . PHP_EOL);
       $this->assertEquals(3, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
       $this->assertEventError($events->get(0));
       $this->assertEventEquals('startTag', $expects, $events->get(1));

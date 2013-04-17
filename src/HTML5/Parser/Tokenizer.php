@@ -337,6 +337,10 @@ class Tokenizer {
         $this->scanner->next();
         return TRUE;
       }
+      if ($this->scanner->current() === FALSE) {
+        $this->parseError("Unexpected EOF inside of tag.");
+        return TRUE;
+      }
       // Basically, we skip the / token and go on.
       // See 8.2.4.43.
       $this->parseError("Unexpected '%s' inside of a tag.", $this->scanner->current());

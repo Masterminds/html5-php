@@ -14,7 +14,7 @@ class HTML5 extends \HTML5\Parser {
    * Save a DOM into a given file as HTML5.
    */
   public static function save($dom, $file) {
-    $serializer = new \HTML5\Serializer($dom);
+    $serializer = new \HTML5\Serializer\Serializer($dom);
     return $serializer->save($file);
   }
 
@@ -22,7 +22,7 @@ class HTML5 extends \HTML5\Parser {
    * Convert a DOM into an HTML5 string.
    */
   public static function saveHTML($dom) {
-    $serializer = new \HTML5\Serializer($dom);
+    $serializer = new \HTML5\Serializer\Serializer($dom);
     return $serializer->saveHTML();
   }
 }

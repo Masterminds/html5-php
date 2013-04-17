@@ -2,7 +2,7 @@
 /**
  * A simple serializer that walks the DOM tree and outputs HTML5.
  */
-namespace HTML5;
+namespace HTML5\Serializer;
 
 /**
  * Transform a DOM into an HTML5 document.

@@ -1,5 +1,5 @@
 <?php
-namespace HTML5;
+namespace HTML5\Serializer;
 
 /**
  * Traverser for walking a DOM tree.
@@ -12,32 +12,7 @@ namespace HTML5;
  */
 class Traverser {
 
-  // TODO: Refactor this into an element mask.
-  static $block_elements = array(
-    'html' => 1,
-    'body' => 1,
-    'head' => 1,
-    'p' => 1,
-    'div' => 1,
-    'h1' => 1,
-    'h2' => 1,
-    'h3' => 1,
-    'h4' => 1,
-    'h5' => 1,
-    'h6' => 1,
-    'title' => 1,
-    'script' => 1,
-    'link' => 1,
-    'meta' => 1,
-    'section' => 1,
-    'article' => 1,
-    'table' => 1,
-    'tbody' => 1,
-    'tr' => 1,
-    'th' => 1,
-    'td' => 1,
-    //'form' => 1,
-  );
+  static $block_elements = 'html|body|head|p|div|h[1-6]|title|script|link|meta|section|article|table|tbody|tr|th|td';
 
   // TODO: Refactor this into an element mask.
   static $literal_elements = array(
@@ -58,19 +33,7 @@ class Traverser {
    * input, keygen, link, meta, param, source, track or wbr element, then
    * continue on to the next child node at this point.
    */
-  static $unary_elements = array(
-    'area' => 1,
-    'base' => 1,
-    'basefont' => 1,
-    'bgsound' => 1,
-    'br' => 1,
-    'col' => 1,
-    'command' => 1,
-    'embed' => 1,
-    'frame' => 1,
-    'hr' => 1,
-    'img' => 1,
-  );
+  static $unary_elements = 'area|base|basefont|bgsound|br|col|command|embed|frame|hr|img';
 
   /** Namespaces that should be treated as "local" to HTML5. */
   static $local_ns = array(
@@ -293,16 +256,28 @@ class Traverser {
 
   /**
    * Is an unary tag.
+   *
+   * @param string $name
+   *   The name of the element to test.
+   *
+   * @return bool
+   *   True if Unary and false otherwise.
    */
   protected function isUnary($name) {
-    return isset(self::$unary_elements[$name]);
+    return (bool)preg_match('/^(' . self::$unary_elements . ')$/i', $name);
   }
 
   /**
    * Is block element.
+   *
+   * @param string $name
+   *   The name of the element to test if a block level element
+   *
+   * @return bool
+   *   If the element is block level or not.
    */
   protected function isBlock($name) {
-    return isset(self::$block_elements[$name]);
+    return (bool)preg_match('/^(' . self::$block_elements . ')$/i', $name);
   }
 
   protected function isLiteral($element) {

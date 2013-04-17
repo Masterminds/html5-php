@@ -319,6 +319,44 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     }
   }
 
+  public function testTagAttributes() {
+    $good = array(
+      '<foo bar="baz">' => array('foo', array('bar' => 'baz'), FALSE),
+      '<foo bar=" baz ">' => array('foo', array('bar' => ' baz '), FALSE),
+      '<foo bar="baz"/>' => array('foo', array('bar' => 'baz'), TRUE),
+      '<foo BAR="baz"/>' => array('foo', array('bar' => 'baz'), TRUE),
+      '<foo BAR="BAZ"/>' => array('foo', array('bar' => 'BAZ'), TRUE),
+      "<foo bar='baz'>" => array('foo', array('bar' => 'baz'), FALSE),
+      '<foo bar="A full sentence.">' => array('foo', array('bar' => 'A full sentence.'), FALSE),
+      "<foo a='1' b=\"2\">" => array('foo', array('a' => '1', 'b' => '2'), FALSE),
+      "<foo ns:bar='baz'>" => array('foo', array('ns:bar' => 'baz'), FALSE),
+      "<foo a='blue&red'>" => array('foo', array('a' => 'blue&red'), FALSE),
+      "<foo a='blue&amp;red'>" => array('foo', array('a' => 'blue&red'), FALSE),
+      '<foo    bar   =   "baz"      >' => array('foo', array('bar' => 'baz'), FALSE),
+      "<foo\nbar='baz'\n>" => array('foo', array('bar' => 'baz'), FALSE),
+    );
+    foreach ($good as $test => $expects) {
+      $events = $this->parse($test);
+      $this->assertEquals(2, $events->depth(), "Counting events for '$test'" . print_r($events, TRUE));
+      $this->assertEventEquals('startTag', $expects, $events->get(0));
+    }
+
+    $bad = array(
+      '<foo b"="baz">' => array('foo', array('b"' => 'baz'), FALSE),
+      '<foo ="bar">' => array('foo', array('="bar"' => NULL), FALSE),
+      '<foo bar=/>' => array('foo', array('bar' => NULL), TRUE),
+      '<foo bar=>' => array('foo', array('bar' => NULL), FALSE),
+      '<foo bar=baz>' => array('foo', array('bar' => 'baz'), FALSE),
+
+    );
+    foreach ($bad as $test => $expects) {
+      $events = $this->parse($test);
+      $this->assertEquals(3, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
+      $this->assertEventError($events->get(0));
+      $this->assertEventEquals('startTag', $expects, $events->get(1));
+    }
+  }
+
   public function testText() {
     $good = array(
       'a<br>b',

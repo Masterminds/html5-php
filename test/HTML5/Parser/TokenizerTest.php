@@ -318,7 +318,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
   /**
    * @depends testCharacterReference
    */
-  public function XXXtestTagAttributes() {
+  public function testTagAttributes() {
     $good = array(
       '<foo bar="baz">' => array('foo', array('bar' => 'baz'), FALSE),
       '<foo bar=" baz ">' => array('foo', array('bar' => ' baz '), FALSE),
@@ -336,10 +336,12 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     );
     $this->isAllGood('startTag', 2, $good);
 
+    /*
     $bad = array(
       '<foo b"="baz">' => array('foo', array('b"' => 'baz'), FALSE),
       '<foo ="bar">' => array('foo', array('="bar"' => NULL), FALSE),
       '<foo bar=/>' => array('foo', array('bar' => NULL), TRUE),
+      '<foo////>' => array('foo', array(), TRUE),
       '<foo bar=>' => array('foo', array('bar' => NULL), FALSE),
       '<foo bar="oh' => array('foo', array('bar' => 'oh'), FALSE),
       '<foo bar=baz>' => array('foo', array('bar' => 'baz'), FALSE),
@@ -353,6 +355,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       $this->assertEventError($events->get(0));
       $this->assertEventEquals('startTag', $expects, $events->get(1));
     }
+     */
   }
 
   public function testText() {
@@ -361,6 +364,9 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       '<a>test</a>',
       'a<![[ test ]]>b',
       'a&amp;b',
+      'a&b',
+      'a& b& c',
+
     );
     $this->markTestIncomplete("Need tag parsing first.");
   }

@@ -34,6 +34,8 @@ class Tokenizer {
   // When this goes to false, the parser stops.
   protected $carryOn = TRUE;
 
+  const WHITE="\t\n\f ";
+
   /**
    * Create a new tokenizer.
    *
@@ -114,13 +116,31 @@ class Tokenizer {
   /**
    * Handle character references (aka entities).
    *
+   * This version is specific to PCDATA, as it buffers data into the
+   * text buffer. For a generic version, see decodeCharacterReference().
+   *
    * HTML5 8.2.4.2
+   */
+  protected function characterReference() {
+    $ref = $this->decodeCharacterReference();
+    if ($ref !== FALSE) {
+      $this->buffer($ref);
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Decode a character reference and return the string.
+   *
+   * Returns FALSE if the entity could not be found. If $inAttribute is set
+   * to TRUE, a bare & will be returned as-is.
    *
    * @param boolean $inAttribute
    *   Set to TRUE if the text is inside of an attribute value.
    *   FALSE otherwise.
    */
-  protected function characterReference($inAttribute = FALSE) {
+  protected function decodeCharacterReference($inAttribute = FALSE) {
 
     // If it fails this, it's definitely not an entity.
     if ($this->scanner->current() != '&') {
@@ -132,21 +152,19 @@ class Tokenizer {
     $entity = '';
     $start = $this->scanner->position();
 
-    // Whitespace: Ignore
-    switch ($tok) {
-    case NULL:
-    case "\t":
-    case "\n":
-    case "\f":
-    case ' ':
-    case '&':
-    case '<':
-      // Don't consume; just return. Spec says return nothing, but I 
-      // think we have to append '&' to the string.
-      $this->buffer('&');
-      return FALSE;
-    case '#':
-      // Consume and read a number
+    if ($tok == FALSE) {
+      return '&';
+    }
+
+    // These indicate not an entity. We return just
+    // the &.
+    if (strspn($tok, self::WHITE . "&<") == 1) {
+      $this->scanner->next();
+      return '&';
+    }
+
+    // Numeric entity
+    if ($tok == '#') {
       $tok = $this->scanner->next();
 
       // Hexidecimal encoding.
@@ -154,27 +172,35 @@ class Tokenizer {
       // x[0-9a-fA-F]+;
       if ($tok == 'x' || $tok == 'X') {
         $tok = $this->scanner->next(); // Consume x
+
+        // Convert from hex code to char.
         $hex = $this->scanner->getHex();
         if (empty($hex)) {
-          //throw new ParseError("Expected &#xHEX;, got &#x" . $tok);
           $this->parseError("Expected &#xHEX;, got &#x%s", $tok);
-          return FALSE;
+          // We unconsume because we don't know what parser rules might
+          // be in effect for the remaining chars. For example. '&#>'
+          // might result in a specific parsing rule inside of tag
+          // contexts, while not inside of pcdata context.
+          $this->scanner->unconsume(2);
+          return '&';
         }
         $entity = CharacterReference::lookupHex($hex);
       }
       // Decimal encoding.
       // [0-9]+;
       else {
+        // Convert from decimal to char.
         $numeric = $this->scanner->getNumeric();
-        if (empty($numeric)) {
-          //throw ParseError("Expected &#DIGITS;, got $#" . $tok);
-          $this->parseError("Expected &#DIGITS;, got $#%s", $tok);
-          return FALSE;
+        if ($numeric === FALSE) {
+          $this->parseError("Expected &#DIGITS;, got &#%s", $tok);
+          $this->scanner->unconsume(2);
+          return '&';
         }
         $entity = CharacterReference::lookupDecimal($numeric);
       }
-      break;
-    default:
+    }
+    // String entity.
+    else {
       // Attempt to consume a string up to a ';'.
       // [a-zA-Z0-9]+;
       $cname = $this->scanner->getAsciiAlpha();
@@ -182,28 +208,26 @@ class Tokenizer {
       if ($entity == NULL) {
           $this->parseError("No match in entity table for '%s'", $entity);
       }
-
     }
+
     // The scanner has advanced the cursor for us.
     $tok = $this->scanner->current();
 
     // We have an entity. We're done here.
     if ($tok == ';') {
-      $this->buffer($entity);
       $this->scanner->next();
-      return TRUE;
+      return $entity;
     }
 
     // If in an attribute, then failing to match ; means unconsume the 
     // entire string. Otherwise, failure to match is an error.
     if ($inAttribute) {
       $this->scanner->unconsume($this->scanner->position() - $start);
-      $this->buffer('&');
-      return FALSE;
+      return '&';
     }
 
-    //throw new ParseError("Expected &ENTITY;, got &ENTITY (no trailing ;) " . $tok);
     $this->parseError("Expected &ENTITY;, got &ENTITY%s (no trailing ;) ", $tok);
+    return '&' . $entity;
 
   }
 
@@ -311,8 +335,8 @@ class Tokenizer {
     $selfClose = FALSE;
 
     do {
-      $this->attributes($attributes);
       $this->scanner->whitespace();
+      $this->attributes($attributes);
     }
     while (!$this->isTagEnd($selfClose));
 
@@ -364,21 +388,96 @@ class Tokenizer {
    */
   protected function attributes(&$attributes) {
     $tok = $this->scanner->current();
-    if ($tok == '/' || $tok == '>') {
-      return array();
+    if ($tok == '/' || $tok == '>' || $tok === FALSE) {
+      return FALSE;
     }
 
-    return array();
+    list($k, $v) = $this->attribute();
+    $attributes[$k] = $v;
   }
 
   protected function attribute() {
-    $name = $this->scanner->charsUntil("/>= '\"\n\f\t");
+    $name = $this->scanner->charsUntil("/>=\n\f\t ");
+
+    if (strlen($name) == 0) {
+      $this->parseError("Expected an attribute name, got %s.", $this->scanner->current());
+      // Really, only '=' can be the char here. Everything else gets absorbed
+      // under one rule or another.
+      $name = $this->scanner->current();
+      $this->scanner->next();
+    }
+    if (preg_match('/\'\"/', $name)) {
+      $this->parseError("Unexpected characters in attribute name");
+    }
+    $this->scanner->whitespace();
+
     $val = $this->attributeValue();
-    return array($name, $value);
+    return array($name, $val);
   }
 
+  /**
+   * Consume an attribute value.
+   * 8.2.4.37 and after.
+   */
   protected function attributeValue() {
-    return '';
+    if ($this->scanner->current() != '=') {
+      return NULL;
+    }
+    $this->scanner->next();
+    // Whitespace is significant
+    //$this->scanner->whitespace();
+
+    $tok = $this->scanner->current();
+    switch ($tok) {
+    case "\n":
+    case "\f":
+    case " ":
+    case "\t":
+      // Whitespace here indicates an empty value.
+      return NULL;
+    case '"':
+    case "'":
+      return $this->quotedAttributeValue($tok);
+    case '>':
+    // case '/': // 8.2.4.37 seems to allow foo=/ as a valid attr.
+      $this->parseError("Expected attribute value, got tag end.");
+      return NULL;
+    case '=':
+    case '`':
+      $this->parseError("Expecting quotes, got %s.", $tok);
+      return $this->unquotedAttributeValue();
+    default:
+      return $this->unquotedAttributeValue();
+    }
+  }
+
+  /**
+   * Get an attribute value string.
+   *
+   * @param string $quote
+   *   IMPORTANT: This is a series of chars! Any one of which will be considered
+   *   termination of an attribute's value. E.g. "\"'" will stop at either
+   *   ' or ".
+   * @return string
+   *   The attribute value.
+   */
+  protected function quotedAttributeValue($quote) {
+    $stoplist = "\t\n\f" . $quote;
+    $val = '';
+    $tok = $this->scanner->current();
+    while (strspn($tok, $stoplist) == 0 && $tok !== FALSE) {
+      if ($tok == '&') {
+        $val .= $this->decodeCharacterReference(TRUE);
+      }
+      else {
+        $val .= $tok;
+        $tok = $this->scanner->next();
+      }
+    }
+    return $val;
+  }
+  protected function unquotedAttributeValue() {
+    return $this->quotedAttributeValue(" >");
   }
 
 

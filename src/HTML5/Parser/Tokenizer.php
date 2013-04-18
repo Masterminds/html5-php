@@ -336,7 +336,7 @@ class Tokenizer {
 
     do {
       $this->scanner->whitespace();
-      $this->attributes($attributes);
+      $this->attribute($attributes);
     }
     while (!$this->isTagEnd($selfClose));
 
@@ -386,18 +386,13 @@ class Tokenizer {
   /**
    * Parse attributes from inside of a tag.
    */
-  protected function attributes(&$attributes) {
+  protected function attribute(&$attributes) {
     $tok = $this->scanner->current();
     if ($tok == '/' || $tok == '>' || $tok === FALSE) {
       return FALSE;
     }
 
-    list($k, $v) = $this->attribute();
-    $attributes[$k] = $v;
-  }
-
-  protected function attribute() {
-    $name = $this->scanner->charsUntil("/>=\n\f\t ");
+    $name = strtolower($this->scanner->charsUntil("/>=\n\f\t "));
 
     if (strlen($name) == 0) {
       $this->parseError("Expected an attribute name, got %s.", $this->scanner->current());
@@ -412,7 +407,9 @@ class Tokenizer {
     $this->scanner->whitespace();
 
     $val = $this->attributeValue();
-    return array($name, $val);
+    //return array($name, $val);
+    $attributes[$name] = $val;
+    return TRUE;
   }
 
   /**
@@ -437,6 +434,7 @@ class Tokenizer {
       return NULL;
     case '"':
     case "'":
+      $this->scanner->next();
       return $this->quotedAttributeValue($tok);
     case '>':
     // case '/': // 8.2.4.37 seems to allow foo=/ as a valid attr.
@@ -468,6 +466,23 @@ class Tokenizer {
     while (strspn($tok, $stoplist) == 0 && $tok !== FALSE) {
       if ($tok == '&') {
         $val .= $this->decodeCharacterReference(TRUE);
+        $tok = $this->scanner->current();
+      }
+      else {
+        $val .= $tok;
+        $tok = $this->scanner->next();
+      }
+    }
+    $this->scanner->next();
+    return $val;
+  }
+  protected function unquotedAttributeValue() {
+    $stoplist = "\t\n\f >";
+    $val = '';
+    $tok = $this->scanner->current();
+    while (strspn($tok, $stoplist) == 0 && $tok !== FALSE) {
+      if ($tok == '&') {
+        $val .= $this->decodeCharacterReference(TRUE);
       }
       else {
         $val .= $tok;
@@ -475,9 +490,6 @@ class Tokenizer {
       }
     }
     return $val;
-  }
-  protected function unquotedAttributeValue() {
-    return $this->quotedAttributeValue(" >");
   }
 
 

@@ -32,6 +32,30 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('error', $event['name'], "Expected error for event: " . print_r($event, TRUE));
   }
 
+  /**
+   * Asserts that all of the tests are good.
+   *
+   * This loops through a map of tests/expectations and runs a few assertions on each test.
+   *
+   * Checks:
+   * - depth (if depth is > 0)
+   * - event name
+   * - matches on event 0.
+   */
+  protected function isAllGood($name, $depth, $tests, $debug = FALSE) {
+    foreach ($tests as $try => $expects) {
+      if ($debug) {
+        fprintf(STDOUT, "%s expects %s\n", $try, print_r($expects, TRUE));
+      }
+      $e = $this->parse($try);
+      if ($depth > 0) {
+        $this->assertEquals($depth, $e->depth(), "Expected depth $depth for test $try." . print_r($e, TRUE));
+      }
+      $this->assertEventEquals($name, $expects, $e->get(0));
+    }
+  }
+
+
   // ================================================================
   // Utility functions.
   // ================================================================
@@ -58,27 +82,6 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
 
     $this->assertEquals('text', $e1['name']);
     $this->assertEquals($spaces, $e1['data'][0]);
-  }
-
-  /**
-   * Asserts that all of the tests are good.
-   *
-   * Checks:
-   * - depth (if depth is > 0)
-   * - event name
-   * - matches on event 0.
-   */
-  protected function isAllGood($name, $depth, $tests, $debug = FALSE) {
-    foreach ($tests as $try => $expects) {
-      if ($debug) {
-        fprintf(STDOUT, "%s expects %s\n", $try, print_r($expects, TRUE));
-      }
-      $e = $this->parse($try);
-      if ($depth > 0) {
-        $this->assertEquals($depth, $e->depth(), "Expected depth $depth for test $try." . print_r($e, TRUE));
-      }
-      $this->assertEventEquals($name, $expects, $e->get(0));
-    }
   }
 
   public function testCharacterReference() {
@@ -322,22 +325,27 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $good = array(
       '<foo bar="baz">' => array('foo', array('bar' => 'baz'), FALSE),
       '<foo bar=" baz ">' => array('foo', array('bar' => ' baz '), FALSE),
-      '<foo bar="baz"/>' => array('foo', array('bar' => 'baz'), TRUE),
-      '<foo BAR="baz"/>' => array('foo', array('bar' => 'baz'), TRUE),
-      '<foo BAR="BAZ"/>' => array('foo', array('bar' => 'BAZ'), TRUE),
       "<foo bar='baz'>" => array('foo', array('bar' => 'baz'), FALSE),
       '<foo bar="A full sentence.">' => array('foo', array('bar' => 'A full sentence.'), FALSE),
       "<foo a='1' b=\"2\">" => array('foo', array('a' => '1', 'b' => '2'), FALSE),
       "<foo ns:bar='baz'>" => array('foo', array('ns:bar' => 'baz'), FALSE),
-      "<foo a='blue&red'>" => array('foo', array('a' => 'blue&red'), FALSE),
       "<foo a='blue&amp;red'>" => array('foo', array('a' => 'blue&red'), FALSE),
       "<foo\nbar='baz'\n>" => array('foo', array('bar' => 'baz'), FALSE),
       '<doe a deer>' => array('doe', array('a' => NULL, 'deer' => NULL), FALSE),
     );
     $this->isAllGood('startTag', 2, $good);
 
+    $withEnd = array(
+      '<foo bar="baz"/>' => array('foo', array('bar' => 'baz'), TRUE),
+      '<foo BAR="baz"/>' => array('foo', array('bar' => 'baz'), TRUE),
+      '<foo BAR="BAZ"/>' => array('foo', array('bar' => 'BAZ'), TRUE),
+    );
+    $this->isAllGood('startTag', 3, $withEnd);
+
     /*
     $bad = array(
+      // This will emit an entity lookup failure for &red.
+      "<foo a='blue&red'>" => array('foo', array('a' => 'blue&red'), FALSE),
       '<foo b"="baz">' => array('foo', array('b"' => 'baz'), FALSE),
       '<foo ="bar">' => array('foo', array('="bar"' => NULL), FALSE),
       '<foo bar=/>' => array('foo', array('bar' => NULL), TRUE),

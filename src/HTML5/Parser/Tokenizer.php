@@ -405,8 +405,8 @@ class Tokenizer {
     //if (strspn($name, '\'\"')) {
       $this->parseError("Unexpected characters in attribute name: %s", $name);
     }
-    // Whitespace not allowed between name and =.
-    //$this->scanner->whitespace();
+    // 8.1.2.3
+    $this->scanner->whitespace();
 
     $val = $this->attributeValue();
     //return array($name, $val);
@@ -423,8 +423,8 @@ class Tokenizer {
       return NULL;
     }
     $this->scanner->next();
-    // Whitespace is significant
-    //$this->scanner->whitespace();
+    // 8.1.2.3
+    $this->scanner->whitespace();
 
     $tok = $this->scanner->current();
     switch ($tok) {

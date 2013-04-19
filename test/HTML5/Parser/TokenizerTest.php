@@ -336,6 +336,9 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       '<doe a deer>' => array('doe', array('a' => NULL, 'deer' => NULL), FALSE),
       '<foo bar=baz>' => array('foo', array('bar' => 'baz'), FALSE),
 
+      // Updated for 8.1.2.3
+      '<foo    bar   =   "baz"      >' => array('foo', array('bar' => 'baz'), FALSE),
+
       // The spec allows an unquoted value '/'. This will not be a closing
       // tag.
       '<foo bar=/>' => array('foo', array('bar' => '/'), FALSE),
@@ -374,7 +377,6 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $reallyBad = array(
       '<foo ="bar">' => array('foo', array('=' => NULL, '"bar"' => NULL), FALSE),
       '<foo////>' => array('foo', array(), TRUE),
-      '<foo    bar   =   "baz"      >' => array('foo', array('bar' => NULL,  '=' => NULL, '"baz"' => NULL), FALSE),
     );
     foreach ($reallyBad as $test => $expects) {
       $events = $this->parse($test);

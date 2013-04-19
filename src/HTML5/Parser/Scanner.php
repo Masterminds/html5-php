@@ -64,6 +64,15 @@ class Scanner {
   }
 
   /**
+   * Silently consume N chars.
+   */
+  public function consume($count = 1) {
+    for ($i = 0; $i < $count; ++$i) {
+      $this->next();
+    }
+  }
+
+  /**
    * Get the current character.
    *
    * Note, this does not advance the pointer.

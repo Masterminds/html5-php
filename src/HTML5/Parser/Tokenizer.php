@@ -69,7 +69,15 @@ class Tokenizer {
   }
 
   /**
-   * Main entry point.
+   * Begin parsing.
+   *
+   * This will begin scanning the document, tokenizing as it goes.
+   * Tokens are emitted into the event handler.
+   *
+   * Tokenizing will continue until the document is completely
+   * read. Errors are emitted into the event handler, but
+   * the parser will attempt to continue parsing until the
+   * entire input stream is read.
    */
   public function parse() {
     $p = 0;
@@ -82,6 +90,26 @@ class Tokenizer {
     while ($this->carryOn);
   }
 
+  /**
+   * Set the text mode for the character data reader.
+   *
+   * HTML5 defines three different modes for reading text:
+   * - Normal: Read until a tag is encountered.
+   * - RCDATA: Read until a tag is encountered, but skip a few otherwise-
+   *   special characters.
+   * - Raw: Read until a special closing tag is encountered (viz. pre, script)
+   *
+   * This allows those modes to be set.
+   *
+   * Normally, setting is done by the event handler via a special return code on
+   * startTag(), but it can also be set manually using this function.
+   *
+   * @param integer $textmode
+   *   One of Tokenizer::TEXTMODE_*
+   * @param string $untilTag
+   *   The tag that should stop RAW or RCDATA mode. Normal mode does not
+   *   use this indicator.
+   */
   public function setTextMode($textmode, $untilTag = NULL) {
     $this->textMode = $textmode;
     $this->untilTag = $untilTag;
@@ -152,6 +180,9 @@ class Tokenizer {
     return TRUE;
   }
 
+  /**
+   * Read text in RAW mode.
+   */
   protected function rawText() {
     if (is_null($this->untilTag)) {
       return $this->text();
@@ -163,8 +194,9 @@ class Tokenizer {
     return $this->endTag();
   }
 
-
-
+  /**
+   * If the document is read, emit an EOF event.
+   */
   protected function eof() {
     if ($this->scanner->current() === FALSE) {
       //fprintf(STDOUT, "EOF");
@@ -195,6 +227,8 @@ class Tokenizer {
 
 
   /**
+   * Emit a tagStart event on encountering a tag.
+   *
    * 8.2.4.8
    */
   protected function tagOpen() {
@@ -216,6 +250,9 @@ class Tokenizer {
       $this->characterData();
   }
 
+  /**
+   * Look for markup.
+   */
   protected function markupDeclaration() {
     if ($this->scanner->current() != '!') {
       return FALSE;
@@ -318,6 +355,9 @@ class Tokenizer {
     return TRUE;
   }
 
+  /**
+   * Check if the scanner has reached the end of a tag.
+   */
   protected function isTagEnd(&$selfClose) {
     $tok = $this->scanner->current();
     if ($tok == '/') {
@@ -529,6 +569,9 @@ class Tokenizer {
     return TRUE;
   }
 
+  /**
+   * Check if the scanner has reached the end of a comment.
+   */
   protected function isCommentEnd() {
     // EOF
     if($this->scanner->current() === FALSE) {
@@ -722,10 +765,11 @@ class Tokenizer {
       $cdata .= $tok;
       $tok = $this->scanner->next();
     }
-    while (!$this->isCdataClose());
+    while (!$this->sequenceMatches(']]>'));
+    //while (!$this->isCdataClose());
 
-    $this->scanner->next(); // consume >
-    $this->scanner->next(); // Next char after >
+    // Consume ]]>
+    $this->scanner->consume(3);
 
     $this->events->cdata($cdata);
     return TRUE;

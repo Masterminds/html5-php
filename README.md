@@ -103,6 +103,14 @@ So tags are serialized according to these rules:
 - A tag that cannot have content: &lt;foo&gt; (no closing tag)
 - A tag that could have content, but doesn't: &lt;foo&gt;&lt;/foo&gt;
 
+## Known Issues
+
+Please check the issue queue for a full list, but the following are
+issues known issues that are not presently on the roadmap:
+
+- Rentrance: The current parser is not re-entrant. (Thus you can't pause
+  the parser to modify the HTML string mid-parse.)
+
 ## Thanks to...
 
 We owe a huge debt of gratitude to the original authors of html5lib.

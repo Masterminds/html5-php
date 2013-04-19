@@ -4,6 +4,12 @@ namespace HTML5\Parser;
 /**
  * This testing class gathers events from a parser and builds a stack of events.
  * It is useful for checking the output of a tokenizer.
+ *
+ * IMPORTANT:
+ *
+ * The startTag event also kicks the parser into TEXTMODE_RAW when it encounters
+ * script or pre tags. This is to match the behavior required by the HTML5 spec,
+ * which says that the tree builder must tell the tokenizer when to switch states.
  */
 class EventStack implements EventHandler {
   protected $stack;
@@ -42,6 +48,9 @@ class EventStack implements EventHandler {
   public function startTag($name, $attributes = array(), $selfClosing = FALSE) {
     $args = func_get_args();
     $this->store('startTag', $args);
+    if ($name == 'pre' || $name == 'script') {
+      return Tokenizer::TEXTMODE_RAW;
+    }
   }
 
   public function endTag($name) {

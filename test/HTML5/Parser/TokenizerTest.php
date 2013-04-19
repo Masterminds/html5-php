@@ -395,38 +395,59 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       '<pre>hello</pre</pre>' => 'hello</pre',
       "<pre>\nhello</pre\n</pre>" => "\nhello</pre\n",
       '<pre>&amp;</pre>' => '&amp;',
+      '<pre><!--not a comment--></pre>' => '<!--not a comment-->',
+      '<pre><![CDATA[not a comment]]></pre>' => '<![CDATA[not a comment]]>',
     );
     foreach ($good as $test => $expects) {
-      list($tok, $events) = $this->createTokenizer($test);
-
-      $tok->setTextMode(Tokenizer::TEXTMODE_RAW, 'pre');
-      $tok->parse();
-
-      //fprintf(STDOUT, "Test: %s\n", $test);
-      fprintf(STDOUT, "Test: %s %s\n", $test, print_r($events, TRUE));
-
+      $events = $this->parse($test);
       $this->assertEventEquals('startTag', 'pre', $events->get(0));
       $this->assertEventEquals('text', $expects, $events->get(1));
       $this->assertEventEquals('endTag', 'pre', $events->get(2));
     }
 
     $bad = array(
-      '<pre>&amp;</pre' => '&amp;',
+      '<pre>&amp;</pre' => '&amp;</pre',
+      '<pre>Hello world' => 'Hello world',
     );
+    foreach ($bad as $test => $expects) {
+      $events = $this->parse($test);
+      $this->assertEquals(4, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
+      $this->assertEventEquals('startTag', 'pre', $events->get(0));
+      $this->assertEventError($events->get(1));
+      $this->assertEventEquals('text', $expects, $events->get(2));
+    }
 
   }
 
   public function testText() {
-    $good = array(
-      'a<br>b',
-      '<a>test</a>',
-      'a<![[ test ]]>b',
-      'a&amp;b',
-      'a&b',
-      'a& b& c',
 
-    );
-    $this->markTestIncomplete("Need tag parsing first.");
+    $events = $this->parse('a<br>b');
+    $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, TRUE));
+    $this->assertEventEquals('text', 'a', $events->get(0));
+    $this->assertEventEquals('startTag', 'br', $events->get(1));
+    $this->assertEventEquals('text', 'b', $events->get(2));
+
+    $events = $this->parse('<a>Test</a>');
+    $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, TRUE));
+    $this->assertEventEquals('startTag', 'a', $events->get(0));
+    $this->assertEventEquals('text', 'Test', $events->get(1));
+    $this->assertEventEquals('endTag', 'a', $events->get(2));
+
+    $events = $this->parse('a<![CDATA[test]]>b');
+    $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, TRUE));
+    $this->assertEventEquals('text', 'a', $events->get(0));
+    $this->assertEventEquals('cdata', 'test', $events->get(1));
+    $this->assertEventEquals('text', 'b', $events->get(2));
+
+    $events = $this->parse('a<!--test-->b');
+    $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, TRUE));
+    $this->assertEventEquals('text', 'a', $events->get(0));
+    $this->assertEventEquals('comment', 'test', $events->get(1));
+    $this->assertEventEquals('text', 'b', $events->get(2));
+
+    $events = $this->parse('a&amp;b');
+    $this->assertEquals(2, $events->depth(), "Events: " . print_r($events, TRUE));
+    $this->assertEventEquals('text', 'a&b', $events->get(0));
   }
 
   // ================================================================

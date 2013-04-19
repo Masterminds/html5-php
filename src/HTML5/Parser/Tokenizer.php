@@ -303,10 +303,14 @@ class Tokenizer {
     }
     while (!$this->isTagEnd($selfClose));
 
-    $this->events->startTag($name, $attributes, $selfClose);
+    $mode = $this->events->startTag($name, $attributes, $selfClose);
     // Should we do this? What does this buy that selfClose doesn't?
     if ($selfClose) {
       $this->events->endTag($name);
+    }
+    elseif (is_int($mode)) {
+      //fprintf(STDOUT, "Event response says move into mode %d for tag %s", $mode, $name);
+      $this->setTextMode($mode, $name);
     }
 
     $this->scanner->next();
@@ -816,6 +820,7 @@ class Tokenizer {
     }
 
     // If we get here, we hit the EOF.
+    $this->parseError("Unexpected EOF during text read.");
     return $buffer;
   }
 

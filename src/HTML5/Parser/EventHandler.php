@@ -27,7 +27,32 @@ interface EventHandler {
   /**
    * A start tag.
    *
-   * 
+   * IMPORTANT: The parser watches the return value of this event. If this returns
+   * an integer, the parser will switch TEXTMODE patters according to the int.
+   *
+   * This is how the Tree Builder can tell the Tokenizer when a certain tag should
+   * cause the parser to go into RAW text mode.
+   *
+   * The HTML5 standard requires that the builder is the one that initiates this
+   * step, and this is the only way short of a circular reference that we can
+   * do that.
+   *
+   * Example: if a startTag even for a `script` name is fired, and the startTag()
+   * implementation returns Tokenizer::TEXTMODE_RAW, then the tokenizer will
+   * switch into RAW text mode and consume data until it reaches a closing
+   * `script` tag.
+   *
+   * The textmode is automatically reset to Tokenizer::TEXTMODE_NORMAL when the
+   * closing tag is encounter. **This behavior may change.**
+   *
+   * @param string $name
+   *   The tag name.
+   * @param array $attributes
+   *   An array with all of the tag's attributes.
+   * @param boolean $selfClosing
+   *   An indicator of whether or not this tag is self-closing (<foo/>)
+   * @return numeric
+   *   One of the Tokenizer::TEXTMODE_* constants.
    */
   public function startTag($name, $attributes = array(), $selfClosing = FALSE);
   /**

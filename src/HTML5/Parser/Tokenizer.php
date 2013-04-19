@@ -159,7 +159,7 @@ class Tokenizer {
     // These indicate not an entity. We return just
     // the &.
     if (strspn($tok, self::WHITE . "&<") == 1) {
-      $this->scanner->next();
+      //$this->scanner->next();
       return '&';
     }
 
@@ -401,10 +401,12 @@ class Tokenizer {
       $name = $this->scanner->current();
       $this->scanner->next();
     }
-    if (preg_match('/\'\"/', $name)) {
-      $this->parseError("Unexpected characters in attribute name");
+    if (preg_match('/[\'\"]/', $name)) {
+    //if (strspn($name, '\'\"')) {
+      $this->parseError("Unexpected characters in attribute name: %s", $name);
     }
-    $this->scanner->whitespace();
+    // Whitespace not allowed between name and =.
+    //$this->scanner->whitespace();
 
     $val = $this->attributeValue();
     //return array($name, $val);
@@ -485,6 +487,9 @@ class Tokenizer {
         $val .= $this->decodeCharacterReference(TRUE);
       }
       else {
+        if(strspn($tok, "\"'<=`") > 0) {
+          $this->parseError("Unexpected chars in unquoted attribute value %s", $tok);
+        }
         $val .= $tok;
         $tok = $this->scanner->next();
       }

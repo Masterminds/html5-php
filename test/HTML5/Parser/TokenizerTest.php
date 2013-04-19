@@ -322,6 +322,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
    * @depends testCharacterReference
    */
   public function testTagAttributes() {
+    // Opening tags.
     $good = array(
       '<foo bar="baz">' => array('foo', array('bar' => 'baz'), FALSE),
       '<foo bar=" baz ">' => array('foo', array('bar' => ' baz '), FALSE),
@@ -330,31 +331,36 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       "<foo a='1' b=\"2\">" => array('foo', array('a' => '1', 'b' => '2'), FALSE),
       "<foo ns:bar='baz'>" => array('foo', array('ns:bar' => 'baz'), FALSE),
       "<foo a='blue&amp;red'>" => array('foo', array('a' => 'blue&red'), FALSE),
+      "<foo a='blue&&amp;red'>" => array('foo', array('a' => 'blue&&red'), FALSE),
       "<foo\nbar='baz'\n>" => array('foo', array('bar' => 'baz'), FALSE),
       '<doe a deer>' => array('doe', array('a' => NULL, 'deer' => NULL), FALSE),
+      '<foo bar=baz>' => array('foo', array('bar' => 'baz'), FALSE),
+
+      // The spec allows an unquoted value '/'. This will not be a closing
+      // tag.
+      '<foo bar=/>' => array('foo', array('bar' => '/'), FALSE),
+      '<foo bar=baz/>' => array('foo', array('bar' => 'baz/'), FALSE),
     );
     $this->isAllGood('startTag', 2, $good);
 
+    // Self-closing tags.
     $withEnd = array(
       '<foo bar="baz"/>' => array('foo', array('bar' => 'baz'), TRUE),
       '<foo BAR="baz"/>' => array('foo', array('bar' => 'baz'), TRUE),
       '<foo BAR="BAZ"/>' => array('foo', array('bar' => 'BAZ'), TRUE),
+      "<foo a='1' b=\"2\" c=3 d/>" => array('foo', array('a' => '1', 'b' => '2', 'c' => '3', 'd' => NULL), TRUE),
     );
     $this->isAllGood('startTag', 3, $withEnd);
 
-    /*
+    // Cause a parse error.
     $bad = array(
       // This will emit an entity lookup failure for &red.
       "<foo a='blue&red'>" => array('foo', array('a' => 'blue&red'), FALSE),
+      "<foo a='blue&&amp;&red'>" => array('foo', array('a' => 'blue&&&red'), FALSE),
       '<foo b"="baz">' => array('foo', array('b"' => 'baz'), FALSE),
-      '<foo ="bar">' => array('foo', array('="bar"' => NULL), FALSE),
-      '<foo bar=/>' => array('foo', array('bar' => NULL), TRUE),
-      '<foo////>' => array('foo', array(), TRUE),
       '<foo bar=>' => array('foo', array('bar' => NULL), FALSE),
       '<foo bar="oh' => array('foo', array('bar' => 'oh'), FALSE),
-      '<foo bar=baz>' => array('foo', array('bar' => 'baz'), FALSE),
-      // This one causes so many errors, it might need to be tested on its own.
-      '<foo    bar   =   "baz"      >' => array('foo', array('bar' => NULL,  '=' => NULL, '"baz"' => NULL), FALSE),
+      '<foo bar=oh">' => array('foo', array('bar' => 'oh"'), FALSE),
 
     );
     foreach ($bad as $test => $expects) {
@@ -363,7 +369,20 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       $this->assertEventError($events->get(0));
       $this->assertEventEquals('startTag', $expects, $events->get(1));
     }
-     */
+
+    // Cause multiple parse errors.
+    $reallyBad = array(
+      '<foo ="bar">' => array('foo', array('=' => NULL, '"bar"' => NULL), FALSE),
+      '<foo////>' => array('foo', array(), TRUE),
+      '<foo    bar   =   "baz"      >' => array('foo', array('bar' => NULL,  '=' => NULL, '"baz"' => NULL), FALSE),
+    );
+    foreach ($reallyBad as $test => $expects) {
+      $events = $this->parse($test);
+      //fprintf(STDOUT, $test . print_r($events, TRUE));
+      $this->assertEventError($events->get(0));
+      $this->assertEventError($events->get(1));
+      //$this->assertEventEquals('startTag', $expects, $events->get(1));
+    }
   }
 
   public function testText() {

@@ -103,13 +103,26 @@ So tags are serialized according to these rules:
 - A tag that cannot have content: &lt;foo&gt; (no closing tag)
 - A tag that could have content, but doesn't: &lt;foo&gt;&lt;/foo&gt;
 
-## Known Issues
+## Known Issues (Or, Things We Designed Against the Spec)
 
 Please check the issue queue for a full list, but the following are
 issues known issues that are not presently on the roadmap:
 
+- Scripts: This parser does not contain a JavaScript or a CSS
+  interpreter. While one may be supplied, not all features will be
+  supported.
 - Rentrance: The current parser is not re-entrant. (Thus you can't pause
   the parser to modify the HTML string mid-parse.)
+- Validation: The current tree builder is **not** a validating parser.
+  While it will correct some HTML, it does not check that the HTML
+  conforms to the standard. (Should you wish, you can build a validating
+  parser by extending DOMTree or building your own EventHandler
+  implementation.)
+- Processor Instructions: The HTML5 spec does not allow processor
+  instructions. We do. Since this is a server-side library, we think
+  this is useful. And that means, dear reader, that in some cases you
+  can parse the HTML from a mixed PHP/HTML document. This, however, 
+  is an incidental feature, not a core feature.
 
 ## Thanks to...
 

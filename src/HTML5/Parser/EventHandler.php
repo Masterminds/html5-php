@@ -26,6 +26,8 @@ interface EventHandler {
   public function doctype($name, $idType = 0, $id = NULL, $quirks = FALSE);
   /**
    * A start tag.
+   *
+   * 
    */
   public function startTag($name, $attributes = array(), $selfClosing = FALSE);
   /**

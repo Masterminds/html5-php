@@ -387,6 +387,35 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     }
   }
 
+  public function testRawText() {
+    $good = array(
+      '<pre>abcd efg hijk lmnop</pre>     ' => 'abcd efg hijk lmnop',
+      '<pre><not/><the/><tag></pre>' => '<not/><the/><tag>',
+      '<pre><<<<<<<<</pre>' => '<<<<<<<<',
+      '<pre>hello</pre</pre>' => 'hello</pre',
+      "<pre>\nhello</pre\n</pre>" => "\nhello</pre\n",
+      '<pre>&amp;</pre>' => '&amp;',
+    );
+    foreach ($good as $test => $expects) {
+      list($tok, $events) = $this->createTokenizer($test);
+
+      $tok->setTextMode(Tokenizer::TEXTMODE_RAW, 'pre');
+      $tok->parse();
+
+      //fprintf(STDOUT, "Test: %s\n", $test);
+      fprintf(STDOUT, "Test: %s %s\n", $test, print_r($events, TRUE));
+
+      $this->assertEventEquals('startTag', 'pre', $events->get(0));
+      $this->assertEventEquals('text', $expects, $events->get(1));
+      $this->assertEventEquals('endTag', 'pre', $events->get(2));
+    }
+
+    $bad = array(
+      '<pre>&amp;</pre' => '&amp;',
+    );
+
+  }
+
   public function testText() {
     $good = array(
       'a<br>b',

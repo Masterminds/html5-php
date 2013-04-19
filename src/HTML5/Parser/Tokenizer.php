@@ -34,7 +34,21 @@ class Tokenizer {
   // When this goes to false, the parser stops.
   protected $carryOn = TRUE;
 
+  protected $textMode = 0; // TEXTMODE_NORMAL;
+  protected $untilTag = NULL;
+
   const WHITE="\t\n\f ";
+
+  /**
+   * Textmodes are used to determine how to scan the text inside of tags.
+   *
+   * NORMAL: Scan non-elements.
+   * RAW: Scan until a specific closing tag.
+   * RCDATA: Scan until a specifc close state. 
+   */
+  const TEXTMODE_NORMAL = 0;
+  const TEXTMODE_RAW = 1;
+  const TEXTMODE_RCDATA = 2;
 
   /**
    * Create a new tokenizer.
@@ -68,24 +82,60 @@ class Tokenizer {
     while ($this->carryOn);
   }
 
+  public function setTextMode($textmode, $untilTag = NULL) {
+    $this->textMode = $textmode;
+    $this->untilTag = $untilTag;
+  }
+
   /**
    * Consume a character and make a move.
    * HTML5 8.2.4.1
    */
   protected function consumeData() {
     // Character Ref
+    /*
     $this->characterReference() ||
       $this->tagOpen() ||
       $this->eof() ||
       $this->characterData();
+     */
+
+    $this->characterReference();
+    $this->tagOpen();
+    $this->eof();
+    $this->characterData();
+
 
     return $this->carryOn;
   }
 
   /**
-   * This buffers the current token as character data.
+   * Parse anything that looks like character data.
+   *
+   * Different rules apply based on the current TEXTMODE.
    */
   protected function characterData() {
+    if ($this->scanner->current() === FALSE) {
+      return FALSE;
+    }
+    switch ($this->textMode) {
+    case self::TEXTMODE_RAW:
+    case self::TEXTMODE_RCDATA:
+      return $this->rawText();
+    case self::TEXTMODE_NORMAL:
+    default:
+      $tok = $this->scanner->current();
+      if (strspn($tok, "<&")) {
+        return FALSE;
+      }
+      return $this->text();
+    }
+  }
+
+  /**
+   * This buffers the current token as character data.
+   */
+  protected function text() {
     $tok = $this->scanner->current();
 
     // This should never happen...
@@ -101,6 +151,19 @@ class Tokenizer {
     $this->scanner->next();
     return TRUE;
   }
+
+  protected function rawText() {
+    if (is_null($this->untilTag)) {
+      return $this->text();
+    }
+    $sequence = '</' . $this->untilTag . '>';
+    $txt =  $this->readUntilSequence($sequence);
+    $this->events->text($txt);
+    $this->setTextMode(self::TEXTMODE_NORMAL);
+    return $this->endTag();
+  }
+
+
 
   protected function eof() {
     if ($this->scanner->current() === FALSE) {
@@ -130,106 +193,6 @@ class Tokenizer {
     return FALSE;
   }
 
-  /**
-   * Decode a character reference and return the string.
-   *
-   * Returns FALSE if the entity could not be found. If $inAttribute is set
-   * to TRUE, a bare & will be returned as-is.
-   *
-   * @param boolean $inAttribute
-   *   Set to TRUE if the text is inside of an attribute value.
-   *   FALSE otherwise.
-   */
-  protected function decodeCharacterReference($inAttribute = FALSE) {
-
-    // If it fails this, it's definitely not an entity.
-    if ($this->scanner->current() != '&') {
-      return FALSE;
-    }
-
-    // Next char after &.
-    $tok = $this->scanner->next();
-    $entity = '';
-    $start = $this->scanner->position();
-
-    if ($tok == FALSE) {
-      return '&';
-    }
-
-    // These indicate not an entity. We return just
-    // the &.
-    if (strspn($tok, self::WHITE . "&<") == 1) {
-      //$this->scanner->next();
-      return '&';
-    }
-
-    // Numeric entity
-    if ($tok == '#') {
-      $tok = $this->scanner->next();
-
-      // Hexidecimal encoding.
-      // X[0-9a-fA-F]+;
-      // x[0-9a-fA-F]+;
-      if ($tok == 'x' || $tok == 'X') {
-        $tok = $this->scanner->next(); // Consume x
-
-        // Convert from hex code to char.
-        $hex = $this->scanner->getHex();
-        if (empty($hex)) {
-          $this->parseError("Expected &#xHEX;, got &#x%s", $tok);
-          // We unconsume because we don't know what parser rules might
-          // be in effect for the remaining chars. For example. '&#>'
-          // might result in a specific parsing rule inside of tag
-          // contexts, while not inside of pcdata context.
-          $this->scanner->unconsume(2);
-          return '&';
-        }
-        $entity = CharacterReference::lookupHex($hex);
-      }
-      // Decimal encoding.
-      // [0-9]+;
-      else {
-        // Convert from decimal to char.
-        $numeric = $this->scanner->getNumeric();
-        if ($numeric === FALSE) {
-          $this->parseError("Expected &#DIGITS;, got &#%s", $tok);
-          $this->scanner->unconsume(2);
-          return '&';
-        }
-        $entity = CharacterReference::lookupDecimal($numeric);
-      }
-    }
-    // String entity.
-    else {
-      // Attempt to consume a string up to a ';'.
-      // [a-zA-Z0-9]+;
-      $cname = $this->scanner->getAsciiAlpha();
-      $entity = CharacterReference::lookupName($cname);
-      if ($entity == NULL) {
-          $this->parseError("No match in entity table for '%s'", $entity);
-      }
-    }
-
-    // The scanner has advanced the cursor for us.
-    $tok = $this->scanner->current();
-
-    // We have an entity. We're done here.
-    if ($tok == ';') {
-      $this->scanner->next();
-      return $entity;
-    }
-
-    // If in an attribute, then failing to match ; means unconsume the 
-    // entire string. Otherwise, failure to match is an error.
-    if ($inAttribute) {
-      $this->scanner->unconsume($this->scanner->position() - $start);
-      return '&';
-    }
-
-    $this->parseError("Expected &ENTITY;, got &ENTITY%s (no trailing ;) ", $tok);
-    return '&' . $entity;
-
-  }
 
   /**
    * 8.2.4.8
@@ -781,172 +744,6 @@ class Tokenizer {
     return FALSE;
   }
 
-  protected function rcdata() {
-    // Ampersand
-    // <
-    // Null
-    // EOF
-    // Character
-  }
-
-  protected function rawtext() {
-    // < is a literal
-    // NULL is an error
-    // EOF
-    // Character data
-  }
-
-  protected function scriptData() {
-    // < is a literal
-    // NULL is an error
-    // EOF
-    // Character data
-  }
-
-  /**
-   * 8.2.4.7
-   */
-  protected function plaintext() {
-    // NULL -> parse error
-    // EOF -> eof
-    // -> Character data
-  }
-
-
-  /**
-   * 8.2.4.11
-   */
-  protected function rcdataLessThan() {
-    // / -> empty the tmp buffer and go to end-tag
-    // ->rcdata
-  }
-
-  /**
-   * 8.2.4.12
-   */
-  protected function rcdataEndTag() {
-    // A-Za-z: append to tagname
-    // -> rcdata state
-  }
-
-  /**
-   * 8.2.4.13
-   */
-  protected function rcdataEndTagName() {
-    // tab, lf, ff, space -> before attribute or treat as anything
-    // / -> self-closing tag
-    // > -> end tag, back to data
-    // A-Za-z -> append to tagname
-    // -> rcdata state
-  }
-
-  /**
-   * 8.2.4.14
-   */
-  protected function rawtextLessThan() {
-    // / -> rawtext endtag state
-    // -> rawtext
-  }
-
-  /**
-   * 8.2.4.15
-   */
-  protected function rawtextEndTagOpen() {
-    // A-Za-z -> rawtext
-    // ->rawtext
-  }
-
-  protected function rawtextEndTagName() {
-    // tab, lf, ff, space -> before attr name
-    //
-  }
-
-  protected function scriptLessThan(){
-  }
-  protected function scriptEndTagOpen() {
-  }
-  protected function scriptEndTagName() {
-  }
-  protected function scriptEscapeStart() {
-  }
-  protected function scriptEscapeStartDash() {
-  }
-  protected function scriptEscaped() {
-  }
-  protected function scriptEscapedDash() {
-  }
-  protected function scriptEscapedDashDash() {
-  }
-  protected function scriptEscapedLessThan() {
-  }
-  protected function scriptEscapedEndTagOpen() {
-  }
-  protected function scriptEscapedEndTagName() {
-  }
-  protected function scriptDoubleEscapeStart() {
-  }
-  protected function scriptDoubleEscaped() {
-  }
-  protected function scriptDoubleEscapedDash() {
-  }
-  protected function scriptDoubleEscapedDashDash() {
-  }
-  protected function scriptDoubleEscapedLessThan() {
-  }
-  protected function scriptDoubleEscapeEnd() {
-  }
-  protected function beforeAttributeName() {
-  }
-  protected function attributeName() {
-  }
-  protected function afterAttributeName() {
-  }
-  protected function beforeAttributeValue() {
-  }
-  protected function attributeValueDoubleQuote() {
-  }
-  protected function attributeValueSingleQuote() {
-  }
-  protected function attributeValueUnquoted() {
-  }
-  protected function characterReferenceInAttributeValue() {
-  }
-  protected function afterAttributeValueQuoted() {
-  }
-  protected function selfCloseingStartTag() {
-  }
-  protected function beforeDoctype() {
-  }
-  protected function doctypeName() {
-  }
-  protected function afterDoctypeName() {
-  }
-  protected function doctypePublicKeyword() {
-  }
-  protected function beforeDoctypePublicId() {
-  }
-  protected function doctypePublicIdDoubleQuoted() {
-  }
-  protected function doctypePublicIdSingleQuoted() {
-  }
-  protected function afterDoctypePublicId() {
-  }
-  protected function betweenDoctypePublicAndSystem() {
-  }
-  protected function afterDoctypeSystemKeyword() {
-  }
-  protected function beforeDoctypeSystemIdentifier() {
-  }
-  protected function doctypeSystemIdDoubleQuoted() {
-  }
-  protected function doctypeSystemIdSingleQuoted() {
-  }
-  protected function afterDoctypeSystemId() {
-  }
-  protected function bogusDoctype() {
-  }
-
-
   // ================================================================
   // Non-HTML5
   // ================================================================
@@ -999,6 +796,62 @@ class Tokenizer {
   // ================================================================
 
   /**
+   * Read from the input stream until we get to the desired sequene 
+   * or hit the end of the input stream.
+   */
+  protected function readUntilSequence($sequence) {
+    $buffer = '';
+
+    // Optimization for reading larger blocks faster.
+    $first = substr($sequence, 0, 1);
+    while ($this->scanner->current() !== FALSE) {
+      $buffer .= $this->scanner->charsUntil($first);
+
+      // Stop as soon as we hit the stopping condition.
+      if ($this->sequenceMatches($sequence)) {
+        return $buffer;
+      }
+      $buffer .= $this->scanner->current();
+      $this->scanner->next();
+    }
+
+    // If we get here, we hit the EOF.
+    return $buffer;
+  }
+
+  /**
+   * Check if upcomming chars match the given sequence.
+   *
+   * This will read the stream for the $sequence. If it's
+   * found, this will return TRUE. If not, return FALSE.
+   * Since this unconsumes any chars it reads, the caller
+   * will still need to read the next sequence, even if 
+   * this returns TRUE.
+   *
+   * Example: $this->sequenceMatches('</script>') will
+   * see if the input stream is at the start of a 
+   * '</script>' string.
+   */
+  protected function sequenceMatches($sequence) {
+    $len = strlen($sequence);
+    $buffer = '';
+    for ($i = 0; $i < $len; ++$i) {
+      $buffer .= $this->scanner->current();
+
+      // EOF. Rewind and let the caller handle it.
+      if ($this->scanner->current() === FALSE) {
+        $this->scanner->unconsume($i);
+        return FALSE;
+      }
+      $this->scanner->next();
+    }
+
+    $this->scanner->unconsume($len);
+    return $buffer == $sequence;
+
+  }
+
+  /**
    * Send a TEXT event with the contents of the text buffer.
    *
    * This emits an EventHandler::text() event with the current contents of the
@@ -1040,6 +893,107 @@ class Tokenizer {
     $col = $this->scanner->columnOffset();
     $this->events->parseError($msg, $line, $col);
     return FALSE;
+  }
+
+  /**
+   * Decode a character reference and return the string.
+   *
+   * Returns FALSE if the entity could not be found. If $inAttribute is set
+   * to TRUE, a bare & will be returned as-is.
+   *
+   * @param boolean $inAttribute
+   *   Set to TRUE if the text is inside of an attribute value.
+   *   FALSE otherwise.
+   */
+  protected function decodeCharacterReference($inAttribute = FALSE) {
+
+    // If it fails this, it's definitely not an entity.
+    if ($this->scanner->current() != '&') {
+      return FALSE;
+    }
+
+    // Next char after &.
+    $tok = $this->scanner->next();
+    $entity = '';
+    $start = $this->scanner->position();
+
+    if ($tok == FALSE) {
+      return '&';
+    }
+
+    // These indicate not an entity. We return just
+    // the &.
+    if (strspn($tok, self::WHITE . "&<") == 1) {
+      //$this->scanner->next();
+      return '&';
+    }
+
+    // Numeric entity
+    if ($tok == '#') {
+      $tok = $this->scanner->next();
+
+      // Hexidecimal encoding.
+      // X[0-9a-fA-F]+;
+      // x[0-9a-fA-F]+;
+      if ($tok == 'x' || $tok == 'X') {
+        $tok = $this->scanner->next(); // Consume x
+
+        // Convert from hex code to char.
+        $hex = $this->scanner->getHex();
+        if (empty($hex)) {
+          $this->parseError("Expected &#xHEX;, got &#x%s", $tok);
+          // We unconsume because we don't know what parser rules might
+          // be in effect for the remaining chars. For example. '&#>'
+          // might result in a specific parsing rule inside of tag
+          // contexts, while not inside of pcdata context.
+          $this->scanner->unconsume(2);
+          return '&';
+        }
+        $entity = CharacterReference::lookupHex($hex);
+      }
+      // Decimal encoding.
+      // [0-9]+;
+      else {
+        // Convert from decimal to char.
+        $numeric = $this->scanner->getNumeric();
+        if ($numeric === FALSE) {
+          $this->parseError("Expected &#DIGITS;, got &#%s", $tok);
+          $this->scanner->unconsume(2);
+          return '&';
+        }
+        $entity = CharacterReference::lookupDecimal($numeric);
+      }
+    }
+    // String entity.
+    else {
+      // Attempt to consume a string up to a ';'.
+      // [a-zA-Z0-9]+;
+      $cname = $this->scanner->getAsciiAlpha();
+      $entity = CharacterReference::lookupName($cname);
+      if ($entity == NULL) {
+          $this->parseError("No match in entity table for '%s'", $entity);
+      }
+    }
+
+    // The scanner has advanced the cursor for us.
+    $tok = $this->scanner->current();
+
+    // We have an entity. We're done here.
+    if ($tok == ';') {
+      $this->scanner->next();
+      return $entity;
+    }
+
+    // If in an attribute, then failing to match ; means unconsume the 
+    // entire string. Otherwise, failure to match is an error.
+    if ($inAttribute) {
+      $this->scanner->unconsume($this->scanner->position() - $start);
+      return '&';
+    }
+
+    $this->parseError("Expected &ENTITY;, got &ENTITY%s (no trailing ;) ", $tok);
+    return '&' . $entity;
+
   }
 
 }

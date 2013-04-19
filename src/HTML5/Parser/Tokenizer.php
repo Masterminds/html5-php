@@ -766,7 +766,6 @@ class Tokenizer {
       $tok = $this->scanner->next();
     }
     while (!$this->sequenceMatches(']]>'));
-    //while (!$this->isCdataClose());
 
     // Consume ]]>
     $this->scanner->consume(3);
@@ -774,22 +773,6 @@ class Tokenizer {
     $this->events->cdata($cdata);
     return TRUE;
 
-  }
-  /**
-   * Check whether the parser has reached the end of a CDATA section.
-   */
-  protected function isCdataClose() {
-    $tok = $this->scanner->current();
-    if ($tok != ']') {
-      return FALSE;
-    }
-    $tok = $this->scanner->next();
-    if ($tok == ']' && $this->scanner->peek() == '>') {
-      return TRUE;
-    }
-    // Unconsume one char and return.
-    $this->scanner->unconsume();
-    return FALSE;
   }
 
   // ================================================================

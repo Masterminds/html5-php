@@ -2,6 +2,7 @@
 namespace HTML5\Tests;
 
 use \HTML5\Serializer\Traverser;
+use \HTML5\Parser;
 
 require_once __DIR__ . '/../TestCase.php';
 

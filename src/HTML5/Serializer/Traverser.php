@@ -280,6 +280,15 @@ class Traverser {
     return (bool)preg_match('/^(' . self::$block_elements . ')$/i', $name);
   }
 
+  /**
+   * Is the element literal?
+   *
+   * @param mixed $element
+   *   An element implementing DOMNode.
+   * 
+   * @return boolean
+   *   True if literal and false otherise.
+   */
   protected function isLiteral($element) {
     if (!$element->parentNode) {
       return FALSE;
@@ -288,13 +297,20 @@ class Traverser {
 
   }
 
+  /**
+   * Is an element local?
+   *
+   * @param mixed $ele
+   *   An element that implement \DOMNode.
+   *
+   * @return bool
+   *   True if local and false otherwise.
+   */
   protected function isLocalElement($ele) {
     $uri = $ele->namespaceURI;
     if (empty($uri)) {
       return FALSE;
     }
     return isset(self::$local_ns[$uri]);
-
   }
-
 }

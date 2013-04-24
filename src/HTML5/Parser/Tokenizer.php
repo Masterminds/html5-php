@@ -42,18 +42,6 @@ class Tokenizer {
   const WHITE="\t\n\f ";
 
   /**
-   * Textmodes are used to determine how to scan the text inside of tags.
-   *
-   * NORMAL: Scan non-elements.
-   * RAW: Scan until a specific closing tag.
-   * RCDATA: Scan until a specifc close state. 
-   *//*
-  const TEXTMODE_NORMAL = 0;
-  const TEXTMODE_RAW = 1;
-  const TEXTMODE_RCDATA = 2;
-    */
-
-  /**
    * Create a new tokenizer.
    *
    * Typically, parsing a document involves creating a new tokenizer, giving

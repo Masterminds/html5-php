@@ -37,17 +37,11 @@ class TraverserTest extends \HTML5\Tests\TestCase {
 
     foreach ($blocks as $block) {
       $this->assertTrue($method->invoke($t, $block), 'Block test failed on: ' . $block);
-
-      // Also test the uppercase version.
-      $this->assertTrue($method->invoke($t, strtoupper($block)), 'Block test failed on: ' . strtoupper($block));
     }
 
     $nonblocks = array('span', 'a', 'img');
     foreach ($nonblocks as $tag) {
       $this->assertFalse($method->invoke($t, $tag),  'Block test failed on: ' . $tag);
-
-      // Also test the uppercase version.
-      $this->assertFalse($method->invoke($t, strtoupper($tag)),  'Block test failed on: ' . strtoupper($tag));
     }
   }
 
@@ -62,17 +56,11 @@ class TraverserTest extends \HTML5\Tests\TestCase {
 
     foreach ($elements as $element) {
       $this->assertTrue($method->invoke($t, $element), 'Unary test failed on: ' . $element);
-
-      // Also test the uppercase version.
-      $this->assertTrue($method->invoke($t, strtoupper($element)), 'Unary test failed on: ' . strtoupper($element));
     }
 
     $nonblocks = array('span', 'a', 'div');
     foreach ($nonblocks as $tag) {
       $this->assertFalse($method->invoke($t, $tag),  'Unary test failed on: ' . $tag);
-
-      // Also test the uppercase version.
-      $this->assertFalse($method->invoke($t, strtoupper($tag)),  'Unary test failed on: ' . strtoupper($tag));
     }
   }
 

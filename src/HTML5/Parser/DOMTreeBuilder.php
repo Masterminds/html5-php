@@ -30,7 +30,14 @@ class DOMTreeBuilder implements EventHandler {
     $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
     $this->doc->errors = array();
 
-    $this->current = $this->doc->documentElement();
+    $this->current = $this->doc->documentElement;
+  }
+
+  /**
+   * Get the document.
+   */
+  public function document() {
+    return $this->doc;
   }
 
   /**
@@ -71,7 +78,7 @@ class DOMTreeBuilder implements EventHandler {
 
   public function endTag($name) {
     $lname = $this->normalizeTagName($name);
-    if ($this->current->tagName() != $lname) {
+    if ($this->current->tagName != $lname) {
       return $this->quirksTreeResolver($lname);
     }
 

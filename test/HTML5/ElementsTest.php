@@ -334,6 +334,7 @@ class ElementsTest extends TestCase {
 
   public function testIsA() {
     $this->assertTrue(Elements::isA('script', Elements::KNOWN_ELEMENT));
+    $this->assertFalse(Elements::isA('scriptypoo', Elements::KNOWN_ELEMENT));
     $this->assertTrue(Elements::isA('script', Elements::TEXT_RAW));
     $this->assertFalse(Elements::isA('script', Elements::TEXT_RCDATA));
   }

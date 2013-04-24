@@ -10,8 +10,9 @@ namespace HTML5;
  */
 class Elements {
 
-  const TEXT_RAW = 0x01;
-  const TEXT_RCDATA = 0x02;
+  const KNOWN_ELEMENT = 0x01;
+  const TEXT_RAW = 0x02;
+  const TEXT_RCDATA = 0x04;
   const OMIT_START = 0x0a;
   const OMIT_END = 0x0b;
 
@@ -95,7 +96,7 @@ class Elements {
     "output" => 1,
     "p" => 1,
     "param" => 1,
-    "pre" => 1,
+    "pre" => 3, // NORMAL | TEXT_RAW
     "progress" => 1,
     "q" => 1,
     "rp" => 1,
@@ -103,7 +104,7 @@ class Elements {
     "ruby" => 1,
     "s" => 1,
     "samp" => 1,
-    "script" => 1,
+    "script" => 3, // NORMAL | TEXT_RAW
     "section" => 1,
     "select" => 1,
     "small" => 1,
@@ -117,7 +118,7 @@ class Elements {
     "table" => 1,
     "tbody" => 1,
     "td" => 1,
-    "textarea" => 1,
+    "textarea" => 5, // NORMAL | TEXT_RCDATA
     "tfoot" => 1,
     "th" => 1,
     "thead" => 1,
@@ -278,6 +279,30 @@ class Elements {
   );
 
   /**
+   * Check whether the given element meets the given criterion.
+   *
+   * Example:
+   *
+   *     Elements::isA('script', Elements::TEXT_RAW); // Returns true.
+   *
+   *     Elements::isA('script', Elements::TEXT_RCDATA); // Returns false.
+   *
+   * @param string $name
+   *   The element name.
+   * @param int $mask
+   *   One of the constants on this class.
+   * @return boolean
+   *   TRUE if the element matches the mask, FALSE otherwise.
+   */
+  public static function isA($name, $mask) {
+    if (!self::isElement($name)) {
+      return FALSE;
+    }
+
+    return (self::element($name) & $mask) == $mask;
+  }
+
+  /**
    * Test if an element is a valid html5 element.
    *
    * @param string $name
@@ -335,7 +360,24 @@ class Elements {
    * @return bool
    *   True if valid and false otherwise.
    */
-  public function isElement($name) {
+  public static function isElement($name) {
     return self::isHtml5Element($name) || self::isMathMLElement($name) || self::isSvgElement($name);
+  }
+
+  /**
+   * Get the element mask for the given element name.
+   */
+  public static function element($name) {
+    if (isset(self::$elements[$name])) {
+      return self::$elements[$name];
+    }
+    if (isset(self::$svg[$name])) {
+      return self::$svg[$name];
+    }
+    if (isset(self::$mathml[$name])) {
+      return self::$mathml[$name];
+    }
+
+    return FALSE;
   }
 }

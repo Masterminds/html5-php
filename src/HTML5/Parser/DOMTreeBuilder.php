@@ -84,6 +84,7 @@ class DOMTreeBuilder implements EventHandler {
   }
 
   public function comment($cdata) {
+    // TODO: Need to handle case where comment appears outside of the HTML tag.
     $node = $this->doc->createComment($cdata);
     $this->current->appendChild($node);
   }

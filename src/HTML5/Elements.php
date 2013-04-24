@@ -1,4 +1,5 @@
 <?php
+namespace HTML5;
 
 class Elements {
 
@@ -8,10 +9,10 @@ class Elements {
   const OMIT_END = 0x0b;
 
   /**
-   * The HTML5 elements.
+   * The HTML5 elements as defined in http://dev.w3.org/html5/markup/elements.html.
    * @var array
    */
-  public static $properties = array(
+  public static $elements = array(
     "a" => 1,
     "abbr" => 1,
     "address" => 1,
@@ -34,6 +35,7 @@ class Elements {
     "col" => 1,
     "colgroup" => 1,
     "command" => 1,
+    //"data" => 1,    // This is highly experimental and only part of the whatwg spec (not w3c). See https://developer.mozilla.org/en-US/docs/HTML/Element/data
     "datalist" => 1,
     "dd" => 1,
     "del" => 1,
@@ -119,6 +121,23 @@ class Elements {
     "u" => 1,
     "ul" => 1,
     "var" => 1,
+    "video" => 1,
     "wbr" => 1,
   );
+
+  /**
+   * Test if an element is a valid html5 element.
+   *
+   * @param string $name
+   *   The name of the element.
+   *
+   * @return bool
+   *   True if a html5 element and false otherwise.
+   */
+  public static function isHtml5Element($name) {
+
+    // html5 element names are case insensetitive. Forcing lowercase for the check.
+    // Do we need this check or will all data passed here already be lowercase?
+    return isset(self::$elements[strtolower($name)]);
+  }
 }

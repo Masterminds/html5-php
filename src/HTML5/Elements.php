@@ -183,6 +183,101 @@ class Elements {
   );
 
   /**
+   * The svg elements.
+   *
+   * The Mozilla documentation has a good list at https://developer.mozilla.org/en-US/docs/SVG/Element.
+   * The w3c list appears to be lacking in some areas like filter effect elements.
+   * That list can be found at http://www.w3.org/wiki/SVG/Elements.
+   *
+   * Note, FireFox appears to do a better job rendering filter effects than chrome.
+   * While they are in the spec I'm not sure how widely implemented they are.
+   *
+   * @var array
+   */
+  public static $svg = array(
+    "a" => 1,
+    "altGlyph" => 1,
+    "altGlyphDef" => 1,
+    "altGlyphItem" => 1,
+    "animate" => 1,
+    "animateColor" => 1,
+    "animateMotion" => 1,
+    "animateTransform" => 1,
+    "circle" => 1,
+    "clipPath" => 1,
+    "color-profile" => 1,
+    "cursor" => 1,
+    "defs" => 1,
+    "desc" => 1,
+    "ellipse" => 1,
+    "feBlend" => 1,
+    "feColorMatrix" => 1,
+    "feComponentTransfer" => 1,
+    "feComposite" => 1,
+    "feConvolveMatrix" => 1,
+    "feDiffuseLighting" => 1,
+    "feDisplacementMap" => 1,
+    "feDistantLight" => 1,
+    "feFlood" => 1,
+    "feFuncA" => 1,
+    "feFuncB" => 1,
+    "feFuncG" => 1,
+    "feFuncR" => 1,
+    "feGaussianBlur" => 1,
+    "feImage" => 1,
+    "feMerge" => 1,
+    "feMergeNode" => 1,
+    "feMorphology" => 1,
+    "feOffset" => 1,
+    "fePointLight" => 1,
+    "feSpecularLighting" => 1,
+    "feSpotLight" => 1,
+    "feTile" => 1,
+    "feTurbulence" => 1,
+    "filter" => 1,
+    "font" => 1,
+    "font-face" => 1,
+    "font-face-format" => 1,
+    "font-face-name" => 1,
+    "font-face-src" => 1,
+    "font-face-uri" => 1,
+    "foreignObject" => 1,
+    "g" => 1,
+    "glyph" => 1,
+    "glyphRef" => 1,
+    "hkern" => 1,
+    "image" => 1,
+    "line" => 1,
+    "linearGradient" => 1,
+    "marker" => 1,
+    "mask" => 1,
+    "metadata" => 1,
+    "missing-glyph" => 1,
+    "mpath" => 1,
+    "path" => 1,
+    "pattern" => 1,
+    "polygon" => 1,
+    "polyline" => 1,
+    "radialGradient" => 1,
+    "rect" => 1,
+    "script" => 1,
+    "set" => 1,
+    "stop" => 1,
+    "style" => 1,
+    "svg" => 1,
+    "switch" => 1,
+    "symbol" => 1,
+    "text" => 1,
+    "textPath" => 1,
+    "title" => 1,
+    "tref" => 1,
+    "tspan" => 1,
+    "use" => 1,
+    "view" => 1,
+    "vkern" => 1,
+  );
+
+  /**
    * Test if an element is a valid html5 element.
    *
    * @param string $name
@@ -214,6 +309,21 @@ class Elements {
   }
 
   /**
+   * Test if an element is a valid SVG element.
+   *
+   * @param string $name
+   *   The name of the element.
+   *
+   * @return boolean
+   *   True if a SVG element and false otherise.
+   */
+  public static function isSvgElement($name) {
+
+    // SVG is case-sensetitive unlike html5 elements.
+    return isset(self::$svg[$name]);
+  }
+
+  /**
    * Is an element name valid in an html5 document.
    *
    * This includes html5 elements along with other allowed embedded content
@@ -226,6 +336,6 @@ class Elements {
    *   True if valid and false otherwise.
    */
   public function isElement($name) {
-    return self::isHtml5Element($name) || self::isMathMLElement($name);
+    return self::isHtml5Element($name) || self::isMathMLElement($name) || self::isSvgElement($name);
   }
 }

@@ -118,11 +118,18 @@ issues known issues that are not presently on the roadmap:
   conforms to the standard. (Should you wish, you can build a validating
   parser by extending DOMTree or building your own EventHandler
   implementation.)
+  * There is limited support for insertion modes.
+  * Some autocorrection is done automatically.
+  * Per the spec, many legacy tags are admitted and correctly handled,
+    even though they are technically not part of HTML5.
 - Processor Instructions: The HTML5 spec does not allow processor
   instructions. We do. Since this is a server-side library, we think
   this is useful. And that means, dear reader, that in some cases you
   can parse the HTML from a mixed PHP/HTML document. This, however, 
   is an incidental feature, not a core feature.
+- HTML manifests: Unsupported.
+- PLAINTEXT: Unsupported.
+- Adoption Agency Algorithm: Not yet implemented. (8.2.5.4.7)
 
 ## Thanks to...
 

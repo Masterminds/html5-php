@@ -1,6 +1,7 @@
 <?php
 namespace HTML5\Parser;
 
+use HTML5\Elements;
 /**
  * Create an HTML5 DOM tree from events.
  *
@@ -30,7 +31,14 @@ class DOMTreeBuilder implements EventHandler {
     $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
     $this->doc->errors = array();
 
-    $this->current = $this->doc->documentElement();
+    $this->current = $this->doc->documentElement;
+  }
+
+  /**
+   * Get the document.
+   */
+  public function document() {
+    return $this->doc;
   }
 
   /**
@@ -62,16 +70,28 @@ class DOMTreeBuilder implements EventHandler {
     }
 
     $ele = $this->doc->createElement($lname);
+    foreach ($attributes as $aName => $aVal) {
+      $ele->setAttribute($aName, $aVal);
+
+      // This is necessary on a non-DTD schema, like HTML5.
+      if ($aName == 'id') {
+        $ele->setIdAttribute('id', TRUE);
+      }
+    }
 
     $this->current->appendChild($ele);
 
     // XXX: Need to handle self-closing tags and unary tags.
     $this->current = $ele;
+
+    // Return the element mask, which the tokenizer can then use to set 
+    // various processing rules.
+    return Elements::element($name);
   }
 
   public function endTag($name) {
     $lname = $this->normalizeTagName($name);
-    if ($this->current->tagName() != $lname) {
+    if ($this->current->tagName != $lname) {
       return $this->quirksTreeResolver($lname);
     }
 

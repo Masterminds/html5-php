@@ -322,4 +322,21 @@ class ElementsTest extends TestCase {
     }
   }
 
+  public function testElement() {
+    foreach ($this->html5Elements as $element) {
+      $this->assertGreaterThan(0, Elements::element($element));
+    }
+    $nonhtml5 = array('foo', 'bar', 'baz');
+    foreach ($nonhtml5 as $element) {
+      $this->assertFalse(Elements::element($element));
+    }
+  }
+
+  public function testIsA() {
+    $this->assertTrue(Elements::isA('script', Elements::KNOWN_ELEMENT));
+    $this->assertFalse(Elements::isA('scriptypoo', Elements::KNOWN_ELEMENT));
+    $this->assertTrue(Elements::isA('script', Elements::TEXT_RAW));
+    $this->assertFalse(Elements::isA('script', Elements::TEXT_RCDATA));
+  }
+
 }

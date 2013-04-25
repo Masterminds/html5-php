@@ -1,6 +1,8 @@
 <?php
 namespace HTML5\Parser;
 
+use HTML5\Elements;
+
 /**
  * The HTML5 tokenizer.
  *
@@ -38,17 +40,6 @@ class Tokenizer {
   protected $untilTag = NULL;
 
   const WHITE="\t\n\f ";
-
-  /**
-   * Textmodes are used to determine how to scan the text inside of tags.
-   *
-   * NORMAL: Scan non-elements.
-   * RAW: Scan until a specific closing tag.
-   * RCDATA: Scan until a specifc close state. 
-   */
-  const TEXTMODE_NORMAL = 0;
-  const TEXTMODE_RAW = 1;
-  const TEXTMODE_RCDATA = 2;
 
   /**
    * Create a new tokenizer.
@@ -105,13 +96,13 @@ class Tokenizer {
    * startTag(), but it can also be set manually using this function.
    *
    * @param integer $textmode
-   *   One of Tokenizer::TEXTMODE_*
+   *   One of Elements::TEXT_*
    * @param string $untilTag
    *   The tag that should stop RAW or RCDATA mode. Normal mode does not
    *   use this indicator.
    */
   public function setTextMode($textmode, $untilTag = NULL) {
-    $this->textMode = $textmode;
+    $this->textMode = $textmode & (Elements::TEXT_RAW | Elements::TEXT_RCDATA);
     $this->untilTag = $untilTag;
   }
 
@@ -140,17 +131,18 @@ class Tokenizer {
   /**
    * Parse anything that looks like character data.
    *
-   * Different rules apply based on the current TEXTMODE.
+   * Different rules apply based on the current text mode.
+   *
+   * @see Elements::TEXT_RAW Elements::TEXT_RCDATA.
    */
   protected function characterData() {
     if ($this->scanner->current() === FALSE) {
       return FALSE;
     }
     switch ($this->textMode) {
-    case self::TEXTMODE_RAW:
-    case self::TEXTMODE_RCDATA:
+    case Elements::TEXT_RAW:
+    case Elements::TEXT_RCDATA:
       return $this->rawText();
-    case self::TEXTMODE_NORMAL:
     default:
       $tok = $this->scanner->current();
       if (strspn($tok, "<&")) {
@@ -190,7 +182,7 @@ class Tokenizer {
     $sequence = '</' . $this->untilTag . '>';
     $txt =  $this->readUntilSequence($sequence);
     $this->events->text($txt);
-    $this->setTextMode(self::TEXTMODE_NORMAL);
+    $this->setTextMode(0);
     return $this->endTag();
   }
 

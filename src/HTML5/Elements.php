@@ -10,11 +10,22 @@ namespace HTML5;
  */
 class Elements {
 
-  const KNOWN_ELEMENT = 0x01;
-  const TEXT_RAW = 0x02;
-  const TEXT_RCDATA = 0x04;
-  const OMIT_START = 0x0a;
-  const OMIT_END = 0x0b;
+  const KNOWN_ELEMENT = 1;
+  const TEXT_RAW = 2;
+  const TEXT_RCDATA = 4;
+  const UNARY_TAG = 8;
+
+  // "address", "article", "aside", "blockquote", "center", "details", "dialog", "dir", "div", "dl",
+  // "fieldset", "figcaption", "figure", "footer", "header", "hgroup", "menu",
+  // "nav", "ol", "p", "section", "summary", "ul"
+  // "h1", "h2", "h3", "h4", "h5", "h6"
+  //  "pre", "listing"
+  //  "form"
+  //  "plaintext"
+  const AUTOCLOSE_P = 16;
+
+  const TEXT_PLAINTEXT = 32;
+
 
   /**
    * The HTML5 elements as defined in http://dev.w3.org/html5/markup/elements.html.
@@ -23,18 +34,18 @@ class Elements {
   public static $elements = array(
     "a" => 1,
     "abbr" => 1,
-    "address" => 1,
+    "address" => 25, // NORMAL | UNARY_TAG |  AUTOCLOSE_P
     "area" => 1,
-    "article" => 1,
-    "aside" => 1,
+    "article" => 17, // NORMAL | AUTOCLOSE_P
+    "aside" => 17, // NORMAL | AUTOCLOSE_P,
     "audio" => 1,
     "b" => 1,
-    "base" => 1,
+    "base" => 9, // | UNARY_TAG
     "bdi" => 1,
     "bdo" => 1,
-    "blockquote" => 1,
+    "blockquote" => 17, // NORMAL | AUTOCLOSE_P,
     "body" => 1,
-    "br" => 1,
+    "br" => 9, // NORMAL | UNARY_TAG
     "button" => 1,
     "canvas" => 1,
     "caption" => 1,
@@ -42,61 +53,61 @@ class Elements {
     "code" => 1,
     "col" => 1,
     "colgroup" => 1,
-    "command" => 1,
+    "command" => 9, // NORMAL | UNARY_TAG
     //"data" => 1,    // This is highly experimental and only part of the whatwg spec (not w3c). See https://developer.mozilla.org/en-US/docs/HTML/Element/data
     "datalist" => 1,
     "dd" => 1,
     "del" => 1,
-    "details" => 1,
+    "details" => 17, // NORMAL | AUTOCLOSE_P,
     "dfn" => 1,
-    "dialog" => 1,
-    "div" => 1,
-    "dl" => 1,
+    "dialog" => 17, // NORMAL | AUTOCLOSE_P,
+    "div" => 17, // NORMAL | AUTOCLOSE_P,
+    "dl" => 17, // NORMAL | AUTOCLOSE_P,
     "dt" => 1,
     "em" => 1,
-    "embed" => 1,
-    "fieldset" => 1,
-    "figcaption" => 1,
-    "figure" => 1,
-    "footer" => 1,
-    "form" => 1,
-    "h1" => 1,
-    "h2" => 1,
-    "h3" => 1,
-    "h4" => 1,
-    "h5" => 1,
-    "h6" => 1,
+    "embed" => 9, // NORMAL | UNARY_TAG
+    "fieldset" => 17, // NORMAL | AUTOCLOSE_P,
+    "figcaption" => 17, // NORMAL | AUTOCLOSE_P,
+    "figure" => 17, // NORMAL | AUTOCLOSE_P,
+    "footer" => 17, // NORMAL | AUTOCLOSE_P,
+    "form" => 17, // NORMAL | AUTOCLOSE_P,
+    "h1" => 17, // NORMAL | AUTOCLOSE_P,
+    "h2" => 17, // NORMAL | AUTOCLOSE_P,
+    "h3" => 17, // NORMAL | AUTOCLOSE_P,
+    "h4" => 17, // NORMAL | AUTOCLOSE_P,
+    "h5" => 17, // NORMAL | AUTOCLOSE_P,
+    "h6" => 17, // NORMAL | AUTOCLOSE_P,
     "head" => 1,
-    "header" => 1,
-    "hgroup" => 1,
-    "hr" => 1,
+    "header" => 17, // NORMAL | AUTOCLOSE_P,
+    "hgroup" => 17, // NORMAL | AUTOCLOSE_P,
+    "hr" => 9, // NORMAL | UNARY_TAG
     "html" => 1,
     "i" => 1,
-    "iframe" => 1,
-    "img" => 1,
-    "input" => 1,
+    "iframe" => 3, // NORMAL | TEXT_RAW
+    "img" => 9, // NORMAL | UNARY_TAG
+    "input" => 9, // NORMAL | UNARY_TAG
     "kbd" => 1,
     "ins" => 1,
-    "keygen" => 1,
+    "keygen" => 9, // NORMAL | UNARY_TAG
     "label" => 1,
     "legend" => 1,
     "li" => 1,
-    "link" => 1,
+    "link" => 9, // NORMAL | UNARY_TAG
     "map" => 1,
     "mark" => 1,
-    "menu" => 1,
-    "meta" => 1,
+    "menu" => 17, // NORMAL | AUTOCLOSE_P,
+    "meta" => 9, // NORMAL | UNARY_TAG
     "meter" => 1,
-    "nav" => 1,
-    "noscript" => 1,
+    "nav" => 17, // NORMAL | AUTOCLOSE_P,
+    "noscript" => 3, // NORMAL | TEXT_RAW
     "object" => 1,
-    "ol" => 1,
+    "ol" => 17, // NORMAL | AUTOCLOSE_P,
     "optgroup" => 1,
     "option" => 1,
     "output" => 1,
-    "p" => 1,
-    "param" => 1,
-    "pre" => 3, // NORMAL | TEXT_RAW
+    "p" => 17, // NORMAL | AUTOCLOSE_P,
+    "param" => 9, // NORMAL | UNARY_TAG
+    "pre" => 19, // NORMAL | TEXT_RAW | AUTOCLOSE_P
     "progress" => 1,
     "q" => 1,
     "rp" => 1,
@@ -105,15 +116,15 @@ class Elements {
     "s" => 1,
     "samp" => 1,
     "script" => 3, // NORMAL | TEXT_RAW
-    "section" => 1,
+    "section" => 17, // NORMAL | AUTOCLOSE_P,
     "select" => 1,
     "small" => 1,
-    "source" => 1,
+    "source" => 9, // NORMAL | UNARY_TAG
     "span" => 1,
     "strong" => 1,
     "style" => 1,
     "sub" => 1,
-    "summary" => 1,
+    "summary" => 17, // NORMAL | AUTOCLOSE_P,
     "sup" => 1,
     "table" => 1,
     "tbody" => 1,
@@ -123,14 +134,26 @@ class Elements {
     "th" => 1,
     "thead" => 1,
     "time" => 1,
-    "title" => 1,
+    "title" => 5, // NORMAL | TEXT_RCDATA
     "tr" => 1,
-    "track" => 1,
+    "track" => 9, // NORMAL | UNARY_TAG
     "u" => 1,
-    "ul" => 1,
+    "ul" => 17, // NORMAL | AUTOCLOSE_P,
     "var" => 1,
     "video" => 1,
-    "wbr" => 1,
+    "wbr" => 9, // NORMAL | UNARY_TAG
+
+    // Legacy?
+    'basefont' => 8, // UNARY_TAG
+    'bgsound' => 8, // UNARY_TAG
+    'noframes' => 2, // RAW_TEXT
+    'center' => 16, 'dir' => 16, 'listing' => 16, // AUTOCLOSE_P
+    'plaintext' => 48, // AUTOCLOSE_P | TEXT_PLAINTEXT
+    'applet' => 0,
+    'marquee' => 0,
+    'isindex' => 8, // UNARY_TAG
+    'xmp' => 18, // AUTOCLOSE_P | UNARY_TAG
+    'noembed' => 2, // RAW_TEXT
   );
 
   /**
@@ -264,7 +287,7 @@ class Elements {
     "script" => 1,
     "set" => 1,
     "stop" => 1,
-    "style" => 1,
+    "style" => 3, // NORMAL | RAW_TEXT
     "svg" => 1,
     "switch" => 1,
     "symbol" => 1,

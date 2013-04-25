@@ -76,8 +76,34 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('a', $body2->getAttribute('id'));
   }
 
+  public function testMissingHtmlTag() {
+    $html = "<!DOCTYPE html><title>test</title>";
+    $doc = $this->parse($html);
+
+    $this->assertEquals('html', $doc->documentElement->tagName);
+    $this->assertEquals('title', $doc->documentElement->childNodes->item(0)->tagName);
+  }
+
   public function testComment() {
-    $this->markTestIncomplete("Incomplete.");
+    $html = '<html><!--Hello World.--></html>';
+
+    $doc = $this->parse($html);
+
+    $comment = $doc->documentElement->childNodes->item(0);
+    $this->assertEquals(XML_COMMENT_NODE, $comment->nodeType);
+    $this->assertEquals("Hello World.", $comment->data);
+
+
+    $html = '<!--Hello World.--><html></html>';
+    $doc = $this->parse($html);
+
+    $comment = $doc->childNodes->item(1);
+    $this->assertEquals(XML_COMMENT_NODE, $comment->nodeType);
+    $this->assertEquals("Hello World.", $comment->data);
+
+    $comment = $doc->childNodes->item(2);
+    $this->assertEquals(XML_ELEMENT_NODE, $comment->nodeType);
+    $this->assertEquals("html", $comment->tagName);
   }
 
   public function testCDATA() {
@@ -94,5 +120,14 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
 
   public function testProcessingInstruction() {
     $this->markTestIncomplete("Incomplete.");
+  }
+
+  public function testAutocloseP() {
+    $html = "<!DOCTYPE html><html><body><p><figure></body></html>";
+    $doc = $this->parse($html);
+
+    $p = $doc->getElementsByTagName('p')->item(0);
+    $this->assertEquals(0, $p->childNodes->length);
+    $this->assertEquals('figure', $p->nextSibling->tagName);
   }
 }

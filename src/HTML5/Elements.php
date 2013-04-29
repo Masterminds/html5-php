@@ -148,6 +148,7 @@ class Elements {
     'bgsound' => 8, // UNARY_TAG
     'noframes' => 2, // RAW_TEXT
     'frame' => 9,  // NORMAL | UNARY_TAG
+    'frameset' => 1,
     'center' => 16, 'dir' => 16, 'listing' => 16, // AUTOCLOSE_P
     'plaintext' => 48, // AUTOCLOSE_P | TEXT_PLAINTEXT
     'applet' => 0,

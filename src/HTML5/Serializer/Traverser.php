@@ -1,6 +1,8 @@
 <?php
 namespace HTML5\Serializer;
 
+use \HTML5\Elements;
+
 /**
  * Traverser for walking a DOM tree.
  *
@@ -47,28 +49,6 @@ class Traverser {
     'noembed' => 1,
     'noframes' => 1,
     'plaintext' => 1,
-  );
-
-  /**
-   * Unary elements.
-   * HTML5 section 8.3:
-   * If current node is an 
-   * area, base, basefont, bgsound, br, col, command, embed, frame, hr, img,
-   * input, keygen, link, meta, param, source, track or wbr element, then
-   * continue on to the next child node at this point.
-   */
-  static $unary_elements = array(
-    'area' => 1,
-    'base' => 1,
-    'basefont' => 1,
-    'bgsound' => 1,
-    'br' => 1,
-    'col' => 1,
-    'command' => 1,
-    'embed' => 1,
-    'frame' => 1,
-    'hr' => 1,
-    'img' => 1,
   );
 
   /** Namespaces that should be treated as "local" to HTML5. */
@@ -199,7 +179,7 @@ class Traverser {
     }
 
     // If not unary, add a closing tag.
-    if (!$this->isUnary($name)) {
+    if (Elements::isA($name, Elements::UNARY_TAG)) {
       $this->closeTag($ele);
       if ($block) $this->nl();
     }
@@ -288,19 +268,6 @@ class Traverser {
     $ret = htmlentities($text, $flags, 'UTF-8');
     //if ($ret != $text) printf("Replaced [%s] with [%s]", $text, $ret);
     return $ret;
-  }
-
-  /**
-   * Is an unary tag.
-   *
-   * @param string $name
-   *   The name of the element to test.
-   *
-   * @return bool
-   *   True if Unary and false otherwise.
-   */
-  protected function isUnary($name) {
-    return isset(self::$unary_elements[$name]);
   }
 
   /**

@@ -118,7 +118,7 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   }
 
   public function testText() {
-    $html = "<!DOCTYPE html><html><mathml>test</mathml></html>";
+    $html = "<!DOCTYPE html><html><head></head><body><mathml>test</mathml></body></html>";
     $doc = $this->parse($html);
 
     $wrapper = $doc->getElementsByTagName('mathml')->item(0);

@@ -238,13 +238,16 @@ class DOMTreeBuilder implements EventHandler {
   }
 
   public function text($data) {
+    // XXX: Hmmm.... should we really be this strict?
     if ($this->insertMode < self::IM_IN_HEAD) {
       $data = trim($data);
       if (!empty($data)) {
+        //fprintf(STDOUT, "Unexpected insert mode: %d", $this->insertMode);
         $this->parseError("Unexpected text. Ignoring: " . $data);
         return;
       }
     }
+    //fprintf(STDOUT, "Appending text %s.", $data);
     $node = $this->doc->createTextNode($data);
     $this->current->appendChild($node);
   }

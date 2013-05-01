@@ -129,7 +129,13 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   }
 
   public function testParseErrors() {
-    $this->markTestIncomplete("Incomplete.");
+    $html = "<!DOCTYPE html><html><mathml><![CDATA[test";
+    $doc = $this->parse($html);
+
+    // We're JUST testing that we can access errors. Actual testing of 
+    // error messages happen in the Tokenizer's tests.
+    $this->assertGreaterThan(0,  count($doc->errors));
+    $this->assertTrue(is_string($doc->errors[0]));
   }
 
   public function testProcessingInstruction() {

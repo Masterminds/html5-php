@@ -139,7 +139,20 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   }
 
   public function testProcessingInstruction() {
-    $this->markTestIncomplete("Incomplete.");
+    // Test the simple case, which is where PIs are inserted into the DOM.
+    $doc = $this->parse('<!DOCTYPE html><html><?foo bar?>');
+    $this->assertEquals(1, $doc->documentElement->childNodes->length);
+    $pi = $doc->documentElement->firstChild;
+    $this->assertInstanceOf('\DOMProcessingInstruction', $pi);
+    $this->assertEquals('foo', $pi->nodeName);
+    $this->assertEquals('bar', $pi->data);
+
+    // Leading xml PIs should be ignored.
+    $doc = $this->parse('<?xml version="1.0"?><!DOCTYPE html><html><head></head></html>');
+
+    $this->assertEquals(2, $doc->childNodes->length);
+    $this->assertInstanceOf('\DOMDocumentType', $doc->childNodes->item(0));
+    $this->assertInstanceOf('\DOMElement', $doc->childNodes->item(1));
   }
 
   public function testAutocloseP() {

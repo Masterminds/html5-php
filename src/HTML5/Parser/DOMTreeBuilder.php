@@ -266,6 +266,11 @@ class DOMTreeBuilder implements EventHandler {
   }
 
   public function processingInstruction($name, $data = NULL) {
+    // XXX: Ignore initial XML declaration, per the spec.
+    if ($this->insertMode == self::IM_INITIAL && 'xml' == strtolower($name)) {
+      return;
+    }
+
     // Important: The processor may modify the current DOM tree however 
     // it sees fit.
     if (isset($this->processor)) {
@@ -273,7 +278,13 @@ class DOMTreeBuilder implements EventHandler {
       if (!empty($res)) {
         $this->current = $res;
       }
+      return;
     }
+
+    // Otherwise, this is just a dumb PI element.
+    $node = $this->doc->createProcessingInstruction($name, $data);
+
+    $this->current->appendChild($node);
   }
 
   // ==========================================================================

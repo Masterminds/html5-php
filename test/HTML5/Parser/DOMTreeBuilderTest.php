@@ -107,11 +107,25 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   }
 
   public function testCDATA() {
-    $this->markTestIncomplete("Incomplete.");
+    $html = "<!DOCTYPE html><html><mathml><![CDATA[test]]></mathml></html>";
+    $doc = $this->parse($html);
+
+    $wrapper = $doc->getElementsByTagName('mathml')->item(0);
+    $this->assertEquals(1, $wrapper->childNodes->length);
+    $cdata = $wrapper->childNodes->item(0);
+    $this->assertEquals(XML_CDATA_SECTION_NODE, $cdata->nodeType);
+    $this->assertEquals('test', $cdata->data);
   }
 
   public function testText() {
-    $this->markTestIncomplete("Incomplete.");
+    $html = "<!DOCTYPE html><html><mathml>test</mathml></html>";
+    $doc = $this->parse($html);
+
+    $wrapper = $doc->getElementsByTagName('mathml')->item(0);
+    $this->assertEquals(1, $wrapper->childNodes->length);
+    $data = $wrapper->childNodes->item(0);
+    $this->assertEquals(XML_TEXT_NODE, $data->nodeType);
+    $this->assertEquals('test', $data->data);
   }
 
   public function testParseErrors() {
@@ -129,5 +143,13 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $p = $doc->getElementsByTagName('p')->item(0);
     $this->assertEquals(0, $p->childNodes->length);
     $this->assertEquals('figure', $p->nextSibling->tagName);
+  }
+
+  public function testMathML() {
+    $this->markTestIncomplete("Incomplete.");
+  }
+
+  public function testSVG() {
+    $this->markTestIncomplete("Incomplete.");
   }
 }

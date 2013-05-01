@@ -259,6 +259,7 @@ class DOMTreeBuilder implements EventHandler {
 
   public function cdata($data) {
     $node = $this->doc->createCDATASection($data);
+    $this->current->appendChild($node);
   }
 
   public function processingInstruction($name, $data = NULL) {

@@ -337,6 +337,21 @@ class ElementsTest extends TestCase {
     $this->assertFalse(Elements::isA('scriptypoo', Elements::KNOWN_ELEMENT));
     $this->assertTrue(Elements::isA('script', Elements::TEXT_RAW));
     $this->assertFalse(Elements::isA('script', Elements::TEXT_RCDATA));
+
+    $unaryElements = array( 'area', 'base', 'basefont', 'bgsound', 'br', 'col',
+      'command', 'embed', 'frame', 'hr', 'img',
+    );
+
+    foreach ($unaryElements as $element) {
+      $this->assertTrue(Elements::isA($element, Elements::UNARY_TAG), 'Unary test failed on: ' . $element);
+    }
+
+    $nonUnary = array('span', 'a', 'div');
+    foreach ($nonUnary as $tag) {
+      $this->assertFalse(Elements::isA($tag, Elements::UNARY_TAG),  'Unary test failed on: ' . $tag);
+    }
+
+
   }
 
 }

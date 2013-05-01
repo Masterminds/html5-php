@@ -44,24 +44,4 @@ class TraverserTest extends \HTML5\Tests\TestCase {
       $this->assertFalse($method->invoke($t, $tag),  'Block test failed on: ' . $tag);
     }
   }
-
-  public function testIsUnary() {
-    $elements = array( 'area', 'base', 'basefont', 'bgsound', 'br', 'col',
-      'command', 'embed', 'frame', 'hr', 'img',
-    );
-
-    // Mocking the required input because there is no checking.
-    $t = new Traverser('', '');
-    $method = $this->getProtectedMethod('isUnary');
-
-    foreach ($elements as $element) {
-      $this->assertTrue($method->invoke($t, $element), 'Unary test failed on: ' . $element);
-    }
-
-    $nonblocks = array('span', 'a', 'div');
-    foreach ($nonblocks as $tag) {
-      $this->assertFalse($method->invoke($t, $tag),  'Unary test failed on: ' . $tag);
-    }
-  }
-
 }

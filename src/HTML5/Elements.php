@@ -35,12 +35,12 @@ class Elements {
     "a" => 1,
     "abbr" => 1,
     "address" => 25, // NORMAL | UNARY_TAG |  AUTOCLOSE_P
-    "area" => 1,
+    "area" => 9,  // NORMAL | UNARY_TAG
     "article" => 17, // NORMAL | AUTOCLOSE_P
     "aside" => 17, // NORMAL | AUTOCLOSE_P,
     "audio" => 1,
     "b" => 1,
-    "base" => 9, // | UNARY_TAG
+    "base" => 9, // NORMAL | UNARY_TAG
     "bdi" => 1,
     "bdo" => 1,
     "blockquote" => 17, // NORMAL | AUTOCLOSE_P,
@@ -51,7 +51,7 @@ class Elements {
     "caption" => 1,
     "cite" => 1,
     "code" => 1,
-    "col" => 1,
+    "col" => 9,  // NORMAL | UNARY_TAG
     "colgroup" => 1,
     "command" => 9, // NORMAL | UNARY_TAG
     //"data" => 1,    // This is highly experimental and only part of the whatwg spec (not w3c). See https://developer.mozilla.org/en-US/docs/HTML/Element/data
@@ -147,6 +147,8 @@ class Elements {
     'basefont' => 8, // UNARY_TAG
     'bgsound' => 8, // UNARY_TAG
     'noframes' => 2, // RAW_TEXT
+    'frame' => 9,  // NORMAL | UNARY_TAG
+    'frameset' => 1,
     'center' => 16, 'dir' => 16, 'listing' => 16, // AUTOCLOSE_P
     'plaintext' => 48, // AUTOCLOSE_P | TEXT_PLAINTEXT
     'applet' => 0,

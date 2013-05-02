@@ -26,6 +26,9 @@ class Elements {
 
   const TEXT_PLAINTEXT = 32;
 
+  // See https://developer.mozilla.org/en-US/docs/HTML/Block-level_elements
+  const BLOCK_TAG = 64;
+
 
   /**
    * The HTML5 elements as defined in http://dev.w3.org/html5/markup/elements.html.
@@ -34,20 +37,20 @@ class Elements {
   public static $html5 = array(
     "a" => 1,
     "abbr" => 1,
-    "address" => 25, // NORMAL | VOID_TAG |  AUTOCLOSE_P
+    "address" => 89, // NORMAL | VOID_TAG |  AUTOCLOSE_P | BLOCK_TAG
     "area" => 9,  // NORMAL | VOID_TAG
-    "article" => 17, // NORMAL | AUTOCLOSE_P
-    "aside" => 17, // NORMAL | AUTOCLOSE_P,
-    "audio" => 1,
+    "article" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "aside" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "audio" => 65, // NORMAL | BLOCK_TAG
     "b" => 1,
     "base" => 9, // NORMAL | VOID_TAG
     "bdi" => 1,
     "bdo" => 1,
-    "blockquote" => 17, // NORMAL | AUTOCLOSE_P,
+    "blockquote" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
     "body" => 1,
     "br" => 9, // NORMAL | VOID_TAG
     "button" => 1,
-    "canvas" => 1,
+    "canvas" => 65, // NORMAL | BLOCK_TAG
     "caption" => 1,
     "cite" => 1,
     "code" => 1,
@@ -56,31 +59,31 @@ class Elements {
     "command" => 9, // NORMAL | VOID_TAG
     //"data" => 1,    // This is highly experimental and only part of the whatwg spec (not w3c). See https://developer.mozilla.org/en-US/docs/HTML/Element/data
     "datalist" => 1,
-    "dd" => 1,
+    "dd" => 65, // NORMAL | BLOCK_TAG 
     "del" => 1,
     "details" => 17, // NORMAL | AUTOCLOSE_P,
     "dfn" => 1,
     "dialog" => 17, // NORMAL | AUTOCLOSE_P,
-    "div" => 17, // NORMAL | AUTOCLOSE_P,
-    "dl" => 17, // NORMAL | AUTOCLOSE_P,
+    "div" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "dl" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
     "dt" => 1,
     "em" => 1,
     "embed" => 9, // NORMAL | VOID_TAG
-    "fieldset" => 17, // NORMAL | AUTOCLOSE_P,
-    "figcaption" => 17, // NORMAL | AUTOCLOSE_P,
-    "figure" => 17, // NORMAL | AUTOCLOSE_P,
-    "footer" => 17, // NORMAL | AUTOCLOSE_P,
-    "form" => 17, // NORMAL | AUTOCLOSE_P,
-    "h1" => 17, // NORMAL | AUTOCLOSE_P,
-    "h2" => 17, // NORMAL | AUTOCLOSE_P,
-    "h3" => 17, // NORMAL | AUTOCLOSE_P,
-    "h4" => 17, // NORMAL | AUTOCLOSE_P,
-    "h5" => 17, // NORMAL | AUTOCLOSE_P,
-    "h6" => 17, // NORMAL | AUTOCLOSE_P,
+    "fieldset" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "figcaption" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "figure" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "footer" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "form" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "h1" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "h2" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "h3" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "h4" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "h5" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "h6" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
     "head" => 1,
-    "header" => 17, // NORMAL | AUTOCLOSE_P,
-    "hgroup" => 17, // NORMAL | AUTOCLOSE_P,
-    "hr" => 9, // NORMAL | VOID_TAG
+    "header" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "hgroup" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+    "hr" => 73, // NORMAL | VOID_TAG | BLOCK_TAG
     "html" => 1,
     "i" => 1,
     "iframe" => 3, // NORMAL | TEXT_RAW
@@ -99,15 +102,15 @@ class Elements {
     "meta" => 9, // NORMAL | VOID_TAG
     "meter" => 1,
     "nav" => 17, // NORMAL | AUTOCLOSE_P,
-    "noscript" => 3, // NORMAL | TEXT_RAW
+    "noscript" => 67, // NORMAL | TEXT_RAW | BLOCK_TAG
     "object" => 1,
-    "ol" => 17, // NORMAL | AUTOCLOSE_P,
+    "ol" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
     "optgroup" => 1,
     "option" => 1,
-    "output" => 1,
-    "p" => 17, // NORMAL | AUTOCLOSE_P,
+    "output" => 65, // NORMAL | BLOCK_TAG
+    "p" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
     "param" => 9, // NORMAL | VOID_TAG
-    "pre" => 19, // NORMAL | TEXT_RAW | AUTOCLOSE_P
+    "pre" => 83, // NORMAL | TEXT_RAW | AUTOCLOSE_P | BLOCK_TAG
     "progress" => 1,
     "q" => 1,
     "rp" => 1,
@@ -116,7 +119,7 @@ class Elements {
     "s" => 1,
     "samp" => 1,
     "script" => 3, // NORMAL | TEXT_RAW
-    "section" => 17, // NORMAL | AUTOCLOSE_P,
+    "section" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
     "select" => 1,
     "small" => 1,
     "source" => 9, // NORMAL | VOID_TAG
@@ -126,11 +129,11 @@ class Elements {
     "sub" => 1,
     "summary" => 17, // NORMAL | AUTOCLOSE_P,
     "sup" => 1,
-    "table" => 1,
+    "table" => 65, // NORMAL | BLOCK_TAG
     "tbody" => 1,
     "td" => 1,
     "textarea" => 5, // NORMAL | TEXT_RCDATA
-    "tfoot" => 1,
+    "tfoot" => 65, // NORMAL | BLOCK_TAG
     "th" => 1,
     "thead" => 1,
     "time" => 1,
@@ -138,9 +141,9 @@ class Elements {
     "tr" => 1,
     "track" => 9, // NORMAL | VOID_TAG
     "u" => 1,
-    "ul" => 17, // NORMAL | AUTOCLOSE_P,
+    "ul" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
     "var" => 1,
-    "video" => 1,
+    "video" => 65, // NORMAL | BLOCK_TAG
     "wbr" => 9, // NORMAL | VOID_TAG
 
     // Legacy?

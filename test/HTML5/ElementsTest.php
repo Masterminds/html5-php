@@ -351,6 +351,21 @@ class ElementsTest extends TestCase {
       $this->assertFalse(Elements::isA($tag, Elements::VOID_TAG),  'Unary test failed on: ' . $tag);
     }
 
+    $blockTags = array('address', 'article', 'aside', 'audio', 'blockquote',
+        'canvas', 'dd', 'div', 'dl', 'fieldset', 'figcaption', 'figure', 'footer',
+        'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr',
+        'noscript', 'ol', 'output', 'p', 'pre', 'section', 'table', 'tfoot',
+        'ul', 'video');
+
+    foreach ($blockTags as $tag) {
+      $this->assertTrue(Elements::isA($tag, Elements::BLOCK_TAG),  'Block tag test failed on: ' . $tag);
+    }
+
+    $nonBlockTags = array('span', 'img', 'label');
+    foreach($nonBlockTags as $tag) {
+      $this->assertFalse(Elements::isA($tag, Elements::BLOCK_TAG),  'Block tag test failed on: ' . $tag);
+
+    }
 
   }
 

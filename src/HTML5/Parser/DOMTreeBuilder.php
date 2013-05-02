@@ -64,6 +64,9 @@ class DOMTreeBuilder implements EventHandler {
 
     // $this->current = $this->doc->documentElement;
     $this->current = $this->doc; //->documentElement;
+
+    // Create a rules engine for tags.
+    $this->rules = new TreeBuildingRules($this->doc);
   }
 
   /**
@@ -123,15 +126,6 @@ class DOMTreeBuilder implements EventHandler {
     if ($name == 'image') {
       $name = 'img';
     }
-    elseif ($name == 'optgroup' && $this->current->tagName == 'option') {
-      $this->current = $this->current->parentNode;
-    }
-    // TODO: MathML support
-    elseif ($name == 'math') {
-    }
-    // TODO: SVG support.
-    elseif ($name == 'svg') {
-    }
 
 
     // Autoclose p tags where appropriate.
@@ -149,7 +143,7 @@ class DOMTreeBuilder implements EventHandler {
         $this->parseError("Unexpected head tag outside of head context.");
       }
       else {
-        $this->isertMode = self::IM_IN_HEAD;
+        $this->insertMode = self::IM_IN_HEAD;
       }
       break;
     case 'body':
@@ -174,11 +168,18 @@ class DOMTreeBuilder implements EventHandler {
       }
     }
 
-    $this->current->appendChild($ele);
+    // Some elements have special processing rules. Handle those separately.
+    if ($this->rules->hasRules($name)) {
+      $this->current = $this->rules->evaluate($ele, $this->current);
+    }
+    // Otherwise, it's a standard element.
+    else {
+      $this->current->appendChild($ele);
 
-    // XXX: Need to handle self-closing tags and unary tags.
-    if (!Elements::isA($name, Elements::VOID_TAG)) {
-      $this->current = $ele;
+      // XXX: Need to handle self-closing tags and unary tags.
+      if (!Elements::isA($name, Elements::VOID_TAG)) {
+        $this->current = $ele;
+      }
     }
 
     // Return the element mask, which the tokenizer can then use to set 
@@ -331,6 +332,30 @@ class DOMTreeBuilder implements EventHandler {
     } while ($working = $working->parentNode);
     return FALSE;
 
+  }
+
+  /**
+   * Checks if the given tagname is an ancestor of the present candidate.
+   *
+   * If $this->current or anything above $this->current matches the given tag
+   * name, this returns TRUE.
+   */
+  protected function isAncestor($tagname) {
+    $candidate = $this->current;
+    while ($candidate->nodeType === XML_ELEMENT_NODE) {
+      if ($candidate->tagName == $tagname) {
+        return TRUE;
+      }
+      $candidate = $candidate->parentNode;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Returns TRUE if the immediate parent element is of the given tagname.
+   */
+  protected function isParent($tagname) {
+    return $this->current->tagName == $tagname;
   }
 
 

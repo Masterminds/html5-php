@@ -31,7 +31,7 @@ class Elements {
    * The HTML5 elements as defined in http://dev.w3.org/html5/markup/elements.html.
    * @var array
    */
-  public static $elements = array(
+  public static $html5 = array(
     "a" => 1,
     "abbr" => 1,
     "address" => 25, // NORMAL | VOID_TAG |  AUTOCLOSE_P
@@ -340,7 +340,7 @@ class Elements {
 
     // html5 element names are case insensetitive. Forcing lowercase for the check.
     // Do we need this check or will all data passed here already be lowercase?
-    return isset(self::$elements[strtolower($name)]);
+    return isset(self::$html5[strtolower($name)]);
   }
 
   /**
@@ -393,8 +393,8 @@ class Elements {
    * Get the element mask for the given element name.
    */
   public static function element($name) {
-    if (isset(self::$elements[$name])) {
-      return self::$elements[$name];
+    if (isset(self::$html5[$name])) {
+      return self::$html5[$name];
     }
     if (isset(self::$svg[$name])) {
       return self::$svg[$name];

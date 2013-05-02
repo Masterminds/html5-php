@@ -15,6 +15,10 @@ class TreeBuildingRules {
 
   protected static $tags = array(
     'li' => 1,
+    'dd' => 1,
+    'dt' => 1,
+    'rt' => 1,
+    'rp' => 1,
   );
 
   /**
@@ -47,6 +51,12 @@ class TreeBuildingRules {
     switch($new->tagName) {
     case 'li':
       return $this->handleLI($new, $current);
+    case 'dt':
+    case 'dd':
+      return $this->handleDT($new, $current);
+    case 'rt':
+    case 'rp':
+      return $this->handleRT($new, $current);
 
     }
 
@@ -54,14 +64,25 @@ class TreeBuildingRules {
   }
 
   protected function handleLI($ele, $current) {
-    if ($current->tagName == 'li') {
-      $current->parentNode->appendChild($ele);
-      return $ele;
-    }
-    // XXX FINISH
+    return $this->closeIfCurrentMatches($ele, $current, array('li'));
+  }
 
-    $current->appendChild($ele);
-    return $current;
+  protected function handleDT($ele, $current) {
+    return $this->closeIfCurrentMatches($ele, $current, array('dt','dd'));
+  }
+  protected function handleRT($ele, $current) {
+    return $this->closeIfCurrentMatches($ele, $current, array('rt','rp'));
+  }
+
+  protected function closeIfCurrentMatches($ele, $current, $match) {
+    $tname = $current->tagName;
+    if (in_array($current->tagName, $match)) {
+      $current->parentNode->appendChild($ele);
+    }
+    else {
+      $current->appendChild($ele);
+    }
+    return $ele;
 
   }
 }

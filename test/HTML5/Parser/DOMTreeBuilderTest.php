@@ -164,6 +164,10 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('figure', $p->nextSibling->tagName);
   }
 
+  public function testAutocloseLI() {
+    $this->markTestIncomplete("Incomplete.");
+  }
+
   public function testMathML() {
     $this->markTestIncomplete("Incomplete.");
   }

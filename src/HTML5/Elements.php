@@ -13,7 +13,7 @@ class Elements {
   const KNOWN_ELEMENT = 1;
   const TEXT_RAW = 2;
   const TEXT_RCDATA = 4;
-  const UNARY_TAG = 8;
+  const VOID_TAG = 8;
 
   // "address", "article", "aside", "blockquote", "center", "details", "dialog", "dir", "div", "dl",
   // "fieldset", "figcaption", "figure", "footer", "header", "hgroup", "menu",
@@ -34,26 +34,26 @@ class Elements {
   public static $elements = array(
     "a" => 1,
     "abbr" => 1,
-    "address" => 25, // NORMAL | UNARY_TAG |  AUTOCLOSE_P
-    "area" => 9,  // NORMAL | UNARY_TAG
+    "address" => 25, // NORMAL | VOID_TAG |  AUTOCLOSE_P
+    "area" => 9,  // NORMAL | VOID_TAG
     "article" => 17, // NORMAL | AUTOCLOSE_P
     "aside" => 17, // NORMAL | AUTOCLOSE_P,
     "audio" => 1,
     "b" => 1,
-    "base" => 9, // NORMAL | UNARY_TAG
+    "base" => 9, // NORMAL | VOID_TAG
     "bdi" => 1,
     "bdo" => 1,
     "blockquote" => 17, // NORMAL | AUTOCLOSE_P,
     "body" => 1,
-    "br" => 9, // NORMAL | UNARY_TAG
+    "br" => 9, // NORMAL | VOID_TAG
     "button" => 1,
     "canvas" => 1,
     "caption" => 1,
     "cite" => 1,
     "code" => 1,
-    "col" => 9,  // NORMAL | UNARY_TAG
+    "col" => 9,  // NORMAL | VOID_TAG
     "colgroup" => 1,
-    "command" => 9, // NORMAL | UNARY_TAG
+    "command" => 9, // NORMAL | VOID_TAG
     //"data" => 1,    // This is highly experimental and only part of the whatwg spec (not w3c). See https://developer.mozilla.org/en-US/docs/HTML/Element/data
     "datalist" => 1,
     "dd" => 1,
@@ -65,7 +65,7 @@ class Elements {
     "dl" => 17, // NORMAL | AUTOCLOSE_P,
     "dt" => 1,
     "em" => 1,
-    "embed" => 9, // NORMAL | UNARY_TAG
+    "embed" => 9, // NORMAL | VOID_TAG
     "fieldset" => 17, // NORMAL | AUTOCLOSE_P,
     "figcaption" => 17, // NORMAL | AUTOCLOSE_P,
     "figure" => 17, // NORMAL | AUTOCLOSE_P,
@@ -80,23 +80,23 @@ class Elements {
     "head" => 1,
     "header" => 17, // NORMAL | AUTOCLOSE_P,
     "hgroup" => 17, // NORMAL | AUTOCLOSE_P,
-    "hr" => 9, // NORMAL | UNARY_TAG
+    "hr" => 9, // NORMAL | VOID_TAG
     "html" => 1,
     "i" => 1,
     "iframe" => 3, // NORMAL | TEXT_RAW
-    "img" => 9, // NORMAL | UNARY_TAG
-    "input" => 9, // NORMAL | UNARY_TAG
+    "img" => 9, // NORMAL | VOID_TAG
+    "input" => 9, // NORMAL | VOID_TAG
     "kbd" => 1,
     "ins" => 1,
-    "keygen" => 9, // NORMAL | UNARY_TAG
+    "keygen" => 9, // NORMAL | VOID_TAG
     "label" => 1,
     "legend" => 1,
     "li" => 1,
-    "link" => 9, // NORMAL | UNARY_TAG
+    "link" => 9, // NORMAL | VOID_TAG
     "map" => 1,
     "mark" => 1,
     "menu" => 17, // NORMAL | AUTOCLOSE_P,
-    "meta" => 9, // NORMAL | UNARY_TAG
+    "meta" => 9, // NORMAL | VOID_TAG
     "meter" => 1,
     "nav" => 17, // NORMAL | AUTOCLOSE_P,
     "noscript" => 3, // NORMAL | TEXT_RAW
@@ -106,7 +106,7 @@ class Elements {
     "option" => 1,
     "output" => 1,
     "p" => 17, // NORMAL | AUTOCLOSE_P,
-    "param" => 9, // NORMAL | UNARY_TAG
+    "param" => 9, // NORMAL | VOID_TAG
     "pre" => 19, // NORMAL | TEXT_RAW | AUTOCLOSE_P
     "progress" => 1,
     "q" => 1,
@@ -119,7 +119,7 @@ class Elements {
     "section" => 17, // NORMAL | AUTOCLOSE_P,
     "select" => 1,
     "small" => 1,
-    "source" => 9, // NORMAL | UNARY_TAG
+    "source" => 9, // NORMAL | VOID_TAG
     "span" => 1,
     "strong" => 1,
     "style" => 1,
@@ -136,25 +136,25 @@ class Elements {
     "time" => 1,
     "title" => 5, // NORMAL | TEXT_RCDATA
     "tr" => 1,
-    "track" => 9, // NORMAL | UNARY_TAG
+    "track" => 9, // NORMAL | VOID_TAG
     "u" => 1,
     "ul" => 17, // NORMAL | AUTOCLOSE_P,
     "var" => 1,
     "video" => 1,
-    "wbr" => 9, // NORMAL | UNARY_TAG
+    "wbr" => 9, // NORMAL | VOID_TAG
 
     // Legacy?
-    'basefont' => 8, // UNARY_TAG
-    'bgsound' => 8, // UNARY_TAG
+    'basefont' => 8, // VOID_TAG
+    'bgsound' => 8, // VOID_TAG
     'noframes' => 2, // RAW_TEXT
-    'frame' => 9,  // NORMAL | UNARY_TAG
+    'frame' => 9,  // NORMAL | VOID_TAG
     'frameset' => 1,
     'center' => 16, 'dir' => 16, 'listing' => 16, // AUTOCLOSE_P
     'plaintext' => 48, // AUTOCLOSE_P | TEXT_PLAINTEXT
     'applet' => 0,
     'marquee' => 0,
-    'isindex' => 8, // UNARY_TAG
-    'xmp' => 18, // AUTOCLOSE_P | UNARY_TAG
+    'isindex' => 8, // VOID_TAG
+    'xmp' => 18, // AUTOCLOSE_P | VOID_TAG
     'noembed' => 2, // RAW_TEXT
   );
 

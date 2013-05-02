@@ -343,12 +343,12 @@ class ElementsTest extends TestCase {
     );
 
     foreach ($unaryElements as $element) {
-      $this->assertTrue(Elements::isA($element, Elements::UNARY_TAG), 'Unary test failed on: ' . $element);
+      $this->assertTrue(Elements::isA($element, Elements::VOID_TAG), 'Unary test failed on: ' . $element);
     }
 
     $nonUnary = array('span', 'a', 'div');
     foreach ($nonUnary as $tag) {
-      $this->assertFalse(Elements::isA($tag, Elements::UNARY_TAG),  'Unary test failed on: ' . $tag);
+      $this->assertFalse(Elements::isA($tag, Elements::VOID_TAG),  'Unary test failed on: ' . $tag);
     }
 
 

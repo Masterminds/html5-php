@@ -96,6 +96,14 @@ class DOMTreeBuilder implements EventHandler {
     $this->insertMode = self::IM_BEFORE_HTML;
   }
 
+  /**
+   * Process the start tag.
+   *
+   * @todo
+   *   - XMLNS namespace handling (we need to parse, even if it's not valid)
+   *   - XLink, MathML and SVG namespace handling
+   *   - Omission rules: 8.1.2.4 Optional tags
+   */
   public function startTag($name, $attributes = array(), $selfClosing = FALSE) {
     $lname = $this->normalizeTagName($name);
 
@@ -169,7 +177,7 @@ class DOMTreeBuilder implements EventHandler {
     $this->current->appendChild($ele);
 
     // XXX: Need to handle self-closing tags and unary tags.
-    if (!Elements::isA($name, Elements::UNARY_TAG)) {
+    if (!Elements::isA($name, Elements::VOID_TAG)) {
       $this->current = $ele;
     }
 
@@ -182,7 +190,7 @@ class DOMTreeBuilder implements EventHandler {
     $lname = $this->normalizeTagName($name);
 
     // Ignore closing tags for unary elements.
-    if (Elements::isA($name, Elements::UNARY_TAG)) {
+    if (Elements::isA($name, Elements::VOID_TAG)) {
       return;
     }
 

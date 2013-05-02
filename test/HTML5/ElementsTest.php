@@ -338,17 +338,17 @@ class ElementsTest extends TestCase {
     $this->assertTrue(Elements::isA('script', Elements::TEXT_RAW));
     $this->assertFalse(Elements::isA('script', Elements::TEXT_RCDATA));
 
-    $unaryElements = array( 'area', 'base', 'basefont', 'bgsound', 'br', 'col',
+    $voidElements = array( 'area', 'base', 'basefont', 'bgsound', 'br', 'col',
       'command', 'embed', 'frame', 'hr', 'img',
     );
 
-    foreach ($unaryElements as $element) {
-      $this->assertTrue(Elements::isA($element, Elements::VOID_TAG), 'Unary test failed on: ' . $element);
+    foreach ($voidElements as $element) {
+      $this->assertTrue(Elements::isA($element, Elements::VOID_TAG), 'Void element test failed on: ' . $element);
     }
 
-    $nonUnary = array('span', 'a', 'div');
-    foreach ($nonUnary as $tag) {
-      $this->assertFalse(Elements::isA($tag, Elements::VOID_TAG),  'Unary test failed on: ' . $tag);
+    $nonVoid = array('span', 'a', 'div');
+    foreach ($nonVoid as $tag) {
+      $this->assertFalse(Elements::isA($tag, Elements::VOID_TAG),  'Void element test failed on: ' . $tag);
     }
 
     $blockTags = array('address', 'article', 'aside', 'audio', 'blockquote',

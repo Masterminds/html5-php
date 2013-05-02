@@ -23,25 +23,4 @@ class TraverserTest extends \HTML5\Tests\TestCase {
     $method->setAccessible(true);
     return $method;
   }
-
-  public function testIsBlock() {
-    $blocks = array('html', 'body', 'head', 'p', 'div', 'h1', 'h2', 'h3', 'h4',
-      'h5', 'h6', 'title', 'script', 'link', 'meta', 'section', 'article',
-      'table', 'tbody', 'tr', 'th', 'td',
-      //'form',
-    );
-
-    // Mocking the required input because there is no checking.
-    $t = new Traverser('', '');
-    $method = $this->getProtectedMethod('isBlock');
-
-    foreach ($blocks as $block) {
-      $this->assertTrue($method->invoke($t, $block), 'Block test failed on: ' . $block);
-    }
-
-    $nonblocks = array('span', 'a', 'img');
-    foreach ($nonblocks as $tag) {
-      $this->assertFalse($method->invoke($t, $tag),  'Block test failed on: ' . $tag);
-    }
-  }
 }

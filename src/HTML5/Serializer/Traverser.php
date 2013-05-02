@@ -14,32 +14,6 @@ use \HTML5\Elements;
  */
 class Traverser {
 
-  static $block_elements = array(
-    'html' => 1,
-    'body' => 1,
-    'head' => 1,
-    'p' => 1,
-    'div' => 1,
-    'h1' => 1,
-    'h2' => 1,
-    'h3' => 1,
-    'h4' => 1,
-    'h5' => 1,
-    'h6' => 1,
-    'title' => 1,
-    'script' => 1,
-    'link' => 1,
-    'meta' => 1,
-    'section' => 1,
-    'article' => 1,
-    'table' => 1,
-    'tbody' => 1,
-    'tr' => 1,
-    'th' => 1,
-    'td' => 1,
-    //'form' => 1,
-  );
-
   // TODO: Refactor this into an element mask.
   static $literal_elements = array(
     'style' => 1,
@@ -158,7 +132,7 @@ class Traverser {
 
   protected function element($ele) {
     $name = $ele->tagName;
-    $block = $this->pretty && $this->isBlock($name);
+    $block = $this->pretty && Elements::isA($name, Elements::BLOCK_TAG);
 
     // Per spec:
     // If the element has a declared namespace in the HTML, MathML or
@@ -268,19 +242,6 @@ class Traverser {
     $ret = htmlentities($text, $flags, 'UTF-8');
     //if ($ret != $text) printf("Replaced [%s] with [%s]", $text, $ret);
     return $ret;
-  }
-
-  /**
-   * Is block element.
-   *
-   * @param string $name
-   *   The name of the element to test if a block level element
-   *
-   * @return bool
-   *   If the element is block level or not.
-   */
-  protected function isBlock($name) {
-    return isset(self::$block_elements[$name]);
   }
 
   /**

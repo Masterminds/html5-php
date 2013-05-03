@@ -37,6 +37,20 @@ class TraverserTest extends \HTML5\Tests\TestCase {
     return $method;
   }
 
+  function getTraverser() {
+    $stream = fopen('php://temp', 'w');
+
+    // Using the existing parser (libxml).
+    // @todo switch to the html5 parser.
+    $dom = new \DOMDocument();
+    $dom->loadHTML($this->markup);
+
+    $t = new Traverser($dom, $stream);
+
+    // We return both the traverser and stream so we can pull from it.
+    return array($t, $stream);
+  }
+
   function testConstruct() {
 
     // The traverser needs a place to write the output to. In our case we
@@ -51,5 +65,13 @@ class TraverserTest extends \HTML5\Tests\TestCase {
     $t = new Traverser($dom, $stream);
 
     $this->assertInstanceOf('\HTML5\Serializer\Traverser', $t);
+  }
+
+  function testNl() {
+    list($t, $s) = $this->getTraverser();
+
+    $m = $this->getProtectedMethod('nl');
+    $m->invoke($t);
+    $this->assertEquals(PHP_EOL, stream_get_contents($s, -1, 0));
   }
 }

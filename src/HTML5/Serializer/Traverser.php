@@ -227,6 +227,12 @@ class Traverser {
     return $this;
   }
 
+  /**
+   * Write a new line character.
+   *
+   * @return HTML5\Serializer\Traverser
+   *   $this so it can be used in chaining.
+   */
   protected function nl() {
     fwrite($this->out, PHP_EOL);
     return $this;

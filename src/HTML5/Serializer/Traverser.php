@@ -222,6 +222,15 @@ class Traverser {
     $this->wr('</')->wr($ele->tagName)->wr('>');
   }
 
+  /**
+   * Write to the output.
+   *
+   * @param string $text
+   *   The string to put into the output.
+   *
+   * @return HTML5\Serializer\Traverser
+   *   $this so it can be used in chaining.
+   */
   protected function wr($text) {
     fwrite($this->out, $text);
     return $this;

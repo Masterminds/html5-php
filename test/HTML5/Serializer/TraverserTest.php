@@ -74,4 +74,12 @@ class TraverserTest extends \HTML5\Tests\TestCase {
     $m->invoke($t);
     $this->assertEquals(PHP_EOL, stream_get_contents($s, -1, 0));
   }
+
+  function testWr() {
+    list($t, $s) = $this->getTraverser();
+
+    $m = $this->getProtectedMethod('wr');
+    $m->invoke($t, 'foo');
+    $this->assertEquals('foo', stream_get_contents($s, -1, 0));
+  }
 }

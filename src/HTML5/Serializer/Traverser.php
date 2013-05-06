@@ -105,7 +105,14 @@ class Traverser {
     $this->nl();
   }
 
+  /**
+   * Process a node in the DOM.
+   *
+   * @param mixed $node
+   *   A node implementing \DOMNode.
+   */
   protected function node($node) {
+    // A listing of types is at http://php.net/manual/en/dom.constants.php
     switch ($node->nodeType) {
       case XML_ELEMENT_NODE:
         $this->element($node);
@@ -188,6 +195,15 @@ class Traverser {
     }
   }
 
+  /**
+   * Write the opening tag.
+   *
+   * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
+   * qualified name (8.3).
+   * 
+   * @param \DOMNode $ele
+   *   The element being written.
+   */
   protected function openTag($ele) {
     // FIXME: Needs support for SVG, MathML, and namespaced XML.
     $this->wr('<')->wr($ele->tagName);
@@ -217,6 +233,15 @@ class Traverser {
     }
   }
 
+  /**
+   * Write the closing tag.
+   * 
+   * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
+   * qualified name (8.3).
+   *
+   * @param \DOMNode $ele
+   *   The element being written.
+   */
   protected function closeTag($ele) {
     // FIXME: Needs support for SVG, MathML, and namespaced XML.
     $this->wr('</')->wr($ele->tagName)->wr('>');

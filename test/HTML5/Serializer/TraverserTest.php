@@ -82,4 +82,24 @@ class TraverserTest extends \HTML5\Tests\TestCase {
     $m->invoke($t, 'foo');
     $this->assertEquals('foo', stream_get_contents($s, -1, 0));
   }
+
+  function testText() {
+    // $dom = new \DOMDocument();
+    // $dom->loadHTML('<!doctype html>
+    // <html lang="en">
+    //   <head>
+    //     <meta charset="utf-8">
+    //     <title>Test</title>
+    //   </head>
+    //   <body>
+    //     <textarea>baz()</textarea>
+    //   </body>
+    // </html>');
+    // //var_export($dom);
+    // print_r($dom);
+    // $list = $dom->getElementsByTagName('textarea');
+    // print_r($list->item(0));
+    //print_r($dom->get());
+
+  }
 }

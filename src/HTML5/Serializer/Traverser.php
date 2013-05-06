@@ -166,6 +166,12 @@ class Traverser {
     }
   }
 
+  /**
+   * Write a text node.
+   *
+   * @param \DOMText $ele 
+   *   The text node to write.
+   */
   protected function text($ele) {
     if ($this->isLiteral($ele)) {
       $this->wr($ele->wholeText);

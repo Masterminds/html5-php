@@ -389,30 +389,30 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
 
   public function testRawText() {
     $good = array(
-      '<pre>abcd efg hijk lmnop</pre>     ' => 'abcd efg hijk lmnop',
-      '<pre><not/><the/><tag></pre>' => '<not/><the/><tag>',
-      '<pre><<<<<<<<</pre>' => '<<<<<<<<',
-      '<pre>hello</pre</pre>' => 'hello</pre',
-      "<pre>\nhello</pre\n</pre>" => "\nhello</pre\n",
-      '<pre>&amp;</pre>' => '&amp;',
-      '<pre><!--not a comment--></pre>' => '<!--not a comment-->',
-      '<pre><![CDATA[not a comment]]></pre>' => '<![CDATA[not a comment]]>',
+      '<script>abcd efg hijk lmnop</script>     ' => 'abcd efg hijk lmnop',
+      '<script><not/><the/><tag></script>' => '<not/><the/><tag>',
+      '<script><<<<<<<<</script>' => '<<<<<<<<',
+      '<script>hello</script</script>' => 'hello</script',
+      "<script>\nhello</script\n</script>" => "\nhello</script\n",
+      '<script>&amp;</script>' => '&amp;',
+      '<script><!--not a comment--></script>' => '<!--not a comment-->',
+      '<script><![CDATA[not a comment]]></script>' => '<![CDATA[not a comment]]>',
     );
     foreach ($good as $test => $expects) {
       $events = $this->parse($test);
-      $this->assertEventEquals('startTag', 'pre', $events->get(0));
+      $this->assertEventEquals('startTag', 'script', $events->get(0));
       $this->assertEventEquals('text', $expects, $events->get(1));
-      $this->assertEventEquals('endTag', 'pre', $events->get(2));
+      $this->assertEventEquals('endTag', 'script', $events->get(2));
     }
 
     $bad = array(
-      '<pre>&amp;</pre' => '&amp;</pre',
-      '<pre>Hello world' => 'Hello world',
+      '<script>&amp;</script' => '&amp;</script',
+      '<script>Hello world' => 'Hello world',
     );
     foreach ($bad as $test => $expects) {
       $events = $this->parse($test);
       $this->assertEquals(4, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
-      $this->assertEventEquals('startTag', 'pre', $events->get(0));
+      $this->assertEventEquals('startTag', 'script', $events->get(0));
       $this->assertEventError($events->get(1));
       $this->assertEventEquals('text', $expects, $events->get(2));
     }

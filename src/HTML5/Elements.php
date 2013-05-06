@@ -11,8 +11,15 @@ namespace HTML5;
 class Elements {
 
   const KNOWN_ELEMENT = 1;
+
+  // From section 8.1.2: "script", "style"
+  // From 8.2.5.4.7 ("in body" insertion mode): "noembed", "noscript"
+  // From 8.4 "style", "xmp", "iframe", "noembed", "noframes"
   const TEXT_RAW = 2;
+
+  // From section 8.1.2: "textarea", "title"
   const TEXT_RCDATA = 4;
+
   const VOID_TAG = 8;
 
   // "address", "article", "aside", "blockquote", "center", "details", "dialog", "dir", "div", "dl",
@@ -110,7 +117,7 @@ class Elements {
     "output" => 65, // NORMAL | BLOCK_TAG
     "p" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
     "param" => 9, // NORMAL | VOID_TAG
-    "pre" => 83, // NORMAL | TEXT_RAW | AUTOCLOSE_P | BLOCK_TAG
+    "pre" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
     "progress" => 1,
     "q" => 1,
     "rp" => 1,
@@ -157,7 +164,7 @@ class Elements {
     'applet' => 0,
     'marquee' => 0,
     'isindex' => 8, // VOID_TAG
-    'xmp' => 18, // AUTOCLOSE_P | VOID_TAG
+    'xmp' => 20, // AUTOCLOSE_P | VOID_TAG | RAW_TEXT
     'noembed' => 2, // RAW_TEXT
   );
 
@@ -289,7 +296,7 @@ class Elements {
     "polyline" => 1,
     "radialGradient" => 1,
     "rect" => 1,
-    "script" => 1,
+    "script" => 3, // NORMAL | RAW_TEXT
     "set" => 1,
     "stop" => 1,
     "style" => 3, // NORMAL | RAW_TEXT

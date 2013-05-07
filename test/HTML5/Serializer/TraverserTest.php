@@ -39,12 +39,7 @@ class TraverserTest extends \HTML5\Tests\TestCase {
 
   function getTraverser() {
     $stream = fopen('php://temp', 'w');
-
-    // Using the existing parser (libxml).
-    // @todo switch to the html5 parser.
-    $dom = new \DOMDocument();
-    $dom->loadHTML($this->markup);
-
+    $dom = \HTML5::parse($this->markup);
     $t = new Traverser($dom, $stream);
 
     // We return both the traverser and stream so we can pull from it.
@@ -57,10 +52,7 @@ class TraverserTest extends \HTML5\Tests\TestCase {
     // use a stream in temp space.
     $stream = fopen('php://temp', 'w');
 
-    // Using the existing parser (libxml).
-    // @todo switch to the html5 parser.
-    $dom = new \DOMDocument();
-    $dom->loadHTML($this->markup);
+    $dom = \HTML5::parse($this->markup);
 
     $t = new Traverser($dom, $stream);
 

@@ -267,12 +267,22 @@ class Traverser {
     return $this;
   }
 
+  /**
+   * Encode text.
+   *
+   * Note, PHP 5.4+ has better html5 encoding.
+   *
+   * @param string $text
+   *   text to encode.
+   *
+   * @return string
+   *   The encoded text.
+   */
   protected function enc($text) {
     $flags = ENT_QUOTES;
 
-    // TODO: Verify on PHP 5.4 that this works as desired.
     if (defined('ENT_HTML5')) {
-      $flags = ENT_HTML5|ENT_SUBSTITUTE;
+      $flags = ENT_HTML5 | ENT_SUBSTITUTE | ENT_QUOTES;
     }
     $ret = htmlentities($text, $flags, 'UTF-8');
     //if ($ret != $text) printf("Replaced [%s] with [%s]", $text, $ret);

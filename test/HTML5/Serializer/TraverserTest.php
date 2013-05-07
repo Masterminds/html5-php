@@ -91,4 +91,19 @@ class TraverserTest extends \HTML5\Tests\TestCase {
     $m->invoke($t, $list->item(0)->childNodes->item(0));
     $this->assertEquals('baz();', stream_get_contents($stream, -1, 0));
   }
+
+  function testEnc() {
+
+    // @todo: add more tests.
+    $tests = array(
+      "& this is a test '" => "&amp; this is a test &apos;",
+    );
+
+    list($t, $s) = $this->getTraverser();
+
+    $m = $this->getProtectedMethod('enc');
+    foreach ($tests as $test => $expected) {
+      $this->assertEquals($expected, $m->invoke($t, $test));
+    }
+  }
 }

@@ -162,7 +162,7 @@ class Traverser {
    *   The text node to write.
    */
   protected function text($ele) {
-    if ($ele->parentNode && Elements::isA($ele->parentNode->tagName, Elements::TEXT_RAW | Elements::TEXT_RCDATA)) {
+    if (isset($ele->parentNode) && (Elements::isA($ele->parentNode->tagName, Elements::TEXT_RAW) || Elements::isA($ele->parentNode->tagName, Elements::TEXT_RCDATA))) {
       $this->wr($ele->wholeText);
       return;
     }

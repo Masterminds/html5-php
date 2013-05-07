@@ -14,17 +14,6 @@ use \HTML5\Elements;
  */
 class Traverser {
 
-  // TODO: Refactor this into an element mask.
-  static $literal_elements = array(
-    'style' => 1,
-    'script' => 1,
-    'xmp' => 1,
-    'iframe' => 1,
-    'noembed' => 1,
-    'noframes' => 1,
-    'plaintext' => 1,
-  );
-
   /** Namespaces that should be treated as "local" to HTML5. */
   static $local_ns = array(
     'http://www.w3.org/1999/xhtml' => 'html',
@@ -173,7 +162,7 @@ class Traverser {
    *   The text node to write.
    */
   protected function text($ele) {
-    if ($this->isLiteral($ele)) {
+    if ($ele->parentNode && Elements::isA($ele->parentNode->tagName, Elements::TEXT_RAW | Elements::TEXT_RCDATA)) {
       $this->wr($ele->wholeText);
       return;
     }
@@ -288,23 +277,6 @@ class Traverser {
     $ret = htmlentities($text, $flags, 'UTF-8');
     //if ($ret != $text) printf("Replaced [%s] with [%s]", $text, $ret);
     return $ret;
-  }
-
-  /**
-   * Is the element literal?
-   *
-   * @param mixed $element
-   *   An element implementing DOMNode.
-   * 
-   * @return boolean
-   *   True if literal and false otherise.
-   */
-  protected function isLiteral($element) {
-    if (!$element->parentNode) {
-      return FALSE;
-    }
-    return isset(self::$literal_elements[$element->parentNode->tagName]);
-
   }
 
   /**

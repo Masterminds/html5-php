@@ -84,22 +84,19 @@ class TraverserTest extends \HTML5\Tests\TestCase {
   }
 
   function testText() {
-    // $dom = new \DOMDocument();
-    // $dom->loadHTML('<!doctype html>
-    // <html lang="en">
-    //   <head>
-    //     <meta charset="utf-8">
-    //     <title>Test</title>
-    //   </head>
-    //   <body>
-    //     <textarea>baz()</textarea>
-    //   </body>
-    // </html>');
-    // //var_export($dom);
-    // print_r($dom);
-    // $list = $dom->getElementsByTagName('textarea');
-    // print_r($list->item(0));
-    //print_r($dom->get());
+    $dom = \HTML5::parse('<!doctype html>
+    <html lang="en">
+      <head>
+        <script>baz();</script>
+      </head>
+    </html>');
 
+    $stream = fopen('php://temp', 'w');
+    $t = new Traverser($dom, $stream);
+    $m = $this->getProtectedMethod('text');
+
+    $list = $dom->getElementsByTagName('script');
+    $m->invoke($t, $list->item(0)->childNodes->item(0));
+    $this->assertEquals('baz();', stream_get_contents($stream, -1, 0));
   }
 }

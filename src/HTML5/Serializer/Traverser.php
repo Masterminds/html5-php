@@ -272,6 +272,8 @@ class Traverser {
    *
    * Note, PHP 5.4+ has better html5 encoding.
    *
+   * @todo Use the Entities class in php 5.3 to have html5 entities.
+   *
    * @param string $text
    *   text to encode.
    *
@@ -284,7 +286,7 @@ class Traverser {
     if (defined('ENT_HTML5')) {
       $flags = ENT_HTML5 | ENT_SUBSTITUTE | ENT_QUOTES;
     }
-    $ret = htmlentities($text, $flags, 'UTF-8');
+    $ret = htmlentities($text, $flags, 'UTF-8', FALSE);
     //if ($ret != $text) printf("Replaced [%s] with [%s]", $text, $ret);
     return $ret;
   }

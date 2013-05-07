@@ -95,9 +95,17 @@ class TraverserTest extends \HTML5\Tests\TestCase {
   function testEnc() {
 
     // @todo: add more tests.
-    $tests = array(
-      "& this is a test '" => "&amp; this is a test &apos;",
-    );
+    // PHP 5.4+ has much better encoding and properly supports html5.
+    if (defined('ENT_HTML5')) {
+      $tests = array(
+        "& this is a test '" => "&amp; this is a test &apos;",
+      );
+    }
+    else {
+      $tests = array(
+        "& this is a test '" => "&amp; this is a test &#039;",
+      );
+    }
 
     list($t, $s) = $this->getTraverser();
 

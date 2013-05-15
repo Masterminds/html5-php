@@ -38,16 +38,16 @@ class HTML5 {
    *   A DOM document. These object type is defined by the libxml 
    *   library, and should have been included with your version of PHP.
    */
-  public function load($file, $options = NULL) {
+  public static function load($file, $options = NULL) {
 
     // Handle the case where file is a resource.
     if (is_resource($file)) {
       // FIXME: We need a StreamInputStream class.
-      return $this->loadHTML(stream_get_contents($file));
+      return self::loadHTML(stream_get_contents($file));
     }
 
     $input = new FileInputStream($file);
-    return $this->parse($input);
+    return self::parse($input);
   }
 
   /**
@@ -63,9 +63,9 @@ class HTML5 {
    *   A DOM document. DOM is part of libxml, which is included with 
    *   almost all distribtions of PHP.
    */
-  public function loadHTML($string, $options = NULL) {
+  public static function loadHTML($string, $options = NULL) {
     $input = new StringInputStream($string);
-    return $this->parse($input);
+    return self::parse($input);
   }
 
   /**
@@ -74,8 +74,8 @@ class HTML5 {
    * This is here to provide backwards compatibility with the
    * PHP DOM implementation. It simply calls load().
    */
-  public function loadHTMLFile($file, $options = NULL) {
-    return $this->load($file, $options);
+  public static function loadHTMLFile($file, $options = NULL) {
+    return self::load($file, $options);
   }
 
   /**
@@ -97,7 +97,7 @@ class HTML5 {
   /**
    * Parse an input stream.
    */
-  protected function parse($input) {
+  public static function parse($input) {
     $events = new DOMTreeBuilder();
     $scanner = new Scanner($input);
     $parser = new Tokenizer($scanner, $events);

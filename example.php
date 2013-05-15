@@ -24,7 +24,9 @@ $html = <<< 'HERE'
   </body></html>
 HERE;
 
-$dom = \HTML5::parse($html);
+$html5 = new HTML5();
+
+$dom = $html5->loadHTML($html);
 
 print "Converting to HTML 5\n";
 

@@ -10,6 +10,10 @@ use HTML5\Elements;
  * individual basis. This class handles those rules.
  *
  * See section 8.1.2.4 of the spec.
+ *
+ * @todo
+ *   - colgroup and col special behaviors
+ *   - body and head special behaviors
  */
 class TreeBuildingRules {
 
@@ -19,6 +23,15 @@ class TreeBuildingRules {
     'dt' => 1,
     'rt' => 1,
     'rp' => 1,
+    'tr' => 1,
+    'th' => 1,
+    'td' => 1,
+    'thead' => 1,
+    'tfoot' => 1,
+    'tbody' => 1,
+    'table' => 1,
+    'optgroup' => 1,
+    'option' => 1,
   );
 
   /**
@@ -57,6 +70,20 @@ class TreeBuildingRules {
     case 'rt':
     case 'rp':
       return $this->handleRT($new, $current);
+    case 'optgroup':
+      $this->closeIfCurrentMatches($new, $current, array('optgroup'));
+    case 'option':
+      $this->closeIfCurrentMatches($new, $current, array('option', 'optgroup'));
+    case 'tr':
+      $this->closeIfCurrentMatches($new, $current, array('tr'));
+    case 'td':
+    case 'th':
+      $this->closeIfCurrentMatches($new, $current, array('th', 'td'));
+    case 'tbody':
+    case 'thead':
+    case 'tfoot':
+    case 'table': // Spec isn't explicit about this, but it's necessary.
+      $this->closeIfCurrentMatches($new, $current, array('thead', 'tfoot', 'tbody'));
 
     }
 

@@ -96,8 +96,11 @@ class HTML5 {
 
   /**
    * Parse an input stream.
+   *
+   * Lower-level loading function. This requires an input stream instead 
+   * of a string, file, or resource.
    */
-  public static function parse($input) {
+  public static function parse(\HTML5\Parser\InputStream $input) {
     $events = new DOMTreeBuilder();
     $scanner = new Scanner($input);
     $parser = new Tokenizer($scanner, $events);

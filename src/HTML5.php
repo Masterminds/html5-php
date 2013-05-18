@@ -80,17 +80,42 @@ class HTML5 {
 
   /**
    * Save a DOM into a given file as HTML5.
+   *
+   * @param mixed $dom
+   *   The DOM to be serialized.
+   * @param string $file
+   *   The filename to be written.
+   * @param array $options
+   *   Configuration options when serialing the DOM. These include:
+   *   - format: a bool value to specify if formatting (e.g. add indentation)
+   *     should be used on the output. Defaults to TRUE.
+   *   - encode: Text written to the output is escaped by default and not all
+   *     entities are encoded. If this is set to TRUE all entities will be encoded.
+   *     Defaults to FALSE.
    */
-  public static function save($dom, $file) {
-    $serializer = new \HTML5\Serializer\Serializer($dom);
+  public static function save($dom, $file, $options = array()) {
+    $serializer = new \HTML5\Serializer\Serializer($dom, $options);
     return $serializer->save($file);
   }
 
   /**
    * Convert a DOM into an HTML5 string.
+   *
+   * @param mixed $dom
+   *   The DOM to be serialized.
+   * @param array $options
+   *   Configuration options when serialing the DOM. These include:
+   *   - format: a bool value to specify if formatting (e.g. add indentation)
+   *     should be used on the output. Defaults to TRUE.
+   *   - encode: Text written to the output is escaped by default and not all
+   *     entities are encoded. If this is set to TRUE all entities will be encoded.
+   *     Defaults to FALSE.
+   *
+   * @return string
+   *   A HTML5 documented generated from the DOM.
    */
-  public static function saveHTML($dom) {
-    $serializer = new \HTML5\Serializer\Serializer($dom);
+  public static function saveHTML($dom, $options = array()) {
+    $serializer = new \HTML5\Serializer\Serializer($dom, $options);
     return $serializer->saveHTML();
   }
 

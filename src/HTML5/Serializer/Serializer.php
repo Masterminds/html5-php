@@ -16,6 +16,7 @@ namespace HTML5\Serializer;
 class Serializer {
   protected $dom;
   protected $pretty = TRUE;
+  protected $encode = FALSE;
 
   /**
    * Create a serializer.
@@ -25,13 +26,24 @@ class Serializer {
    *
    * @param DOMNode $dom
    *   A DOMNode-like object. Typically, a DOMDocument should be passed.
-   * @param boolean $format
-   *   If true, this will format the output (e.g. add indentation). If FALSE, then
-   *   little or no formatting will be done.
+   * @param array $options
+   *   Options that can be passed into the serializer. These include:
+   *   - format: a bool value to specify if formatting (e.g. add indentation)
+   *     should be used on the output. Defaults to TRUE.
+   *   - encode: Text written to the output is escaped by default and not all
+   *     entities are encoded. If this is set to TRUE all entities will be encoded.
+   *     Defaults to FALSE.
    */
-  public function __construct($dom, $format = TRUE) {
+  public function __construct($dom, $options = array()) {
     $this->dom = $dom;
-    $this->pretty = $format;
+    
+    if (isset($options['format']) && is_bool($options['format'])) {
+      $this->pretty = $options['format'];
+    }
+
+    if (isset($options['encode']) && is_bool($options['encode'])) {
+      $this->encode = $options['encode'];
+    }
   }
 
   /**
@@ -53,6 +65,7 @@ class Serializer {
     }
     $trav = new Traverser($this->dom, $file);
     $trav->formatOutput($this->pretty);
+    $trav->encodeOutput($this->encode);
 
     $trav->walk();
 

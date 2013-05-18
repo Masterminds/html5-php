@@ -24,6 +24,7 @@ class Traverser {
   protected $dom;
   protected $out;
   protected $pretty = TRUE;
+  protected $encode = FALSE;
 
   const DOCTYPE = '<!DOCTYPE html>';
 
@@ -58,6 +59,21 @@ class Traverser {
    */
   public function formatOutput($useFormatting = TRUE) {
     $this->pretty = $useFormatting;
+  }
+
+  /**
+   * Set whether encoding should encode all html5 entities.
+   *
+   * True encoding will turn all named character references into their entities.
+   * This includes such characters as +.# and many other common ones. By default
+   * encoding here will just escape &'<>". which is what most users expect.
+   * 
+   * @param  bool $encode
+   *   Whether to encode all html5 entities. Defaults to FALSE where only
+   *   &'<>". are escaped.
+   */
+  public function encodeOutput($encode = FALSE) {
+    $this->encode = $encode;
   }
 
   /**
@@ -270,6 +286,10 @@ class Traverser {
   /**
    * Encode text.
    *
+   * True encoding will turn all named character references into their entities.
+   * This includes such characters as +.# and many other common ones. By default
+   * encoding here will just escape &'<>".
+   *
    * Note, PHP 5.4+ has better html5 encoding.
    *
    * @todo Use the Entities class in php 5.3 to have html5 entities.
@@ -283,11 +303,21 @@ class Traverser {
   protected function enc($text) {
     $flags = ENT_QUOTES;
 
+    // Escape rather than encode all entities.
+    if (!$this->encode) {
+      return htmlspecialchars($text, $flags, 'UTF-8');
+    }
+
+    // If we are in PHP 5.4+ we can use the native html5 entity functionality.
     if (defined('ENT_HTML5')) {
       $flags = ENT_HTML5 | ENT_SUBSTITUTE | ENT_QUOTES;
+      $ret = htmlentities($text, $flags, 'UTF-8', FALSE);
     }
-    $ret = htmlentities($text, $flags, 'UTF-8', FALSE);
-    //if ($ret != $text) printf("Replaced [%s] with [%s]", $text, $ret);
+    // If a version earlier than 5.4 html5 entities are not entirely handled.
+    // This manually handles them.
+    else {
+      $ret = strtr($text, \HTML5\Serializer\HTML5Entities::$map);
+    }
     return $ret;
   }
 

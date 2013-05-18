@@ -165,7 +165,7 @@ class Traverser {
     }
 
     // If not unary, add a closing tag.
-    if (Elements::isA($name, Elements::VOID_TAG)) {
+    if (!Elements::isA($name, Elements::VOID_TAG)) {
       $this->closeTag($ele);
       if ($block) $this->nl();
     }

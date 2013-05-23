@@ -26,6 +26,18 @@ class SerializerTest extends \HTML5\Tests\TestCase {
     return $out;
   }
 
+  /**
+   * Wrap a html5 fragment in a html5 document to run through the parser.
+   *
+   * @param string $markup
+   *
+   * @return string
+   *   html5 fragment wrapped in a document.
+   */
+  protected function prepareHtml($markup) {
+    return '<!DOCTYPE html><html><body>' . $markup . '</body></html>';
+  }
+
   public function testSaveHTML() {
     $html = '<!DOCTYPE html><html><body>test</body></html>';
 
@@ -58,33 +70,33 @@ class SerializerTest extends \HTML5\Tests\TestCase {
 
   public function testElements() {
     // Should have content.
-    $res = $this->cycle('<div>FOO</div>');
+    $res = $this->cycle($this->prepareHtml('<div>FOO</div>'));
     $this->assertRegExp('|<div>FOO</div>|', $res);
 
     // Should be empty
-    $res = $this->cycle('<span></span>');
+    $res = $this->cycle($this->prepareHtml('<span></span>'));
     $this->assertRegExp('|<span></span>|', $res);
 
     // Should have no closing tag.
-    $res = $this->cycle('<hr>');
+    $res = $this->cycle($this->prepareHtml('<hr>'));
     $this->assertRegExp('|<hr></body>|', $res);
 
   }
 
   public function testAttributes() {
-    $res = $this->cycle('<div attr="val">FOO</div>');
+    $res = $this->cycle($this->prepareHtml('<div attr="val">FOO</div>'));
     $this->assertRegExp('|<div attr="val">FOO</div>|', $res);
 
     // XXX: Note that spec does NOT require attrs in the same order.
-    $res = $this->cycle('<div attr="val" class="even">FOO</div>');
+    $res = $this->cycle($this->prepareHtml('<div attr="val" class="even">FOO</div>'));
     $this->assertRegExp('|<div attr="val" class="even">FOO</div>|', $res);
 
-    $res = $this->cycle('<div xmlns:foo="http://example.com">FOO</div>');
+    $res = $this->cycle($this->prepareHtml('<div xmlns:foo="http://example.com">FOO</div>'));
     $this->assertRegExp('|<div xmlns:foo="http://example.com">FOO</div>|', $res);
   }
 
   public function testPCData() {
-    $res = $this->cycle('<a>This is a test.</a>');
+    $res = $this->cycle($this->prepareHtml('<a>This is a test.</a>'));
     $this->assertRegExp('|This is a test.|', $res);
 
     $res = $this->cycle('This
@@ -95,31 +107,31 @@ class SerializerTest extends \HTML5\Tests\TestCase {
     // Check that newlines are there, but don't count spaces.
     $this->assertRegExp('|This\n\s*is\n\s*a\n\s*test.|', $res);
 
-    $res = $this->cycle('<a>This <em>is</em> a test.</a>');
+    $res = $this->cycle($this->prepareHtml('<a>This <em>is</em> a test.</a>'));
     $this->assertRegExp('|This <em>is</em> a test.|', $res);
   }
 
   public function testUnescaped() {
-    $res = $this->cycle('<script>2 < 1</script>');
+    $res = $this->cycle($this->prepareHtml('<script>2 < 1</script>'));
     $this->assertRegExp('|2 < 1|', $res);
 
-    $res = $this->cycle('<style>div>div>div</style>');
-    $this->assertRegExp('|div>div>div|', $res);
+    $res = $this->cycle($this->prepareHtml('<style>div>div>div</style>'));
+    $this->assertRegExp('|div&gt;div&gt;div|', $res);
   }
 
   public function testEntities() {
-    $res = $this->cycle('<a>Apples &amp; bananas.</a>');
+    $res = $this->cycle($this->prepareHtml('<a>Apples &amp; bananas.</a>'));
     $this->assertRegExp('|Apples &amp; bananas.|', $res);
   }
 
   public function testComment() {
-    $res = $this->cycle('a<!-- This is a test. -->b');
+    $res = $this->cycle($this->prepareHtml('a<!-- This is a test. -->b'));
     $this->assertRegExp('|<!-- This is a test. -->|', $res);
   }
 
   // FAILS because the parser converts CDATA to a comment. Issue #2.
   public function testCDATA() {
-    $res = $this->cycle('a<![CDATA[ This <is> a test. ]]>b');
+    $res = $this->cycle($this->prepareHtml('a<![CDATA[ This <is> a test. ]]>b'));
     $this->assertRegExp('|<![CDATA[ This <is> a test. ]]>|', $res);
   }
 }

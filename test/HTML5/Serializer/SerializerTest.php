@@ -19,8 +19,8 @@ class SerializerTest extends \HTML5\Tests\TestCase {
    * Parse and serialize a string.
    */
   protected function cycle($html) {
-    $dom = \HTML5::parse($html);
-    $ser = new Serializer($dom, FALSE);
+    $dom = \HTML5::loadHTML($html);
+    $ser = new Serializer($dom);
     $out = $ser->saveHTML();
 
     return $out;
@@ -29,7 +29,7 @@ class SerializerTest extends \HTML5\Tests\TestCase {
   public function testSaveHTML() {
     $html = '<!DOCTYPE html><html><body>test</body></html>';
 
-    $dom = \HTML5::parse($html);
+    $dom = \HTML5::loadHTML($html);
     $this->assertTrue($dom instanceof \DOMDocument, "Canary");
 
     $ser = new Serializer($dom, FALSE);
@@ -44,7 +44,7 @@ class SerializerTest extends \HTML5\Tests\TestCase {
   public function testSave() {
     $html = '<!DOCTYPE html><html><body>test</body></html>';
 
-    $dom = \HTML5::parse($html);
+    $dom = \HTML5::loadHTML($html);
     $this->assertTrue($dom instanceof \DOMDocument, "Canary");
 
     $ser = new Serializer($dom, FALSE);

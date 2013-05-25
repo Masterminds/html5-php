@@ -54,12 +54,13 @@ class DOMTreeBuilder implements EventHandler {
   protected $quirks = TRUE;
 
   public function __construct() {
+    $impl = new \DOMImplementation();
     // XXX:
     // Create the doctype. For now, we are always creating HTML5 
     // documents, and attempting to up-convert any older DTDs to HTML5.
-    $dt = \DOMImplementation::createDocumentType('html');
+    $dt = $impl->createDocumentType('html');
     //$this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
-    $this->doc = \DOMImplementation::createDocument(NULL, NULL, $dt);
+    $this->doc = $impl->createDocument(NULL, NULL, $dt);
     $this->doc->errors = array();
 
     // $this->current = $this->doc->documentElement;

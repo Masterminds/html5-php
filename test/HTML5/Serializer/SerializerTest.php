@@ -20,7 +20,8 @@ class SerializerTest extends \HTML5\Tests\TestCase {
    */
   protected function cycle($html) {
     $dom = \HTML5::loadHTML($html);
-    $ser = new Serializer($dom);
+    $options = \HTML5::options();
+    $ser = new Serializer($dom, $options);
     $out = $ser->saveHTML();
 
     return $out;
@@ -44,7 +45,7 @@ class SerializerTest extends \HTML5\Tests\TestCase {
     $dom = \HTML5::loadHTML($html);
     $this->assertTrue($dom instanceof \DOMDocument, "Canary");
 
-    $ser = new Serializer($dom, FALSE);
+    $ser = new Serializer($dom, \HTML5::options());
     $out = $ser->saveHTML();
 
     $this->assertTrue(count($out) >= count($html), 'Byte counts');
@@ -59,7 +60,7 @@ class SerializerTest extends \HTML5\Tests\TestCase {
     $dom = \HTML5::loadHTML($html);
     $this->assertTrue($dom instanceof \DOMDocument, "Canary");
 
-    $ser = new Serializer($dom, FALSE);
+    $ser = new Serializer($dom, \HTML5::options());
     $out = fopen("php://temp", "w");
     $ser->save($out);
 
@@ -99,10 +100,10 @@ class SerializerTest extends \HTML5\Tests\TestCase {
     $res = $this->cycle($this->prepareHtml('<a>This is a test.</a>'));
     $this->assertRegExp('|This is a test.|', $res);
 
-    $res = $this->cycle('This
+    $res = $this->cycle($this->prepareHtml('This
       is
       a
-      test.');
+      test.'));
 
     // Check that newlines are there, but don't count spaces.
     $this->assertRegExp('|This\n\s*is\n\s*a\n\s*test.|', $res);

@@ -8,8 +8,6 @@ require_once __DIR__ . '/../TestCase.php';
 
 class TraverserTest extends \HTML5\Tests\TestCase {
 
-  // Dummy markup to parse then try to traverse. Note, not using any html5
-  // so we can use the old parser until ours is complete.
   protected $markup = '<!doctype html>
     <html lang="en">
       <head>
@@ -40,7 +38,7 @@ class TraverserTest extends \HTML5\Tests\TestCase {
   function getTraverser() {
     $stream = fopen('php://temp', 'w');
     $dom = \HTML5::loadHTML($this->markup);
-    $t = new Traverser($dom, $stream);
+    $t = new Traverser($dom, $stream, \HTML5::options());
 
     // We return both the traverser and stream so we can pull from it.
     return array($t, $stream);
@@ -54,62 +52,8 @@ class TraverserTest extends \HTML5\Tests\TestCase {
 
     $dom = \HTML5::loadHTML($this->markup);
 
-    $t = new Traverser($dom, $stream);
+    $t = new Traverser($dom, $stream, \HTML5::options());
 
     $this->assertInstanceOf('\HTML5\Serializer\Traverser', $t);
-  }
-
-  function testNl() {
-    list($t, $s) = $this->getTraverser();
-
-    $m = $this->getProtectedMethod('nl');
-    $m->invoke($t);
-    $this->assertEquals(PHP_EOL, stream_get_contents($s, -1, 0));
-  }
-
-  function testWr() {
-    list($t, $s) = $this->getTraverser();
-
-    $m = $this->getProtectedMethod('wr');
-    $m->invoke($t, 'foo');
-    $this->assertEquals('foo', stream_get_contents($s, -1, 0));
-  }
-
-  function testText() {
-    $dom = \HTML5::loadHTML('<!doctype html>
-    <html lang="en">
-      <head>
-        <script>baz();</script>
-      </head>
-    </html>');
-
-    $stream = fopen('php://temp', 'w');
-    $t = new Traverser($dom, $stream);
-    $m = $this->getProtectedMethod('text');
-
-    $list = $dom->getElementsByTagName('script');
-    $m->invoke($t, $list->item(0)->childNodes->item(0));
-    $this->assertEquals('baz();', stream_get_contents($stream, -1, 0));
-  }
-
-  function testEnc() {
-
-    // Test basic escaping of text.
-    $tests = array(
-      '&\'<>"' => '&amp;&#039;&lt;&gt;&quot;',
-      'This + is. a < test' => 'This + is. a &lt; test',
-    );
-
-    list($t, $s) = $this->getTraverser();
-    $m = $this->getProtectedMethod('enc');
-    foreach ($tests as $test => $expected) {
-      $this->assertEquals($expected, $m->invoke($t, $test));
-    }
-
-    list($t, $s) = $this->getTraverser();
-    $t->encodeOutput(TRUE);
-    $m = $this->getProtectedMethod('enc');
-
-    $this->assertEquals('&period;&plus;&num;', $m->invoke($t, '.+#'));
   }
 }

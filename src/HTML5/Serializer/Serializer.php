@@ -15,8 +15,7 @@ namespace HTML5\Serializer;
  */
 class Serializer {
   protected $dom;
-  protected $pretty = TRUE;
-  protected $encode = FALSE;
+  protected $options = array();
 
   /**
    * Create a serializer.
@@ -36,14 +35,7 @@ class Serializer {
    */
   public function __construct($dom, $options = array()) {
     $this->dom = $dom;
-    
-    if (isset($options['format']) && is_bool($options['format'])) {
-      $this->pretty = $options['format'];
-    }
-
-    if (isset($options['encode']) && is_bool($options['encode'])) {
-      $this->encode = $options['encode'];
-    }
+    $this->options = $options;
   }
 
   /**
@@ -63,9 +55,7 @@ class Serializer {
     else {
       $file = fopen($filename, 'w');
     }
-    $trav = new Traverser($this->dom, $file);
-    $trav->formatOutput($this->pretty);
-    $trav->encodeOutput($this->encode);
+    $trav = new Traverser($this->dom, $file, $this->options);
 
     $trav->walk();
 

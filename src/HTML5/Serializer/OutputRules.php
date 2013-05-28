@@ -26,7 +26,6 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
     }
 
     $this->out = $output;
-
   }
 
   public function document($dom) {

@@ -47,6 +47,69 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     return array($o, $stream);
   }
 
+  function testDocument() {
+    $dom = \HTML5::loadHTML('<!doctype html><html lang="en"><body>foo</body></html>');
+
+    $stream = fopen('php://temp', 'w');
+    $t = new Traverser($dom, $stream, \HTML5::options());
+    $o = new OutputRules($t, $stream, \HTML5::options());
+
+    $o->document($dom);
+    $this->assertEquals("<!DOCTYPE html>\n<html lang=\"en\"><body>foo</body></html>\n", stream_get_contents($stream, -1, 0));
+  }
+
+
+  function testElement() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+      </body>
+    </html>');
+
+    $stream = fopen('php://temp', 'w');
+    $t = new Traverser($dom, $stream, \HTML5::options());
+    $o = new OutputRules($t, $stream, \HTML5::options());
+
+    $list = $dom->getElementsByTagName('div');
+    $o->element($list->item(0));
+    $this->assertEquals('<div id="foo" class="bar baz">foo bar baz</div>', stream_get_contents($stream, -1, 0));
+  }
+
+  function testCData() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div><![CDATA[bar]]></div>
+      </body>
+    </html>');
+
+    $stream = fopen('php://temp', 'w');
+    $t = new Traverser($dom, $stream, \HTML5::options());
+    $o = new OutputRules($t, $stream, \HTML5::options());
+
+    $list = $dom->getElementsByTagName('div');
+    $o->cdata($list->item(0)->childNodes->item(0));
+    $this->assertEquals('<![CDATA[bar]]>', stream_get_contents($stream, -1, 0));
+  }
+
+  function testComment() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div><!-- foo --></div>
+      </body>
+    </html>');
+
+    $stream = fopen('php://temp', 'w');
+    $t = new Traverser($dom, $stream, \HTML5::options());
+    $o = new OutputRules($t, $stream, \HTML5::options());
+
+    $list = $dom->getElementsByTagName('div');
+    $o->comment($list->item(0)->childNodes->item(0));
+    $this->assertEquals('<!-- foo -->', stream_get_contents($stream, -1, 0));
+  }
+
   function testText() {
     $dom = \HTML5::loadHTML('<!doctype html>
     <html lang="en">

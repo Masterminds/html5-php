@@ -64,7 +64,8 @@ class Traverser {
     }
     // If NodeList, loop
     elseif ($this->dom instanceof \DOMNodeList) {
-      // Loop through the list
+      // If this is a NodeList of DOMDocuments this will not work.
+      $this->children($this->dom);
     }
     // Else assume this is a DOMNode-like datastructure.
     else {

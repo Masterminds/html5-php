@@ -58,7 +58,7 @@ class Traverser {
    *   Returns the output stream.
    */
   public function walk() {
-    // If DOMDocument, start with the DOCTYPE and travers.
+    
     if ($this->dom instanceof \DOMDocument) {
       $this->rules->document($this->dom);
     }

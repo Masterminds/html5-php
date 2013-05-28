@@ -64,17 +64,17 @@ class OutputRules {
    */
   public function text($ele) {
     if (isset($ele->parentNode) && Elements::isA($ele->parentNode->tagName, Elements::TEXT_RAW)) {
-      $this->wr($ele->wholeText);
+      $this->wr($ele->data);
       return;
     }
 
     // FIXME: This probably needs some flags set.
-    $this->wr($this->enc($ele->wholeText));
+    $this->wr($this->enc($ele->data));
 
   }
 
   public function cdata($ele) {
-    $this->wr('<![CDATA[')->wr($ele->wholeText)->wr(']]>');
+    $this->wr('<![CDATA[')->wr($ele->data)->wr(']]>');
   }
 
   public function comment($ele) {

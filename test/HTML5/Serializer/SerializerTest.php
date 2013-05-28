@@ -130,9 +130,8 @@ class SerializerTest extends \HTML5\Tests\TestCase {
     $this->assertRegExp('|<!-- This is a test. -->|', $res);
   }
 
-  // FAILS because the parser converts CDATA to a comment. Issue #2.
   public function testCDATA() {
     $res = $this->cycle($this->prepareHtml('a<![CDATA[ This <is> a test. ]]>b'));
-    $this->assertRegExp('|<![CDATA[ This <is> a test. ]]>|', $res);
+    $this->assertRegExp('|<!\[CDATA\[ This <is> a test\. \]\]>|', $res);
   }
 }

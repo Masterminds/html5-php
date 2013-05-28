@@ -10,7 +10,7 @@ namespace HTML5\Serializer;
 
 use \HTML5\Elements;
 
-class OutputRules {
+class OutputRules implements \HTML5\Serializer\RulesInterface {
 
   protected $traverser;
   protected $encode = FALSE;

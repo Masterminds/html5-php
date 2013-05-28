@@ -44,6 +44,9 @@ class Traverser {
     $this->out = $out;
     $this->options = $options;
 
+    if (!isset($this->options['rules'])) {
+      throw new \HTML5\Exception('No Rules specified for output generation.');
+    }
     $rulesClass = $this->options['rules'];
     $this->rules = new $rulesClass($this, $out, $this->options);
   }

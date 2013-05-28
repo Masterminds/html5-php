@@ -1,6 +1,13 @@
 {
-  "name": "technosophos/html5",
+  "name": "masterminds/html5",
   "description": "An HTML5 parser and serializer.",
+  "type": "library",
+  "homepage": "https://github.com/Masterminds/html5-php",
+  "license": "MIT",
+  "keywords": ["xml", "html", "html5", "dom", "parser", "serializer", "querypath"],
+  "require" : {
+    "php" : ">=5.3.0"
+  },
   "autoload": {
     "psr-0": {"HTML5": "src"}
   }

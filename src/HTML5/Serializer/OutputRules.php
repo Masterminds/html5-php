@@ -1,4 +1,11 @@
 <?php
+/**
+ * @file
+ * The rules for generating output in the serializer.
+ *
+ * These output rules are likely to generate output similar to the document that
+ * was parsed. It is not intended to output exactly the document that was parsed.
+ */
 namespace HTML5\Serializer;
 
 use \HTML5\Elements;

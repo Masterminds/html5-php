@@ -1,6 +1,6 @@
 <?php
 namespace HTML5\Parser;
-require __DIR__ . '/../TestCase.php';
+require_once __DIR__ . '/../TestCase.php';
 require 'EventStack.php';
 
 class TokenizerTest extends \HTML5\Tests\TestCase {

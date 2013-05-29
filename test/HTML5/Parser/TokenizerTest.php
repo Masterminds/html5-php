@@ -18,7 +18,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
   public function assertEventEquals($type, $expects, $event) {
     $this->assertEquals($type, $event['name'], "Event $type for " . print_r($event, TRUE));
     if (is_array($expects)) {
-      $this->assertEquals($expects, $event['data'], "Event $type should equal $expects: " . print_r($event, TRUE));
+      $this->assertEquals($expects, $event['data'], "Event $type should equal " . print_r($expects, TRUE) . ": " . print_r($event, TRUE));
     }
     else {
       $this->assertEquals($expects, $event['data'][0], "Event $type should equal $expects: " . print_r($event, TRUE));

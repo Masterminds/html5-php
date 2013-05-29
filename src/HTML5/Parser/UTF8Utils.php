@@ -86,22 +86,33 @@ class UTF8Utils {
     could not be converted to Unicode characters must be converted
     to U+FFFD REPLACEMENT CHARACTER code points. */
 
-    if (function_exists('iconv') && $encoding != 'auto') {
+    // mb_convert_encoding is chosen over iconv because of a bug. The best
+    // details for the bug are on http://us1.php.net/manual/en/function.iconv.php#108643
+    // which contains links to the actual but reports as well as work around
+    // details.
+    if (function_exists('mb_convert_encoding')) {
+      // mb library has the following behaviors:
+      // - UTF-16 surrogates result in FALSE.
+      // - Overlongs and outside Plane 16 result in empty strings.
+      
+      // Before we run mb_convert_encoding we need to tell it what to do with
+      // characters it does not know. This could be different than the parent
+      // application executing this library so we store the value, change it
+      // to our needs, and then change it back when we are done. This feels
+      // a little excessive and it would be great if there was a better way.
+      $save = ini_get('mbstring.substitute_character');
+      ini_set('mbstring.substitute_character', "none");
+      $data = mb_convert_encoding($data, 'UTF-8', $encoding);
+      ini_set('mbstring.substitute_character', $save);
+    }
+    // @todo Get iconv running in at least some environments if that is possible.
+    elseif (function_exists('iconv') && $encoding != 'auto') {
       // fprintf(STDOUT, "iconv found\n");
       // iconv has the following behaviors:
       // - Overlong representations are ignored.
       // - Beyond Plane 16 is replaced with a lower char.
       // - Incomplete sequences generate a warning.
       $data = @iconv($encoding, 'UTF-8//IGNORE', $data);
-    }
-    // MPB: Testing the newer mb_convert_encoding(). This might need
-    // to be removed again.
-    elseif (function_exists('mb_convert_encoding')) {
-      fprintf(STDOUT, "MB found\n");
-      // mb library has the following behaviors:
-      // - UTF-16 surrogates result in FALSE.
-      // - Overlongs and outside Plane 16 result in empty strings.
-      $data = mb_convert_encoding($data, 'UTF-8', $encoding);
     }
     else {
       // we can make a conforming native implementation

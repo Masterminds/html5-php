@@ -13,6 +13,8 @@ But after some initial refactoring work, we began a new parser.
 - DOM tree builder [in progress]
 - Interoperability with QueryPath [not started]
 
+[![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php)
+
 ## Basic Usage
 
 HTML5-PHP has a high-level API and a low-level API. 

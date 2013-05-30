@@ -35,19 +35,19 @@ class Traverser {
    *   stream.
    * @param array $options
    *   An array or options for the traverser as key/value pairs. These include:
-   *   - encode: A bool to specify if full encding should happen for all named
+   *   - encode_entities: A bool to specify if full encding should happen for all named
    *     charachter references. Defaults to FALSE which escapes &'<>".
-   *   - rules: The path to the class handling the output rules.
+   *   - output_rules: The path to the class handling the output rules.
    */
   public function __construct($dom, $out, $options = array()) {
     $this->dom = $dom;
     $this->out = $out;
     $this->options = $options;
 
-    if (!isset($this->options['rules'])) {
+    if (!isset($this->options['output_rules'])) {
       throw new \HTML5\Exception('No Rules specified for output generation.');
     }
-    $rulesClass = $this->options['rules'];
+    $rulesClass = $this->options['output_rules'];
     $this->rules = new $rulesClass($this, $out, $this->options);
   }
 

@@ -157,7 +157,7 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
       $this->assertEquals($expected, $m->invoke($o, $test));
     }
 
-    list($o, $s) = $this->getOutputRules(array('encode' => TRUE));
+    list($o, $s) = $this->getOutputRules(array('encode_entities' => TRUE));
     $m = $this->getProtectedMethod('enc');
 
     $this->assertEquals('&period;&plus;&num;', $m->invoke($o, '.+#'));

@@ -21,8 +21,8 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
   public function __construct($traverser, $output, $options = array()) {
     $this->traverser = $traverser;
 
-    if (isset($options['encode'])) {
-      $this->encode = $options['encode'];
+    if (isset($options['encode_entities'])) {
+      $this->encode = $options['encode_entities'];
     }
 
     $this->out = $output;

@@ -37,13 +37,11 @@ class HTML5 {
    *   The path to the file to parse. If this is a resource, it is 
    *   assumed to be an open stream whose pointer is set to the first 
    *   byte of input.
-   * @param array $options
-   *   An array of options.
    * @return \DOMDocument
    *   A DOM document. These object type is defined by the libxml 
    *   library, and should have been included with your version of PHP.
    */
-  public static function load($file, $options = NULL) {
+  public static function load($file) {
 
     // Handle the case where file is a resource.
     if (is_resource($file)) {
@@ -61,14 +59,13 @@ class HTML5 {
    * Take a string of HTML 5 (or earlier) and parse it into a 
    * DOMDocument.
    *
-   *
-   * @param array $options
-   *   An array of options.
+   * @param string $string
+   *   A html5 document as a string.
    * @return \DOMDocument
    *   A DOM document. DOM is part of libxml, which is included with 
    *   almost all distribtions of PHP.
    */
-  public static function loadHTML($string, $options = NULL) {
+  public static function loadHTML($string) {
     $input = new StringInputStream($string);
     return self::parse($input);
   }

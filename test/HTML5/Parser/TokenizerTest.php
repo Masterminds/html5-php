@@ -226,6 +226,8 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
   public function testDoctype() {
     $good = array(
       '<!DOCTYPE html>' => array('html', 0, NULL, FALSE),
+      '<!doctype html>' => array('html', 0, NULL, FALSE),
+      '<!DocType html>' => array('html', 0, NULL, FALSE),
       "<!DOCTYPE\nhtml>" => array('html', 0, NULL, FALSE),
       "<!DOCTYPE\fhtml>" => array('html', 0, NULL, FALSE),
       '<!DOCTYPE html PUBLIC "foo bar">' => array('html', EventStack::DOCTYPE_PUBLIC, 'foo bar', FALSE),

@@ -259,7 +259,7 @@ class Tokenizer {
       return $this->comment();
     }
     // Doctype
-    elseif($tok == 'D') {
+    elseif($tok == 'D' || $tok == 'd') {
       return $this->doctype('');
     }
     // CDATA section
@@ -598,12 +598,12 @@ class Tokenizer {
    * @todo This method is a little long. Should probably refactor.
    */
   protected function doctype() {
-    if ($this->scanner->current() != 'D') {
+    if (strcasecmp($this->scanner->current(), 'D')) {
       return FALSE;
     }
-    // Check that string is DOCTYPE
-    $chars = $this->scanner->charsWhile("DOCTYPE");
-    if ($chars != 'DOCTYPE') {
+    // Check that string is DOCTYPE.
+    $chars = $this->scanner->charsWhile("DOCTYPEdoctype");
+    if (strcasecmp($chars, 'DOCTYPE')) {
       $this->parseError('Expected DOCTYPE, got %s', $chars);
       return $this->bogusComment('<!' .  $chars);
     }

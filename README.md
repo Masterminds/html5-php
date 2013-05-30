@@ -88,15 +88,20 @@ events and builds a document tree (`DOMDocument`) based on the events.
 The serializer takes a data structure (the `DOMDocument`) and transforms
 it into a character representation -- an HTML5 document.
 
-The serializer is broken into two parts:
+The serializer is broken into three parts:
 
+- The `OutputRules` contain the rules to turn DOM elements into strings. The
+rules used are configurable with the `OutputRules` being the default. An option
+can be set by default or at call time to use a different ruleset that implements
+`RulesInterface`.
 - The `Traverser`, which is a special-purpose tree walker. It visits
-each node and transforms it into a string.
+each node node in the tree and uses the `OutputRules` to transform the node
+into a string.
 - The `Serializer` manages the `Traverser` and stores the resultant data
 in the correct place.
 
 The serializer (`save()`, `saveHTML()`) follows the 
-[section 8.9 of the HTML 5.0 spec] (http://www.w3.org/TR/2012/CR-html5-20121217/syntax.html#serializing-html-fragments).
+[section 8.9 of the HTML 5.0 spec](http://www.w3.org/TR/2012/CR-html5-20121217/syntax.html#serializing-html-fragments).
 So tags are serialized according to these rules:
 
 - A tag with children: &lt;foo&gt;CHILDREN&lt;/foo&gt;

@@ -8,7 +8,7 @@ But after some initial refactoring work, we began a new parser.
 
 - An HTML5 serializer [in progress; early alpha]
 - Support for PHP namespace [done]
-- Composer support [in progress]
+- Composer support [done]
 - Event-based (SAX-like) parser [in progress]
 - DOM tree builder [in progress]
 - Interoperability with QueryPath [not started]

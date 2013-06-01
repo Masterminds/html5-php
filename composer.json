@@ -5,7 +5,18 @@
   "homepage": "https://github.com/Masterminds/html5-php",
   "license": "MIT",
   "keywords": ["xml", "html", "html5", "dom", "parser", "serializer", "querypath"],
+  "authors": [
+    {
+      "name": "Matt Butcher",
+      "email": "technosophos@gmail.com"
+    },
+    {
+      "name": "Matt Farina",
+      "email": "matt@mattfarina.com"
+    }
+  ],
   "require" : {
+    "ext-libxml" : "*",
     "php" : ">=5.3.0"
   },
   "autoload": {

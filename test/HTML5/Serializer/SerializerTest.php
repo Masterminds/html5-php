@@ -60,6 +60,7 @@ class SerializerTest extends \HTML5\Tests\TestCase {
     $dom = \HTML5::loadHTML($html);
     $this->assertTrue($dom instanceof \DOMDocument, "Canary");
 
+    // Test saving to a stream.
     $ser = new Serializer($dom, \HTML5::options());
     $out = fopen("php://temp", "w");
     $ser->save($out);
@@ -67,6 +68,14 @@ class SerializerTest extends \HTML5\Tests\TestCase {
     rewind($out);
     $res = stream_get_contents($out);
     $this->assertTrue(count($res) >= count($html));
+
+    // Test saving to a file on the file system.
+    $tmpfname = tempnam(sys_get_temp_dir(), "html5-php");
+    $ser = new Serializer($dom, \HTML5::options());
+    $ser->save($tmpfname);
+    $content = file_get_contents($tmpfname);
+    $this->assertRegExp('|<body>test</body>|', $content);
+    unlink($tmpfname);
   }
 
   public function testElements() {

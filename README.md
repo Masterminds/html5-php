@@ -6,12 +6,12 @@ The need for an HTML5 parser in PHP is clear. This project initially
 began with the seemingly abandoned `html5lib` project [original source](https://code.google.com/p/html5lib/source/checkout).
 But after some initial refactoring work, we began a new parser.
 
-- An HTML5 serializer [in progress; early alpha]
+- An HTML5 serializer [in progress; alpha]
 - Support for PHP namespace [done]
 - Composer support [done]
-- Event-based (SAX-like) parser [in progress]
-- DOM tree builder [in progress]
-- Interoperability with QueryPath [not started]
+- Event-based (SAX-like) parser [in progress; alpha]
+- DOM tree builder [in progress; alpha]
+- Interoperability with QueryPath [[in progress](https://github.com/technosophos/querypath/issues/114)]
 
 [![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php)
 

@@ -58,6 +58,18 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $this->assertEquals("<!DOCTYPE html>\n<html lang=\"en\"><body>foo</body></html>\n", stream_get_contents($stream, -1, 0));
   }
 
+  function testDoctype() {
+    $dom = \HTML5::loadHTML('<!doctype html><html lang="en"><body>foo</body></html>');
+
+    $stream = fopen('php://temp', 'w');
+    $t = new Traverser($dom, $stream, \HTML5::options());
+    $o = new OutputRules($t, $stream, \HTML5::options());
+
+    $m = $this->getProtectedMethod('doctype');
+    $m->invoke($o, 'foo');
+    $this->assertEquals("<!DOCTYPE html>\n", stream_get_contents($stream, -1, 0));
+  }
+
 
   function testElement() {
     $dom = \HTML5::loadHTML('<!doctype html>

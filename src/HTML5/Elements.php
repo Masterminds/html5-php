@@ -314,6 +314,122 @@ class Elements {
   );
 
   /**
+   * Some attributes in SVG are case sensetitive.
+   *
+   * This map contains key/value pairs with the key as the lowercase attribute
+   * name and the value with the correct casing.
+   */
+  public static $svgCaseSensitiveAttributeMap = array(
+    'attributename' => 'attributeName',
+    'attributetype' => 'attributeType',
+    'basefrequency' => 'baseFrequency',
+    'baseprofile' => 'baseProfile',
+    'calcmode' => 'calcMode',
+    'clippathunits' => 'clipPathUnits',
+    'contentscripttype' => 'contentScriptType',
+    'contentstyletype' => 'contentStyleType',
+    'diffuseconstant' => 'diffuseConstant',
+    'edgemode' => 'edgeMode',
+    'externalresourcesrequired' => 'externalResourcesRequired',
+    'filterres' => 'filterRes',
+    'filterunits' => 'filterUnits',
+    'glyphref' => 'glyphRef',
+    'gradienttransform' => 'gradientTransform',
+    'gradientunits' => 'gradientUnits',
+    'kernelmatrix' => 'kernelMatrix',
+    'kernelunitlength' => 'kernelUnitLength',
+    'keypoints' => 'keyPoints',
+    'keysplines' => 'keySplines',
+    'keytimes' => 'keyTimes',
+    'lengthadjust' => 'lengthAdjust',
+    'limitingconeangle' => 'limitingConeAngle',
+    'markerheight' => 'markerHeight',
+    'markerunits' => 'markerUnits',
+    'markerwidth' => 'markerWidth',
+    'maskcontentunits' => 'maskContentUnits',
+    'maskunits' => 'maskUnits',
+    'numoctaves' => 'numOctaves',
+    'pathlength' => 'pathLength',
+    'patterncontentunits' => 'patternContentUnits',
+    'patterntransform' => 'patternTransform',
+    'patternunits' => 'patternUnits',
+    'pointsatx' => 'pointsAtX',
+    'pointsaty' => 'pointsAtY',
+    'pointsatz' => 'pointsAtZ',
+    'preservealpha' => 'preserveAlpha',
+    'preserveaspectratio' => 'preserveAspectRatio',
+    'primitiveunits' => 'primitiveUnits',
+    'refx' => 'refX',
+    'refy' => 'refY',
+    'repeatcount' => 'repeatCount',
+    'repeatdur' => 'repeatDur',
+    'requiredextensions' => 'requiredExtensions',
+    'requiredfeatures' => 'requiredFeatures',
+    'specularconstant' => 'specularConstant',
+    'specularexponent' => 'specularExponent',
+    'spreadmethod' => 'spreadMethod',
+    'startoffset' => 'startOffset',
+    'stddeviation' => 'stdDeviation',
+    'stitchtiles' => 'stitchTiles',
+    'surfacescale' => 'surfaceScale',
+    'systemlanguage' => 'systemLanguage',
+    'tablevalues' => 'tableValues',
+    'targetx' => 'targetX',
+    'targety' => 'targetY',
+    'textlength' => 'textLength',
+    'viewbox' => 'viewBox',
+    'viewtarget' => 'viewTarget',
+    'xchannelselector' => 'xChannelSelector',
+    'ychannelselector' => 'yChannelSelector',
+    'zoomandpan' => 'zoomAndPan',
+  );
+
+  /**
+   * Some SVG elements are case sensetitive. This map contains these.
+   *
+   * The map contains key/value store of the name is lowercase as the keys and
+   * the correct casing as the value.
+   */
+  public static $svgCaseSensitiveElementMap = array(
+    'altglyph' => 'altGlyph',
+    'altglyphdef' => 'altGlyphDef',
+    'altglyphitem' => 'altGlyphItem',
+    'animatecolor' => 'animateColor',
+    'animatemotion' => 'animateMotion',
+    'animatetransform' => 'animateTransform',
+    'clippath' => 'clipPath',
+    'feblend' => 'feBlend',
+    'fecolormatrix' => 'feColorMatrix',
+    'fecomponenttransfer' => 'feComponentTransfer',
+    'fecomposite' => 'feComposite',
+    'feconvolvematrix' => 'feConvolveMatrix',
+    'fediffuselighting' => 'feDiffuseLighting',
+    'fedisplacementmap' => 'feDisplacementMap',
+    'fedistantlight' => 'feDistantLight',
+    'feflood' => 'feFlood',
+    'fefunca' => 'feFuncA',
+    'fefuncb' => 'feFuncB',
+    'fefuncg' => 'feFuncG',
+    'fefuncr' => 'feFuncR',
+    'fegaussianblur' => 'feGaussianBlur',
+    'feimage' => 'feImage',
+    'femerge' => 'feMerge',
+    'femergenode' => 'feMergeNode',
+    'femorphology' => 'feMorphology',
+    'feoffset' => 'feOffset',
+    'fepointlight' => 'fePointLight',
+    'fespecularlighting' => 'feSpecularLighting',
+    'fespotlight' => 'feSpotLight',
+    'fetile' => 'feTile',
+    'feturbulence' => 'feTurbulence',
+    'foreignobject' => 'foreignObject',
+    'glyphref' => 'glyphRef',
+    'lineargradient' => 'linearGradient',
+    'radialgradient' => 'radialGradient',
+    'textpath' => 'textPath',
+  );
+
+  /**
    * Check whether the given element meets the given criterion.
    *
    * Example:
@@ -414,5 +530,63 @@ class Elements {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Normalize a SVG element name to its proper case and form.
+   *
+   * @param string $name
+   *   The name of the element.
+   *
+   * @return string
+   *   The normalized form of the element name.
+   */
+  public static function normalizeSvgElement($name) {
+    $name = strtolower($name);
+    if (isset(self::$svgCaseSensitiveElementMap[$name])) {
+      $name = self::$svgCaseSensitiveElementMap[$name];
+    }
+
+    return $name;
+  }
+
+  /**
+   * Normalize a SVG attribute name to its proper case and form.
+   *
+   * @param string $name
+   *   The name of the attribute.
+   *
+   * @return string
+   *   The normalized form of the attribute name.
+   */
+  public static function normalizeSvgAttribute($name) {
+    $name = strtolower($name);
+    if (isset(self::$svgCaseSensitiveAttributeMap[$name])) {
+      $name = self::$svgCaseSensitiveAttributeMap[$name];
+    }
+
+    return $name;
+  }
+
+  /**
+   * Normalize a MathML attribute name to its proper case and form.
+   *
+   * Note, all MathML element names are lowercase.
+   * 
+   * @param string $name
+   *   The name of the attribute.
+   *
+   * @return string
+   *   The normalized form of the attribute name.
+   */
+  public static function normalizeMathMlAttribute($name) {
+    $name = strtolower($name);
+
+    // Only one attribute has a mixed case form for MathML.
+    if ($name == 'definitionurl') {
+      $name = 'definitionURL';
+    }
+
+    return $name;
   }
 }

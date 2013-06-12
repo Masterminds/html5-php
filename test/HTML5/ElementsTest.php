@@ -369,4 +369,46 @@ class ElementsTest extends TestCase {
 
   }
 
+  public function testNormalizeSvgElement() {
+    $tests = array(
+      'foo' => 'foo',
+      'altglyph' => 'altGlyph',
+      'BAR' => 'bar',
+      'fespecularlighting' => 'feSpecularLighting',
+      'bAz' => 'baz',
+      'foreignobject' => 'foreignObject',
+    );
+
+    foreach ($tests as $input => $expected) {
+      $this->assertEquals($expected, Elements::normalizeSvgElement($input));
+    }
+  }
+
+  public function testNormalizeSvgAttribute() {
+    $tests = array(
+      'foo' => 'foo',
+      'attributename' => 'attributeName',
+      'BAR' => 'bar',
+      'limitingconeangle' => 'limitingConeAngle',
+      'bAz' => 'baz',
+      'patterncontentunits' => 'patternContentUnits',
+    );
+
+    foreach ($tests as $input => $expected) {
+      $this->assertEquals($expected, Elements::normalizeSvgAttribute($input));
+    }
+  }
+
+  public function testNormalizeMathMlAttribute() {
+    $tests = array(
+      'foo' => 'foo',
+      'definitionurl' => 'definitionURL',
+      'BAR' => 'bar',
+    );
+
+    foreach ($tests as $input => $expected) {
+      $this->assertEquals($expected, Elements::normalizeMathMlAttribute($input));
+    }
+  }
+
 }

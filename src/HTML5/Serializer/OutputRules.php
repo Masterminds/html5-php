@@ -15,6 +15,8 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
   protected $traverser;
   protected $encode = FALSE;
   protected $out;
+  protected $inSvg = FALSE;
+  protected $inMathMl = FALSE;
 
   const DOCTYPE = '<!DOCTYPE html>';
 
@@ -49,11 +51,32 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
       $name = $ele->localName;
     }
 
+    // If we are in SVG or MathML there is special handling. 
+    switch($name) {
+      case 'svg':
+        $this->inSvg = TRUE;
+        $name = Elements::normalizeSvgElement($name);
+        break;
+      case 'mathml':
+        $this->inMathMl = TRUE;
+        break;
+    }
+
     $this->openTag($ele);
 
     // Handle children.
     if ($ele->hasChildNodes()) {
       $this->traverser->children($ele->childNodes);
+    }
+
+    // Close out the SVG or MathML special handling.
+    switch($name) {
+      case 'svg':
+        $this->inSvg = FALSE;
+        break;
+      case 'mathml':
+        $this->inMathMl = FALSE;
+        break;
     }
 
     // If not unary, add a closing tag.
@@ -125,7 +148,17 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
       // the XML, XMLNS, or XLink NS's should use the canonical
       // prefix. It seems that DOM does this for us already, but there
       // may be exceptions.
-      $this->wr(' ')->wr($node->name)->wr('="')->wr($val)->wr('"');
+      $name = $node->name;
+
+      // Special handling for attributes in SVG and MathML.
+      if ($this->inSvg) {
+        $name = Elements::normalizeSvgAttribute($name);
+      }
+      elseif ($this->inMathMl) {
+        $name = Elements::normalizeMathMlAttribute($name);
+      }
+
+      $this->wr(' ')->wr($name)->wr('="')->wr($val)->wr('"');
     }
   }
 

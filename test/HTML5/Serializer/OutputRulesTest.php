@@ -76,6 +76,11 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     <html lang="en">
       <body>
         <div id="foo" class="bar baz">foo bar baz</div>
+        <svg width="150" height="100" viewBox="0 0 3 2">
+          <rect width="1" height="2" x="0" fill="#008d46" />
+          <rect width="1" height="2" x="1" fill="#ffffff" />
+          <rect width="1" height="2" x="2" fill="#d2232c" />
+        </svg>
       </body>
     </html>');
 
@@ -86,6 +91,24 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $list = $dom->getElementsByTagName('div');
     $o->element($list->item(0));
     $this->assertEquals('<div id="foo" class="bar baz">foo bar baz</div>', stream_get_contents($stream, -1, 0));
+  }
+
+  function testOpenTag() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+      </body>
+    </html>');
+
+    $stream = fopen('php://temp', 'w');
+    $t = new Traverser($dom, $stream, \HTML5::options());
+    $o = new OutputRules($t, $stream, \HTML5::options());
+
+    $list = $dom->getElementsByTagName('div');
+    $m = $this->getProtectedMethod('openTag');
+    $m->invoke($o, $list->item(0));
+    $this->assertEquals('<div id="foo" class="bar baz">', stream_get_contents($stream, -1, 0));
   }
 
   function testCData() {
@@ -173,6 +196,28 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $m = $this->getProtectedMethod('enc');
 
     $this->assertEquals('&period;&plus;&num;', $m->invoke($o, '.+#'));
+  }
+
+  function testSvg() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+        <svg width="150" height="100" viewBox="0 0 3 2">
+          <rect width="1" height="2" x="0" fill="#008d46" />
+          <rect width="1" height="2" x="1" fill="#ffffff" />
+          <rect width="1" height="2" x="2" fill="#d2232c" />
+        </svg>
+      </body>
+    </html>');
+
+    $stream = fopen('php://temp', 'w');
+    $t = new Traverser($dom, $stream, \HTML5::options());
+    $o = new OutputRules($t, $stream, \HTML5::options());
+
+    $list = $dom->getElementsByTagName('svg');
+    $o->element($list->item(0));
+    $this->assertRegExp('|<svg width="150" height="100" viewBox="0 0 3 2">|', stream_get_contents($stream, -1, 0));
   }
 
 }

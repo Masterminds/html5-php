@@ -76,6 +76,27 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('a', $body2->getAttribute('id'));
   }
 
+  public function testSVGAttributes() {
+    $html = "<!DOCTYPE html>
+      <html><body>
+      <svg width='150' viewbox='2'>
+      <rect textlength='2'/>
+      <animatecolor>foo</animatecolor>
+      </svg> 
+      </body></html>";
+    $doc = $this->parse($html);
+    $root = $doc->documentElement;
+
+    $svg = $root->getElementsByTagName('svg')->item(0);
+    $this->assertTrue($svg->hasAttribute('viewBox'));
+
+    $rect = $root->getElementsByTagName('rect')->item(0);
+    $this->assertTrue($rect->hasAttribute('textLength'));
+
+    $ac = $root->getElementsByTagName('animateColor');
+    $this->assertEquals(1, $ac->length);
+  }
+
   public function testMissingHtmlTag() {
     $html = "<!DOCTYPE html><title>test</title>";
     $doc = $this->parse($html);

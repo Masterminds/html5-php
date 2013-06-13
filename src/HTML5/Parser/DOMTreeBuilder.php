@@ -39,6 +39,9 @@ class DOMTreeBuilder implements EventHandler {
   const IM_AFTER_AFTER_BODY = 20;
   const IM_AFTER_AFTER_FRAMESET = 21;
 
+  const IM_IN_SVG = 22;
+  const IM_IN_MATHML = 23;
+
   protected $stack = array();
   protected $current; // Pointer in the tag hierarchy.
   protected $doc;
@@ -150,6 +153,12 @@ class DOMTreeBuilder implements EventHandler {
     case 'body':
       $this->insertMode = self::IM_IN_BODY;
       break;
+    case 'svg':
+      $this->insertMode = self::IM_IN_SVG;
+      break;
+    case 'mathml':
+      $this->insertMode = self::IM_IN_MATHML;
+      break;
     case 'noscript':
       if ($this->insertMode == self::IM_IN_HEAD) {
         $this->insertMode = self::IM_IN_HEAD_NOSCRIPT;
@@ -158,9 +167,22 @@ class DOMTreeBuilder implements EventHandler {
 
     }
 
+    // Special case handling for SVG.
+    if ($this->insertMode == self::IM_IN_SVG) {
+      $lname = Elements::normalizeSvgElement($lname);
+    }
+
 
     $ele = $this->doc->createElement($lname);
     foreach ($attributes as $aName => $aVal) {
+
+      if ($this->insertMode == self::IM_IN_SVG) {
+        $aName = Elements::normalizeSvgAttribute($aName);
+      }
+      elseif ($this->insertMode == self::IM_IN_MATHML) {
+        $aName = Elements::normalizeMathMlAttribute($aname);
+      }
+
       $ele->setAttribute($aName, $aVal);
 
       // This is necessary on a non-DTD schema, like HTML5.
@@ -211,7 +233,7 @@ class DOMTreeBuilder implements EventHandler {
     }
 
     if ($name != $lname) {
-      fprintf(STDOUT, "Mismatch on %s and %s", $name, $lname);
+      //fprintf(STDOUT, "Mismatch on %s and %s", $name, $lname);
       return $this->quirksTreeResolver($lname);
     }
 
@@ -226,12 +248,17 @@ class DOMTreeBuilder implements EventHandler {
       $this->parseError('Could not find closing tag for ' . $name);
     }
 
-    switch ($this->insertMode) {
+    //switch ($this->insertMode) {
+    switch ($lname) {
     case "head":
       $this->insertMode = self::IM_AFTER_HEAD;
       break;
     case "body":
       $this->insertMode = self::IM_AFTER_BODY;
+      break;
+    case "svg":
+    case "mathml":
+      $this->insertMode = self::IM_IN_BODY;
       break;
     }
 

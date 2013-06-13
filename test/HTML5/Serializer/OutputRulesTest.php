@@ -205,6 +205,28 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('&period;&plus;&num;', $m->invoke($o, '.+#'));
   }
 
+  function testAttrs() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo" class="bar baz" disabled>foo bar baz</div>
+      </body>
+    </html>');
+
+    $stream = fopen('php://temp', 'w');
+    $t = new Traverser($dom, $stream, \HTML5::options());
+    $p = $this->getTraverserProtectedProperty('rules');
+    $o = $p->getValue($t);
+
+    $list = $dom->getElementsByTagName('div');
+
+    $m = $this->getProtectedMethod('attrs');
+    $m->invoke($o, $list->item(0));
+
+    $content = stream_get_contents($stream, -1, 0);
+    $this->assertEquals(' id="foo" class="bar baz" disabled', $content);
+  }
+
   function testSvg() {
     $dom = \HTML5::loadHTML('<!doctype html>
     <html lang="en">

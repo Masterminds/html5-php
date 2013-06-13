@@ -158,7 +158,10 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
         $name = Elements::normalizeMathMlAttribute($name);
       }
 
-      $this->wr(' ')->wr($name)->wr('="')->wr($val)->wr('"');
+      $this->wr(' ')->wr($name);
+      if (!empty($val)) {
+        $this->wr('="')->wr($val)->wr('"');
+      }
     }
   }
 

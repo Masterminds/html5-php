@@ -57,7 +57,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
         $this->inSvg = TRUE;
         $name = Elements::normalizeSvgElement($name);
         break;
-      case 'mathml':
+      case 'math':
         $this->inMathMl = TRUE;
         break;
     }
@@ -74,7 +74,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
       case 'svg':
         $this->inSvg = FALSE;
         break;
-      case 'mathml':
+      case 'math':
         $this->inMathMl = FALSE;
         break;
     }

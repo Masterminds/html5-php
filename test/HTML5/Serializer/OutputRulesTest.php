@@ -36,6 +36,13 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     return $method;
   }
 
+  function getTraverserProtectedProperty($name) {
+    $class = new \ReflectionClass('\HTML5\Serializer\Traverser');
+    $property = $class->getProperty($name);
+    $property->setAccessible(true);
+    return $property;
+  }
+
   function getOutputRules($options = array()) {
     $options = $options + \HTML5::options();
     $stream = fopen('php://temp', 'w');
@@ -198,6 +205,28 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('&period;&plus;&num;', $m->invoke($o, '.+#'));
   }
 
+  function testAttrs() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo" class="bar baz" disabled>foo bar baz</div>
+      </body>
+    </html>');
+
+    $stream = fopen('php://temp', 'w');
+    $t = new Traverser($dom, $stream, \HTML5::options());
+    $p = $this->getTraverserProtectedProperty('rules');
+    $o = $p->getValue($t);
+
+    $list = $dom->getElementsByTagName('div');
+
+    $m = $this->getProtectedMethod('attrs');
+    $m->invoke($o, $list->item(0));
+
+    $content = stream_get_contents($stream, -1, 0);
+    $this->assertEquals(' id="foo" class="bar baz" disabled', $content);
+  }
+
   function testSvg() {
     $dom = \HTML5::loadHTML('<!doctype html>
     <html lang="en">
@@ -218,6 +247,33 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $list = $dom->getElementsByTagName('svg');
     $o->element($list->item(0));
     $this->assertRegExp('|<svg width="150" height="100" viewBox="0 0 3 2">|', stream_get_contents($stream, -1, 0));
+  }
+
+  function testMath() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+        <math>
+          <mi>x</mi>
+          <csymbol definitionURL="http://www.example.com/mathops/multiops.html#plusminus">
+            <mo>&PlusMinus;</mo>
+          </csymbol>
+          <mi>y</mi>
+        </math>
+      </body>
+    </html>');
+
+    $stream = fopen('php://temp', 'w');
+    $t = new Traverser($dom, $stream, \HTML5::options());
+    $p = $this->getTraverserProtectedProperty('rules');
+    $o = $p->getValue($t);
+
+    $list = $dom->getElementsByTagName('math');
+    $o->element($list->item(0));
+    $content = stream_get_contents($stream, -1, 0);
+    $this->assertRegExp('|<math>|', $content);
+    $this->assertRegExp('|<csymbol definitionURL="http://www.example.com/mathops/multiops.html#plusminus">|', $content);
   }
 
 }

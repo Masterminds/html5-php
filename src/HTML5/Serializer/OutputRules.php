@@ -12,11 +12,14 @@ use \HTML5\Elements;
 
 class OutputRules implements \HTML5\Serializer\RulesInterface {
 
+  const IM_IN_HTML = 1;
+  const IM_IN_SVG = 2;
+  const IM_IN_MATHML = 3;
+
   protected $traverser;
   protected $encode = FALSE;
   protected $out;
-  protected $inSvg = FALSE;
-  protected $inMathMl = FALSE;
+  protected $outputMode;
 
   const DOCTYPE = '<!DOCTYPE html>';
 
@@ -27,6 +30,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
       $this->encode = $options['encode_entities'];
     }
 
+    $this->outputMode = self::IM_IN_HTML;
     $this->out = $output;
   }
 
@@ -51,15 +55,14 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
       $name = $ele->localName;
     }
 
-    // If we are in SVG or MathML there is special handling. 
-    switch($name) {
-      case 'svg':
-        $this->inSvg = TRUE;
+    // If we are in SVG or MathML there is special handling.
+    // Using if/elseif instead of switch because it's faster in PHP.
+    if ($name == 'svg') {
+        $this->outputMode = self::IM_IN_SVG;
         $name = Elements::normalizeSvgElement($name);
-        break;
-      case 'math':
-        $this->inMathMl = TRUE;
-        break;
+    }
+    elseif ($name == 'math') {
+        $this->outputMode = self::IM_IN_MATHML;
     }
 
     $this->openTag($ele);
@@ -70,13 +73,8 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
     }
 
     // Close out the SVG or MathML special handling.
-    switch($name) {
-      case 'svg':
-        $this->inSvg = FALSE;
-        break;
-      case 'math':
-        $this->inMathMl = FALSE;
-        break;
+    if ($name == 'svg' || $name == 'math') {
+        $this->outputMode = self::IM_IN_HTML;
     }
 
     // If not unary, add a closing tag.
@@ -151,10 +149,11 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
       $name = $node->name;
 
       // Special handling for attributes in SVG and MathML.
-      if ($this->inSvg) {
+      // Using if/elseif instead of switch because it's faster in PHP.
+      if ($this->outputMode == self::IM_IN_SVG) {
         $name = Elements::normalizeSvgAttribute($name);
       }
-      elseif ($this->inMathMl) {
+      elseif ($this->outputMode == self::IM_IN_MATHML) {
         $name = Elements::normalizeMathMlAttribute($name);
       }
 

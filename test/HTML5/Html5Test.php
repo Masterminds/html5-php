@@ -98,7 +98,7 @@ class Html5Test extends TestCase {
 
     // Test a mixed case attribute.
     $list = $dom->getElementsByTagName('svg');
-    $this->assertNotEmpty($list);
+    $this->assertNotEmpty($list->length);
     $svg = $list->item(0);
     $this->assertEquals("0 0 3 2", $svg->getAttribute('viewBox'));
     $this->assertFalse($svg->hasAttribute('viewbox'));
@@ -106,7 +106,7 @@ class Html5Test extends TestCase {
     // Test a mixed case tag.
     // Note: getElementsByTagName is not case sensetitive.
     $list = $dom->getElementsByTagName('textPath');
-    $this->assertNotEmpty($list);
+    $this->assertNotEmpty($list->length);
     $textPath = $list->item(0);
     $this->assertEquals('textPath', $textPath->tagName);
     $this->assertNotEquals('textpath', $textPath->tagName);
@@ -115,6 +115,40 @@ class Html5Test extends TestCase {
     $this->assertRegExp('|<svg width="150" height="100" viewBox="0 0 3 2">|',$html);
     $this->assertRegExp('|<rect width="1" height="2" x="0" fill="#008d46" />|',$html);
 
+  }
+
+  public function testMathMl() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+      <html lang="en">
+        <body>
+          <div id="foo" class="bar baz" definitionURL="http://example.com">foo bar baz</div>
+          <math>
+            <mi>x</mi>
+            <csymbol definitionURL="http://www.example.com/mathops/multiops.html#plusminus">
+              <mo>&PlusMinus;</mo>
+            </csymbol>
+            <mi>y</mi>
+          </math>
+        </body>
+      </html>');
+
+    $this->assertEmpty($dom->errors);
+    $list = $dom->getElementsByTagName('math');
+    $this->assertNotEmpty($list->length);
+
+    $list = $dom->getElementsByTagName('div');
+    $this->assertNotEmpty($list->length);
+    $div = $list->item(0);
+    $this->assertEquals('http://example.com', $div->getAttribute('definitionurl'));
+    $this->assertFalse($div->hasAttribute('definitionURL'));
+    $list = $dom->getElementsByTagName('csymbol');
+    $csymbol = $list->item(0);
+    $this->assertEquals('http://www.example.com/mathops/multiops.html#plusminus', $csymbol->getAttribute('definitionURL'));
+    $this->assertFalse($csymbol->hasAttribute('definitionurl'));
+
+    $html = \HTML5::saveHTML($dom);
+    $this->assertRegExp('|<csymbol definitionURL="http://www.example.com/mathops/multiops.html#plusminus">|',$html);
+    $this->assertRegExp('|<mi>y</mi>|',$html);
   }
 
 }

@@ -156,7 +156,7 @@ class DOMTreeBuilder implements EventHandler {
     case 'svg':
       $this->insertMode = self::IM_IN_SVG;
       break;
-    case 'mathml':
+    case 'math':
       $this->insertMode = self::IM_IN_MATHML;
       break;
     case 'noscript':
@@ -180,7 +180,7 @@ class DOMTreeBuilder implements EventHandler {
         $aName = Elements::normalizeSvgAttribute($aName);
       }
       elseif ($this->insertMode == self::IM_IN_MATHML) {
-        $aName = Elements::normalizeMathMlAttribute($aname);
+        $aName = Elements::normalizeMathMlAttribute($aName);
       }
 
       $ele->setAttribute($aName, $aVal);

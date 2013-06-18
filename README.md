@@ -15,6 +15,26 @@ But after some initial refactoring work, we began a new parser.
 
 [![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php)
 
+## Installation
+
+Install HTML5-PHP using [composer](http://getcomposer.org/).
+
+To install, add `masterminds/html5` to your `composer.json` file:
+
+```
+{
+  "require" : {
+    "masterminds/html5": "dev-master"
+  },
+}
+```
+
+(You may substitute `dev-master` for a more stable release tag, of
+course.)
+
+From there, use the `composer install` or `composer update` commands to
+install.
+
 ## Basic Usage
 
 HTML5-PHP has a high-level API and a low-level API. 

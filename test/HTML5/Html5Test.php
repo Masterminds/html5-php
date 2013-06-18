@@ -76,4 +76,45 @@ class Html5Test extends TestCase {
     \HTML5::setOption('encode_entities', FALSE);
   }
 
+  public function testSvg() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+      <html lang="en">
+        <body>
+          <div id="foo" class="bar baz">foo bar baz</div>
+          <svg width="150" height="100" viewBox="0 0 3 2">
+            <rect width="1" height="2" x="0" fill="#008d46" />
+            <rect width="1" height="2" x="1" fill="#ffffff" />
+            <rect width="1" height="2" x="2" fill="#d2232c" />
+            <text font-family="Verdana" font-size="32">
+              <textPath xlink:href="#Foo">
+                Test Text.
+              </textPath>
+            </text>
+          </svg>
+        </body>
+      </html>');
+
+    $this->assertEmpty($dom->errors);
+
+    // Test a mixed case attribute.
+    $list = $dom->getElementsByTagName('svg');
+    $this->assertNotEmpty($list);
+    $svg = $list->item(0);
+    $this->assertEquals("0 0 3 2", $svg->getAttribute('viewBox'));
+    $this->assertFalse($svg->hasAttribute('viewbox'));
+
+    // Test a mixed case tag.
+    // Note: getElementsByTagName is not case sensetitive.
+    $list = $dom->getElementsByTagName('textPath');
+    $this->assertNotEmpty($list);
+    $textPath = $list->item(0);
+    $this->assertEquals('textPath', $textPath->tagName);
+    $this->assertNotEquals('textpath', $textPath->tagName);
+
+    $html = \HTML5::saveHTML($dom);
+    $this->assertRegExp('|<svg width="150" height="100" viewBox="0 0 3 2">|',$html);
+    $this->assertRegExp('|<rect width="1" height="2" x="0" fill="#008d46" />|',$html);
+
+  }
+
 }

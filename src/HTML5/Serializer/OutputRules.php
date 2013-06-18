@@ -122,10 +122,22 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *   The element being written.
    */
   protected function openTag($ele) {
-    // FIXME: Needs support for SVG, MathML, and namespaced XML.
     $this->wr('<')->wr($ele->tagName);
     $this->attrs($ele);
-    $this->wr('>');
+
+    if ($this->outputMode == self::IM_IN_HTML) {
+      $this->wr('>');
+    }
+    // If we are not in html mode we are in SVG, MathML, or XML embedded content.
+    else {
+      if ($ele->hasChildNodes()) {
+        $this->wr('>');
+      }
+      // If there are no children this is self closing.
+      else {
+        $this->wr(' />');
+      }
+    }
   }
 
   protected function attrs($ele) {
@@ -158,7 +170,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
       }
 
       $this->wr(' ')->wr($name);
-      if (!empty($val)) {
+      if (isset($val) && $val !== '') {
         $this->wr('="')->wr($val)->wr('"');
       }
     }
@@ -174,8 +186,9 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *   The element being written.
    */
   protected function closeTag($ele) {
-    // FIXME: Needs support for SVG, MathML, and namespaced XML.
-    $this->wr('</')->wr($ele->tagName)->wr('>');
+    if ($this->outputMode == self::IM_IN_HTML || $ele->hasChildNodes()) {
+      $this->wr('</')->wr($ele->tagName)->wr('>');
+    }
   }
 
   /**

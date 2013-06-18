@@ -151,6 +151,16 @@ class HTML5 {
     return $events->document();
   }
 
+  public static function parseFragment(\HTML5\Parser\InputStream $input) {
+    $events = new DOMTreeBuilder();
+    $scanner = new Scanner($input);
+    $parser = new Tokenizer($scanner, $events);
+
+    $parser->parse();
+
+    return $events->fragment();
+  }
+
   /**
    * Get the default options.
    *

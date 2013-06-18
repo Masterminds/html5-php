@@ -81,6 +81,16 @@ class DOMTreeBuilder implements EventHandler {
   }
 
   /**
+   * Get the DOM fragment for the body.
+   *
+   * This returns a DOMNodeList because a fragment may have zero or more 
+   * DOMNodes at its root.
+   */
+  public function fragment() {
+    return $this->doc->documentElement->childNodes;
+  }
+
+  /**
    * Provide an instruction processor.
    *
    * This is used for handling Processor Instructions as they are

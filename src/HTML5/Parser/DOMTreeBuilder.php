@@ -85,9 +85,17 @@ class DOMTreeBuilder implements EventHandler {
    *
    * This returns a DOMNodeList because a fragment may have zero or more 
    * DOMNodes at its root.
+   *
+   * @return \DOMNodeList
    */
   public function fragment() {
-    return $this->doc->documentElement->childNodes;
+    $append = $this->doc->documentElement->childNodes;
+    $frag = $this->doc->createDocumentFragment();
+
+    foreach ($append as $node) {
+      $frag->appendChild($node);
+    }
+    return $frag;
   }
 
   /**

@@ -27,6 +27,16 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
 
     return $treeBuilder->document();
   }
+  protected function parseFragment($string) {
+    $treeBuilder = new DOMTreeBuilder();
+    $input = new StringInputStream($string);
+    $scanner = new Scanner($input);
+    $parser = new Tokenizer($scanner, $treeBuilder);
+
+    $parser->parse();
+
+    return $treeBuilder->fragment();
+  }
 
   public function testDocument() {
     $html = "<!DOCTYPE html><html></html>";
@@ -34,6 +44,15 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
 
     $this->assertInstanceOf('\DOMDocument', $doc);
     $this->assertEquals('html', $doc->documentElement->tagName);
+  }
+
+  public function testFragment() {
+    $html = "<div>test</div>";
+    $doc = $this->parseFragment($html);
+
+    $this->assertInstanceOf('\DOMDocumentFragment', $doc);
+    $this->assertTrue($doc->hasChildNodes());
+    $this->assertEquals('div', $doc->childNodes->item(0)->tagName);
   }
 
   public function testElements() {

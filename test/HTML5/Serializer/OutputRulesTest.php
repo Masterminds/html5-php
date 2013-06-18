@@ -243,6 +243,9 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
           <rect width="1" height="2" x="0" fill="#008d46" />
           <rect width="1" height="2" x="1" fill="#ffffff" />
           <rect width="1" height="2" x="2" fill="#d2232c" />
+          <rect id="Bar" x="300" y="100" width="300" height="100" fill="rgb(255,255,0)">
+            <animate attributeName="x" attributeType="XML" begin="0s" dur="9s" fill="freeze" from="300" to="0" />
+          </rect>
         </svg>
       </body>
     </html>');
@@ -256,6 +259,8 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $o->element($list->item(0));
     $contents = stream_get_contents($stream, -1, 0);
     $this->assertRegExp('|<svg width="150" height="100" viewBox="0 0 3 2">|', $contents);
+    $this->assertRegExp('|<rect width="1" height="2" x="0" fill="#008d46" />|', $contents);
+    $this->assertRegExp('|<rect id="Bar" x="300" y="100" width="300" height="100" fill="rgb\(255,255,0\)">|', $contents);
   }
 
   function testMath() {

@@ -62,7 +62,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
         $name = Elements::normalizeSvgElement($name);
     }
     elseif ($name == 'math') {
-        $this->outputMode = self::IM_IN_MATHML;
+      $this->outputMode = self::IM_IN_MATHML;
     }
 
     $this->openTag($ele);
@@ -74,7 +74,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
 
     // Close out the SVG or MathML special handling.
     if ($name == 'svg' || $name == 'math') {
-        $this->outputMode = self::IM_IN_HTML;
+      $this->outputMode = self::IM_IN_HTML;
     }
 
     // If not unary, add a closing tag.

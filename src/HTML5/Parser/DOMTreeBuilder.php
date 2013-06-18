@@ -95,6 +95,7 @@ class DOMTreeBuilder implements EventHandler {
     foreach ($append as $node) {
       $frag->appendChild($node);
     }
+    $frag->errors = $this->doc->errors;
     return $frag;
   }
 

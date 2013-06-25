@@ -100,6 +100,13 @@ class Traverser {
       case XML_COMMENT_NODE:
         $this->rules->comment($node);
         break;
+      case XML_DOCUMENT_FRAG_NODE:
+        // Document fragments are a special case. Only the children need to
+        // be serialized.
+        if ($node->hasChildNodes()) {
+          $this->children($node->childNodes);
+        }
+        break;
       // Currently we don't support embedding DTDs.
       default:
         print '<!-- Skipped -->';

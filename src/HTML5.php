@@ -152,7 +152,7 @@ class HTML5 {
   }
 
   public static function parseFragment(\HTML5\Parser\InputStream $input) {
-    $events = new DOMTreeBuilder();
+    $events = new DOMTreeBuilder(DOMTreeBuilder::IM_IN_BODY);
     $scanner = new Scanner($input);
     $parser = new Tokenizer($scanner, $events);
 

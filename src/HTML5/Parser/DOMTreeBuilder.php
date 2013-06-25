@@ -56,7 +56,8 @@ class DOMTreeBuilder implements EventHandler {
    */
   protected $quirks = TRUE;
 
-  public function __construct() {
+  public function __construct($insertMode = self::IM_INITIAL) {
+    $this->insertMode = $insertMode;
     $impl = new \DOMImplementation();
     // XXX:
     // Create the doctype. For now, we are always creating HTML5 

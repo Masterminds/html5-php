@@ -57,17 +57,19 @@ class TraverserTest extends \HTML5\Tests\TestCase {
     $this->assertInstanceOf('\HTML5\Serializer\Traverser', $t);
   }
 
-  // function testFragment() {
-  //   $html = '<span class="bar">foo</span>';
-  //   $input = new \HTML5\Parser\StringInputStream($html);
-  //   $dom = \HTML5::parseFragment($input);
+   function testFragment() {
+     $html = '<span class="bar">foo</span><span></span><div>bar</div>';
+     $input = new \HTML5\Parser\StringInputStream($html);
+     $dom = \HTML5::parseFragment($input);
 
-  //   $this->assertInstanceOf('\DOMDocumentFragment', $dom);
+     //fprintf(STDOUT, print_r($dom, TRUE));
 
-  //   $stream = fopen('php://temp', 'w');
-  //   $t = new Traverser($dom, $stream, \HTML5::options());
+     $this->assertInstanceOf('\DOMDocumentFragment', $dom);
 
-  //   $out = $t->walk();
-  //   $this->assertEquals($html, stream_get_contents($stream, -1, 0));
-  // }
+     $stream = fopen('php://temp', 'w');
+     $t = new Traverser($dom, $stream, \HTML5::options());
+
+     $out = $t->walk();
+     $this->assertEquals($html, stream_get_contents($stream, -1, 0));
+   }
 }

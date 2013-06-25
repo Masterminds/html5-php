@@ -56,8 +56,9 @@ class DOMTreeBuilder implements EventHandler {
    */
   protected $quirks = TRUE;
 
-  public function __construct($insertMode = self::IM_INITIAL) {
-    $this->insertMode = $insertMode;
+  public $isFragment = FALSE;
+
+  public function __construct($isFragment = FALSE) {
     $impl = new \DOMImplementation();
     // XXX:
     // Create the doctype. For now, we are always creating HTML5 
@@ -72,6 +73,14 @@ class DOMTreeBuilder implements EventHandler {
 
     // Create a rules engine for tags.
     $this->rules = new TreeBuildingRules($this->doc);
+
+    if ($isFragment) {
+      $this->isFragment = TRUE;
+      $this->insertMode = self::IM_IN_BODY;
+      $ele = $this->doc->createElement('html');
+      $this->doc->appendChild($ele);
+      $this->current = $ele;
+    }
   }
 
   /**
@@ -93,9 +102,18 @@ class DOMTreeBuilder implements EventHandler {
     $append = $this->doc->documentElement->childNodes;
     $frag = $this->doc->createDocumentFragment();
 
+    // appendChild() modifies the DOMNodeList, so we
+    // have to buffer up the items first, then use the
+    // array buffer and loop twice.
+    $buffer = array();
     foreach ($append as $node) {
+      $buffer[] = $node;
+    }
+
+    foreach ($buffer as $node) {
       $frag->appendChild($node);
     }
+
     $frag->errors = $this->doc->errors;
     return $frag;
   }
@@ -132,6 +150,7 @@ class DOMTreeBuilder implements EventHandler {
    *   - Omission rules: 8.1.2.4 Optional tags
    */
   public function startTag($name, $attributes = array(), $selfClosing = FALSE) {
+    // fprintf(STDOUT, $name);
     $lname = $this->normalizeTagName($name);
 
     // Make sure we have an html element.

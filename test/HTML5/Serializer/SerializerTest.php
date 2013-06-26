@@ -84,6 +84,14 @@ class SerializerTest extends \HTML5\Tests\TestCase {
     $res = $this->cycle('<span></span>');
     $this->assertRegExp('|<span></span>|', $res);
 
+    // Should have content.
+    $res = $this->cycleFragment('<div>FOO</div>');
+    $this->assertRegExp('|<div>FOO</div>|', $res);
+
+    // Should be empty
+    $res = $this->cycleFragment('<span></span>');
+    $this->assertRegExp('|<span></span>|', $res);
+
     // Should have no closing tag.
     $res = $this->cycle('<hr>');
     $this->assertRegExp('|<hr></body>|', $res);
@@ -100,21 +108,45 @@ class SerializerTest extends \HTML5\Tests\TestCase {
 
     $res = $this->cycle('<div xmlns:foo="http://example.com">FOO</div>');
     $this->assertRegExp('|<div xmlns:foo="http://example.com">FOO</div>|', $res);
+
+    $res = $this->cycleFragment('<div attr="val">FOO</div>');
+    $this->assertRegExp('|<div attr="val">FOO</div>|', $res);
+
+    // XXX: Note that spec does NOT require attrs in the same order.
+    $res = $this->cycleFragment('<div attr="val" class="even">FOO</div>');
+    $this->assertRegExp('|<div attr="val" class="even">FOO</div>|', $res);
+
+    $res = $this->cycleFragment('<div xmlns:foo="http://example.com">FOO</div>');
+    $this->assertRegExp('|<div xmlns:foo="http://example.com">FOO</div>|', $res);
   }
 
   public function testPCData() {
     $res = $this->cycle('<a>This is a test.</a>');
     $this->assertRegExp('|This is a test.|', $res);
 
-    $res = $this->cycle($this->prepareHtml('This
+    $res = $this->cycleFragment('<a>This is a test.</a>');
+    $this->assertRegExp('|This is a test.|', $res);
+
+    $res = $this->cycle('This
       is
       a
-      test.'));
+      test.');
 
     // Check that newlines are there, but don't count spaces.
     $this->assertRegExp('|This\n\s*is\n\s*a\n\s*test.|', $res);
 
-    $res = $this->cycle($this->prepareHtml('<a>This <em>is</em> a test.</a>'));
+    $res = $this->cycleFragment('This
+      is
+      a
+      test.');
+
+    // Check that newlines are there, but don't count spaces.
+    $this->assertRegExp('|This\n\s*is\n\s*a\n\s*test.|', $res);
+
+    $res = $this->cycle('<a>This <em>is</em> a test.</a>');
+    $this->assertRegExp('|This <em>is</em> a test.|', $res);
+
+    $res = $this->cycleFragment('<a>This <em>is</em> a test.</a>');
     $this->assertRegExp('|This <em>is</em> a test.|', $res);
   }
 
@@ -123,6 +155,12 @@ class SerializerTest extends \HTML5\Tests\TestCase {
     $this->assertRegExp('|2 < 1|', $res);
 
     $res = $this->cycle('<style>div>div>div</style>');
+    $this->assertRegExp('|div&gt;div&gt;div|', $res);
+
+    $res = $this->cycleFragment('<script>2 < 1</script>');
+    $this->assertRegExp('|2 < 1|', $res);
+
+    $res = $this->cycleFragment('<style>div>div>div</style>');
     $this->assertRegExp('|div&gt;div&gt;div|', $res);
   }
 

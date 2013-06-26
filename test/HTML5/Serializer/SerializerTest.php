@@ -27,6 +27,15 @@ class SerializerTest extends \HTML5\Tests\TestCase {
     return $out;
   }
 
+  protected function cycleFragment($fragment) {
+    $dom = \HTML5::loadHTMLFragment($fragment);
+    $options = \HTML5::options();
+    $ser = new Serializer($dom, $options);
+    $out = $ser->saveHTML();
+
+    return $out;
+  }
+
   /**
    * Wrap a html5 fragment in a html5 document to run through the parser.
    *
@@ -137,10 +146,16 @@ class SerializerTest extends \HTML5\Tests\TestCase {
   public function testComment() {
     $res = $this->cycle($this->prepareHtml('a<!-- This is a test. -->b'));
     $this->assertRegExp('|<!-- This is a test. -->|', $res);
+
+    $res = $this->cycleFragment('a<!-- This is a test. -->b');
+    $this->assertRegExp('|<!-- This is a test. -->|', $res);
   }
 
   public function testCDATA() {
     $res = $this->cycle($this->prepareHtml('a<![CDATA[ This <is> a test. ]]>b'));
+    $this->assertRegExp('|<!\[CDATA\[ This <is> a test\. \]\]>|', $res);
+
+    $res = $this->cycleFragment('a<![CDATA[ This <is> a test. ]]>b');
     $this->assertRegExp('|<!\[CDATA\[ This <is> a test\. \]\]>|', $res);
   }
 }

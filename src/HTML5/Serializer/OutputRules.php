@@ -90,7 +90,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *   The text node to write.
    */
   public function text($ele) {
-    if (isset($ele->parentNode) && Elements::isA($ele->parentNode->tagName, Elements::TEXT_RAW)) {
+    if (isset($ele->parentNode) && isset($ele->parentNode->tagName) && Elements::isA($ele->parentNode->tagName, Elements::TEXT_RAW)) {
       $this->wr($ele->data);
       return;
     }

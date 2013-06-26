@@ -48,3 +48,6 @@ the DOMTree builder is a DOMDocument.
 PHP has a DOMDocument class built-in (technically, it's part of libxml.)
 We use that, thus rendering the output of this process compatible with
 SimpleXML, QueryPath, and many other XML/HTML processing tools.
+
+For cases where the HTML5 is a fragment of a HTML5 document a
+DOMDocumentFragment is returned instead. This is another built-in class.

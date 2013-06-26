@@ -58,7 +58,7 @@ class HTML5 {
   }
 
   /**
-   * Parse an HTML string.
+   * Parse a HTML Document from a string.
    * 
    * Take a string of HTML 5 (or earlier) and parse it into a 
    * DOMDocument.
@@ -82,6 +82,21 @@ class HTML5 {
    */
   public static function loadHTMLFile($file, $options = NULL) {
     return self::load($file, $options);
+  }
+
+  /**
+   * Parse a HTML fragment from a string.
+   *
+   * @param string $string
+   *   The html5 fragment as a string.
+   *
+   * @return \DOMDocumentFragment
+   *   A DOM fragment. The DOM is part of libxml, which is included with
+   *   almost all distributions of PHP.
+   */
+  public static function loadHTMLFragment($string) {
+    $input = new StringInputStream($string);
+    return self::parseFragment($input);
   }
 
   /**

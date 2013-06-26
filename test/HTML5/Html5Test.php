@@ -18,6 +18,13 @@ class Html5Test extends TestCase {
     $this->assertEmpty($dom->errors);
   }
 
+  public function testLoadHTMLFragment() {
+    $fragment = '<section id="Foo"><div class="Bar">Baz</div></section>';
+    $dom = \HTML5::loadHTMLFragment($fragment);
+    $this->assertInstanceOf('\DOMDocumentFragment', $dom);
+    $this->assertEmpty($dom->errors);
+  }
+
   public function testSaveHTML() {
     $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);

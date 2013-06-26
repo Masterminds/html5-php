@@ -62,6 +62,13 @@ class Traverser {
     if ($this->dom instanceof \DOMDocument) {
       $this->rules->document($this->dom);
     }
+    elseif ($this->dom instanceof \DOMDocumentFragment) {
+      // Document fragments are a special case. Only the children need to
+      // be serialized.
+      if ($this->dom->hasChildNodes()) {
+        $this->children($this->dom->childNodes);
+      }
+    }
     // If NodeList, loop
     elseif ($this->dom instanceof \DOMNodeList) {
       // If this is a NodeList of DOMDocuments this will not work.
@@ -99,13 +106,6 @@ class Traverser {
         break;
       case XML_COMMENT_NODE:
         $this->rules->comment($node);
-        break;
-      case XML_DOCUMENT_FRAG_NODE:
-        // Document fragments are a special case. Only the children need to
-        // be serialized.
-        if ($node->hasChildNodes()) {
-          $this->children($node->childNodes);
-        }
         break;
       // Currently we don't support embedding DTDs.
       default:

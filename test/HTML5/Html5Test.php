@@ -34,6 +34,14 @@ class Html5Test extends TestCase {
     $this->assertRegExp('|<p>This is a test.</p>|', $saved);
   }
 
+  public function testSaveHTMLFragment() {
+    $fragment = '<section id="Foo"><div class="Bar">Baz</div></section>';
+    $dom = \HTML5::loadHTMLFragment($fragment);
+
+    $string = \HTML5::saveHTML($dom);
+    $this->assertEquals($fragment, $string);
+  }
+
   public function testSave() {
     $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);

@@ -96,7 +96,9 @@ class DOMTreeBuilder implements EventHandler {
    * This returns a DOMNodeList because a fragment may have zero or more 
    * DOMNodes at its root.
    *
-   * @return \DOMNodeList
+   * @see http://www.w3.org/TR/2012/CR-html5-20121217/syntax.html#concept-frag-parse-context
+   *
+   * @return \DOMFragmentDocumentFragment
    */
   public function fragment() {
     $append = $this->doc->documentElement->childNodes;
@@ -271,10 +273,10 @@ class DOMTreeBuilder implements EventHandler {
       return;
     }
 
-    if ($name != $lname) {
-      //fprintf(STDOUT, "Mismatch on %s and %s", $name, $lname);
-      return $this->quirksTreeResolver($lname);
-    }
+    // XXX: Not sure whether we need this anymore.
+    // if ($name != $lname) {
+    //  return $this->quirksTreeResolver($lname);
+    //}
 
     // XXX: HTML has no parent. What do we do, though,
     // if this element appears in the wrong place?
@@ -367,13 +369,25 @@ class DOMTreeBuilder implements EventHandler {
   // UTILITIES
   // ==========================================================================
 
+  /**
+   * Apply normalization rules to a tag name.
+   *
+   * See sections 2.9 and 8.1.2.
+   *
+   * @param string $name
+   *   The tag name.
+   * @return string
+   *   The normalized tag name.
+   */
   protected function normalizeTagName($name) {
+    /* Section 2.9 suggests that we should not do this.
     if (strpos($name, ':') !== FALSE) {
       // We know from the grammar that there must be at least one other 
       // char besides :, since : is not a legal tag start.
       $parts = explode(':', $name);
       return array_pop($parts);
     }
+     */
 
     return $name;
   }

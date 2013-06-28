@@ -166,4 +166,21 @@ class Html5Test extends TestCase {
     $this->assertRegExp('|<mi>y</mi>|',$html);
   }
 
+  public function testUnknownElements() {
+    
+    // The : should not have special handling accourding to section 2.9 of the
+    // spec. This is differenant than XML. Since we don't know these elements
+    // they are handled as normal elements. Note, to do this is really
+    // an invalid example and you should not embed prefixed xml in html5.
+    $dom = \HTML5::loadHTMLFragment("<f:rug>
+      <f:name>Big rectangle thing</f:name>
+      <f:width>40</f:width>
+      <f:length>80</f:length>
+    </f:rug>");
+
+    $this->assertEmpty($dom->errors);
+    $markup = \HTML5::saveHTML($dom);
+    $this->assertRegExp('|<f:name>Big rectangle thing</f:name>|',$markup);
+  }
+
 }

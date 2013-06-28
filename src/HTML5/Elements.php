@@ -38,13 +38,17 @@ class Elements {
   //  "pre", "listing"
   //  "form"
   //  "plaintext"
-  /** Indicates that if a previous event is for a P tag, that element 
-   * should be considered closed. */
+  /** 
+   * Indicates that if a previous event is for a P tag, that element 
+   * should be considered closed.
+   */
   const AUTOCLOSE_P = 16;
 
+  /** Indicates that the text inside is plaintext (pre). */
   const TEXT_PLAINTEXT = 32;
 
   // See https://developer.mozilla.org/en-US/docs/HTML/Block-level_elements
+  /** Indicates that the tag is a block. */
   const BLOCK_TAG = 64;
 
 

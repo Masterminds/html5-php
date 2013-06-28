@@ -4,22 +4,31 @@ namespace HTML5;
 /**
  * Provide general element functions.
  *
- * @todo consider using a bitmask table lookup. There is enought overlap in
+ * This class provides general information about HTML5 elements, 
+ * including syntactic and semantic issues. Parsers and serializers can 
+ * use this class as a reference point for information about the rules 
+ * of various HTML5 elements.
+ *
+ * @todo consider using a bitmask table lookup. There is enough overlap in
  *   naming that this could significantly shrink the size and maybe make it
  *   faster. See the Go teams implementation at https://code.google.com/p/go/source/browse/html/atom.
  */
 class Elements {
 
+  /** Indicates an element is described in the specification. */
   const KNOWN_ELEMENT = 1;
 
   // From section 8.1.2: "script", "style"
   // From 8.2.5.4.7 ("in body" insertion mode): "noembed", "noscript"
   // From 8.4 "style", "xmp", "iframe", "noembed", "noframes"
+  /** Indicates the contained text should be processed as raw text. */
   const TEXT_RAW = 2;
 
   // From section 8.1.2: "textarea", "title"
+  /** Indicates the contained text should be processed as RCDATA. */
   const TEXT_RCDATA = 4;
 
+  /** Indicates the tag cannot have content. */
   const VOID_TAG = 8;
 
   // "address", "article", "aside", "blockquote", "center", "details", "dialog", "dir", "div", "dl",
@@ -29,6 +38,8 @@ class Elements {
   //  "pre", "listing"
   //  "form"
   //  "plaintext"
+  /** Indicates that if a previous event is for a P tag, that element 
+   * should be considered closed. */
   const AUTOCLOSE_P = 16;
 
   const TEXT_PLAINTEXT = 32;

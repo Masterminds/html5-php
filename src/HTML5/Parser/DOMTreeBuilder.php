@@ -9,6 +9,11 @@ use HTML5\Elements;
  * attempts (but does not guarantee) to up-convert older HTML documents 
  * to HTML5. It does this by applying HTML5's rules, but it will not 
  * change the architecture of the document itself.
+ *
+ * Many of the error correction and quirks features suggested in the specification
+ * are implemented herein; however, not all of them are. Since we do not
+ * assume a graphical user agent, no presentation-specific logic is conducted
+ * during tree building.
  */
 class DOMTreeBuilder implements EventHandler {
 

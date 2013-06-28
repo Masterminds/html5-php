@@ -27,6 +27,10 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
 
     return $treeBuilder->document();
   }
+
+  /**
+   * Utility function for parsing a fragment of HTML5.
+   */
   protected function parseFragment($string) {
     $treeBuilder = new DOMTreeBuilder(TRUE);
     $input = new StringInputStream($string);

@@ -2,7 +2,7 @@
 namespace HTML5\Parser;
 
 /**
- * When the parser has an error.
+ * Emit when the parser has an error.
  */
 class ParseError extends \Exception {
 }

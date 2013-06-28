@@ -3,6 +3,12 @@ namespace HTML5\Parser;
 
 /**
  * Interface for stream readers.
+ *
+ * The parser only reads from streams. Various input sources can write 
+ * an adapater to this InputStream.
+ *
+ * Currently provided InputStream implementations include 
+ * FileInputStream and StringInputStream.
  */
 interface InputStream extends \Iterator {
 

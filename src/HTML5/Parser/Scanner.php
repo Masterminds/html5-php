@@ -168,9 +168,15 @@ class Scanner {
     return $this->is->currentLine();
   }
 
+  /**
+   * Read chars until something in the mask is encountered.
+   */
   public function charsUntil($mask) {
     return $this->is->charsUntil($mask);
   }
+  /**
+   * Read chars as long as the mask matches.
+   */
   public function charsWhile($mask) {
     return $this->is->charsWhile($mask);
   }

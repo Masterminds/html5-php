@@ -12,7 +12,7 @@ of the HTML5 specification, though we do not assume a networking layer.
            ||
     [ Tree Builder ]    // Organizes units into a tree of objects
            ||
-     [DOM Document]     // The final state of the parsed document.
+     [ DOM Document ]     // The final state of the parsed document.
 
 
 ## InputStream

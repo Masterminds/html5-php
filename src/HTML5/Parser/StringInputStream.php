@@ -295,6 +295,9 @@ class StringInputStream implements InputStream {
     }
   }
 
+  /**
+   * Look ahead without moving cursor.
+   */
   public function peek() {
     if (($this->char + 1) <= $this->EOF) {
       return $this->data[$this->char + 1];

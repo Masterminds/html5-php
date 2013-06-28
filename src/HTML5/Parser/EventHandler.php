@@ -4,6 +4,18 @@ namespace HTML5\Parser;
 /**
  * Standard events for HTML5.
  *
+ * This is roughly analogous to a SAX2 or expat-style interface. 
+ * However, it is tuned specifically for HTML5, according to section 8 
+ * of the HTML5 specification.
+ *
+ * An event handler receives parser events. For a concrete 
+ * implementation, see DOMTreeBuilder.
+ *
+ * Quirks support in the parser is limited to close-in syntax (malformed 
+ * tags or attributes). Higher order syntax and semantic issues with a 
+ * document (e.g. mismatched tags, illegal nesting, etc.) are the 
+ * responsibility of the event handler implementation.
+ *
  * See HTML5 spec section 8.2.4
  */
 interface EventHandler {

@@ -5,6 +5,9 @@ use \HTML5\Entities;
 
 /**
  * Manage entity references.
+ *
+ * This is a simple resolver for HTML5 character reference entitites.
+ * See \HTML5\Entities for the list of supported entities.
  */
 class CharacterReference {
 

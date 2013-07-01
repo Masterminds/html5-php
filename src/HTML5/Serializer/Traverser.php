@@ -15,7 +15,7 @@ class Traverser {
   /** Namespaces that should be treated as "local" to HTML5. */
   static $local_ns = array(
     'http://www.w3.org/1999/xhtml' => 'html',
-    'http://www.w3.org/1998/Math/MathML' => 'mathml',
+    'http://www.w3.org/1998/Math/MathML' => 'math',
     'http://www.w3.org/2000/svg' => 'svg',
   );
 

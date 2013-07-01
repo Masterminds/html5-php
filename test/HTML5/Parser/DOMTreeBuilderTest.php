@@ -123,6 +123,27 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals(1, $ac->length);
   }
 
+  public function testMathMLAttribute() {
+    $html = '<!doctype html>
+      <html lang="en">
+        <body>
+          <math>
+            <mi>x</mi>
+            <csymbol definitionurl="http://www.example.com/mathops/multiops.html#plusminus">
+              <mo>&PlusMinus;</mo>
+            </csymbol>
+            <mi>y</mi>
+          </math>
+        </body>
+      </html>';
+
+    $doc = $this->parse($html);
+    $root = $doc->documentElement;
+
+    $csymbol = $root->getElementsByTagName('csymbol')->item(0);
+    $this->assertTrue($csymbol->hasAttribute('definitionURL'));
+  }
+
   public function testMissingHtmlTag() {
     $html = "<!DOCTYPE html><title>test</title>";
     $doc = $this->parse($html);
@@ -154,10 +175,10 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   }
 
   public function testCDATA() {
-    $html = "<!DOCTYPE html><html><mathml><![CDATA[test]]></mathml></html>";
+    $html = "<!DOCTYPE html><html><math><![CDATA[test]]></math></html>";
     $doc = $this->parse($html);
 
-    $wrapper = $doc->getElementsByTagName('mathml')->item(0);
+    $wrapper = $doc->getElementsByTagName('math')->item(0);
     $this->assertEquals(1, $wrapper->childNodes->length);
     $cdata = $wrapper->childNodes->item(0);
     $this->assertEquals(XML_CDATA_SECTION_NODE, $cdata->nodeType);
@@ -165,10 +186,10 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   }
 
   public function testText() {
-    $html = "<!DOCTYPE html><html><head></head><body><mathml>test</mathml></body></html>";
+    $html = "<!DOCTYPE html><html><head></head><body><math>test</math></body></html>";
     $doc = $this->parse($html);
 
-    $wrapper = $doc->getElementsByTagName('mathml')->item(0);
+    $wrapper = $doc->getElementsByTagName('math')->item(0);
     $this->assertEquals(1, $wrapper->childNodes->length);
     $data = $wrapper->childNodes->item(0);
     $this->assertEquals(XML_TEXT_NODE, $data->nodeType);
@@ -176,7 +197,7 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   }
 
   public function testParseErrors() {
-    $html = "<!DOCTYPE html><html><mathml><![CDATA[test";
+    $html = "<!DOCTYPE html><html><math><![CDATA[test";
     $doc = $this->parse($html);
 
     // We're JUST testing that we can access errors. Actual testing of 
@@ -216,7 +237,25 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   }
 
   public function testMathML() {
-    $this->markTestIncomplete("Incomplete.");
+    $html = '<!doctype html>
+      <html lang="en">
+        <body>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <mi>x</mi>
+            <csymbol definitionurl="http://www.example.com/mathops/multiops.html#plusminus">
+              <mo>&PlusMinus;</mo>
+            </csymbol>
+            <mi>y</mi>
+          </math>
+        </body>
+      </html>';
+
+    $doc = $this->parse($html);
+    $math = $doc->getElementsByTagName('math')->item(0);
+    $this->assertEquals('math', $math->tagName);
+    $this->assertEquals('math', $math->nodeName);
+    $this->assertEquals('math', $math->localName);
+    $this->assertEmpty($math->namespaceURI);
   }
 
   public function testSVG() {

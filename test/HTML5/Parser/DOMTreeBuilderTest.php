@@ -259,6 +259,28 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   }
 
   public function testSVG() {
-    $this->markTestIncomplete("Incomplete.");
+    $html = '<!doctype html>
+      <html lang="en">
+        <body>
+          <svg width="150" height="100" viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg">
+            <rect width="1" height="2" x="2" fill="#d2232c" />
+            <text font-family="Verdana" font-size="32">
+              <textpath xlink:href="#Foo">
+                Test Text.
+              </textPath>
+            </text>
+          </svg>
+        </body>
+      </html>';
+
+    $doc = $this->parse($html);
+    $svg = $doc->getElementsByTagName('svg')->item(0);
+    $this->assertEquals('svg', $svg->tagName);
+    $this->assertEquals('svg', $svg->nodeName);
+    $this->assertEquals('svg', $svg->localName);
+    $this->assertEmpty($svg->namespaceURI);
+
+    $textPath = $doc->getElementsByTagName('textPath')->item(0);
+    $this->assertEquals('textPath', $textPath->tagName);
   }
 }

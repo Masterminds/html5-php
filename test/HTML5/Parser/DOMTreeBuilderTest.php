@@ -233,7 +233,16 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   }
 
   public function testAutocloseLI() {
-    $this->markTestIncomplete("Incomplete.");
+    $html = '<!doctype html>
+      <html lang="en">
+        <body>
+          <ul><li>Foo<li>Bar<li>Baz</ul>
+        </body>
+      </html>';
+
+    $doc = $this->parse($html);
+    $length = $doc->getElementsByTagName('ul')->item(0)->childNodes->length;
+    $this->assertEquals(3, $length);
   }
 
   public function testMathML() {

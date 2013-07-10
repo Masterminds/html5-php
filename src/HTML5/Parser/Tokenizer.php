@@ -357,7 +357,6 @@ class Tokenizer {
       $this->scanner->whitespace();
       if ($this->scanner->current() == '>') {
         $selfClose = TRUE;
-        $this->scanner->next();
         return TRUE;
       }
       if ($this->scanner->current() === FALSE) {

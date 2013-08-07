@@ -194,6 +194,14 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $data = $wrapper->childNodes->item(0);
     $this->assertEquals(XML_TEXT_NODE, $data->nodeType);
     $this->assertEquals('test', $data->data);
+
+    // The DomTreeBuilder has special handling for text when in before head mode.
+    $html = "<!DOCTYPE html><html>
+    Foo<head></head><body></body></html>";
+    $doc = $this->parse($html);
+    $this->assertEquals('Line 0, Col 0: Unexpected text. Ignoring: Foo', $doc->errors[0]);
+    $whiteSpace = $doc->documentElement->firstChild;
+    $this->assertEquals("\n    ", $whiteSpace->data);
   }
 
   public function testParseErrors() {

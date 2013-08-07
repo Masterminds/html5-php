@@ -323,11 +323,17 @@ class DOMTreeBuilder implements EventHandler {
   public function text($data) {
     // XXX: Hmmm.... should we really be this strict?
     if ($this->insertMode < self::IM_IN_HEAD) {
-      $data = trim($data);
-      if (!empty($data)) {
+      // Per '8.2.5.4.3 The "before head" insertion mode' we are supposed to
+      // ignore " \t\n\r\f" characters and throw a parse error for other strings.
+      // In this case we are throwing a parse error for other strings while
+      // passing " \t\n\r\f" through to the DOM. Since this parser is not creating
+      // a DOM that will be used for rendering a display and the DOM may be
+      // turned back into html these characters are passed along to the DOM.
+      $dataTmp = trim($data, " \t\n\r\f");
+      if (!empty($dataTmp)) {
         //fprintf(STDOUT, "Unexpected insert mode: %d", $this->insertMode);
-        $this->parseError("Unexpected text. Ignoring: " . $data);
-        return;
+        $this->parseError("Unexpected text. Ignoring: " . $dataTmp);
+        $data = str_replace($dataTmp, '', $data);
       }
     }
     //fprintf(STDOUT, "Appending text %s.", $data);

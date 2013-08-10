@@ -200,8 +200,8 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     Foo<head></head><body></body></html>";
     $doc = $this->parse($html);
     $this->assertEquals('Line 0, Col 0: Unexpected text. Ignoring: Foo', $doc->errors[0]);
-    $whiteSpace = $doc->documentElement->firstChild;
-    $this->assertEquals("\n    ", $whiteSpace->data);
+    $headElement = $doc->documentElement->firstChild;
+    $this->assertEquals('head', $headElement->tagName);
   }
 
   public function testParseErrors() {

@@ -135,6 +135,9 @@ So tags are serialized according to these rules:
 Please check the issue queue for a full list, but the following are
 issues known issues that are not presently on the roadmap:
 
+- Namespaces: HTML5 only [supports a selected list of namespaces](http://www.w3.org/TR/html5/infrastructure.html#namespaces)
+  and they do not operate in the same way as XML namespaces. A `:` has no special
+  meaning. The parser does not support XML style namespaces via `:`.
 - Scripts: This parser does not contain a JavaScript or a CSS
   interpreter. While one may be supplied, not all features will be
   supported.

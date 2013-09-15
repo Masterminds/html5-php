@@ -14,6 +14,11 @@ use HTML5\Elements;
  * are implemented herein; however, not all of them are. Since we do not
  * assume a graphical user agent, no presentation-specific logic is conducted
  * during tree building.
+ *
+ * FIXME: The present tree builder does not exactly follow the state machine rules
+ * for insert modes as outlined in the HTML5 spec. The processor needs to be
+ * re-written to accomodate this. See, for example, the Go language HTML5
+ * parser.
  */
 class DOMTreeBuilder implements EventHandler {
 
@@ -249,6 +254,12 @@ class DOMTreeBuilder implements EventHandler {
       if (!Elements::isA($name, Elements::VOID_TAG)) {
         $this->current = $ele;
       }
+    }
+
+    // This is sort of a last-ditch attempt to correct for cases where no head/body
+    // elements are provided.
+    if ($this->insertMode <= self::IM_BEFORE_HEAD && $name != 'head' && $name != 'html') {
+      $this->insertMode = self::IM_IN_BODY;
     }
 
     // Return the element mask, which the tokenizer can then use to set 

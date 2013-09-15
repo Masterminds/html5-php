@@ -300,4 +300,18 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $textPath = $doc->getElementsByTagName('textPath')->item(0);
     $this->assertEquals('textPath', $textPath->tagName);
   }
+
+  /**
+   * Regression for issue #13
+   */
+  public function testRegressionHTMLNoBody() {
+    $html = '<!DOCTYPE html><html><span id="test">Test</span></html>';
+    $doc = $this->parse($html);
+    $span = $doc->getElementById('test');
+
+    $this->assertEmpty($doc->errors);
+
+    $this->assertEquals('span', $span->tagName);
+    $this->assertEquals('Test', $span->textContent);
+  }
 }

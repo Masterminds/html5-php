@@ -794,7 +794,8 @@ class Tokenizer {
     }
 
     $data = '';
-    while ($this->scanner->current() != '?' && $this->scanner->peek() != '>') {
+    // As long as it's not the case that the next two chars are ? and >.
+    while (!($this->scanner->current() == '?' && $this->scanner->peek() == '>')) {
       $data .= $this->scanner->current();
 
       $tok = $this->scanner->next();

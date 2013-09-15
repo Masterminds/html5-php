@@ -102,7 +102,7 @@ class Traverser {
         break;
       // FIXME: It appears that the parser doesn't do PI's.
       case XML_PI_NODE:
-        $this->rules->processorInstruction($ele);
+        $this->rules->processorInstruction($node);
         break;
       case XML_COMMENT_NODE:
         $this->rules->comment($node);

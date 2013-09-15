@@ -714,7 +714,7 @@ class Tokenizer {
    */
   protected function quotedString($stopchars) {
     $tok = $this->scanner->current();
-    if ($tok == '"' || "'") {
+    if ($tok == '"' || $tok == "'") {
       $this->scanner->next();
       $ret = $this->scanner->charsUntil($tok . $stopchars);
       if ($this->scanner->current() == $tok) {

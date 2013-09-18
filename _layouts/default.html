@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <title>{{ page.title }} | html5-php</title>
+    {% if page.keywords != empty %}
+    <meta name="keywords" content="{{ page.keywords }}">
+    {% endif %}
+    {% if page.description != empty %}
+    <meta name="description" content="{{ page.description }}">
+    {% endif %}
+    <!--
+    <link rel="stylesheet" href="assets/css/normalize.css?A" />
+    <link rel="stylesheet" href="assets/css/unsemantic-grid-responsive.css?A" />
+    <link rel="stylesheet" href="assets/css/prettify.css?A" />
+    <link rel="stylesheet" href="assets/css/github.css?A" />
+    <link rel="stylesheet" href="assets/css/html5-php.css?A" />
+    -->
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/html5-php.min.css?A" />
+  </head>
+  <body>
+    <header role="banner">
+      <div class="grid-container clearfix">
+        <h1 id="brand" class="grid-25 mobile-grid-100">
+          <a href="#">html5-php</a>
+        </h1>
+        <nav role="navigation" class="grid-75 mobile-grid-100">
+          <ul>
+            {% for link in site.navigation %}
+              {% assign current = nil %}
+              {% if page.url == link.url or page.url == link.check %}
+                {% assign current = 'active' %}
+              {% endif %}
+
+              <li class="{{ current }}">
+                <a class="{{ current }}" href="{{ link.url }}">{{ link.text }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      </div>
+    </header>
+      {{ content }}
+    <footer role="contentinfo" class="grid-container">
+      <div class="grid-100">
+        html5-php is maintained by <a href="http://technosophos.com">Matt Butcher</a> (<a href="http://twitter.com/technosophos">@techosophos</a>) and <a href="http://mattfarina.com">Matt Farina</a> (<a href="http://twitter.com/mattfarina">@mattfarina</a>).
+      </div>
+    </footer>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{ site.baseurl }}/assets/js/jquery-1.10.2.min.js"><\/script>')</script>
+    <script src="{{ site.baseurl }}/assets/js/prettify.js?A"></script>
+    <script>
+      (function($, window, undefined) {
+
+        // Add pretty print to all pre and code tags.
+        $('pre, code').addClass("prettyprint");
+
+        // Remove prettify from code tags inside pre tags.
+        $('pre code').removeClass("prettyprint");
+
+        // Activate pretty presentation.
+        prettyPrint();
+      })(jQuery, this);
+    </script>
+  </body>
+</html>

@@ -1,5 +1,8 @@
 ---
 layout: page
+title: "Parsing and Serializing HTML5 in PHP"
+keywords: "PHP, HTML5, Parser, Serializer, Writer"
+description: "Parsing and Serializing (Writing) HTML5 in PHP."
 ---
 <div class="masthead"><div class="grid-container"><!-- Start Masthead -->
 <div class="grid-70 prefix-15 suffix-15">HTML5 Parsing and Writing in PHP is finally here.</div>

@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/HTML5.html">\HTML5</a></li>
+                                                    </ul>
+                    </li>
+                    <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                    <i class="icon-list-alt"></i>&#160;Errors
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                    <i class="icon-list-alt"></i>&#160;Markers
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1777876661"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1777876661" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-54489820"></a>
+                                <a href="../namespaces/HTML5.html" style="margin-left: 30px; padding-left: 0">HTML5</a>
+            </div>
+            <div id="namespace-54489820" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-607338786"></a>
+                                <a href="../namespaces/HTML5.Parser.html" style="margin-left: 30px; padding-left: 0">Parser</a>
+            </div>
+            <div id="namespace-607338786" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/HTML5.Parser.EventHandler.html">EventHandler</a></li>
+                                                    <li class="interface"><a href="../classes/HTML5.Parser.InputStream.html">InputStream</a></li>
+                                                                                                    <li class="class"><a href="../classes/HTML5.Parser.Tokenizer.html">Tokenizer</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Parser.FileInputStream.html">FileInputStream</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Parser.StringInputStream.html">StringInputStream</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Parser.Scanner.html">Scanner</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Parser.ParseError.html">ParseError</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Parser.CharacterReference.html">CharacterReference</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Parser.TreeBuildingRules.html">TreeBuildingRules</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Parser.DOMTreeBuilder.html">DOMTreeBuilder</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Parser.UTF8Utils.html">UTF8Utils</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2063599118"></a>
+                                <a href="../namespaces/HTML5.Serializer.html" style="margin-left: 30px; padding-left: 0">Serializer</a>
+            </div>
+            <div id="namespace-2063599118" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/HTML5.Serializer.RulesInterface.html">RulesInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/HTML5.Serializer.Serializer.html">Serializer</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Serializer.Traverser.html">Traverser</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Serializer.HTML5Entities.html">HTML5Entities</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Serializer.OutputRules.html">OutputRules</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/HTML5.InstructionProcessor.html">InstructionProcessor</a></li>
+                                                                                                    <li class="class"><a href="../classes/HTML5.Elements.html">Elements</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Entities.html">Entities</a></li>
+                                                    <li class="class"><a href="../classes/HTML5.Exception.html">Exception</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/HTML5.html">HTML5</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/HTML5.html">\HTML5</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\HTML5</small>Elements</h1>
+                    <p><em>Provide general element functions.</em></p>
+                    <p>This class provides general information about HTML5 elements,
+including syntactic and semantic issues. Parsers and serializers can
+use this class as a reference point for information about the rules
+of various HTML5 elements.</p>
+
+
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/HTML5.Elements.html#method_isA" class="">isA()</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#method_isHtml5Element" class="">isHtml5Element()</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#method_isMathMLElement" class="">isMathMLElement()</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#method_isSvgElement" class="">isSvgElement()</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#method_isElement" class="">isElement()</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#method_element" class="">element()</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#method_normalizeSvgElement" class="">normalizeSvgElement()</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#method_normalizeSvgAttribute" class="">normalizeSvgAttribute()</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#method_normalizeMathMlAttribute" class="">normalizeMathMlAttribute()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/HTML5.Elements.html#property_html5" class="">$html5</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#property_mathml" class="">$mathml</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#property_svg" class="">$svg</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#property_svgCaseSensitiveAttributeMap" class="">$svgCaseSensitiveAttributeMap</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#property_svgCaseSensitiveElementMap" class="">$svgCaseSensitiveElementMap</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/HTML5.Elements.html#constant_KNOWN_ELEMENT" class="">KNOWN_ELEMENT</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#constant_TEXT_RAW" class="">TEXT_RAW</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#constant_TEXT_RCDATA" class="">TEXT_RCDATA</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#constant_VOID_TAG" class="">VOID_TAG</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#constant_AUTOCLOSE_P" class="">AUTOCLOSE_P</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#constant_TEXT_PLAINTEXT" class="">TEXT_PLAINTEXT</a><br />
+                                                                    <a href="../classes/HTML5.Elements.html#constant_BLOCK_TAG" class="">BLOCK_TAG</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No private properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/HTML5.Elements.php.html"><div class="path-wrapper">HTML5/Elements.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">\Default</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\HTML5\Elements</div>
+                            </dd>
+
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                todo
+                            </th>
+                            <td>
+                                                                    <p>consider using a bitmask table lookup. There is enough overlap in
+  naming that this could significantly shrink the size and maybe make it
+  faster. See the Go teams implementation at https://code.google.com/p/go/source/browse/html/atom.</p>
+
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                                    <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_KNOWN_ELEMENT" name="constant_KNOWN_ELEMENT" class="anchor"></a>
+            <article id="constant_KNOWN_ELEMENT" class="constant">
+                <h3 class="">KNOWN_ELEMENT</h3>
+                <pre class="signature">KNOWN_ELEMENT</pre>
+                <p><em>Indicates an element is described in the specification.</em></p>
+                
+
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_TEXT_RAW" name="constant_TEXT_RAW" class="anchor"></a>
+            <article id="constant_TEXT_RAW" class="constant">
+                <h3 class="">TEXT_RAW</h3>
+                <pre class="signature">TEXT_RAW</pre>
+                <p><em>Indicates the contained text should be processed as raw text.</em></p>
+                
+
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_TEXT_RCDATA" name="constant_TEXT_RCDATA" class="anchor"></a>
+            <article id="constant_TEXT_RCDATA" class="constant">
+                <h3 class="">TEXT_RCDATA</h3>
+                <pre class="signature">TEXT_RCDATA</pre>
+                <p><em>Indicates the contained text should be processed as RCDATA.</em></p>
+                
+
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_VOID_TAG" name="constant_VOID_TAG" class="anchor"></a>
+            <article id="constant_VOID_TAG" class="constant">
+                <h3 class="">VOID_TAG</h3>
+                <pre class="signature">VOID_TAG</pre>
+                <p><em>Indicates the tag cannot have content.</em></p>
+                
+
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_AUTOCLOSE_P" name="constant_AUTOCLOSE_P" class="anchor"></a>
+            <article id="constant_AUTOCLOSE_P" class="constant">
+                <h3 class="">AUTOCLOSE_P</h3>
+                <pre class="signature">AUTOCLOSE_P</pre>
+                <p><em>Indicates that if a previous event is for a P tag, that element
+should be considered closed.</em></p>
+                
+
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_TEXT_PLAINTEXT" name="constant_TEXT_PLAINTEXT" class="anchor"></a>
+            <article id="constant_TEXT_PLAINTEXT" class="constant">
+                <h3 class="">TEXT_PLAINTEXT</h3>
+                <pre class="signature">TEXT_PLAINTEXT</pre>
+                <p><em>Indicates that the text inside is plaintext (pre).</em></p>
+                
+
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_BLOCK_TAG" name="constant_BLOCK_TAG" class="anchor"></a>
+            <article id="constant_BLOCK_TAG" class="constant">
+                <h3 class="">BLOCK_TAG</h3>
+                <pre class="signature">BLOCK_TAG</pre>
+                <p><em>Indicates that the tag is a block.</em></p>
+                
+
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_html5" name="property_html5" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$html5</h3>
+                <pre class="signature">$html5 : array</pre>
+                <p><em>The HTML5 elements as defined in http://dev.w3.org/html5/markup/elements.html.</em></p>
+                
+
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mathml" name="property_mathml" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$mathml</h3>
+                <pre class="signature">$mathml : array</pre>
+                <p><em>The MathML elements. See http://www.w3.org/wiki/MathML/Elements.</em></p>
+                <p>In our case we are only concerned with presentation MathML and not content
+MathML. There is a nice list of this subset at https://developer.mozilla.org/en-US/docs/MathML/Element.</p>
+
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_svg" name="property_svg" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$svg</h3>
+                <pre class="signature">$svg : array</pre>
+                <p><em>The svg elements.</em></p>
+                <p>The Mozilla documentation has a good list at https://developer.mozilla.org/en-US/docs/SVG/Element.
+The w3c list appears to be lacking in some areas like filter effect elements.
+That list can be found at http://www.w3.org/wiki/SVG/Elements.</p>
+
+<p>Note, FireFox appears to do a better job rendering filter effects than chrome.
+While they are in the spec I'm not sure how widely implemented they are.</p>
+
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_svgCaseSensitiveAttributeMap" name="property_svgCaseSensitiveAttributeMap" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$svgCaseSensitiveAttributeMap</h3>
+                <pre class="signature">$svgCaseSensitiveAttributeMap</pre>
+                <p><em>Some attributes in SVG are case sensetitive.</em></p>
+                <p>This map contains key/value pairs with the key as the lowercase attribute
+name and the value with the correct casing.</p>
+
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_svgCaseSensitiveElementMap" name="property_svgCaseSensitiveElementMap" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$svgCaseSensitiveElementMap</h3>
+                <pre class="signature">$svgCaseSensitiveElementMap</pre>
+                <p><em>Some SVG elements are case sensetitive. This map contains these.</em></p>
+                <p>The map contains key/value store of the name is lowercase as the keys and
+the correct casing as the value.</p>
+
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isA" name="method_isA" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isA()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isA(string <span class="argument">$name</span>, int <span class="argument">$mask</span>) : boolean</pre>
+                <p><em>Check whether the given element meets the given criterion.</em></p>
+                <p>Example:</p>
+
+<pre><code>Elements::isA('script', Elements::TEXT_RAW); // Returns true.
+
+Elements::isA('script', Elements::TEXT_RCDATA); // Returns false.
+</code></pre>
+
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name</td>
+                                <td><p>The element name.</p>
+</td>
+                            </tr>
+                                                    <tr>
+                                <td>int</td>
+                                <td>$mask</td>
+                                <td><p>One of the constants on this class.</p>
+</td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>TRUE if the element matches the mask, FALSE otherwise.</p>
+
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isHtml5Element" name="method_isHtml5Element" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isHtml5Element()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isHtml5Element(string <span class="argument">$name</span>) : bool</pre>
+                <p><em>Test if an element is a valid html5 element.</em></p>
+                
+
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name</td>
+                                <td><p>The name of the element.</p>
+</td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                            &mdash; <p>True if a html5 element and false otherwise.</p>
+
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isMathMLElement" name="method_isMathMLElement" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isMathMLElement()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isMathMLElement(string <span class="argument">$name</span>) : bool</pre>
+                <p><em>Test if an element name is a valid MathML presentation element.</em></p>
+                
+
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name</td>
+                                <td><p>The name of the element.</p>
+</td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                            &mdash; <p>True if a MathML name and false otherwise.</p>
+
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isSvgElement" name="method_isSvgElement" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isSvgElement()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isSvgElement(string <span class="argument">$name</span>) : boolean</pre>
+                <p><em>Test if an element is a valid SVG element.</em></p>
+                
+
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name</td>
+                                <td><p>The name of the element.</p>
+</td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>True if a SVG element and false otherise.</p>
+
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isElement" name="method_isElement" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isElement()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isElement(string <span class="argument">$name</span>) : bool</pre>
+                <p><em>Is an element name valid in an html5 document.</em></p>
+                <p>This includes html5 elements along with other allowed embedded content
+such as svg and mathml.</p>
+
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name</td>
+                                <td><p>The name of the element.</p>
+</td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                            &mdash; <p>True if valid and false otherwise.</p>
+
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_element" name="method_element" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">element()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">element( <span class="argument">$name</span>)</pre>
+                <p><em>Get the element mask for the given element name.</em></p>
+                
+
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$name</td>
+                                <td>
+</td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_normalizeSvgElement" name="method_normalizeSvgElement" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">normalizeSvgElement()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">normalizeSvgElement(string <span class="argument">$name</span>) : string</pre>
+                <p><em>Normalize a SVG element name to its proper case and form.</em></p>
+                
+
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name</td>
+                                <td><p>The name of the element.</p>
+</td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The normalized form of the element name.</p>
+
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_normalizeSvgAttribute" name="method_normalizeSvgAttribute" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">normalizeSvgAttribute()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">normalizeSvgAttribute(string <span class="argument">$name</span>) : string</pre>
+                <p><em>Normalize a SVG attribute name to its proper case and form.</em></p>
+                
+
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name</td>
+                                <td><p>The name of the attribute.</p>
+</td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The normalized form of the attribute name.</p>
+
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_normalizeMathMlAttribute" name="method_normalizeMathMlAttribute" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">normalizeMathMlAttribute()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">normalizeMathMlAttribute(string <span class="argument">$name</span>) : string</pre>
+                <p><em>Normalize a MathML attribute name to its proper case and form.</em></p>
+                <p>Note, all MathML element names are lowercase.</p>
+
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name</td>
+                                <td><p>The name of the attribute.</p>
+</td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The normalized form of the attribute name.</p>
+
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">Elements.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/HTML5/Elements.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/HTML5.html">\HTML5</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="">Errors</a></li>
+                                    <li><a href="">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on September 18th, 2013 at 13:38.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

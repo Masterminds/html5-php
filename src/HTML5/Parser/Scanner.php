@@ -107,7 +107,7 @@ class Scanner {
    *   The next group that is hex characters.
    */
   public function getHex() {
-    return $this->is->charsWhile(self::CHARS_HEX);
+    return $this->is->charsWhile(static::CHARS_HEX);
   }
 
   /**
@@ -120,7 +120,7 @@ class Scanner {
    *   The next group of ASCII alpha characters.
    */
   public function getAsciiAlpha() {
-    return $this->is->charsWhile(self::CHARS_ALPHA);
+    return $this->is->charsWhile(static::CHARS_ALPHA);
   }
 
   /**
@@ -133,7 +133,7 @@ class Scanner {
    *   The next group of ASCII alpha characters and numbers.
    */
   public function getAsciiAlphaNum() {
-    return $this->is->charsWhile(self::CHARS_ALNUM);
+    return $this->is->charsWhile(static::CHARS_ALNUM);
   }
 
   /**

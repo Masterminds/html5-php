@@ -29,7 +29,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
       $this->encode = $options['encode_entities'];
     }
 
-    $this->outputMode = self::IM_IN_HTML;
+    $this->outputMode = static::IM_IN_HTML;
     $this->out = $output;
   }
 
@@ -46,7 +46,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
   }
 
   protected function doctype() {
-    $this->wr(self::DOCTYPE);
+    $this->wr(static::DOCTYPE);
     $this->nl();
   }
 
@@ -63,11 +63,11 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
     // If we are in SVG or MathML there is special handling.
     // Using if/elseif instead of switch because it's faster in PHP.
     if ($name == 'svg') {
-        $this->outputMode = self::IM_IN_SVG;
+        $this->outputMode = static::IM_IN_SVG;
         $name = Elements::normalizeSvgElement($name);
     }
     elseif ($name == 'math') {
-      $this->outputMode = self::IM_IN_MATHML;
+      $this->outputMode = static::IM_IN_MATHML;
     }
 
     $this->openTag($ele);
@@ -79,7 +79,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
 
     // Close out the SVG or MathML special handling.
     if ($name == 'svg' || $name == 'math') {
-      $this->outputMode = self::IM_IN_HTML;
+      $this->outputMode = static::IM_IN_HTML;
     }
 
     // If not unary, add a closing tag.
@@ -130,7 +130,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
     $this->wr('<')->wr($ele->tagName);
     $this->attrs($ele);
 
-    if ($this->outputMode == self::IM_IN_HTML) {
+    if ($this->outputMode == static::IM_IN_HTML) {
       $this->wr('>');
     }
     // If we are not in html mode we are in SVG, MathML, or XML embedded content.
@@ -167,10 +167,10 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
 
       // Special handling for attributes in SVG and MathML.
       // Using if/elseif instead of switch because it's faster in PHP.
-      if ($this->outputMode == self::IM_IN_SVG) {
+      if ($this->outputMode == static::IM_IN_SVG) {
         $name = Elements::normalizeSvgAttribute($name);
       }
-      elseif ($this->outputMode == self::IM_IN_MATHML) {
+      elseif ($this->outputMode == static::IM_IN_MATHML) {
         $name = Elements::normalizeMathMlAttribute($name);
       }
 
@@ -191,7 +191,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *   The element being written.
    */
   protected function closeTag($ele) {
-    if ($this->outputMode == self::IM_IN_HTML || $ele->hasChildNodes()) {
+    if ($this->outputMode == static::IM_IN_HTML || $ele->hasChildNodes()) {
       $this->wr('</')->wr($ele->tagName)->wr('>');
     }
   }

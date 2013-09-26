@@ -137,6 +137,6 @@ class Traverser {
     if (empty($uri)) {
       return FALSE;
     }
-    return isset(self::$local_ns[$uri]);
+    return isset(static::$local_ns[$uri]);
   }
 }

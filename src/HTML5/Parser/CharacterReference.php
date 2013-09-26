@@ -44,13 +44,13 @@ class CharacterReference {
     $entity = '&#' . $int . ';';
     // UNTESTED: This may fail on some planes. Couldn't find full documentation
     // on the value of the mask array.
-    return mb_decode_numericentity($entity, self::$numeric_mask, 'utf-8');
+    return mb_decode_numericentity($entity, static::$numeric_mask, 'utf-8');
   }
 
   /**
    * Given a hexidecimal number, return the UTF-8 character.
    */
   public static function lookupHex($hexdec) {
-    return self::lookupDecimal(hexdec($hexdec));
+    return static::lookupDecimal(hexdec($hexdec));
   }
 }

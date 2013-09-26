@@ -48,11 +48,11 @@ class HTML5 {
     // Handle the case where file is a resource.
     if (is_resource($file)) {
       // FIXME: We need a StreamInputStream class.
-      return self::loadHTML(stream_get_contents($file));
+      return static::loadHTML(stream_get_contents($file));
     }
 
     $input = new FileInputStream($file);
-    return self::parse($input);
+    return static::parse($input);
   }
 
   /**
@@ -69,7 +69,7 @@ class HTML5 {
    */
   public static function loadHTML($string) {
     $input = new StringInputStream($string);
-    return self::parse($input);
+    return static::parse($input);
   }
 
   /**
@@ -79,7 +79,7 @@ class HTML5 {
    * PHP DOM implementation. It simply calls load().
    */
   public static function loadHTMLFile($file, $options = NULL) {
-    return self::load($file, $options);
+    return static::load($file, $options);
   }
 
   /**
@@ -94,7 +94,7 @@ class HTML5 {
    */
   public static function loadHTMLFragment($string) {
     $input = new StringInputStream($string);
-    return self::parseFragment($input);
+    return static::parseFragment($input);
   }
 
   /**
@@ -111,7 +111,7 @@ class HTML5 {
    *     Defaults to FALSE.
    */
   public static function save($dom, $file, $options = array()) {
-    $options = $options + self::options();
+    $options = $options + static::options();
     $close = TRUE;
     if (is_resource($file)) {
       $stream = $file;
@@ -183,7 +183,7 @@ class HTML5 {
    *   The default options.
    */
   public static function options() {
-    return self::$options;
+    return static::$options;
   }
 
   /**
@@ -195,7 +195,7 @@ class HTML5 {
    *   The option value.
    */
   public static function setOption($name, $value) {
-    self::$options[$name] = $value;
+    static::$options[$name] = $value;
   }
 
 }

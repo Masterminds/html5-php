@@ -947,7 +947,7 @@ class Tokenizer {
 
     // These indicate not an entity. We return just
     // the &.
-    if (strspn($tok, self::WHITE . "&<") == 1) {
+    if (strspn($tok, static::WHITE . "&<") == 1) {
       //$this->scanner->next();
       return '&';
     }

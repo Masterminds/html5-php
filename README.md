@@ -119,7 +119,7 @@ can be set by default or at call time to use a different ruleset that implements
 - The `Traverser`, which is a special-purpose tree walker. It visits
 each node node in the tree and uses the `OutputRules` to transform the node
 into a string.
-- The `Serializer` manages the `Traverser` and stores the resultant data
+- `\HTML5` manages the `Traverser` and stores the resultant data
 in the correct place.
 
 The serializer (`save()`, `saveHTML()`) follows the 

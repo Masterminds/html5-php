@@ -22,9 +22,6 @@ class HTML5 {
 
     // If the serializer should encode all entities.
     'encode_entities' => FALSE,
-
-    // The class the serializer should use for the output rules.
-    'output_rules' => '\HTML5\Serializer\OutputRules', 
   );
 
   /**

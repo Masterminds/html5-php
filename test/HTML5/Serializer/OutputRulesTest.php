@@ -47,22 +47,20 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $options = $options + \HTML5::options();
     $stream = fopen('php://temp', 'w');
     $dom = \HTML5::loadHTML($this->markup);
-    $t = new Traverser($dom, $stream, $options);
-    $p = $this->getTraverserProtectedProperty('rules');
-    $o = $p->getValue($t);
+    $r = new OutputRules($stream, $options);
+    $t = new Traverser($dom, $stream, $r, $options);
 
-    return array($o, $stream);
+    return array($r, $stream);
   }
 
   function testDocument() {
     $dom = \HTML5::loadHTML('<!doctype html><html lang="en"><body>foo</body></html>');
 
     $stream = fopen('php://temp', 'w');
-    $t = new Traverser($dom, $stream, \HTML5::options());
-    $p = $this->getTraverserProtectedProperty('rules');
-    $o = $p->getValue($t);
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
-    $o->document($dom);
+    $r->document($dom);
     $this->assertEquals("<!DOCTYPE html>\n<html lang=\"en\"><body>foo</body></html>\n", stream_get_contents($stream, -1, 0));
   }
 
@@ -70,15 +68,13 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $dom = \HTML5::loadHTML('<!doctype html><html lang="en"><body>foo</body></html>');
 
     $stream = fopen('php://temp', 'w');
-    $t = new Traverser($dom, $stream, \HTML5::options());
-    $p = $this->getTraverserProtectedProperty('rules');
-    $o = $p->getValue($t);
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
     $m = $this->getProtectedMethod('doctype');
-    $m->invoke($o, 'foo');
+    $m->invoke($r, 'foo');
     $this->assertEquals("<!DOCTYPE html>\n", stream_get_contents($stream, -1, 0));
   }
-
 
   function testElement() {
     $dom = \HTML5::loadHTML('<!doctype html>
@@ -94,12 +90,11 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     </html>');
 
     $stream = fopen('php://temp', 'w');
-    $t = new Traverser($dom, $stream, \HTML5::options());
-    $p = $this->getTraverserProtectedProperty('rules');
-    $o = $p->getValue($t);
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
     $list = $dom->getElementsByTagName('div');
-    $o->element($list->item(0));
+    $r->element($list->item(0));
     $this->assertEquals('<div id="foo" class="bar baz">foo bar baz</div>', stream_get_contents($stream, -1, 0));
   }
 
@@ -112,13 +107,12 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     </html>');
 
     $stream = fopen('php://temp', 'w');
-    $t = new Traverser($dom, $stream, \HTML5::options());
-    $p = $this->getTraverserProtectedProperty('rules');
-    $o = $p->getValue($t);
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
     $list = $dom->getElementsByTagName('div');
     $m = $this->getProtectedMethod('openTag');
-    $m->invoke($o, $list->item(0));
+    $m->invoke($r, $list->item(0));
     $this->assertEquals('<div id="foo" class="bar baz">', stream_get_contents($stream, -1, 0));
   }
 
@@ -131,12 +125,11 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     </html>');
 
     $stream = fopen('php://temp', 'w');
-    $t = new Traverser($dom, $stream, \HTML5::options());
-    $p = $this->getTraverserProtectedProperty('rules');
-    $o = $p->getValue($t);
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
     $list = $dom->getElementsByTagName('div');
-    $o->cdata($list->item(0)->childNodes->item(0));
+    $r->cdata($list->item(0)->childNodes->item(0));
     $this->assertEquals('<![CDATA[bar]]>', stream_get_contents($stream, -1, 0));
   }
 
@@ -149,12 +142,11 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     </html>');
 
     $stream = fopen('php://temp', 'w');
-    $t = new Traverser($dom, $stream, \HTML5::options());
-    $p = $this->getTraverserProtectedProperty('rules');
-    $o = $p->getValue($t);
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
     $list = $dom->getElementsByTagName('div');
-    $o->comment($list->item(0)->childNodes->item(0));
+    $r->comment($list->item(0)->childNodes->item(0));
     $this->assertEquals('<!-- foo -->', stream_get_contents($stream, -1, 0));
   }
 
@@ -167,12 +159,11 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     </html>');
 
     $stream = fopen('php://temp', 'w');
-    $t = new Traverser($dom, $stream, \HTML5::options());
-    $p = $this->getTraverserProtectedProperty('rules');
-    $o = $p->getValue($t);
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
     $list = $dom->getElementsByTagName('script');
-    $o->text($list->item(0)->childNodes->item(0));
+    $r->text($list->item(0)->childNodes->item(0));
     $this->assertEquals('baz();', stream_get_contents($stream, -1, 0));
   }
 
@@ -221,14 +212,13 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     </html>');
 
     $stream = fopen('php://temp', 'w');
-    $t = new Traverser($dom, $stream, \HTML5::options());
-    $p = $this->getTraverserProtectedProperty('rules');
-    $o = $p->getValue($t);
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
     $list = $dom->getElementsByTagName('div');
 
     $m = $this->getProtectedMethod('attrs');
-    $m->invoke($o, $list->item(0));
+    $m->invoke($r, $list->item(0));
 
     $content = stream_get_contents($stream, -1, 0);
     $this->assertEquals(' id="foo" class="bar baz" disabled', $content);
@@ -251,12 +241,11 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     </html>');
 
     $stream = fopen('php://temp', 'w');
-    $t = new Traverser($dom, $stream, \HTML5::options());
-    $p = $this->getTraverserProtectedProperty('rules');
-    $o = $p->getValue($t);
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
     $list = $dom->getElementsByTagName('svg');
-    $o->element($list->item(0));
+    $r->element($list->item(0));
     $contents = stream_get_contents($stream, -1, 0);
     $this->assertRegExp('|<svg width="150" height="100" viewBox="0 0 3 2">|', $contents);
     $this->assertRegExp('|<rect width="1" height="2" x="0" fill="#008d46" />|', $contents);
@@ -279,12 +268,11 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     </html>');
 
     $stream = fopen('php://temp', 'w');
-    $t = new Traverser($dom, $stream, \HTML5::options());
-    $p = $this->getTraverserProtectedProperty('rules');
-    $o = $p->getValue($t);
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
     $list = $dom->getElementsByTagName('math');
-    $o->element($list->item(0));
+    $r->element($list->item(0));
     $content = stream_get_contents($stream, -1, 0);
     $this->assertRegExp('|<math>|', $content);
     $this->assertRegExp('|<csymbol definitionURL="http://www.example.com/mathops/multiops.html#plusminus">|', $content);

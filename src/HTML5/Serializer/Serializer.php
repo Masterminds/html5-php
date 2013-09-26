@@ -4,6 +4,8 @@
  */
 namespace HTML5\Serializer;
 
+use \HTML5\Serializer\OutputRules;
+
 /**
  * Transform a DOM into an HTML5 document.
  *
@@ -55,7 +57,8 @@ class Serializer {
     else {
       $file = fopen($filename, 'w');
     }
-    $trav = new Traverser($this->dom, $file, $this->options);
+    $rules = new OutputRules($file, $this->options);
+    $trav = new Traverser($this->dom, $file, $rules, $this->options);
 
     $trav->walk();
 

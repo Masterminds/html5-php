@@ -1,6 +1,7 @@
 <?php
 namespace HTML5\Tests;
 
+use \HTML5\Serializer\OutputRules;
 use \HTML5\Serializer\Traverser;
 use \HTML5\Parser;
 
@@ -50,9 +51,10 @@ class TraverserTest extends \HTML5\Tests\TestCase {
     // use a stream in temp space.
     $stream = fopen('php://temp', 'w');
 
+    $r = new OutputRules($stream, \HTML5::options());
     $dom = \HTML5::loadHTML($this->markup);
 
-    $t = new Traverser($dom, $stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
     $this->assertInstanceOf('\HTML5\Serializer\Traverser', $t);
   }
@@ -67,7 +69,8 @@ class TraverserTest extends \HTML5\Tests\TestCase {
      $this->assertInstanceOf('\DOMDocumentFragment', $dom);
 
      $stream = fopen('php://temp', 'w');
-     $t = new Traverser($dom, $stream, \HTML5::options());
+     $r = new OutputRules($stream, \HTML5::options());
+     $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
      $out = $t->walk();
      $this->assertEquals($html, stream_get_contents($stream, -1, 0));

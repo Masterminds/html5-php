@@ -39,16 +39,13 @@ class Traverser {
    *     charachter references. Defaults to FALSE which escapes &'<>".
    *   - output_rules: The path to the class handling the output rules.
    */
-  public function __construct($dom, $out, $options = array()) {
+  public function __construct($dom, $out, RulesInterface $rules, $options = array()) {
     $this->dom = $dom;
     $this->out = $out;
+    $this->rules = $rules;
     $this->options = $options;
 
-    if (!isset($this->options['output_rules'])) {
-      throw new \HTML5\Exception('No Rules specified for output generation.');
-    }
-    $rulesClass = $this->options['output_rules'];
-    $this->rules = new $rulesClass($this, $out, $this->options);
+    $this->rules->setTraverser($this);
   }
 
   /**

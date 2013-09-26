@@ -79,7 +79,6 @@ class Html5Test extends TestCase {
   public function testConfig() {
     $options = \HTML5::options();
     $this->assertEquals(FALSE, $options['encode_entities']);
-    $this->assertEquals('\HTML5\Serializer\OutputRules', $options['output_rules']);
 
     \HTML5::setOption('foo', 'bar');
     \HTML5::setOption('encode_entities', TRUE);

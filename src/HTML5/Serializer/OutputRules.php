@@ -23,8 +23,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
 
   const DOCTYPE = '<!DOCTYPE html>';
 
-  public function __construct($traverser, $output, $options = array()) {
-    $this->traverser = $traverser;
+  public function __construct($output, $options = array()) {
 
     if (isset($options['encode_entities'])) {
       $this->encode = $options['encode_entities'];
@@ -32,6 +31,12 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
 
     $this->outputMode = self::IM_IN_HTML;
     $this->out = $output;
+  }
+
+  public function setTraverser(\HTML5\Serializer\Traverser $traverser) {
+    $this->traverser = $traverser;
+
+    return $this;
   }
 
   public function document($dom) {

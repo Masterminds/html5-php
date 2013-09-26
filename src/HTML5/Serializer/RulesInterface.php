@@ -17,14 +17,26 @@ interface RulesInterface {
   /**
    * The class constructor.
    *
-   * @param \HTML5\Serializer\Traverser $traverser
-   *   The traverser walking through the html.
+   * Note, before the rules can be used a traverser must be registered.
+   * 
    * @param mixed $output
    *   The output stream to write output to.
    * @param array $options
    *   An array of options.
    */
-  public function __construct($traverser, $output, $options = array());
+  public function __construct($output, $options = array());
+
+  /**
+   * Register the traverser used in but the rules.
+   *
+   * Note, only one traverser can be used by the rules.
+   * 
+   * @param  \HTML5\Serializer\Traverser $traverser
+   *   The traverser used in the rules.
+   * @return \HTML5\Serializer\RulesInterface
+   *   $this for the current object.
+   */
+  public function setTraverser(\HTML5\Serializer\Traverser $traverser);
 
   /**
    * Write a document element (\DOMDocument).

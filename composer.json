@@ -19,9 +19,6 @@
     "ext-libxml" : "*",
     "php" : ">=5.3.0"
   },
-  "require-dev": {
-    "phpunit/phpunit" : "*"
-  },
   "autoload": {
     "psr-0": {"HTML5": "src"}
   }

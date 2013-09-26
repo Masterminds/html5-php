@@ -5,7 +5,8 @@ use HTML5\Parser\FileInputStream;
 use HTML5\Parser\Scanner;
 use HTML5\Parser\Tokenizer;
 use HTML5\Parser\DOMTreeBuilder;
-use HTML5\Serializer\Serializer;
+use HTML5\Serializer\OutputRules;
+use HTML5\Serializer\Traverser;
 
 /**
  * The main HTML5 front end.
@@ -105,20 +106,28 @@ class HTML5 {
    *   The filename to be written.
    * @param array $options
    *   Configuration options when serializing the DOM. These include:
-   *   - output_rules: The class with the serializer writing rules. Defaults to
-   *     \HTML5\Serializer\OutputRules. The standard rules are representative of the
-   *     original document. This can be replaced by alternatives that can
-   *     minify or make other alterations.
    *   - encode_entities: Text written to the output is escaped by default and not all
    *     entities are encoded. If this is set to TRUE all entities will be encoded.
    *     Defaults to FALSE.
    */
   public static function save($dom, $file, $options = array()) {
-    // Passing all the default options is intentional. This way a custom
-    // rule set can have default options passed in if needed.
     $options = $options + self::options();
-    $serializer = new \HTML5\Serializer\Serializer($dom, $options);
-    return $serializer->save($file);
+    $close = TRUE;
+    if (is_resource($file)) {
+      $stream = $file;
+      $close = FALSE;
+     }
+    else {
+      $stream = fopen($file, 'w');
+    }
+    $rules = new OutputRules($stream, $options);
+    $trav = new Traverser($dom, $stream, $rules, $options);
+
+    $trav->walk();
+
+    if ($close) {
+      fclose($stream);
+    }
   }
 
   /**
@@ -128,10 +137,6 @@ class HTML5 {
    *   The DOM to be serialized.
    * @param array $options
    *   Configuration options when serializing the DOM. These include:
-   *   - output_rules: The class with the serializer writing rules. Defaults to
-   *     \HTML5\Serializer\OutputRules. The standard rules are representative of the
-   *     original document. This can be replaced by alternatives that can
-   *     minify or make other alterations.
    *   - encode_entities: Text written to the output is escaped by default and not all
    *     entities are encoded. If this is set to TRUE all entities will be encoded.
    *     Defaults to FALSE.
@@ -140,11 +145,9 @@ class HTML5 {
    *   A HTML5 documented generated from the DOM.
    */
   public static function saveHTML($dom, $options = array()) {
-    // Passing all the default options is intentional. This way a custom
-    // rule set can have default options passed in if needed.
-    $options = $options + self::options();
-    $serializer = new \HTML5\Serializer\Serializer($dom, $options);
-    return $serializer->saveHTML();
+    $stream = fopen('php://temp', 'w');
+    static::save($dom, $stream, $options);
+    return stream_get_contents($stream, -1, 0);
   }
 
   /**

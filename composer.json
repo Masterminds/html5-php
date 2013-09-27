@@ -2,7 +2,7 @@
   "name": "masterminds/html5",
   "description": "An HTML5 parser and serializer.",
   "type": "library",
-  "homepage": "https://masterminds.github.io/html5-php",
+  "homepage": "http://masterminds.github.io/html5-php",
   "license": "MIT",
   "keywords": ["xml", "html", "html5", "dom", "parser", "serializer", "querypath"],
   "authors": [

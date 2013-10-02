@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+  <title>html5-php</title>
+  <parser>
+    <target>api</target>
+  </parser>
+  <transformer>
+    <target>api</target>
+  </transformer>
+  <files>
+    <directory>src</directory>
+  </files>
+</phpdoc>

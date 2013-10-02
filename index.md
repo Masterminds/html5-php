@@ -32,7 +32,7 @@ description: "Parsing and Serializing (Writing) HTML5 in PHP."
 <p>The best installation method is via <a href="http://getcomposer.org/">composer</a>. To install add <code>masterminds/html5-php</code> to your <code>composer.json</code> file.</p>
 <pre><code>{
   "require" : {
-    "masterminds/html5": "dev-master"
+    "masterminds/html5": "1.*"
   },
 }</code></pre>
 

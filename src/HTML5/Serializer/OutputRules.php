@@ -10,6 +10,9 @@ namespace HTML5\Serializer;
 
 use \HTML5\Elements;
 
+/**
+ * Generate the output html5 based on element rules.
+ */
 class OutputRules implements \HTML5\Serializer\RulesInterface {
 
   const IM_IN_HTML = 1;

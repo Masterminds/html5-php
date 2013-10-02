@@ -461,11 +461,11 @@ class Elements {
    *   TRUE if the element matches the mask, FALSE otherwise.
    */
   public static function isA($name, $mask) {
-    if (!self::isElement($name)) {
+    if (!static::isElement($name)) {
       return FALSE;
     }
 
-    return (self::element($name) & $mask) == $mask;
+    return (static::element($name) & $mask) == $mask;
   }
 
   /**
@@ -481,7 +481,7 @@ class Elements {
 
     // html5 element names are case insensetitive. Forcing lowercase for the check.
     // Do we need this check or will all data passed here already be lowercase?
-    return isset(self::$html5[strtolower($name)]);
+    return isset(static::$html5[strtolower($name)]);
   }
 
   /**
@@ -496,7 +496,7 @@ class Elements {
   public static function isMathMLElement($name) {
 
     // MathML is case-sensetitive unlike html5 elements.
-    return isset(self::$mathml[$name]);
+    return isset(static::$mathml[$name]);
   }
 
   /**
@@ -511,7 +511,7 @@ class Elements {
   public static function isSvgElement($name) {
 
     // SVG is case-sensetitive unlike html5 elements.
-    return isset(self::$svg[$name]);
+    return isset(static::$svg[$name]);
   }
 
   /**
@@ -527,21 +527,21 @@ class Elements {
    *   True if valid and false otherwise.
    */
   public static function isElement($name) {
-    return self::isHtml5Element($name) || self::isMathMLElement($name) || self::isSvgElement($name);
+    return static::isHtml5Element($name) || static::isMathMLElement($name) || static::isSvgElement($name);
   }
 
   /**
    * Get the element mask for the given element name.
    */
   public static function element($name) {
-    if (isset(self::$html5[$name])) {
-      return self::$html5[$name];
+    if (isset(static::$html5[$name])) {
+      return static::$html5[$name];
     }
-    if (isset(self::$svg[$name])) {
-      return self::$svg[$name];
+    if (isset(static::$svg[$name])) {
+      return static::$svg[$name];
     }
-    if (isset(self::$mathml[$name])) {
-      return self::$mathml[$name];
+    if (isset(static::$mathml[$name])) {
+      return static::$mathml[$name];
     }
 
     return FALSE;
@@ -558,8 +558,8 @@ class Elements {
    */
   public static function normalizeSvgElement($name) {
     $name = strtolower($name);
-    if (isset(self::$svgCaseSensitiveElementMap[$name])) {
-      $name = self::$svgCaseSensitiveElementMap[$name];
+    if (isset(static::$svgCaseSensitiveElementMap[$name])) {
+      $name = static::$svgCaseSensitiveElementMap[$name];
     }
 
     return $name;
@@ -576,8 +576,8 @@ class Elements {
    */
   public static function normalizeSvgAttribute($name) {
     $name = strtolower($name);
-    if (isset(self::$svgCaseSensitiveAttributeMap[$name])) {
-      $name = self::$svgCaseSensitiveAttributeMap[$name];
+    if (isset(static::$svgCaseSensitiveAttributeMap[$name])) {
+      $name = static::$svgCaseSensitiveAttributeMap[$name];
     }
 
     return $name;

@@ -48,7 +48,7 @@ class TreeBuildingRules {
    * Returns TRUE if the given tagname has special processing rules.
    */
   public function hasRules($tagname) {
-    return isset(self::$tags[$tagname]);
+    return isset(static::$tags[$tagname]);
   }
 
   /**

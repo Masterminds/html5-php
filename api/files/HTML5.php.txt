@@ -5,7 +5,8 @@ use HTML5\Parser\FileInputStream;
 use HTML5\Parser\Scanner;
 use HTML5\Parser\Tokenizer;
 use HTML5\Parser\DOMTreeBuilder;
-use HTML5\Serializer\Serializer;
+use HTML5\Serializer\OutputRules;
+use HTML5\Serializer\Traverser;
 
 /**
  * The main HTML5 front end.
@@ -22,9 +23,6 @@ class HTML5 {
 
     // If the serializer should encode all entities.
     'encode_entities' => FALSE,
-
-    // The class the serializer should use for the output rules.
-    'output_rules' => '\HTML5\Serializer\OutputRules', 
   );
 
   /**
@@ -50,11 +48,11 @@ class HTML5 {
     // Handle the case where file is a resource.
     if (is_resource($file)) {
       // FIXME: We need a StreamInputStream class.
-      return self::loadHTML(stream_get_contents($file));
+      return static::loadHTML(stream_get_contents($file));
     }
 
     $input = new FileInputStream($file);
-    return self::parse($input);
+    return static::parse($input);
   }
 
   /**
@@ -71,7 +69,7 @@ class HTML5 {
    */
   public static function loadHTML($string) {
     $input = new StringInputStream($string);
-    return self::parse($input);
+    return static::parse($input);
   }
 
   /**
@@ -81,7 +79,7 @@ class HTML5 {
    * PHP DOM implementation. It simply calls load().
    */
   public static function loadHTMLFile($file, $options = NULL) {
-    return self::load($file, $options);
+    return static::load($file, $options);
   }
 
   /**
@@ -96,7 +94,7 @@ class HTML5 {
    */
   public static function loadHTMLFragment($string) {
     $input = new StringInputStream($string);
-    return self::parseFragment($input);
+    return static::parseFragment($input);
   }
 
   /**
@@ -108,20 +106,28 @@ class HTML5 {
    *   The filename to be written.
    * @param array $options
    *   Configuration options when serializing the DOM. These include:
-   *   - output_rules: The class with the serializer writing rules. Defaults to
-   *     \HTML5\Serializer\OutputRules. The standard rules are representative of the
-   *     original document. This can be replaced by alternatives that can
-   *     minify or make other alterations.
    *   - encode_entities: Text written to the output is escaped by default and not all
    *     entities are encoded. If this is set to TRUE all entities will be encoded.
    *     Defaults to FALSE.
    */
   public static function save($dom, $file, $options = array()) {
-    // Passing all the default options is intentional. This way a custom
-    // rule set can have default options passed in if needed.
-    $options = $options + self::options();
-    $serializer = new \HTML5\Serializer\Serializer($dom, $options);
-    return $serializer->save($file);
+    $options = $options + static::options();
+    $close = TRUE;
+    if (is_resource($file)) {
+      $stream = $file;
+      $close = FALSE;
+     }
+    else {
+      $stream = fopen($file, 'w');
+    }
+    $rules = new OutputRules($stream, $options);
+    $trav = new Traverser($dom, $stream, $rules, $options);
+
+    $trav->walk();
+
+    if ($close) {
+      fclose($stream);
+    }
   }
 
   /**
@@ -131,10 +137,6 @@ class HTML5 {
    *   The DOM to be serialized.
    * @param array $options
    *   Configuration options when serializing the DOM. These include:
-   *   - output_rules: The class with the serializer writing rules. Defaults to
-   *     \HTML5\Serializer\OutputRules. The standard rules are representative of the
-   *     original document. This can be replaced by alternatives that can
-   *     minify or make other alterations.
    *   - encode_entities: Text written to the output is escaped by default and not all
    *     entities are encoded. If this is set to TRUE all entities will be encoded.
    *     Defaults to FALSE.
@@ -143,11 +145,9 @@ class HTML5 {
    *   A HTML5 documented generated from the DOM.
    */
   public static function saveHTML($dom, $options = array()) {
-    // Passing all the default options is intentional. This way a custom
-    // rule set can have default options passed in if needed.
-    $options = $options + self::options();
-    $serializer = new \HTML5\Serializer\Serializer($dom, $options);
-    return $serializer->saveHTML();
+    $stream = fopen('php://temp', 'w');
+    static::save($dom, $stream, $options);
+    return stream_get_contents($stream, -1, 0);
   }
 
   /**
@@ -183,7 +183,7 @@ class HTML5 {
    *   The default options.
    */
   public static function options() {
-    return self::$options;
+    return static::$options;
   }
 
   /**
@@ -195,7 +195,7 @@ class HTML5 {
    *   The option value.
    */
   public static function setOption($name, $value) {
-    self::$options[$name] = $value;
+    static::$options[$name] = $value;
   }
 
 }

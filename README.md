@@ -1,16 +1,14 @@
 # HTML5-PHP
 
-This is a **highly experimental** HTML5 Parser.
-
 The need for an HTML5 parser in PHP is clear. This project initially
 began with the seemingly abandoned `html5lib` project [original source](https://code.google.com/p/html5lib/source/checkout).
 But after some initial refactoring work, we began a new parser.
 
-- An HTML5 serializer [feature complete]
-- Support for PHP namespace [done]
-- Composer support [done]
-- Event-based (SAX-like) parser [feature complete]
-- DOM tree builder [feature complete]
+- An HTML5 serializer
+- Support for PHP namespaces
+- Composer support
+- Event-based (SAX-like) parser
+- DOM tree builder
 - Interoperability with QueryPath [[in progress](https://github.com/technosophos/querypath/issues/114)]
 
 [![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php)
@@ -24,12 +22,12 @@ To install, add `masterminds/html5` to your `composer.json` file:
 ```
 {
   "require" : {
-    "masterminds/html5": "dev-master"
+    "masterminds/html5": "1.*"
   },
 }
 ```
 
-(You may substitute `dev-master` for a more stable release tag, of
+(You may substitute `1.*` for a more specific release tag, of
 course.)
 
 From there, use the `composer install` or `composer update` commands to
@@ -113,9 +111,8 @@ it into a character representation -- an HTML5 document.
 The serializer is broken into three parts:
 
 - The `OutputRules` contain the rules to turn DOM elements into strings. The
-rules used are configurable with the `OutputRules` being the default. An option
-can be set by default or at call time to use a different ruleset that implements
-`RulesInterface`.
+rules are an implementation of the interface `RulesInterface` allowing for
+different rule sets to be used. 
 - The `Traverser`, which is a special-purpose tree walker. It visits
 each node node in the tree and uses the `OutputRules` to transform the node
 into a string.

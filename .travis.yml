@@ -6,7 +6,7 @@ php:
   - 5.5
 
 notifications:
-  irc: "chat.freenode.net#masterminds"
+  irc: "irc.freenode.net#masterminds"
 
 before_script:
   - curl -s http://getcomposer.org/installer | php

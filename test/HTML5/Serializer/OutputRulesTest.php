@@ -131,6 +131,24 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $list = $dom->getElementsByTagName('div');
     $r->cdata($list->item(0)->childNodes->item(0));
     $this->assertEquals('<![CDATA[bar]]>', stream_get_contents($stream, -1, 0));
+
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo"></div>
+      </body>
+    </html>');
+
+
+    $dom->getElementById('foo')->appendChild(new \DOMCdataSection("]]>Foo<[![CDATA test ]]>"));
+
+    $stream = fopen('php://temp', 'w');
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
+    $list = $dom->getElementsByTagName('div');
+    $r->cdata($list->item(0)->childNodes->item(0));
+
+    $this->assertEquals('<![CDATA[]]]]><![CDATA[>Foo<[![CDATA test ]]]]><![CDATA[>]]>', stream_get_contents($stream, -1, 0));
   }
 
   function testComment() {
@@ -148,6 +166,23 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $list = $dom->getElementsByTagName('div');
     $r->comment($list->item(0)->childNodes->item(0));
     $this->assertEquals('<!-- foo -->', stream_get_contents($stream, -1, 0));
+
+
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo"></div>
+      </body>
+      </html>');
+    $dom->getElementById('foo')->appendChild(new \DOMComment('<!-- --> --> Foo -->'));
+
+    $stream = fopen('php://temp', 'w');
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
+
+    $list = $dom->getElementsByTagName('div');
+    $r->comment($list->item(0)->childNodes->item(0));
+    $this->assertEquals('<!--<!-- --> --> Foo -->-->', stream_get_contents($stream, -1, 0));
   }
 
   function testText() {
@@ -165,6 +200,20 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $list = $dom->getElementsByTagName('script');
     $r->text($list->item(0)->childNodes->item(0));
     $this->assertEquals('baz();', stream_get_contents($stream, -1, 0));
+
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <head id="foo"></head>
+    </html>');
+    $dom->getElementById('foo')->appendChild(new \DOMText('<script>alert("hi");</script>'));
+
+    $stream = fopen('php://temp', 'w');
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
+
+    $item = $dom->getElementById('foo');
+    $r->text($item->firstChild);
+    $this->assertEquals('&lt;script&gt;alert(&quot;hi&quot;);&lt;/script&gt;', stream_get_contents($stream, -1, 0));
   }
 
   function testNl() {

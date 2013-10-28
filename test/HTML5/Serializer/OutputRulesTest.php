@@ -182,6 +182,9 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
 
     $list = $dom->getElementsByTagName('div');
     $r->comment($list->item(0)->childNodes->item(0));
+
+    // Could not find more definitive guidelines on what this should be. Went with
+    // what the HTML5 spec says and what \DOMDocument::saveXML() produces.
     $this->assertEquals('<!--<!-- --> --> Foo -->-->', stream_get_contents($stream, -1, 0));
   }
 

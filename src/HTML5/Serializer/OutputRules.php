@@ -109,11 +109,14 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
   }
 
   public function cdata($ele) {
-    $this->wr('<![CDATA[')->wr($ele->data)->wr(']]>');
+    // This encodes CDATA.
+    $this->wr($ele->ownerDocument->saveXML($ele));
   }
 
   public function comment($ele) {
-    $this->wr('<!--')->wr($ele->data)->wr('-->');
+    // These produce identical output.
+    //$this->wr('<!--')->wr($ele->data)->wr('-->');
+    $this->wr($ele->ownerDocument->saveXML($ele));
   }
 
   public function processorInstruction($ele) {

@@ -11,7 +11,7 @@ But after some initial refactoring work, we began a new parser.
 - DOM tree builder
 - Interoperability with QueryPath [[in progress](https://github.com/technosophos/querypath/issues/114)]
 
-[![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php)
+[![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php) [![Latest Stable Version](https://poser.pugx.org/masterminds/html5/v/stable.png)](https://packagist.org/packages/masterminds/html5)
 
 ## Installation
 

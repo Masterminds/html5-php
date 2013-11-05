@@ -10,5 +10,6 @@ notifications:
 
 before_script:
   - composer self-update
+  - composer install --dev
 
 script: phpunit test/HTML5

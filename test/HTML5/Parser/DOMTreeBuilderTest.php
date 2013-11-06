@@ -301,6 +301,14 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('textPath', $textPath->tagName);
   }
 
+  public function testNoScript() {
+    $html = '<!DOCTYPE html><html><head><noscript>No JS</noscript></head></html>';
+    $doc = $this->parse($html);
+    $this->assertEmpty($doc->errors);
+    $noscript = $doc->getElementsByTagName('noscript')->item(0);
+    $this->assertEquals('noscript', $noscript->tagName);
+  }
+
   /**
    * Regression for issue #13
    */
@@ -313,5 +321,36 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
 
     $this->assertEquals('span', $span->tagName);
     $this->assertEquals('Test', $span->textContent);
+  }
+
+  public function testInstructionProcessor() {
+    $string = '<!DOCTYPE html><html><?foo bar ?></html>';
+
+    $treeBuilder = new DOMTreeBuilder();
+    $is = new InstructionProcessorMock();
+    $treeBuilder->setInstructionProcessor($is);
+
+    $input = new StringInputStream($string);
+    $scanner = new Scanner($input);
+    $parser = new Tokenizer($scanner, $treeBuilder);
+
+    $parser->parse();
+
+    $this->assertEquals(1, $is->count);
+    $this->assertEquals('foo', $is->name);
+    $this->assertEquals('bar ', $is->data);
+  }
+}
+
+class InstructionProcessorMock implements \HTML5\InstructionProcessor {
+
+  public $name = NULL;
+  public $data = NULL;
+  public $count = 0;
+
+  public function process(\DOMElement $element, $name, $data) {
+    $this->name = $name;
+    $this->data = $data;
+    $this->count++;
   }
 }

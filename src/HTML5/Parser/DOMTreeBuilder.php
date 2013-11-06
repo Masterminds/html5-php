@@ -372,7 +372,7 @@ class DOMTreeBuilder implements EventHandler {
     // Important: The processor may modify the current DOM tree however 
     // it sees fit.
     if (isset($this->processor)) {
-      $res = $processor->process($this->current, $name, $data);
+      $res = $this->processor->process($this->current, $name, $data);
       if (!empty($res)) {
         $this->current = $res;
       }

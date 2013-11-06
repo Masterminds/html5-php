@@ -120,7 +120,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
   }
 
   public function processorInstruction($ele) {
-    $this->wr('<?')->wr($ele->target)->wr($ele->data)->wr(' ?>');
+    $this->wr('<?')->wr($ele->target)->wr(' ')->wr($ele->data)->wr('?>');
   }
 
   /**

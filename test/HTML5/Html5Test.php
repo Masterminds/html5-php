@@ -26,6 +26,15 @@ class Html5Test extends TestCase {
     $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
     $this->assertEmpty($dom->errors);
+
+    $file = fopen(__DIR__ . '/Html5Test.html', 'r');
+    $dom = \HTML5::load($file);
+    $this->assertInstanceOf('\DOMDocument', $dom);
+    $this->assertEmpty($dom->errors);
+
+    $dom = \HTML5::loadHTMLFile(__DIR__ . '/Html5Test.html');
+    $this->assertInstanceOf('\DOMDocument', $dom);
+    $this->assertEmpty($dom->errors);
   }
 
   public function testLoadHTML() {

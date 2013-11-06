@@ -21,7 +21,8 @@
   },
   "require-dev": {
     "satooshi/php-coveralls": "0.6.*",
-    "phpunit/phpunit" : "*"
+    "phpunit/phpunit" : "*",
+    "phpdocumentor/phpdocumentor": "2.1.*"
   },
   "autoload": {
     "psr-0": {"HTML5": "src"}

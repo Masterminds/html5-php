@@ -5,7 +5,7 @@
 - Some parser rules were not returning the new current element. (Issue #20)
 - Added, to the README, details on code test coverage and to packagist version.
 - Fixed processor instructions.
-- Improved test coverage.
+- Improved test coverage and documentation coverage.
 
 1.0.0 (2013-10-02)
 - Initial release.

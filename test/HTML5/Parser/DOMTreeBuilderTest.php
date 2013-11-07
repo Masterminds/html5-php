@@ -335,10 +335,14 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $parser = new Tokenizer($scanner, $treeBuilder);
 
     $parser->parse();
+    $dom = $treeBuilder->document();
+    $div = $dom->getElementsByTagName('div')->item(0);
 
     $this->assertEquals(1, $is->count);
     $this->assertEquals('foo', $is->name);
     $this->assertEquals('bar ', $is->data);
+    $this->assertEquals('div', $div->tagName);
+    $this->assertEquals('foo', $div->textContent);
   }
 }
 
@@ -352,5 +356,12 @@ class InstructionProcessorMock implements \HTML5\InstructionProcessor {
     $this->name = $name;
     $this->data = $data;
     $this->count++;
+
+    $div = $element->ownerDocument->createElement("div");
+    $div->nodeValue = 'foo';
+
+    $element->appendChild($div);
+
+    return $div;
   }
 }

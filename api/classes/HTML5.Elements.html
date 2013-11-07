@@ -139,28 +139,28 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1172048695"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-727544503"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1172048695" class="accordion-body collapse in">
+            <div id="namespace-727544503" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1832217137"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1572595504"></a>
                                 <a href="../namespaces/HTML5.html" style="margin-left: 30px; padding-left: 0">HTML5</a>
             </div>
-            <div id="namespace-1832217137" class="accordion-body collapse ">
+            <div id="namespace-1572595504" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1350142792"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-44184032"></a>
                                 <a href="../namespaces/HTML5.Parser.html" style="margin-left: 30px; padding-left: 0">Parser</a>
             </div>
-            <div id="namespace-1350142792" class="accordion-body collapse ">
+            <div id="namespace-44184032" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -185,10 +185,10 @@
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-542480955"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-418953840"></a>
                                 <a href="../namespaces/HTML5.Serializer.html" style="margin-left: 30px; padding-left: 0">Serializer</a>
             </div>
-            <div id="namespace-542480955" class="accordion-body collapse ">
+            <div id="namespace-418953840" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -236,11 +236,11 @@
                     <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
 
                     <h1><small>\HTML5</small>Elements</h1>
-                    <p><em>Provide general element functions.</em></p>
-                    <p>This class provides general information about HTML5 elements,
+                    <p><em>This class provides general information about HTML5 elements,
 including syntactic and semantic issues. Parsers and serializers can
 use this class as a reference point for information about the rules
-of various HTML5 elements.</p>
+of various HTML5 elements.</em></p>
+                    
 
 
                     <section id="summary">
@@ -869,7 +869,7 @@ such as svg and mathml.</p>
             <article class="method">
                 <h3 class="public ">element()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">element( <span class="argument">$name</span>)</pre>
+                <pre class="signature" style="margin-right: 54px;">element(string <span class="argument">$name</span>) : int</pre>
                 <p><em>Get the element mask for the given element name.</em></p>
                 
 
@@ -877,15 +877,19 @@ such as svg and mathml.</p>
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$name</td>
-                                <td>
+                                <td><p>The name of the element.</p>
 </td>
                             </tr>
                                             </table>
                 
                 
-                            </article>
+                                    <h4>Returns</h4>
+                    int
+                                            &mdash; <p>The element mask.</p>
+
+                                                </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -1069,7 +1073,7 @@ such as svg and mathml.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on October 2nd, 2013 at 12:19.
+                    on November 7th, 2013 at 07:52.
                 </section>
             </section>
         </section>

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Loads a string to be parsed.
+ */
 namespace HTML5\Parser;
 
 /*

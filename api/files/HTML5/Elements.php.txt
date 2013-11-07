@@ -1,9 +1,10 @@
 <?php
+/**
+ * Provide general element functions.
+ */
 namespace HTML5;
 
 /**
- * Provide general element functions.
- *
  * This class provides general information about HTML5 elements, 
  * including syntactic and semantic issues. Parsers and serializers can 
  * use this class as a reference point for information about the rules 
@@ -532,6 +533,12 @@ class Elements {
 
   /**
    * Get the element mask for the given element name.
+   *
+   * @param string $name
+   *   The name of the element.
+   *
+   * @return int
+   *   The element mask.
    */
   public static function element($name) {
     if (isset(static::$html5[$name])) {

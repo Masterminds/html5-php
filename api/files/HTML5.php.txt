@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * The main HTML5 front end.
+ */
 use HTML5\Parser\StringInputStream;
 use HTML5\Parser\FileInputStream;
 use HTML5\Parser\Scanner;
@@ -9,8 +11,6 @@ use HTML5\Serializer\OutputRules;
 use HTML5\Serializer\Traverser;
 
 /**
- * The main HTML5 front end.
- *
  * This class offers convenience methods for parsing and serializing HTML5.
  * It is roughly designed to mirror the \DOMDocument class that is 
  * provided with most versions of PHP.
@@ -19,6 +19,10 @@ use HTML5\Serializer\Traverser;
  */
 class HTML5 {
 
+  /**
+   * Global options for the parser and serializer.
+   * @var array
+   */
   public static $options = array(
 
     // If the serializer should encode all entities.
@@ -77,6 +81,15 @@ class HTML5 {
    *
    * This is here to provide backwards compatibility with the
    * PHP DOM implementation. It simply calls load().
+   *
+   * @param string $file
+   *   The path to the file to parse. If this is a resource, it is 
+   *   assumed to be an open stream whose pointer is set to the first 
+   *   byte of input.
+   *
+   * @return \DOMDocument
+   *   A DOM document. These object type is defined by the libxml 
+   *   library, and should have been included with your version of PHP.
    */
   public static function loadHTMLFile($file, $options = NULL) {
     return static::load($file, $options);
@@ -166,6 +179,12 @@ class HTML5 {
     return $events->document();
   }
 
+  /**
+   * Parse an input stream where the stream is a fragment.
+   *
+   * Lower-level loading function. This requires an input stream instead 
+   * of a string, file, or resource.
+   */
   public static function parseFragment(\HTML5\Parser\InputStream $input) {
     $events = new DOMTreeBuilder(TRUE);
     $scanner = new Scanner($input);

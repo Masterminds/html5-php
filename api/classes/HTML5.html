@@ -139,28 +139,28 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1922718652"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-186744007"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1922718652" class="accordion-body collapse in">
+            <div id="namespace-186744007" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-453795844"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-734031156"></a>
                                 <a href="../namespaces/HTML5.html" style="margin-left: 30px; padding-left: 0">HTML5</a>
             </div>
-            <div id="namespace-453795844" class="accordion-body collapse ">
+            <div id="namespace-734031156" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-295587745"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1686819802"></a>
                                 <a href="../namespaces/HTML5.Parser.html" style="margin-left: 30px; padding-left: 0">Parser</a>
             </div>
-            <div id="namespace-295587745" class="accordion-body collapse ">
+            <div id="namespace-1686819802" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -185,10 +185,10 @@
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1677112929"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-275826801"></a>
                                 <a href="../namespaces/HTML5.Serializer.html" style="margin-left: 30px; padding-left: 0">Serializer</a>
             </div>
-            <div id="namespace-1677112929" class="accordion-body collapse ">
+            <div id="namespace-275826801" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -236,9 +236,8 @@
                     <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
 
                     <h1><small>\</small>HTML5</h1>
-                    <p><em>The main HTML5 front end.</em></p>
-                    <p>This class offers convenience methods for parsing and serializing HTML5.
-It is roughly designed to mirror the \DOMDocument class that is
+                    <p><em>This class offers convenience methods for parsing and serializing HTML5.</em></p>
+                    <p>It is roughly designed to mirror the \DOMDocument class that is
 provided with most versions of PHP.</p>
 
 <p>EXPERIMENTAL. This may change or be completely replaced.</p>
@@ -339,12 +338,14 @@ provided with most versions of PHP.</p>
             <a id="property_options" name="property_options" class="anchor"></a>
             <article class="property">
                 <h3 class="public ">$options</h3>
-                <pre class="signature">$options</pre>
-                <p><em></em></p>
+                <pre class="signature">$options : array</pre>
+                <p><em>Global options for the parser and serializer.</em></p>
                 
 
 
-                            </article>
+                                <h4>Type</h4>
+                array
+                                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -460,7 +461,7 @@ DOMDocument.</p>
             <article class="method">
                 <h3 class="public ">loadHTMLFile()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">loadHTMLFile( <span class="argument">$file</span>,  <span class="argument">$options</span>)</pre>
+                <pre class="signature" style="margin-right: 54px;">loadHTMLFile(string <span class="argument">$file</span>,  <span class="argument">$options</span>) : \DOMDocument</pre>
                 <p><em>Convenience function to load an HTML file.</em></p>
                 <p>This is here to provide backwards compatibility with the
 PHP DOM implementation. It simply calls load().</p>
@@ -469,9 +470,11 @@ PHP DOM implementation. It simply calls load().</p>
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$file</td>
-                                <td>
+                                <td><p>The path to the file to parse. If this is a resource, it is
+  assumed to be an open stream whose pointer is set to the first
+  byte of input.</p>
 </td>
                             </tr>
                                                     <tr>
@@ -483,7 +486,12 @@ PHP DOM implementation. It simply calls load().</p>
                                             </table>
                 
                 
-                            </article>
+                                    <h4>Returns</h4>
+                    \DOMDocument
+                                            &mdash; <p>A DOM document. These object type is defined by the libxml
+  library, and should have been included with your version of PHP.</p>
+
+                                                </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -682,8 +690,9 @@ of a string, file, or resource.</p>
                 <h3 class="public ">parseFragment()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">parseFragment(\HTML5\Parser\InputStream <span class="argument">$input</span>)</pre>
-                <p><em></em></p>
-                
+                <p><em>Parse an input stream where the stream is a fragment.</em></p>
+                <p>Lower-level loading function. This requires an input stream instead
+of a string, file, or resource.</p>
 
 
                                     <h4>Parameters</h4>
@@ -834,7 +843,7 @@ of a string, file, or resource.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on October 2nd, 2013 at 12:19.
+                    on November 7th, 2013 at 07:52.
                 </section>
             </section>
         </section>

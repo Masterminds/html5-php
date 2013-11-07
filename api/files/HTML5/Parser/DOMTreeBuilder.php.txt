@@ -318,11 +318,6 @@ class DOMTreeBuilder implements EventHandler {
       $this->insertMode = static::IM_IN_BODY;
       break;
     }
-
-    // 8.2.5.4.7
-    if ($name == 'sarcasm') {
-      $this->text("Take a deep breath.");
-    }
   }
 
   public function comment($cdata) {
@@ -372,7 +367,7 @@ class DOMTreeBuilder implements EventHandler {
     // Important: The processor may modify the current DOM tree however 
     // it sees fit.
     if (isset($this->processor)) {
-      $res = $processor->process($this->current, $name, $data);
+      $res = $this->processor->process($this->current, $name, $data);
       if (!empty($res)) {
         $this->current = $res;
       }

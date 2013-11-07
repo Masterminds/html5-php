@@ -201,11 +201,13 @@ class Html5Test extends TestCase {
       <f:name>Big rectangle thing</f:name>
       <f:width>40</f:width>
       <f:length>80</f:length>
-    </f:rug>");
+    </f:rug>
+    <sarcasm>um, yeah</sarcasm>");
 
     $this->assertEmpty($dom->errors);
     $markup = \HTML5::saveHTML($dom);
     $this->assertRegExp('|<f:name>Big rectangle thing</f:name>|',$markup);
+    $this->assertRegExp('|<sarcasm>um, yeah</sarcasm>|',$markup);
   }
 
   public function testElements() {

@@ -318,11 +318,6 @@ class DOMTreeBuilder implements EventHandler {
       $this->insertMode = static::IM_IN_BODY;
       break;
     }
-
-    // 8.2.5.4.7
-    if ($name == 'sarcasm') {
-      $this->text("Take a deep breath.");
-    }
   }
 
   public function comment($cdata) {

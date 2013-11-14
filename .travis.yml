@@ -18,5 +18,3 @@ script:
 
 after_script:
   - php vendor/bin/coveralls -v
-
-script: phpunit test/HTML5

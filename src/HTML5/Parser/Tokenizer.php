@@ -460,7 +460,7 @@ class Tokenizer {
    *   The attribute value.
    */
   protected function quotedAttributeValue($quote) {
-    $stoplist = "\t\n\f" . $quote;
+    $stoplist = "\f" . $quote;
     $val = '';
     $tok = $this->scanner->current();
     while (strspn($tok, $stoplist) == 0 && $tok !== FALSE) {

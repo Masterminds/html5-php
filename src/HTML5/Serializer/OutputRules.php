@@ -245,7 +245,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *   The encoded text.
    */
   protected function enc($text) {
-    $flags = ENT_QUOTES;
+    $flags = 0;
 
     // Escape rather than encode all entities.
     if (!$this->encode) {
@@ -254,7 +254,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
 
     // If we are in PHP 5.4+ we can use the native html5 entity functionality.
     if (defined('ENT_HTML5')) {
-      $flags = ENT_HTML5 | ENT_SUBSTITUTE | ENT_QUOTES;
+      $flags = ENT_HTML5 | ENT_SUBSTITUTE;
       $ret = htmlentities($text, $flags, 'UTF-8', FALSE);
     }
     // If a version earlier than 5.4 html5 entities are not entirely handled.

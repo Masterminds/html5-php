@@ -234,43 +234,37 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $m->invoke($o, 'foo');
     $this->assertEquals('foo', stream_get_contents($s, -1, 0));
   }
-
-  function getEncData(){
-  	return array(
-  	    array('&\'<>"', '&amp;\'&lt;&gt;"'),
-  	    array('This + is. a < test', 'This + is. a &lt; test'),
-  	    array('.+#', '.+#'),
-    );
-  }
-
-  function getEncWithEntiyesData(){
+  function getEncDataAttssribute(){
       return array(
-          array('.+#', '&period;&plus;&num;'),
+          array('&\'<>"', '&amp;\'&lt;&gt;"', '&amp;\'&lt;&gt;"'),
+          array('.+#', '.+#', '&period;&plus;&num;'),
       );
   }
+  function getEncData(){
+  	return array(
+  	    array(false, '&\'<>"', '&amp;\'&lt;&gt;"', '&amp;\'&lt;&gt;"'),
+  	    array(false, 'This + is. a < test', 'This + is. a &lt; test', 'This &plus; is&period; a &lt; test'),
+  	    array(false, '.+#', '.+#', '&period;&plus;&num;'),
 
+  	    array(true, '.+#\'', '.+#&#039;', '&period;&plus;&num;&apos;'),
+  	    array(true, '&".<', '&amp;&quot;.&lt;', '&amp;&quot;&period;&lt;'),
+    );
+  }
   /**
    * Test basic escaping of text.
    * @dataProvider getEncData
    */
-  function testEnc($test, $expected) {
+  function testEnc($isAttribute, $test, $expected, $expectedEncoded) {
 
-    list($o, $s) = $this->getOutputRules();
-    $m = $this->getProtectedMethod('enc');
-    $this->assertEquals($expected, $m->invoke($o, $test));
+      list($o, $s) = $this->getOutputRules();
+      $m = $this->getProtectedMethod('enc');
 
-  }
-
-  /**
-   * Test basic escaping of text.
-   * @dataProvider getEncWithEntiyesData
-   */
-  function testEncWithEntities($test, $expected) {
+      $this->assertEquals($expected, $m->invoke($o, $test, $isAttribute));
 
       list($o, $s) = $this->getOutputRules(array('encode_entities' => TRUE));
       $m = $this->getProtectedMethod('enc');
 
-      $this->assertEquals($expected, $m->invoke($o, $test));
+      $this->assertEquals($expectedEncoded, $m->invoke($o, $test, $isAttribute));
   }
 
   function testAttrs() {

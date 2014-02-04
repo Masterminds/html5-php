@@ -94,7 +94,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
   /**
    * Write a text node.
    *
-   * @param \DOMText $ele 
+   * @param \DOMText $ele
    *   The text node to write.
    */
   public function text($ele) {
@@ -128,7 +128,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *
    * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
    * qualified name (8.3).
-   * 
+   *
    * @param \DOMNode $ele
    *   The element being written.
    */
@@ -163,7 +163,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
     $len = $map->length;
     for ($i = 0; $i < $len; ++$i) {
       $node = $map->item($i);
-      $val = $this->enc($node->value);
+      $val = $this->enc($node->value, true);
 
       // XXX: The spec says that we need to ensure that anything in
       // the XML, XMLNS, or XLink NS's should use the canonical
@@ -189,7 +189,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
 
   /**
    * Write the closing tag.
-   * 
+   *
    * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
    * qualified name (8.3).
    *
@@ -244,17 +244,17 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    * @return string
    *   The encoded text.
    */
-  protected function enc($text) {
-    $flags = 0;
+  protected function enc($text, $attribute = false) {
+    $quotes = !$attribute?0:ENT_QUOTES;
 
     // Escape rather than encode all entities.
     if (!$this->encode) {
-      return htmlspecialchars($text, $flags, 'UTF-8');
+      return htmlspecialchars($text, $quotes, 'UTF-8');
     }
 
     // If we are in PHP 5.4+ we can use the native html5 entity functionality.
     if (defined('ENT_HTML5')) {
-      $flags = ENT_HTML5 | ENT_SUBSTITUTE;
+      $flags = ENT_HTML5 | ENT_SUBSTITUTE|$quotes;
       $ret = htmlentities($text, $flags, 'UTF-8', FALSE);
     }
     // If a version earlier than 5.4 html5 entities are not entirely handled.

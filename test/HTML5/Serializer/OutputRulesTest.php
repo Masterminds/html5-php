@@ -22,7 +22,7 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
 
   /**
    * Using reflection we make a protected method accessible for testing.
-   * 
+   *
    * @param string $name
    *   The name of the method on the Traverser class to test.
    *
@@ -216,7 +216,7 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
 
     $item = $dom->getElementById('foo');
     $r->text($item->firstChild);
-    $this->assertEquals('&lt;script&gt;alert(&quot;hi&quot;);&lt;/script&gt;', stream_get_contents($stream, -1, 0));
+    $this->assertEquals('&lt;script&gt;alert("hi");&lt;/script&gt;', stream_get_contents($stream, -1, 0));
   }
 
   function testNl() {
@@ -235,24 +235,42 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('foo', stream_get_contents($s, -1, 0));
   }
 
-  function testEnc() {
-
-    // Test basic escaping of text.
-    $tests = array(
-      '&\'<>"' => '&amp;&#039;&lt;&gt;&quot;',
-      'This + is. a < test' => 'This + is. a &lt; test',
+  function getEncData(){
+  	return array(
+  	    array('&\'<>"', '&amp;\'&lt;&gt;"'),
+  	    array('This + is. a < test', 'This + is. a &lt; test'),
+  	    array('.+#', '.+#'),
     );
+  }
+
+  function getEncWithEntiyesData(){
+      return array(
+          array('.+#', '&period;&plus;&num;'),
+      );
+  }
+
+  /**
+   * Test basic escaping of text.
+   * @dataProvider getEncData
+   */
+  function testEnc($test, $expected) {
 
     list($o, $s) = $this->getOutputRules();
     $m = $this->getProtectedMethod('enc');
-    foreach ($tests as $test => $expected) {
+    $this->assertEquals($expected, $m->invoke($o, $test));
+
+  }
+
+  /**
+   * Test basic escaping of text.
+   * @dataProvider getEncWithEntiyesData
+   */
+  function testEncWithEntities($test, $expected) {
+
+      list($o, $s) = $this->getOutputRules(array('encode_entities' => TRUE));
+      $m = $this->getProtectedMethod('enc');
+
       $this->assertEquals($expected, $m->invoke($o, $test));
-    }
-
-    list($o, $s) = $this->getOutputRules(array('encode_entities' => TRUE));
-    $m = $this->getProtectedMethod('enc');
-
-    $this->assertEquals('&period;&plus;&num;', $m->invoke($o, '.+#'));
   }
 
   function testAttrs() {

@@ -295,7 +295,7 @@ class Tokenizer {
       return $this->bogusComment('</');
     }
 
-    $name = $this->scanner->charsUntil("\n\f \t>");
+    $name = strtolower($this->scanner->charsUntil("\n\f \t>"));
     // Trash whitespace.
     $this->scanner->whitespace();
 
@@ -831,7 +831,7 @@ class Tokenizer {
       $buffer .= $this->scanner->charsUntil($first);
 
       // Stop as soon as we hit the stopping condition.
-      if ($this->sequenceMatches($sequence)) {
+      if ($this->sequenceMatches($sequence) || $this->sequenceMatches(strtoupper($sequence))) {
         return $buffer;
       }
       $buffer .= $this->scanner->current();

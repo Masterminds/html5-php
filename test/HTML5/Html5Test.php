@@ -134,7 +134,7 @@ class Html5Test extends TestCase {
         </body>
       </html>');
 
-    $this->assertEmpty($dom->errors);
+    $this->assertEmpty($dom->errors, print_r($dom->errors, TRUE));
 
     // Test a mixed case attribute.
     $list = $dom->getElementsByTagName('svg');

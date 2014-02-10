@@ -236,7 +236,7 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
   }
   function getEncDataAttssribute(){
       return array(
-          array('&\'<>"', '&amp;\'&lt;&gt;"', '&amp;\'&lt;&gt;"'),
+          array('&\'<>"', '&amp;\'<>"', '&amp;\'&lt;&gt;"'),
           array('.+#', '.+#', '&period;&plus;&num;'),
       );
   }
@@ -246,8 +246,9 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
   	    array(false, 'This + is. a < test', 'This + is. a &lt; test', 'This &plus; is&period; a &lt; test'),
   	    array(false, '.+#', '.+#', '&period;&plus;&num;'),
 
-  	    array(true, '.+#\'', '.+#&#039;', '&period;&plus;&num;&apos;'),
-  	    array(true, '&".<', '&amp;&quot;.&lt;', '&amp;&quot;&period;&lt;'),
+  	    array(true, '.+#\'', '.+#\'', '&period;&plus;&num;\''),
+  	    array(true, '&".<', '&amp;&quot;.<', '&amp;&quot;&period;&lt;'),
+  	    array(true, '&\'<>"', '&amp;\'<>&quot;', '&amp;\'&lt;&gt;&quot;'),
     );
   }
   /**

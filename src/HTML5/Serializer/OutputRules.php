@@ -163,7 +163,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
     $len = $map->length;
     for ($i = 0; $i < $len; ++$i) {
       $node = $map->item($i);
-      $val = $this->enc($node->value, true);
+      $val = $this->enc($node->value, TRUE);
 
       // XXX: The spec says that we need to ensure that anything in
       // the XML, XMLNS, or XLink NS's should use the canonical
@@ -240,26 +240,34 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *
    * @param string $text
    *   text to encode.
+   * @param boolean $attribute
+   *   True if we are encoding an attrubute, false otherwise
    *
    * @return string
    *   The encoded text.
    */
-  protected function enc($text, $attribute = false) {
-    $quotes = !$attribute?0:ENT_QUOTES;
+  protected function enc($text, $attribute = FALSE) {
 
+    $quotes = $attribute ? ENT_COMPAT : 0;
     // Escape rather than encode all entities.
-    if (!$this->encode) {
+    if (!$this->encode && $attribute) {
+        return strtr($text, array('"'=>'&quot;','&'=>'&amp;'));
+    } elseif (!$this->encode) {
       return htmlspecialchars($text, $quotes, 'UTF-8');
     }
 
     // If we are in PHP 5.4+ we can use the native html5 entity functionality.
     if (defined('ENT_HTML5')) {
-      $flags = ENT_HTML5 | ENT_SUBSTITUTE|$quotes;
+      $flags = ENT_HTML5 | ENT_SUBSTITUTE | $quotes;
       $ret = htmlentities($text, $flags, 'UTF-8', FALSE);
     }
     // If a version earlier than 5.4 html5 entities are not entirely handled.
     // This manually handles them.
     else {
+      $cusotmMap = \HTML5\Serializer\HTML5Entities::$map;
+      if (!($cusotmMap & ENT_COMPAT)){
+          unset($cusotmMap["'"]);
+      }
       $ret = strtr($text, \HTML5\Serializer\HTML5Entities::$map);
     }
     return $ret;

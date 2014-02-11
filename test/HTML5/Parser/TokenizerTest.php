@@ -109,7 +109,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $e1 = $events->get(0);
     $this->assertEquals('error', $e1['name']);
 
-    // FIXME: Once the text processor is done, need to verify that the 
+    // FIXME: Once the text processor is done, need to verify that the
     // tokens are transformed correctly into text.
   }
 
@@ -139,12 +139,12 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $succeed = array(
       '</a>' => 'a',
       '</test>' => 'test',
-      '</test 
+      '</test
       >' => 'test',
       '</thisIsTheTagThatDoesntEndItJustGoesOnAndOnMyFriend>' =>
         'thisisthetagthatdoesntenditjustgoesonandonmyfriend',
       // See 8.2.4.10, which requires this and does not say error.
-      '</a<b>' => 'a<b', 
+      '</a<b>' => 'a<b',
     );
     $this->isAllGood('endTag', 2, $succeed);
 
@@ -271,8 +271,8 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
   public function testProcessorInstruction() {
     $good = array(
       '<?hph ?>' => 'hph',
-      '<?hph echo "Hello World"; ?>' => array('hph', 'echo "Hello World"; '), 
-      "<?hph \necho 'Hello World';\n?>" => array('hph', "echo 'Hello World';\n"), 
+      '<?hph echo "Hello World"; ?>' => array('hph', 'echo "Hello World"; '),
+      "<?hph \necho 'Hello World';\n?>" => array('hph', "echo 'Hello World';\n"),
     );
     $this->isAllGood('pi', 2, $good);
   }
@@ -379,6 +379,8 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $reallyBad = array(
       '<foo ="bar">' => array('foo', array('=' => NULL, '"bar"' => NULL), FALSE),
       '<foo////>' => array('foo', array(), TRUE),
+      // character "&" in unquoted attribute shouldn't cause an infinite loop
+      '<foo bar=index.php?str=1&amp;id=29>' => array('foo', array('bar' => 'index.php?str=1&id=29'), FALSE),
     );
     foreach ($reallyBad as $test => $expects) {
       $events = $this->parse($test);

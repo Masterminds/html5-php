@@ -234,38 +234,34 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $m->invoke($o, 'foo');
     $this->assertEquals('foo', stream_get_contents($s, -1, 0));
   }
-  function getEncDataAttssribute(){
-      return array(
-          array('&\'<>"', '&amp;\'<>"', '&amp;\'&lt;&gt;"'),
-          array('.+#', '.+#', '&period;&plus;&num;'),
-      );
-  }
+
   function getEncData(){
   	return array(
-  	    array(false, '&\'<>"', '&amp;\'&lt;&gt;"', '&amp;\'&lt;&gt;"'),
-  	    array(false, 'This + is. a < test', 'This + is. a &lt; test', 'This &plus; is&period; a &lt; test'),
-  	    array(false, '.+#', '.+#', '&period;&plus;&num;'),
+  	  array(false, '&\'<>"', '&amp;\'&lt;&gt;"', '&amp;&apos;&lt;&gt;&quot;'),
+  	  array(false, 'This + is. a < test', 'This + is. a &lt; test', 'This &plus; is&period; a &lt; test'),
+  	  array(false, '.+#', '.+#', '&period;&plus;&num;'),
 
-  	    array(true, '.+#\'', '.+#\'', '&period;&plus;&num;\''),
-  	    array(true, '&".<', '&amp;&quot;.<', '&amp;&quot;&period;&lt;'),
-  	    array(true, '&\'<>"', '&amp;\'<>&quot;', '&amp;\'&lt;&gt;&quot;'),
+  	  array(true, '.+#\'', '.+#\'', '&period;&plus;&num;&apos;'),
+  	  array(true, '&".<', '&amp;&quot;.<', '&amp;&quot;&period;&lt;'),
+  	  array(true, '&\'<>"', '&amp;\'<>&quot;', '&amp;&apos;&lt;&gt;&quot;'),
+  	  array(true, "\xc2\xa0\"'", '&nbsp;&quot;\'', '&nbsp;&quot;&apos;'),
     );
   }
+
   /**
    * Test basic escaping of text.
    * @dataProvider getEncData
    */
   function testEnc($isAttribute, $test, $expected, $expectedEncoded) {
 
-      list($o, $s) = $this->getOutputRules();
-      $m = $this->getProtectedMethod('enc');
+    list($o, $s) = $this->getOutputRules();
+    $m = $this->getProtectedMethod('enc');
 
-      $this->assertEquals($expected, $m->invoke($o, $test, $isAttribute));
+    $this->assertEquals($expected, $m->invoke($o, $test, $isAttribute));
 
-      list($o, $s) = $this->getOutputRules(array('encode_entities' => TRUE));
-      $m = $this->getProtectedMethod('enc');
-
-      $this->assertEquals($expectedEncoded, $m->invoke($o, $test, $isAttribute));
+    list($o, $s) = $this->getOutputRules(array('encode_entities' => TRUE));
+    $m = $this->getProtectedMethod('enc');
+    $this->assertEquals($expectedEncoded, $m->invoke($o, $test, $isAttribute));
   }
 
   function testAttrs() {

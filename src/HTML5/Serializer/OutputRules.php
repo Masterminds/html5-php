@@ -251,26 +251,20 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
     $quotes = $attribute ? ENT_COMPAT : 0;
     // Escape rather than encode all entities.
     if (!$this->encode && $attribute) {
-        return strtr($text, array('"'=>'&quot;','&'=>'&amp;'));
+        return strtr($text, array('"'=>'&quot;', '&'=>'&amp;', "\xc2\xa0"=>'&nbsp;'));
     } elseif (!$this->encode) {
       return htmlspecialchars($text, $quotes, 'UTF-8');
     }
 
     // If we are in PHP 5.4+ we can use the native html5 entity functionality.
     if (defined('ENT_HTML5')) {
-      $flags = ENT_HTML5 | ENT_SUBSTITUTE | $quotes;
-      $ret = htmlentities($text, $flags, 'UTF-8', FALSE);
+      return htmlentities($text, ENT_HTML5 | ENT_SUBSTITUTE | ENT_QUOTES, 'UTF-8', FALSE);
     }
     // If a version earlier than 5.4 html5 entities are not entirely handled.
     // This manually handles them.
     else {
-      $cusotmMap = \HTML5\Serializer\HTML5Entities::$map;
-      if (!($cusotmMap & ENT_COMPAT)){
-          unset($cusotmMap["'"]);
-      }
-      $ret = strtr($text, \HTML5\Serializer\HTML5Entities::$map);
+      return strtr($text, \HTML5\Serializer\HTML5Entities::$map);
     }
-    return $ret;
   }
 
 }

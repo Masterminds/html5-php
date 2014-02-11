@@ -22,7 +22,7 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
 
   /**
    * Using reflection we make a protected method accessible for testing.
-   * 
+   *
    * @param string $name
    *   The name of the method on the Traverser class to test.
    *
@@ -61,7 +61,8 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $t = new Traverser($dom, $stream, $r, \HTML5::options());
 
     $r->document($dom);
-    $this->assertEquals("<!DOCTYPE html>\n<html lang=\"en\"><body>foo</body></html>\n", stream_get_contents($stream, -1, 0));
+    $expected = '<!DOCTYPE html>' . PHP_EOL . '<html lang="en"><body>foo</body></html>' . PHP_EOL;
+    $this->assertEquals($expected, stream_get_contents($stream, -1, 0));
   }
 
   function testDoctype() {
@@ -73,7 +74,7 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
 
     $m = $this->getProtectedMethod('doctype');
     $m->invoke($r, 'foo');
-    $this->assertEquals("<!DOCTYPE html>\n", stream_get_contents($stream, -1, 0));
+    $this->assertEquals("<!DOCTYPE html>" . PHP_EOL, stream_get_contents($stream, -1, 0));
   }
 
   function testElement() {

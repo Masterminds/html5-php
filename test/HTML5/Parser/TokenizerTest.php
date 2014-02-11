@@ -387,6 +387,14 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       $this->assertEventError($events->get(1));
       //$this->assertEventEquals('startTag', $expects, $events->get(1));
     }
+
+    // Regression: Malformed elements should be detected.
+    //  '<foo baz="1" <bar></foo>' => array('foo', array('baz' => '1'), FALSE),
+    $events = $this->parse('<foo baz="1" <bar></foo>');
+    $this->assertEventError($events->get(0));
+    $this->assertEventEquals('startTag', array('foo', array('baz' => '1'), FALSE), $events->get(1));
+    $this->assertEventEquals('startTag', array('bar', array(), FALSE), $events->get(2));
+    $this->assertEventEquals('endTag', array('foo'), $events->get(3));
   }
 
   public function testRawText() {

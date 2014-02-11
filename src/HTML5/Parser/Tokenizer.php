@@ -326,11 +326,18 @@ class Tokenizer {
     $attributes = array();
     $selfClose = FALSE;
 
-    do {
-      $this->scanner->whitespace();
-      $this->attribute($attributes);
+    // Handle attribute parse exceptions here so that we can
+    // react by trying to build a sensible parse tree.
+    try {
+      do {
+        $this->scanner->whitespace();
+        $this->attribute($attributes);
+      }
+      while (!$this->isTagEnd($selfClose));
+      }
+    catch (ParseError $e) {
+      $selfClose = FALSE;
     }
-    while (!$this->isTagEnd($selfClose));
 
     $mode = $this->events->startTag($name, $attributes, $selfClose);
     // Should we do this? What does this buy that selfClose doesn't?
@@ -388,6 +395,14 @@ class Tokenizer {
     $tok = $this->scanner->current();
     if ($tok == '/' || $tok == '>' || $tok === FALSE) {
       return FALSE;
+    }
+
+    if ($tok == '<') {
+      $this->parseError("Unexepcted '<' inside of attributes list.");
+      // Push the < back onto the stack.
+      $this->scanner->unconsume();
+      // Let the caller figure out how to handle this.
+      throw new ParseError("Start tag inside of attribute.");
     }
 
     $name = strtolower($this->scanner->charsUntil("/>=\n\f\t "));

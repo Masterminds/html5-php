@@ -62,4 +62,15 @@ class TreeBuildingRulesTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('dd', $list->lastChild->tagName);
   }
 
+  public function testTable() {
+    $html = sprintf(self::HTML_STUB, '<table><thead id="a"><th>foo<td>bar<td>baz');
+    $doc = $this->parse($html);
+
+    $list = $doc->getElementById('a');
+
+    $this->assertEquals(3, $list->childNodes->length);
+    $this->assertEquals('th', $list->firstChild->tagName);
+    $this->assertEquals('td', $list->lastChild->tagName);
+  }
+
 }

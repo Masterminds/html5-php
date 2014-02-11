@@ -26,6 +26,15 @@ class Html5Test extends TestCase {
     $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
     $this->assertEmpty($dom->errors);
+
+    $file = fopen(__DIR__ . '/Html5Test.html', 'r');
+    $dom = \HTML5::load($file);
+    $this->assertInstanceOf('\DOMDocument', $dom);
+    $this->assertEmpty($dom->errors);
+
+    $dom = \HTML5::loadHTMLFile(__DIR__ . '/Html5Test.html');
+    $this->assertInstanceOf('\DOMDocument', $dom);
+    $this->assertEmpty($dom->errors);
   }
 
   public function testLoadHTML() {
@@ -125,7 +134,7 @@ class Html5Test extends TestCase {
         </body>
       </html>');
 
-    $this->assertEmpty($dom->errors);
+    $this->assertEmpty($dom->errors, print_r($dom->errors, TRUE));
 
     // Test a mixed case attribute.
     $list = $dom->getElementsByTagName('svg');
@@ -192,11 +201,13 @@ class Html5Test extends TestCase {
       <f:name>Big rectangle thing</f:name>
       <f:width>40</f:width>
       <f:length>80</f:length>
-    </f:rug>");
+    </f:rug>
+    <sarcasm>um, yeah</sarcasm>");
 
     $this->assertEmpty($dom->errors);
     $markup = \HTML5::saveHTML($dom);
     $this->assertRegExp('|<f:name>Big rectangle thing</f:name>|',$markup);
+    $this->assertRegExp('|<sarcasm>um, yeah</sarcasm>|',$markup);
   }
 
   public function testElements() {

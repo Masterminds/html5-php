@@ -9,7 +9,12 @@ notifications:
   irc: "irc.freenode.net#masterminds"
 
 before_script:
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install
+  - composer self-update
+  - composer install --dev
 
-script: phpunit test/HTML5
+script:
+  - mkdir -p build/logs
+  - phpunit -c phpunit.xml.dist
+
+after_script:
+  - php vendor/bin/coveralls -v

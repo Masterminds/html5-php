@@ -330,4 +330,15 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $this->assertRegExp('|<csymbol definitionURL="http://www.example.com/mathops/multiops.html#plusminus">|', $content);
   }
 
+  function testProcessorInstruction() {
+    $dom = \HTML5::loadHTMLFragment('<?foo bar ?>');
+
+    $stream = fopen('php://temp', 'w');
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
+
+    $r->processorInstruction($dom->firstChild);
+    $content = stream_get_contents($stream, -1, 0);
+    $this->assertRegExp('|<\?foo bar \?>|', $content);
+  }
 }

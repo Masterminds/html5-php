@@ -289,6 +289,11 @@ class DOMTreeBuilder implements EventHandler {
       return;
     }
 
+    // Special case handling for SVG.
+    if ($this->insertMode == static::IM_IN_SVG) {
+      $lname = Elements::normalizeSvgElement($lname);
+    }
+
     // XXX: Not sure whether we need this anymore.
     // if ($name != $lname) {
     //  return $this->quirksTreeResolver($lname);
@@ -301,8 +306,8 @@ class DOMTreeBuilder implements EventHandler {
     }
 
     //$this->current = $this->current->parentNode;
-    if (!$this->autoclose($name)) {
-      $this->parseError('Could not find closing tag for ' . $name);
+    if (!$this->autoclose($lname)) {
+      $this->parseError('Could not find closing tag for ' . $lname);
     }
 
     //switch ($this->insertMode) {
@@ -317,11 +322,6 @@ class DOMTreeBuilder implements EventHandler {
     case "mathml":
       $this->insertMode = static::IM_IN_BODY;
       break;
-    }
-
-    // 8.2.5.4.7
-    if ($name == 'sarcasm') {
-      $this->text("Take a deep breath.");
     }
   }
 
@@ -372,7 +372,7 @@ class DOMTreeBuilder implements EventHandler {
     // Important: The processor may modify the current DOM tree however 
     // it sees fit.
     if (isset($this->processor)) {
-      $res = $processor->process($this->current, $name, $data);
+      $res = $this->processor->process($this->current, $name, $data);
       if (!empty($res)) {
         $this->current = $res;
       }

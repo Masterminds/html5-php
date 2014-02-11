@@ -142,7 +142,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       '</test 
       >' => 'test',
       '</thisIsTheTagThatDoesntEndItJustGoesOnAndOnMyFriend>' =>
-        'thisIsTheTagThatDoesntEndItJustGoesOnAndOnMyFriend',
+        'thisisthetagthatdoesntenditjustgoesonandonmyfriend',
       // See 8.2.4.10, which requires this and does not say error.
       '</a<b>' => 'a<b', 
     );
@@ -426,6 +426,12 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       $this->assertEventError($events->get(1));
       $this->assertEventEquals('text', $expects, $events->get(2));
     }
+
+    // Testing case sensitivity
+    $events = $this->parse('<TITLE>a test</TITLE>');
+    $this->assertEventEquals('startTag', 'title', $events->get(0));
+    $this->assertEventEquals('text', 'a test', $events->get(1));
+    $this->assertEventEquals('endTag', 'title', $events->get(2));
 
   }
 

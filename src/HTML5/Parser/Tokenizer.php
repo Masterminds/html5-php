@@ -483,6 +483,7 @@ class Tokenizer {
     while (strspn($tok, $stoplist) == 0 && $tok !== FALSE) {
       if ($tok == '&') {
         $val .= $this->decodeCharacterReference(TRUE);
+        $tok = $this->scanner->current();
       }
       else {
         if(strspn($tok, "\"'<=`") > 0) {

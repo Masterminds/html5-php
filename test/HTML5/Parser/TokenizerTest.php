@@ -379,6 +379,8 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $reallyBad = array(
       '<foo ="bar">' => array('foo', array('=' => NULL, '"bar"' => NULL), FALSE),
       '<foo////>' => array('foo', array(), TRUE),
+      // character "&" in unquoted attribute shouldn't cause an infinite loop
+      '<foo bar=index.php?str=1&amp;id=29>' => array('foo', array('bar' => 'index.php?str=1&id=29'), FALSE),
     );
     foreach ($reallyBad as $test => $expects) {
       $events = $this->parse($test);

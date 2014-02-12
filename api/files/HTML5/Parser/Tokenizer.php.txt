@@ -295,7 +295,7 @@ class Tokenizer {
       return $this->bogusComment('</');
     }
 
-    $name = $this->scanner->charsUntil("\n\f \t>");
+    $name = strtolower($this->scanner->charsUntil("\n\f \t>"));
     // Trash whitespace.
     $this->scanner->whitespace();
 
@@ -326,11 +326,18 @@ class Tokenizer {
     $attributes = array();
     $selfClose = FALSE;
 
-    do {
-      $this->scanner->whitespace();
-      $this->attribute($attributes);
+    // Handle attribute parse exceptions here so that we can
+    // react by trying to build a sensible parse tree.
+    try {
+      do {
+        $this->scanner->whitespace();
+        $this->attribute($attributes);
+      }
+      while (!$this->isTagEnd($selfClose));
+      }
+    catch (ParseError $e) {
+      $selfClose = FALSE;
     }
-    while (!$this->isTagEnd($selfClose));
 
     $mode = $this->events->startTag($name, $attributes, $selfClose);
     // Should we do this? What does this buy that selfClose doesn't?
@@ -388,6 +395,14 @@ class Tokenizer {
     $tok = $this->scanner->current();
     if ($tok == '/' || $tok == '>' || $tok === FALSE) {
       return FALSE;
+    }
+
+    if ($tok == '<') {
+      $this->parseError("Unexepcted '<' inside of attributes list.");
+      // Push the < back onto the stack.
+      $this->scanner->unconsume();
+      // Let the caller figure out how to handle this.
+      throw new ParseError("Start tag inside of attribute.");
     }
 
     $name = strtolower($this->scanner->charsUntil("/>=\n\f\t "));
@@ -460,7 +475,7 @@ class Tokenizer {
    *   The attribute value.
    */
   protected function quotedAttributeValue($quote) {
-    $stoplist = "\t\n\f" . $quote;
+    $stoplist = "\f" . $quote;
     $val = '';
     $tok = $this->scanner->current();
     while (strspn($tok, $stoplist) == 0 && $tok !== FALSE) {
@@ -483,6 +498,7 @@ class Tokenizer {
     while (strspn($tok, $stoplist) == 0 && $tok !== FALSE) {
       if ($tok == '&') {
         $val .= $this->decodeCharacterReference(TRUE);
+        $tok = $this->scanner->current();
       }
       else {
         if(strspn($tok, "\"'<=`") > 0) {
@@ -774,7 +790,7 @@ class Tokenizer {
    *
    * XML processing instructions are supposed to be ignored in HTML5,
    * treated as "bogus comments". However, since we're not a user
-   * agent, we allow them. We consume until ?> and then issue a 
+   * agent, we allow them. We consume until ?> and then issue a
    * EventListener::processingInstruction() event.
    */
   protected function processingInstruction() {
@@ -819,7 +835,7 @@ class Tokenizer {
   // ================================================================
 
   /**
-   * Read from the input stream until we get to the desired sequene 
+   * Read from the input stream until we get to the desired sequene
    * or hit the end of the input stream.
    */
   protected function readUntilSequence($sequence) {
@@ -831,7 +847,7 @@ class Tokenizer {
       $buffer .= $this->scanner->charsUntil($first);
 
       // Stop as soon as we hit the stopping condition.
-      if ($this->sequenceMatches($sequence)) {
+      if ($this->sequenceMatches($sequence) || $this->sequenceMatches(strtoupper($sequence))) {
         return $buffer;
       }
       $buffer .= $this->scanner->current();
@@ -849,11 +865,11 @@ class Tokenizer {
    * This will read the stream for the $sequence. If it's
    * found, this will return TRUE. If not, return FALSE.
    * Since this unconsumes any chars it reads, the caller
-   * will still need to read the next sequence, even if 
+   * will still need to read the next sequence, even if
    * this returns TRUE.
    *
    * Example: $this->sequenceMatches('</script>') will
-   * see if the input stream is at the start of a 
+   * see if the input stream is at the start of a
    * '</script>' string.
    */
   protected function sequenceMatches($sequence) {
@@ -902,7 +918,7 @@ class Tokenizer {
   /**
    * Emit a parse error.
    *
-   * A parse error always returns FALSE because it never consumes any 
+   * A parse error always returns FALSE because it never consumes any
    * characters.
    */
   protected function parseError($msg) {
@@ -1008,7 +1024,7 @@ class Tokenizer {
       return $entity;
     }
 
-    // If in an attribute, then failing to match ; means unconsume the 
+    // If in an attribute, then failing to match ; means unconsume the
     // entire string. Otherwise, failure to match is an error.
     if ($inAttribute) {
       $this->scanner->unconsume($this->scanner->position() - $start);

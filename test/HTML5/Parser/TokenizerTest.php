@@ -328,6 +328,7 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     $good = array(
       '<foo bar="baz">' => array('foo', array('bar' => 'baz'), FALSE),
       '<foo bar=" baz ">' => array('foo', array('bar' => ' baz '), FALSE),
+      "<foo bar=\"\nbaz\n\">" => array('foo', array('bar' => "\nbaz\n"), FALSE),
       "<foo bar='baz'>" => array('foo', array('bar' => 'baz'), FALSE),
       '<foo bar="A full sentence.">' => array('foo', array('bar' => 'A full sentence.'), FALSE),
       "<foo a='1' b=\"2\">" => array('foo', array('a' => '1', 'b' => '2'), FALSE),

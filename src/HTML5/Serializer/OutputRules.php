@@ -94,7 +94,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
   /**
    * Write a text node.
    *
-   * @param \DOMText $ele 
+   * @param \DOMText $ele
    *   The text node to write.
    */
   public function text($ele) {
@@ -128,7 +128,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *
    * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
    * qualified name (8.3).
-   * 
+   *
    * @param \DOMNode $ele
    *   The element being written.
    */
@@ -163,7 +163,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
     $len = $map->length;
     for ($i = 0; $i < $len; ++$i) {
       $node = $map->item($i);
-      $val = $this->enc($node->value);
+      $val = $this->enc($node->value, TRUE);
 
       // XXX: The spec says that we need to ensure that anything in
       // the XML, XMLNS, or XLink NS's should use the canonical
@@ -189,7 +189,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
 
   /**
    * Write the closing tag.
-   * 
+   *
    * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
    * qualified name (8.3).
    *
@@ -240,29 +240,31 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *
    * @param string $text
    *   text to encode.
+   * @param boolean $attribute
+   *   True if we are encoding an attrubute, false otherwise
    *
    * @return string
    *   The encoded text.
    */
-  protected function enc($text) {
-    $flags = ENT_QUOTES;
+  protected function enc($text, $attribute = FALSE) {
 
+    $quotes = $attribute ? ENT_COMPAT : 0;
     // Escape rather than encode all entities.
-    if (!$this->encode) {
-      return htmlspecialchars($text, $flags, 'UTF-8');
+    if (!$this->encode && $attribute) {
+        return strtr($text, array('"'=>'&quot;', '&'=>'&amp;', "\xc2\xa0"=>'&nbsp;'));
+    } elseif (!$this->encode) {
+      return htmlspecialchars($text, $quotes, 'UTF-8');
     }
 
     // If we are in PHP 5.4+ we can use the native html5 entity functionality.
     if (defined('ENT_HTML5')) {
-      $flags = ENT_HTML5 | ENT_SUBSTITUTE | ENT_QUOTES;
-      $ret = htmlentities($text, $flags, 'UTF-8', FALSE);
+      return htmlentities($text, ENT_HTML5 | ENT_SUBSTITUTE | ENT_QUOTES, 'UTF-8', FALSE);
     }
     // If a version earlier than 5.4 html5 entities are not entirely handled.
     // This manually handles them.
     else {
-      $ret = strtr($text, \HTML5\Serializer\HTML5Entities::$map);
+      return strtr($text, \HTML5\Serializer\HTML5Entities::$map);
     }
-    return $ret;
   }
 
 }

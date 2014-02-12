@@ -1,5 +1,13 @@
 # Release Notes
 
+x.x.x (xxx-xx-xx)
+- #25: Fixed text escaping in the serializer (HTML% 8.3).
+- #27: Fixed tests on Windows: changed "\n" -> PHP_EOL.
+- #28: Fixed infinite loop for char "&" in unquoted attribute in parser.
+- #26: Updated tag name case handling to deal with uppercase usage.
+- #24: Newlines and tabs are allowed inside quoted attributes (HTML5 8.2.4).
+- Fixed Travis CI testing.
+
 1.0.1 (2013-11-07)
 - CDATA encoding is improved. (Non-standard; Issue #19)
 - Some parser rules were not returning the new current element. (Issue #20)

@@ -230,6 +230,19 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
   /**
    * Encode text.
    *
+   * When encode is set to FALSE, the default value, the text passed in is
+   * escaped per section 8.3 of the html5 spec. For details on how text is
+   * escaped see the escape() method.
+   *
+   * When encoding is set to true the text is converted to named character
+   * references where appropriate. Section 8.1.4 Character references of the
+   * html5 spec refers to using named character references. This is useful for
+   * characters that can't otherwise legally be used in the text.
+   *
+   * The named character references are listed in section 8.5.
+   *
+   * @see http://www.w3.org/TR/2013/CR-html5-20130806/syntax.html#named-character-references
+   * 
    * True encoding will turn all named character references into their entities.
    * This includes such characters as +.# and many other common ones. By default
    * encoding here will just escape &'<>".
@@ -248,15 +261,13 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    */
   protected function enc($text, $attribute = FALSE) {
 
-    $quotes = $attribute ? ENT_COMPAT : 0;
-    // Escape rather than encode all entities.
-    if (!$this->encode && $attribute) {
-        return strtr($text, array('"'=>'&quot;', '&'=>'&amp;', "\xc2\xa0"=>'&nbsp;'));
-    } elseif (!$this->encode) {
-      return htmlspecialchars($text, $quotes, 'UTF-8');
+    // Escape the text rather than convert to named character references.
+    if (!$this->encode) {
+      return $this->escape($text, $attribute);
     }
 
-    // If we are in PHP 5.4+ we can use the native html5 entity functionality.
+    // If we are in PHP 5.4+ we can use the native html5 entity functionality to
+    // convert the named character references.
     if (defined('ENT_HTML5')) {
       return htmlentities($text, ENT_HTML5 | ENT_SUBSTITUTE | ENT_QUOTES, 'UTF-8', FALSE);
     }
@@ -267,4 +278,37 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
     }
   }
 
+  /**
+   * Escape test.
+   *
+   * According to the html5 spec section 8.3 Serializing HTML fragments, text
+   * within tags that are not style, script, xmp, iframe, noembed, and noframes
+   * need to be properly escaped.
+   *
+   * The & should be converted to &amp;, no breaking space unicode characters
+   * converted to &nbsp;, when in attribute mode the " should be converted to
+   * &quot;, and when not in attribute mode the < and > should be converted to
+   * &lt; and &gt;.
+   *
+   * @see http://www.w3.org/TR/2013/CR-html5-20130806/syntax.html#escapingString
+   *
+   * @param string $text
+   *   text to escape.
+   * @param boolean $attribute
+   *   True if we are escaping an attrubute, false otherwise
+   */
+  protected function escape($text, $attribute = FALSE) {
+
+    // Not using htmlspecialchars because, while it does escaping, it doesn't
+    // match the requirements of section 8.5. For example, it doesn't handle
+    // non-breaking spaces.
+    if ($attribute) {
+      $replace = array('"'=>'&quot;', '&'=>'&amp;', "\xc2\xa0"=>'&nbsp;');
+    }
+    else {
+      $replace = array('<'=>'&lt;', '>'=>'&gt;', '&'=>'&amp;', "\xc2\xa0"=>'&nbsp;');
+    }
+
+    return strtr($text, $replace);
+  }
 }

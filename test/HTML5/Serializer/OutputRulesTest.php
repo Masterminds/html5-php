@@ -238,19 +238,19 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
 
   function getEncData(){
   	return array(
-  	  array(false, '&\'<>"', '&amp;\'&lt;&gt;"', '&amp;&apos;&lt;&gt;&quot;'),
-  	  array(false, 'This + is. a < test', 'This + is. a &lt; test', 'This &plus; is&period; a &lt; test'),
-  	  array(false, '.+#', '.+#', '&period;&plus;&num;'),
+  	  array(FALSE, '&\'<>"', '&amp;\'&lt;&gt;"', '&amp;&apos;&lt;&gt;&quot;'),
+  	  array(FALSE, 'This + is. a < test', 'This + is. a &lt; test', 'This &plus; is&period; a &lt; test'),
+  	  array(FALSE, '.+#', '.+#', '&period;&plus;&num;'),
 
-  	  array(true, '.+#\'', '.+#\'', '&period;&plus;&num;&apos;'),
-  	  array(true, '&".<', '&amp;&quot;.<', '&amp;&quot;&period;&lt;'),
-  	  array(true, '&\'<>"', '&amp;\'<>&quot;', '&amp;&apos;&lt;&gt;&quot;'),
-  	  array(true, "\xc2\xa0\"'", '&nbsp;&quot;\'', '&nbsp;&quot;&apos;'),
+  	  array(TRUE, '.+#\'', '.+#\'', '&period;&plus;&num;&apos;'),
+  	  array(TRUE, '&".<', '&amp;&quot;.<', '&amp;&quot;&period;&lt;'),
+  	  array(TRUE, '&\'<>"', '&amp;\'<>&quot;', '&amp;&apos;&lt;&gt;&quot;'),
+  	  array(TRUE, "\xc2\xa0\"'", '&nbsp;&quot;\'', '&nbsp;&quot;&apos;'),
     );
   }
 
   /**
-   * Test basic escaping of text.
+   * Test basic encoding of text.
    * @dataProvider getEncData
    */
   function testEnc($isAttribute, $test, $expected, $expectedEncoded) {
@@ -263,6 +263,18 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     list($o, $s) = $this->getOutputRules(array('encode_entities' => TRUE));
     $m = $this->getProtectedMethod('enc');
     $this->assertEquals($expectedEncoded, $m->invoke($o, $test, $isAttribute));
+  }
+
+  /**
+   * Test basic encoding of text.
+   * @dataProvider getEncData
+   */
+  function testEscape($isAttribute, $test, $expected, $expectedEncoded) {
+
+    list($o, $s) = $this->getOutputRules();
+    $m = $this->getProtectedMethod('escape');
+
+    $this->assertEquals($expected, $m->invoke($o, $test, $isAttribute));
   }
 
   function testAttrs() {

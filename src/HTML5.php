@@ -217,4 +217,22 @@ class HTML5 {
     static::$options[$name] = $value;
   }
 
+  /**
+   * Load all files
+   *
+   * @param string $name
+   *   The classname.
+   */
+  public static function Autoloader($name) {
+      if ((class_exists($name)) || (strpos($name, 'HTML5') === False)) {
+          return false;
+      }
+      
+      $filename = str_replace("\\", DIRECTORY_SEPARATOR, $name) . '.php';
+      $path = dirname(__FILE__) . DIRECTORY_SEPARATOR;
+      
+      require_once $path . $filename;
+  }
 }
+
+spl_autoload_register(array('HTML5', 'Autoloader'));

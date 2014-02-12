@@ -1,6 +1,7 @@
 # Release Notes
 
-x.x.x (xxx-xx-xx)
+1.0.2 (2014-02-12)
+- #23: Handle missing tag close in attribute list.
 - #25: Fixed text escaping in the serializer (HTML% 8.3).
 - #27: Fixed tests on Windows: changed "\n" -> PHP_EOL.
 - #28: Fixed infinite loop for char "&" in unquoted attribute in parser.

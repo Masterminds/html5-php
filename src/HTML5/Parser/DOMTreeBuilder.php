@@ -5,9 +5,9 @@ use HTML5\Elements;
 /**
  * Create an HTML5 DOM tree from events.
  *
- * This attempts to create a DOM from events emitted by a parser. This 
- * attempts (but does not guarantee) to up-convert older HTML documents 
- * to HTML5. It does this by applying HTML5's rules, but it will not 
+ * This attempts to create a DOM from events emitted by a parser. This
+ * attempts (but does not guarantee) to up-convert older HTML documents
+ * to HTML5. It does this by applying HTML5's rules, but it will not
  * change the architecture of the document itself.
  *
  * Many of the error correction and quirks features suggested in the specification
@@ -61,7 +61,7 @@ class DOMTreeBuilder implements EventHandler {
   protected $insertMode = 0;
 
   /**
-   * Quirks mode is enabled by default. Any document that is missing the 
+   * Quirks mode is enabled by default. Any document that is missing the
    * DT will be considered to be in quirks mode.
    */
   protected $quirks = TRUE;
@@ -71,7 +71,7 @@ class DOMTreeBuilder implements EventHandler {
   public function __construct($isFragment = FALSE) {
     $impl = new \DOMImplementation();
     // XXX:
-    // Create the doctype. For now, we are always creating HTML5 
+    // Create the doctype. For now, we are always creating HTML5
     // documents, and attempting to up-convert any older DTDs to HTML5.
     $dt = $impl->createDocumentType('html');
     //$this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
@@ -103,7 +103,7 @@ class DOMTreeBuilder implements EventHandler {
   /**
    * Get the DOM fragment for the body.
    *
-   * This returns a DOMNodeList because a fragment may have zero or more 
+   * This returns a DOMNodeList because a fragment may have zero or more
    * DOMNodes at its root.
    *
    * @see http://www.w3.org/TR/2012/CR-html5-20121217/syntax.html#concept-frag-parse-context
@@ -141,7 +141,7 @@ class DOMTreeBuilder implements EventHandler {
   }
 
   public function doctype($name, $idType = 0, $id = NULL, $quirks = FALSE) {
-    // This is used solely for setting quirks mode. Currently we don't 
+    // This is used solely for setting quirks mode. Currently we don't
     // try to preserve the inbound DT. We convert it to HTML5.
     $this->quirks = $quirks;
 
@@ -262,7 +262,7 @@ class DOMTreeBuilder implements EventHandler {
       $this->insertMode = static::IM_IN_BODY;
     }
 
-    // Return the element mask, which the tokenizer can then use to set 
+    // Return the element mask, which the tokenizer can then use to set
     // various processing rules.
     return Elements::element($name);
   }
@@ -369,7 +369,7 @@ class DOMTreeBuilder implements EventHandler {
       return;
     }
 
-    // Important: The processor may modify the current DOM tree however 
+    // Important: The processor may modify the current DOM tree however
     // it sees fit.
     if (isset($this->processor)) {
       $res = $this->processor->process($this->current, $name, $data);
@@ -402,7 +402,7 @@ class DOMTreeBuilder implements EventHandler {
   protected function normalizeTagName($name) {
     /* Section 2.9 suggests that we should not do this.
     if (strpos($name, ':') !== FALSE) {
-      // We know from the grammar that there must be at least one other 
+      // We know from the grammar that there must be at least one other
       // char besides :, since : is not a legal tag start.
       $parts = explode(':', $name);
       return array_pop($parts);

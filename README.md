@@ -149,6 +149,10 @@ issues known issues that are not presently on the roadmap:
   * Some autocorrection is done automatically.
   * Per the spec, many legacy tags are admitted and correctly handled,
     even though they are technically not part of HTML5.
+- Attribute names and values: Due to the implementation details of the
+  PHP implementation of DOM, attribute names that do not follow the 
+  XML 1.0 standard are not inserted into the DOM. (Effectively, they
+  are ignored.) If you've got a clever fix for this, jump in!
 - Processor Instructions: The HTML5 spec does not allow processor
   instructions. We do. Since this is a server-side library, we think
   this is useful. And that means, dear reader, that in some cases you

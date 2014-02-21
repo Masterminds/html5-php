@@ -363,10 +363,17 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
       // This will emit an entity lookup failure for &red.
       "<foo a='blue&red'>" => array('foo', array('a' => 'blue&red'), FALSE),
       "<foo a='blue&&amp;&red'>" => array('foo', array('a' => 'blue&&&red'), FALSE),
-      '<foo b"="baz">' => array('foo', array('b"' => 'baz'), FALSE),
       '<foo bar=>' => array('foo', array('bar' => NULL), FALSE),
       '<foo bar="oh' => array('foo', array('bar' => 'oh'), FALSE),
       '<foo bar=oh">' => array('foo', array('bar' => 'oh"'), FALSE),
+
+      // these attributes are ignored because of current implementation
+      // of method "DOMElement::setAttribute"
+      // see issue #23: https://github.com/Masterminds/html5-php/issues/23
+      '<foo b"="baz">' => array('foo', array(), FALSE),
+      '<foo 2abc="baz">' => array('foo', array(), FALSE),
+      '<foo ?="baz">' => array('foo', array(), FALSE),
+      '<foo foo?bar="baz">' => array('foo', array(), FALSE),
 
     );
     foreach ($bad as $test => $expects) {

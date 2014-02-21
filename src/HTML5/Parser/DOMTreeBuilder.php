@@ -234,7 +234,13 @@ class DOMTreeBuilder implements EventHandler {
         $aName = Elements::normalizeMathMlAttribute($aName);
       }
 
-      $ele->setAttribute($aName, $aVal);
+      try {
+        $ele->setAttribute($aName, $aVal);
+      }
+      catch(\DOMException $e) {
+        $this->parseError("Illegal attribute name for tag $name. Ignoring: $aName");
+        continue;
+      }
 
       // This is necessary on a non-DTD schema, like HTML5.
       if ($aName == 'id') {

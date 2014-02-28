@@ -414,16 +414,33 @@ class Tokenizer {
       $name = $this->scanner->current();
       $this->scanner->next();
     }
-    if (preg_match('/[\'\"]/', $name)) {
-    //if (strspn($name, '\'\"')) {
+
+    $isValidAttribute = TRUE;
+    // Attribute names can contain most Unicode characters for HTML5.
+    // But method "DOMElement::setAttribute" is throwing exception
+    // because of it's own internal restriction so these have to be filtered.
+    // see issue #23: https://github.com/Masterminds/html5-php/issues/23
+    // and http://www.w3.org/TR/2011/WD-html5-20110525/syntax.html#syntax-attribute-name
+    if (preg_match("/[\x1-\x2C\\/\x3B-\x40\x5B-\x5E\x60\x7B-\x7F]/u", $name)) {
       $this->parseError("Unexpected characters in attribute name: %s", $name);
+      $isValidAttribute = FALSE;
+    }
+    // There is no limitation for 1st character in HTML5.
+    // But method "DOMElement::setAttribute" is throwing exception for the
+    // characters below so they have to be filtered.
+    // see issue #23: https://github.com/Masterminds/html5-php/issues/23
+    // and http://www.w3.org/TR/2011/WD-html5-20110525/syntax.html#syntax-attribute-name
+    else if (preg_match("/^[0-9.-]/u", $name)) {
+      $this->parseError("Unexpected character at the begining of attribute name: %s", $name);
+      $isValidAttribute = FALSE;
     }
     // 8.1.2.3
     $this->scanner->whitespace();
 
     $val = $this->attributeValue();
-    //return array($name, $val);
-    $attributes[$name] = $val;
+    if($isValidAttribute) {
+      $attributes[$name] = $val;
+    }
     return TRUE;
   }
 

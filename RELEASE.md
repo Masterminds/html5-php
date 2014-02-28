@@ -1,5 +1,8 @@
 # Release Notes
 
+1.0.3 (2014-02-28)
+- #23 and #29: Ignore attributes with illegal chars in name for the PHP DOM.
+
 1.0.2 (2014-02-12)
 - #23: Handle missing tag close in attribute list.
 - #25: Fixed text escaping in the serializer (HTML% 8.3).

@@ -223,8 +223,14 @@ class DOMTreeBuilder implements EventHandler {
       $lname = Elements::normalizeSvgElement($lname);
     }
 
+    try {
+      $ele = $this->doc->createElement($lname);
+    }
+    catch(\DOMException $e) {
+      $this->parseError("Illegal tag name: <$lname>. Replaced with <invalid>.");
+      $ele = $this->doc->createElement('invalid');
+    }
 
-    $ele = $this->doc->createElement($lname);
     foreach ($attributes as $aName => $aVal) {
 
       if ($this->insertMode == static::IM_IN_SVG) {

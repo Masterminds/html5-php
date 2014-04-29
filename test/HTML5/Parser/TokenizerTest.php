@@ -320,6 +320,93 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
     }
   }
 
+  public function testTagsWithAttributeAndMissingName() {
+    $cases = array(
+      '<id="top_featured">' => 'id',
+      '<color="white">' => 'color',
+      "<class='neaktivni_stranka'>" => 'class',
+      '<bgcolor="white">' => 'bgcolor',
+      '<class="nom">' => 'class',
+    );
+
+    foreach($cases as $html => $expected) {
+      $events = $this->parse($html);
+      $this->assertEventError($events->get(0));
+      $this->assertEventError($events->get(1));
+      $this->assertEventError($events->get(2));
+      $this->assertEventEquals('startTag', $expected, $events->get(3));
+      $this->assertEventEquals('eof', NULL, $events->get(4));
+    }
+  }
+
+  public function testTagNotClosedAfterTagName() {
+    $cases = array(
+      "<noscript<img>" => array('noscript', 'img'),
+      '<center<a>' => array('center', 'a'),
+      '<br<br>' => array('br', 'br'),
+    );
+
+    foreach($cases as $html => $expected) {
+      $events = $this->parse($html);
+      $this->assertEventError($events->get(0));
+      $this->assertEventEquals('startTag', $expected[0], $events->get(1));
+      $this->assertEventEquals('startTag', $expected[1], $events->get(2));
+      $this->assertEventEquals('eof', NULL, $events->get(3));
+    }
+
+    $events = $this->parse('<span<>02</span>');
+    $this->assertEventError($events->get(0));
+    $this->assertEventEquals('startTag', 'span', $events->get(1));
+    $this->assertEventError($events->get(2));
+    $this->assertEventEquals('text', '>02', $events->get(3));
+    $this->assertEventEquals('endTag', 'span', $events->get(4));
+    $this->assertEventEquals('eof', NULL, $events->get(5));
+
+    $events = $this->parse('<p</p>');
+    $this->assertEventError($events->get(0));
+    $this->assertEventEquals('startTag', 'p', $events->get(1));
+    $this->assertEventEquals('endTag', 'p', $events->get(2));
+    $this->assertEventEquals('eof', NULL, $events->get(3));
+
+    $events = $this->parse('<strong><WordPress</strong>');
+    $this->assertEventEquals('startTag', 'strong', $events->get(0));
+    $this->assertEventError($events->get(1));
+    $this->assertEventEquals('startTag', 'wordpress', $events->get(2));
+    $this->assertEventEquals('endTag', 'strong', $events->get(3));
+    $this->assertEventEquals('eof', NULL, $events->get(4));
+
+    $events = $this->parse('<src=<a>');
+    $this->assertEventError($events->get(0));
+    $this->assertEventError($events->get(1));
+    $this->assertEventError($events->get(2));
+    $this->assertEventEquals('startTag', 'src', $events->get(3));
+    $this->assertEventEquals('startTag', 'a', $events->get(4));
+    $this->assertEventEquals('eof', NULL, $events->get(5));
+
+    $events = $this->parse('<br...<a>');
+    $this->assertEventError($events->get(0));
+    $this->assertEventEquals('startTag', 'br', $events->get(1));
+    $this->assertEventEquals('eof', NULL, $events->get(2));
+  }
+
+  public function testIllegalTagNames() {
+    $cases = array(
+      '<li">' => 'li',
+      '<p">' => 'p',
+      '<b&nbsp; >' => 'b',
+      '<static*all>' => 'static',
+      '<h*0720/>' => 'h',
+      '<st*ATTRIBUTE />' => 'st',
+      '<a-href="http://url.com/">' => 'a',
+    );
+
+    foreach($cases as $html => $expected) {
+      $events = $this->parse($html);
+      $this->assertEventError($events->get(0));
+      $this->assertEventEquals('startTag', $expected, $events->get(1));
+    }
+  }
+
   /**
    * @depends testCharacterReference
    */

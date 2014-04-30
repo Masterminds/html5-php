@@ -1,5 +1,8 @@
 # Release Notes
 
+1.0.4 (2014-04-29)
+- #30/#31 Don't throw an exception for invalid tag names.
+
 1.0.3 (2014-02-28)
 - #23 and #29: Ignore attributes with illegal chars in name for the PHP DOM.
 

@@ -22,7 +22,7 @@
   "require-dev": {
     "satooshi/php-coveralls": "0.6.*",
     "phpunit/phpunit" : "4.*",
-    "phpdocumentor/phpdocumentor": "2.1.*"
+    "phpdocumentor/phpdocumentor": "2.*"
   },
   "autoload": {
     "psr-0": {"HTML5": "src"}

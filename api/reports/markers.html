@@ -16,8 +16,8 @@
     <!--[if lt IE 9]>
     <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
     <![endif]-->
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
-    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js" type="text/javascript"></script>
     <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="../js/jquery.smooth-scroll.js"></script>
     <script src="../js/prism.min.js"></script>
@@ -40,7 +40,7 @@
 
             <div class="nav-collapse">
                 <ul class="nav pull-right">
-                    <li class="dropdown">
+                                        <li class="dropdown">
                         <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
                             API Documentation <b class="caret"></b>
                         </a>
@@ -48,7 +48,7 @@
                                                         <li><a href="../namespaces/HTML5.html">\HTML5</a></li>
                                                     </ul>
                     </li>
-                    <li class="dropdown" id="charts-menu">
+                                        <li class="dropdown" id="charts-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             Charts <b class="caret"></b>
                         </a>
@@ -72,7 +72,12 @@
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">8</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">15</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">2</span>
                                 </a>
                             </li>
                         </ul>
@@ -91,11 +96,15 @@
         <div class="span2 sidebar">
             <ul class="side-nav nav nav-list">
                 <li class="nav-header">Navigation</li>
-                                                                                                                                                                                                                                                                                                                                                                <li><a href="#HTML5/Parser/DOMTreeBuilder.php"><i class="icon-file"></i> HTML5/Parser/DOMTreeBuilder.php</a></li>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                <li><a href="#HTML5/Parser/Tokenizer.php"><i class="icon-file"></i> HTML5/Parser/Tokenizer.php</a></li>
-                                                                                                                                                                                                                                                                        <li><a href="#HTML5/Serializer/OutputRules.php"><i class="icon-file"></i> HTML5/Serializer/OutputRules.php</a></li>
-                                                                                                                                                        <li><a href="#HTML5/Serializer/Traverser.php"><i class="icon-file"></i> HTML5/Serializer/Traverser.php</a></li>
+                                                                        <li><a href="#HTML5/Parser/Tokenizer.php"><i class="icon-file"></i> HTML5/Parser/Tokenizer.php</a></li>
+                                                                                                <li><a href="#HTML5/Serializer/Traverser.php"><i class="icon-file"></i> HTML5/Serializer/Traverser.php</a></li>
+                                                                                                <li><a href="#HTML5/Parser/FileInputStream.php"><i class="icon-file"></i> HTML5/Parser/FileInputStream.php</a></li>
+                                                                                                <li><a href="#HTML5/Elements.php"><i class="icon-file"></i> HTML5/Elements.php</a></li>
                                                                                                 <li><a href="#HTML5.php"><i class="icon-file"></i> HTML5.php</a></li>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <li><a href="#HTML5/Parser/TreeBuildingRules.php"><i class="icon-file"></i> HTML5/Parser/TreeBuildingRules.php</a></li>
+                                                                                                <li><a href="#HTML5/Parser/DOMTreeBuilder.php"><i class="icon-file"></i> HTML5/Parser/DOMTreeBuilder.php</a></li>
+                                                                                                                                                        <li><a href="#HTML5/Parser/UTF8Utils.php"><i class="icon-file"></i> HTML5/Parser/UTF8Utils.php</a></li>
+                                                                                                                                                                                                                                                                        <li><a href="#HTML5/Serializer/OutputRules.php"><i class="icon-file"></i> HTML5/Serializer/OutputRules.php</a></li>
                                                                     </ul>
         </div>
 
@@ -108,34 +117,12 @@
 
             
             <div id="marker-accordion">
-                                                                                                                                                                                                                                                <div class="package-contents">
-                            <a name="HTML5/Parser/DOMTreeBuilder.php" id="HTML5/Parser/DOMTreeBuilder.php"></a>
-                            <h3>
-                            <i class="icon-file"></i>
-                                HTML5/Parser/DOMTreeBuilder.php
-                                <small style="float: right;padding-right: 10px;">1</small>
-                            </h3>
-                            <div>
-                                <table class="table markers table-bordered">
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Line</th>
-                                        <th>Description</th>
-                                    </tr>
-                                                                            <tr>
-                                            <td>TODO</td>
-                                            <td>335</td>
-                                            <td>Need to handle case where comment appears outside of the HTML tag.</td>
-                                        </tr>
-                                                                    </table>
-                            </div>
-                        </div>
-                                                                                                                                                                                                                                                                                                        <div class="package-contents">
+                                                            <div class="package-contents">
                             <a name="HTML5/Parser/Tokenizer.php" id="HTML5/Parser/Tokenizer.php"></a>
                             <h3>
                             <i class="icon-file"></i>
                                 HTML5/Parser/Tokenizer.php
-                                <small style="float: right;padding-right: 10px;">2</small>
+                                <small style="float: right;padding-right: 10px;">3</small>
                             </h3>
                             <div>
                                 <table class="table markers table-bordered">
@@ -151,8 +138,177 @@
                                         </tr>
                                                                             <tr>
                                             <td>TODO</td>
-                                            <td>548</td>
+                                            <td>550</td>
                                             <td>This can be done more efficiently when the</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>634</td>
+                                            <td>This method is a little long. Should probably refactor.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="HTML5/Serializer/Traverser.php" id="HTML5/Serializer/Traverser.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                HTML5/Serializer/Traverser.php
+                                <small style="float: right;padding-right: 10px;">1</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>FIXME</td>
+                                            <td>100</td>
+                                            <td>It appears that the parser doesn&#039;t do PI&#039;s.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="HTML5/Parser/FileInputStream.php" id="HTML5/Parser/FileInputStream.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                HTML5/Parser/FileInputStream.php
+                                <small style="float: right;padding-right: 10px;">1</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>9</td>
+                                            <td>A buffered input stream would be useful.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="HTML5/Elements.php" id="HTML5/Elements.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                HTML5/Elements.php
+                                <small style="float: right;padding-right: 10px;">1</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>17</td>
+                                            <td>consider using a bitmask table lookup. There is enough overlap in
+  naming that this could significantly shrink the size and maybe make it
+  faster. See the Go teams implementation at https://code.google.com/p/go/source/browse/html/atom.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="HTML5.php" id="HTML5.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                HTML5.php
+                                <small style="float: right;padding-right: 10px;">1</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>FIXME</td>
+                                            <td>54</td>
+                                            <td>We need a StreamInputStream class.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                                                                                                                                                                                                                                                                            <div class="package-contents">
+                            <a name="HTML5/Parser/TreeBuildingRules.php" id="HTML5/Parser/TreeBuildingRules.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                HTML5/Parser/TreeBuildingRules.php
+                                <small style="float: right;padding-right: 10px;">1</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>18</td>
+                                            <td>- colgroup and col special behaviors
+  - body and head special behaviors</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="HTML5/Parser/DOMTreeBuilder.php" id="HTML5/Parser/DOMTreeBuilder.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                HTML5/Parser/DOMTreeBuilder.php
+                                <small style="float: right;padding-right: 10px;">2</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>341</td>
+                                            <td>Need to handle case where comment appears outside of the HTML tag.</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>164</td>
+                                            <td>- XMLNS namespace handling (we need to parse, even if it&#039;s not valid)
+  - XLink, MathML and SVG namespace handling
+  - Omission rules: 8.1.2.4 Optional tags</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                                                    <div class="package-contents">
+                            <a name="HTML5/Parser/UTF8Utils.php" id="HTML5/Parser/UTF8Utils.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                HTML5/Parser/UTF8Utils.php
+                                <small style="float: right;padding-right: 10px;">1</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>45</td>
+                                            <td>Move this to a general utility class.</td>
                                         </tr>
                                                                     </table>
                             </div>
@@ -162,7 +318,7 @@
                             <h3>
                             <i class="icon-file"></i>
                                 HTML5/Serializer/OutputRules.php
-                                <small style="float: right;padding-right: 10px;">3</small>
+                                <small style="float: right;padding-right: 10px;">4</small>
                             </h3>
                             <div>
                                 <table class="table markers table-bordered">
@@ -186,49 +342,10 @@
                                             <td>160</td>
                                             <td>Currently, this always writes name=&quot;value&quot;, and does not do</td>
                                         </tr>
-                                                                    </table>
-                            </div>
-                        </div>
-                                                                                                                    <div class="package-contents">
-                            <a name="HTML5/Serializer/Traverser.php" id="HTML5/Serializer/Traverser.php"></a>
-                            <h3>
-                            <i class="icon-file"></i>
-                                HTML5/Serializer/Traverser.php
-                                <small style="float: right;padding-right: 10px;">1</small>
-                            </h3>
-                            <div>
-                                <table class="table markers table-bordered">
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Line</th>
-                                        <th>Description</th>
-                                    </tr>
                                                                             <tr>
-                                            <td>FIXME</td>
-                                            <td>100</td>
-                                            <td>It appears that the parser doesn&#039;t do PI&#039;s.</td>
-                                        </tr>
-                                                                    </table>
-                            </div>
-                        </div>
-                                                                                <div class="package-contents">
-                            <a name="HTML5.php" id="HTML5.php"></a>
-                            <h3>
-                            <i class="icon-file"></i>
-                                HTML5.php
-                                <small style="float: right;padding-right: 10px;">1</small>
-                            </h3>
-                            <div>
-                                <table class="table markers table-bordered">
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Line</th>
-                                        <th>Description</th>
-                                    </tr>
-                                                                            <tr>
-                                            <td>FIXME</td>
-                                            <td>54</td>
-                                            <td>We need a StreamInputStream class.</td>
+                                            <td>TODO</td>
+                                            <td>262</td>
+                                            <td>Use the Entities class in php 5.3 to have html5 entities.</td>
                                         </tr>
                                                                     </table>
                             </div>
@@ -274,7 +391,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on February 28th, 2014 at 14:20.
+                    on April 29th, 2014 at 21:52.
                 </section>
             </section>
         </section>

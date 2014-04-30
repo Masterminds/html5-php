@@ -15,8 +15,8 @@
     <!--[if lt IE 9]>
     <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
     <![endif]-->
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
-    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js" type="text/javascript"></script>
     <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="../js/jquery.smooth-scroll.js"></script>
     <script src="../js/prism.min.js"></script>
@@ -87,7 +87,7 @@
 
             <div class="nav-collapse">
                 <ul class="nav pull-right">
-                    <li class="dropdown">
+                                        <li class="dropdown">
                         <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
                             API Documentation <b class="caret"></b>
                         </a>
@@ -95,7 +95,7 @@
                                                         <li><a href="../namespaces/HTML5.html">\HTML5</a></li>
                                                     </ul>
                     </li>
-                    <li class="dropdown" id="charts-menu">
+                                        <li class="dropdown" id="charts-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             Charts <b class="caret"></b>
                         </a>
@@ -119,7 +119,12 @@
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">8</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">15</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">2</span>
                                 </a>
                             </li>
                         </ul>
@@ -139,28 +144,28 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-946005022"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1290827591"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-946005022" class="accordion-body collapse in">
+            <div id="namespace-1290827591" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-205992161"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-119564750"></a>
                                 <a href="../namespaces/HTML5.html" style="margin-left: 30px; padding-left: 0">HTML5</a>
             </div>
-            <div id="namespace-205992161" class="accordion-body collapse ">
+            <div id="namespace-119564750" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-970165218"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1569826561"></a>
                                 <a href="../namespaces/HTML5.Parser.html" style="margin-left: 30px; padding-left: 0">Parser</a>
             </div>
-            <div id="namespace-970165218" class="accordion-body collapse ">
+            <div id="namespace-1569826561" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -185,10 +190,10 @@
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1657607152"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1746962465"></a>
                                 <a href="../namespaces/HTML5.Serializer.html" style="margin-left: 30px; padding-left: 0">Serializer</a>
             </div>
-            <div id="namespace-1657607152" class="accordion-body collapse ">
+            <div id="namespace-1746962465" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -240,18 +245,14 @@
                     <p>The tokenizer's role is reading data from the scanner and gathering it into
 semantic units. From the tokenizer, data is emitted to an event handler,
 which may (for example) create a DOM tree.</p>
-
 <p>The HTML5 specification has a detailed explanation of tokenizing HTML5. We
 follow that specification to the maximum extent that we can. If you find
 a discrepancy that is not documented, please file a bug and/or submit a
 patch.</p>
-
 <p>This tokenizer is implemented as a recursive descent parser.</p>
-
 <p>Within the API documentation, you may see references to the specific section
 of the HTML5 spec that the code attempts to reproduce. Example: 8.2.4.1.
 This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
-
 
                     <section id="summary">
                         <h2>Summary</h2>
@@ -343,7 +344,7 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                         <dt>File</dt>
                             <dd><a href="../files/HTML5.Parser.Tokenizer.php.html"><div class="path-wrapper">HTML5/Parser/Tokenizer.php</div></a></dd>
                                                 <dt>Package</dt>
-                            <dd><div class="namespace-wrapper">\Default</div></dd>
+                            <dd><div class="namespace-wrapper"></div></dd>
                                                 <dt>Class hierarchy</dt>
                             <dd class="hierarchy">
                                                                                                                                                                     <div class="namespace-wrapper">\HTML5\Parser\Tokenizer</div>
@@ -358,7 +359,13 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                                                                         </dl>
                     <h2>Tags</h2>
                     <table class="table table-condensed">
-                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                            <tr>
+                            <th>
+                                todo
+                            </th>
+                            <td>
+                                                            </td>
+                        </tr>
                                         </table>
                 </aside>
             </div>
@@ -379,7 +386,6 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                 <pre class="signature">WHITE</pre>
                 <p><em></em></p>
                 
-
             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -388,7 +394,13 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -411,7 +423,6 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                 <p><em></em></p>
                 
 
-
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -420,7 +431,13 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -434,7 +451,6 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                 <p><em></em></p>
                 
 
-
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -443,7 +459,13 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -457,7 +479,6 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                 <p><em></em></p>
                 
 
-
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -466,7 +487,13 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -480,7 +507,6 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                 <p><em>Buffer for text.</em></p>
                 
 
-
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -489,7 +515,13 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -503,7 +535,6 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                 <p><em></em></p>
                 
 
-
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -512,7 +543,13 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -526,7 +563,6 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                 <p><em></em></p>
                 
 
-
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -535,7 +571,13 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -549,7 +591,6 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                 <p><em></em></p>
                 
 
-
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -558,7 +599,13 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -582,21 +629,18 @@ This refers to section 8.2.4.1 of the HTML5 CR specification.</p>
 it a scanner (input) and an event handler (output), and then calling
 the Tokenizer::parse() method.`</p>
 
-
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td><a href="../classes/HTML5.Parser.Scanner.html">\HTML5\Parser\Scanner</a></td>
-                                <td>$scanner</td>
-                                <td><p>A scanner initialized with an input stream.</p>
-</td>
+                                <td>$scanner </td>
+                                <td><p>A scanner initialized with an input stream.</p></td>
                             </tr>
                                                     <tr>
                                 <td><a href="../classes/HTML5.Parser.EventHandler.html">\HTML5\Parser\EventHandler</a></td>
-                                <td>$eventHandler</td>
+                                <td>$eventHandler </td>
                                 <td><p>An event handler, initialized and ready to receive
-  events.</p>
-</td>
+  events.</p></td>
                             </tr>
                                             </table>
                 
@@ -609,7 +653,13 @@ the Tokenizer::parse() method.`</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -624,12 +674,10 @@ the Tokenizer::parse() method.`</p>
                 <p><em>Begin parsing.</em></p>
                 <p>This will begin scanning the document, tokenizing as it goes.
 Tokens are emitted into the event handler.</p>
-
 <p>Tokenizing will continue until the document is completely
 read. Errors are emitted into the event handler, but
 the parser will attempt to continue parsing until the
 entire input stream is read.</p>
-
 
                 
                 
@@ -641,7 +689,13 @@ entire input stream is read.</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -654,32 +708,29 @@ entire input stream is read.</p>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">setTextMode(integer <span class="argument">$textmode</span>, string <span class="argument">$untilTag</span>)</pre>
                 <p><em>Set the text mode for the character data reader.</em></p>
-                <p>HTML5 defines three different modes for reading text:
-- Normal: Read until a tag is encountered.
-- RCDATA: Read until a tag is encountered, but skip a few otherwise-
-  special characters.
-- Raw: Read until a special closing tag is encountered (viz. pre, script)</p>
-
+                <p>HTML5 defines three different modes for reading text:</p>
+<ul>
+<li>Normal: Read until a tag is encountered.</li>
+<li>RCDATA: Read until a tag is encountered, but skip a few otherwise-
+special characters.</li>
+<li>Raw: Read until a special closing tag is encountered (viz. pre, script)</li>
+</ul>
 <p>This allows those modes to be set.</p>
-
 <p>Normally, setting is done by the event handler via a special return code on
 startTag(), but it can also be set manually using this function.</p>
-
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td>integer</td>
-                                <td>$textmode</td>
-                                <td><p>One of Elements::TEXT_*</p>
-</td>
+                                <td>$textmode </td>
+                                <td><p>One of Elements::TEXT_*</p></td>
                             </tr>
                                                     <tr>
                                 <td>string</td>
-                                <td>$untilTag</td>
+                                <td>$untilTag </td>
                                 <td><p>The tag that should stop RAW or RCDATA mode. Normal mode does not
-  use this indicator.</p>
-</td>
+  use this indicator.</p></td>
                             </tr>
                                             </table>
                 
@@ -692,7 +743,13 @@ startTag(), but it can also be set manually using this function.</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -707,7 +764,6 @@ startTag(), but it can also be set manually using this function.</p>
                 <p><em>Consume a character and make a move.</em></p>
                 <p>HTML5 8.2.4.1</p>
 
-
                 
                 
                             </article>
@@ -718,7 +774,13 @@ startTag(), but it can also be set manually using this function.</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -733,7 +795,6 @@ startTag(), but it can also be set manually using this function.</p>
                 <p><em>Parse anything that looks like character data.</em></p>
                 <p>Different rules apply based on the current text mode.</p>
 
-
                 
                 
                             </article>
@@ -746,7 +807,13 @@ startTag(), but it can also be set manually using this function.</p>
                                                                 </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -760,7 +827,6 @@ startTag(), but it can also be set manually using this function.</p>
                 <pre class="signature" style="margin-right: 54px;">text()</pre>
                 <p><em>This buffers the current token as character data.</em></p>
                 
-
 
                 
                 
@@ -787,7 +853,6 @@ startTag(), but it can also be set manually using this function.</p>
                 <p><em>Read text in RAW mode.</em></p>
                 
 
-
                 
                 
                             </article>
@@ -798,7 +863,13 @@ startTag(), but it can also be set manually using this function.</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -813,7 +884,6 @@ startTag(), but it can also be set manually using this function.</p>
                 <p><em>If the document is read, emit an EOF event.</em></p>
                 
 
-
                 
                 
                             </article>
@@ -824,7 +894,13 @@ startTag(), but it can also be set manually using this function.</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -839,9 +915,7 @@ startTag(), but it can also be set manually using this function.</p>
                 <p><em>Handle character references (aka entities).</em></p>
                 <p>This version is specific to PCDATA, as it buffers data into the
 text buffer. For a generic version, see decodeCharacterReference().</p>
-
 <p>HTML5 8.2.4.2</p>
-
 
                 
                 
@@ -853,7 +927,13 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -868,7 +948,6 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                 <p><em>Emit a tagStart event on encountering a tag.</em></p>
                 <p>8.2.4.8</p>
 
-
                 
                 
                             </article>
@@ -879,7 +958,13 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -894,7 +979,6 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                 <p><em>Look for markup.</em></p>
                 
 
-
                 
                 
                             </article>
@@ -905,7 +989,13 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -920,7 +1010,6 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                 <p><em>Consume an end tag.</em></p>
                 <p>8.2.4.9</p>
 
-
                 
                 
                             </article>
@@ -931,7 +1020,13 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -946,7 +1041,6 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                 <p><em>Consume a tag name and body.</em></p>
                 <p>8.2.4.10</p>
 
-
                 
                 
                             </article>
@@ -957,7 +1051,13 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -972,14 +1072,12 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                 <p><em>Check if the scanner has reached the end of a tag.</em></p>
                 
 
-
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td></td>
-                                <td>$selfClose</td>
-                                <td>
-</td>
+                                <td>$selfClose </td>
+                                <td></td>
                             </tr>
                                             </table>
                 
@@ -992,7 +1090,13 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1007,14 +1111,12 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                 <p><em>Parse attributes from inside of a tag.</em></p>
                 
 
-
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td></td>
-                                <td>$attributes</td>
-                                <td>
-</td>
+                                <td>$attributes </td>
+                                <td></td>
                             </tr>
                                             </table>
                 
@@ -1027,7 +1129,13 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1042,7 +1150,6 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                 <p><em>Consume an attribute value.</em></p>
                 <p>8.2.4.37 and after.</p>
 
-
                 
                 
                             </article>
@@ -1053,7 +1160,13 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1068,16 +1181,14 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                 <p><em>Get an attribute value string.</em></p>
                 
 
-
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td>string</td>
-                                <td>$quote</td>
+                                <td>$quote </td>
                                 <td><p>IMPORTANT: This is a series of chars! Any one of which will be considered
   termination of an attribute's value. E.g. "\"'" will stop at either
-  ' or ".</p>
-</td>
+  ' or ".</p></td>
                             </tr>
                                             </table>
                 
@@ -1085,7 +1196,6 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                                     <h4>Returns</h4>
                     string
                                             &mdash; <p>The attribute value.</p>
-
                                                 </article>
         </div>
         <aside class="span4 detailsbar">
@@ -1094,7 +1204,13 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1109,7 +1225,6 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                 <p><em></em></p>
                 
 
-
                 
                 
                             </article>
@@ -1120,7 +1235,13 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1134,22 +1255,18 @@ text buffer. For a generic version, see decodeCharacterReference().</p>
                 <pre class="signature" style="margin-right: 54px;">bogusComment(string <span class="argument">$leading</span>)</pre>
                 <p><em>Consume malformed markup as if it were a comment.</em></p>
                 <p>8.2.4.44</p>
-
 <p>The spec requires that the ENTIRE tag-like thing be enclosed inside of
 the comment. So this will generate comments like:</p>
-
 <p>&lt;!--&amp;lt/+foo&gt;--&gt;</p>
-
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td>string</td>
-                                <td>$leading</td>
+                                <td>$leading </td>
                                 <td><p>Prepend any leading characters. This essentially
   negates the need to backtrack, but it's sort of
-  a hack.</p>
-</td>
+  a hack.</p></td>
                             </tr>
                                             </table>
                 
@@ -1162,7 +1279,13 @@ the comment. So this will generate comments like:</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1177,7 +1300,6 @@ the comment. So this will generate comments like:</p>
                 <p><em>Read a comment.</em></p>
                 <p>Expects the first tok to be inside of the comment.</p>
 
-
                 
                 
                             </article>
@@ -1188,7 +1310,13 @@ the comment. So this will generate comments like:</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1203,7 +1331,6 @@ the comment. So this will generate comments like:</p>
                 <p><em>Check if the scanner has reached the end of a comment.</em></p>
                 
 
-
                 
                 
                             </article>
@@ -1214,7 +1341,13 @@ the comment. So this will generate comments like:</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1229,7 +1362,6 @@ the comment. So this will generate comments like:</p>
                 <p><em>Parse a DOCTYPE.</em></p>
                 <p>Parse a DOCTYPE declaration. This method has strong bearing on whether or
 not Quirksmode is enabled on the event handler.</p>
-
 
                 
                 
@@ -1247,7 +1379,6 @@ not Quirksmode is enabled on the event handler.</p>
                         </th>
                         <td>
                                                                                             <p>This method is a little long. Should probably refactor.</p>
-
                                                     </td>
                     </tr>
                             </table>
@@ -1264,15 +1395,13 @@ not Quirksmode is enabled on the event handler.</p>
                 <p><em>Utility for reading a quoted string.</em></p>
                 
 
-
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td>string</td>
-                                <td>$stopchars</td>
+                                <td>$stopchars </td>
                                 <td><p>Characters (in addition to a close-quote) that should stop the string.
-  E.g. sometimes '>' is higher precedence than '"' or "'".</p>
-</td>
+  E.g. sometimes '>' is higher precedence than '"' or "'".</p></td>
                             </tr>
                                             </table>
                 
@@ -1280,7 +1409,6 @@ not Quirksmode is enabled on the event handler.</p>
                                     <h4>Returns</h4>
                     mixed
                                             &mdash; <p>String if one is found (quotations omitted)</p>
-
                                                 </article>
         </div>
         <aside class="span4 detailsbar">
@@ -1289,7 +1417,13 @@ not Quirksmode is enabled on the event handler.</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1304,7 +1438,6 @@ not Quirksmode is enabled on the event handler.</p>
                 <p><em>Handle a CDATA section.</em></p>
                 
 
-
                 
                 
                             </article>
@@ -1315,7 +1448,13 @@ not Quirksmode is enabled on the event handler.</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1333,7 +1472,6 @@ treated as "bogus comments". However, since we're not a user
 agent, we allow them. We consume until ?> and then issue a
 EventListener::processingInstruction() event.</p>
 
-
                 
                 
                             </article>
@@ -1344,7 +1482,13 @@ EventListener::processingInstruction() event.</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1360,14 +1504,12 @@ EventListener::processingInstruction() event.</p>
 or hit the end of the input stream.</em></p>
                 
 
-
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td></td>
-                                <td>$sequence</td>
-                                <td>
-</td>
+                                <td>$sequence </td>
+                                <td></td>
                             </tr>
                                             </table>
                 
@@ -1380,7 +1522,13 @@ or hit the end of the input stream.</em></p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1398,19 +1546,16 @@ found, this will return TRUE. If not, return FALSE.
 Since this unconsumes any chars it reads, the caller
 will still need to read the next sequence, even if
 this returns TRUE.</p>
-
 <p>Example: $this->sequenceMatches('</script>') will
 see if the input stream is at the start of a
 '</script>' string.</p>
-
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td></td>
-                                <td>$sequence</td>
-                                <td>
-</td>
+                                <td>$sequence </td>
+                                <td></td>
                             </tr>
                                             </table>
                 
@@ -1423,7 +1568,13 @@ see if the input stream is at the start of a
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1440,7 +1591,6 @@ see if the input stream is at the start of a
 temporary text buffer. (The buffer is used to group as much PCDATA
 as we can instead of emitting lots and lots of TEXT events.)</p>
 
-
                 
                 
                             </article>
@@ -1451,7 +1601,13 @@ as we can instead of emitting lots and lots of TEXT events.)</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1466,14 +1622,12 @@ as we can instead of emitting lots and lots of TEXT events.)</p>
                 <p><em>Add text to the temporary buffer.</em></p>
                 
 
-
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td></td>
-                                <td>$str</td>
-                                <td>
-</td>
+                                <td>$str </td>
+                                <td></td>
                             </tr>
                                             </table>
                 
@@ -1488,7 +1642,13 @@ as we can instead of emitting lots and lots of TEXT events.)</p>
                                                                 </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1504,14 +1664,12 @@ as we can instead of emitting lots and lots of TEXT events.)</p>
                 <p>A parse error always returns FALSE because it never consumes any
 characters.</p>
 
-
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td></td>
-                                <td>$msg</td>
-                                <td>
-</td>
+                                <td>$msg </td>
+                                <td></td>
                             </tr>
                                             </table>
                 
@@ -1524,7 +1682,13 @@ characters.</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1540,15 +1704,13 @@ characters.</p>
                 <p>Returns FALSE if the entity could not be found. If $inAttribute is set
 to TRUE, a bare &amp; will be returned as-is.</p>
 
-
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td>boolean</td>
-                                <td>$inAttribute</td>
+                                <td>$inAttribute </td>
                                 <td><p>Set to TRUE if the text is inside of an attribute value.
-  FALSE otherwise.</p>
-</td>
+  FALSE otherwise.</p></td>
                             </tr>
                                             </table>
                 
@@ -1561,7 +1723,13 @@ to TRUE, a bare &amp; will be returned as-is.</p>
                                                                             </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -1616,7 +1784,7 @@ to TRUE, a bare &amp; will be returned as-is.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on February 28th, 2014 at 14:20.
+                    on April 29th, 2014 at 21:52.
                 </section>
             </section>
         </section>

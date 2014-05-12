@@ -109,7 +109,7 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
       <html><body>
       <svg width='150' viewbox='2'>
       <rect textlength='2'/>
-      <animatecolor>foo</animatecolor>
+      <animateColor>foo</animateColor>
       </svg>
       </body></html>";
     $doc = $this->parse($html);
@@ -155,7 +155,7 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   }
 
   public function testComment() {
-    $html = '<html><!--Hello World.--></html>';
+    $html = '<!DOCTYPE html><html><!--Hello World.--></html>';
 
     $doc = $this->parse($html);
 
@@ -164,7 +164,7 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals("Hello World.", $comment->data);
 
 
-    $html = '<!--Hello World.--><html></html>';
+    $html = '<!--Hello World.--><!DOCTYPE html><html></html>';
     $doc = $this->parse($html);
 
     $comment = $doc->childNodes->item(1);
@@ -197,23 +197,26 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals(XML_TEXT_NODE, $data->nodeType);
     $this->assertEquals('test', $data->data);
 
+  }
+  /**
+   * @expectedException HTML5\Exception
+   * @expectedExceptionMessage Parse error in line 0, Col 0: Unexpected text. Ignoring: Foo
+   */
+  public function testIllegalPositionText() {
     // The DomTreeBuilder has special handling for text when in before head mode.
+
     $html = "<!DOCTYPE html><html>
     Foo<head></head><body></body></html>";
     $doc = $this->parse($html);
-    $this->assertEquals('Line 0, Col 0: Unexpected text. Ignoring: Foo', $doc->errors[0]);
-    $headElement = $doc->documentElement->firstChild;
-    $this->assertEquals('head', $headElement->tagName);
+    //$headElement = $doc->documentElement->firstChild;
+    //$this->assertEquals('head', $headElement->tagName);
   }
-
+  /**
+   * @expectedException HTML5\Exception
+   */
   public function testParseErrors() {
     $html = "<!DOCTYPE html><html><math><![CDATA[test";
     $doc = $this->parse($html);
-
-    // We're JUST testing that we can access errors. Actual testing of
-    // error messages happen in the Tokenizer's tests.
-    $this->assertGreaterThan(0,  count($doc->errors));
-    $this->assertTrue(is_string($doc->errors[0]));
   }
 
   public function testProcessingInstruction() {
@@ -306,7 +309,6 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
   public function testNoScript() {
     $html = '<!DOCTYPE html><html><head><noscript>No JS</noscript></head></html>';
     $doc = $this->parse($html);
-    $this->assertEmpty($doc->errors);
     $noscript = $doc->getElementsByTagName('noscript')->item(0);
     $this->assertEquals('noscript', $noscript->tagName);
   }
@@ -318,8 +320,6 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $html = '<!DOCTYPE html><html><span id="test">Test</span></html>';
     $doc = $this->parse($html);
     $span = $doc->getElementById('test');
-
-    $this->assertEmpty($doc->errors);
 
     $this->assertEquals('span', $span->tagName);
     $this->assertEquals('Test', $span->textContent);

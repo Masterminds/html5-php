@@ -94,7 +94,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
   /**
    * Write a text node.
    *
-   * @param \DOMText $ele 
+   * @param \DOMText $ele
    *   The text node to write.
    */
   public function text($ele) {
@@ -114,9 +114,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
   }
 
   public function comment($ele) {
-    // These produce identical output.
-    //$this->wr('<!--')->wr($ele->data)->wr('-->');
-    $this->wr($ele->ownerDocument->saveXML($ele));
+    $this->wr('<!--')->wr($ele->data)->wr('-->');
   }
 
   public function processorInstruction($ele) {
@@ -128,7 +126,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *
    * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
    * qualified name (8.3).
-   * 
+   *
    * @param \DOMNode $ele
    *   The element being written.
    */
@@ -189,7 +187,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
 
   /**
    * Write the closing tag.
-   * 
+   *
    * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
    * qualified name (8.3).
    *

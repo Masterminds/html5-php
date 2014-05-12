@@ -23,36 +23,30 @@ class Html5Test extends TestCase {
   public function testLoad() {
     $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
 
     $file = fopen(__DIR__ . '/Html5Test.html', 'r');
     $dom = \HTML5::load($file);
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
 
     $dom = \HTML5::loadHTMLFile(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
   }
 
   public function testLoadHTML() {
     $contents = file_get_contents(__DIR__ . '/Html5Test.html');
     $dom = \HTML5::loadHTML($contents);
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
   }
 
   public function testLoadHTMLFragment() {
     $fragment = '<section id="Foo"><div class="Bar">Baz</div></section>';
     $dom = \HTML5::loadHTMLFragment($fragment);
     $this->assertInstanceOf('\DOMDocumentFragment', $dom);
-    $this->assertEmpty($dom->errors);
   }
 
   public function testSaveHTML() {
     $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
 
     $saved = \HTML5::saveHTML($dom);
     $this->assertRegExp('|<p>This is a test.</p>|', $saved);
@@ -69,7 +63,6 @@ class Html5Test extends TestCase {
   public function testSave() {
     $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
 
     // Test resource
     $file = fopen('php://temp', 'w');
@@ -91,13 +84,11 @@ class Html5Test extends TestCase {
   public function testItWorks() {
     $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
 
     $saved = \HTML5::saveHTML($dom);
 
     $dom2 = \HTML5::loadHTML($saved);
     $this->assertInstanceOf('\DOMDocument', $dom2);
-    $this->assertEmpty($dom2->errors);
   }
 
   public function testConfig() {
@@ -132,7 +123,6 @@ class Html5Test extends TestCase {
         </body>
       </html>');
 
-    $this->assertEmpty($dom->errors);
 
     // Test a mixed case attribute.
     $list = $dom->getElementsByTagName('svg');
@@ -170,7 +160,6 @@ class Html5Test extends TestCase {
         </body>
       </html>');
 
-    $this->assertEmpty($dom->errors);
     $list = $dom->getElementsByTagName('math');
     $this->assertNotEmpty($list->length);
 
@@ -190,7 +179,7 @@ class Html5Test extends TestCase {
   }
 
   public function testUnknownElements() {
-    
+
     // The : should not have special handling accourding to section 2.9 of the
     // spec. This is differenant than XML. Since we don't know these elements
     // they are handled as normal elements. Note, to do this is really
@@ -202,7 +191,6 @@ class Html5Test extends TestCase {
     </f:rug>
     <sarcasm>um, yeah</sarcasm>");
 
-    $this->assertEmpty($dom->errors);
     $markup = \HTML5::saveHTML($dom);
     $this->assertRegExp('|<f:name>Big rectangle thing</f:name>|',$markup);
     $this->assertRegExp('|<sarcasm>um, yeah</sarcasm>|',$markup);

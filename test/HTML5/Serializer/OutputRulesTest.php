@@ -1,11 +1,9 @@
 <?php
-namespace HTML5\Tests;
+namespace HTML5\Tests\Serializer;
 
 use \HTML5\Serializer\OutputRules;
 use \HTML5\Serializer\Traverser;
 use \HTML5\Parser;
-
-require_once __DIR__ . '/../TestCase.php';
 
 class OutputRulesTest extends \HTML5\Tests\TestCase {
 
@@ -22,7 +20,7 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
 
   /**
    * Using reflection we make a protected method accessible for testing.
-   * 
+   *
    * @param string $name
    *   The name of the method on the Traverser class to test.
    *

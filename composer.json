@@ -1,30 +1,43 @@
 {
-  "name": "masterminds/html5",
-  "description": "An HTML5 parser and serializer.",
-  "type": "library",
-  "homepage": "http://masterminds.github.io/html5-php",
-  "license": "MIT",
-  "keywords": ["xml", "html", "html5", "dom", "parser", "serializer", "querypath"],
-  "authors": [
-    {
-      "name": "Matt Butcher",
-      "email": "technosophos@gmail.com"
-    },
-    {
-      "name": "Matt Farina",
-      "email": "matt@mattfarina.com"
+	"name" : "masterminds/html5",
+	"description" : "An HTML5 parser and serializer.",
+	"type" : "library",
+	"homepage" : "http://masterminds.github.io/html5-php",
+	"license" : "MIT",
+	"keywords" : [
+		"xml",
+		"html",
+		"html5",
+		"dom",
+		"parser",
+		"serializer",
+		"querypath"
+	],
+	"authors" : [{
+			"name" : "Matt Butcher",
+			"email" : "technosophos@gmail.com"
+		}, {
+			"name" : "Matt Farina",
+			"email" : "matt@mattfarina.com"
+		}
+	],
+	"require" : {
+		"ext-libxml" : "*",
+		"php" : ">=5.3.0"
+	},
+	"require-dev" : {
+		"satooshi/php-coveralls" : "0.6.*",
+		"phpunit/phpunit" : "*",
+		"phpdocumentor/phpdocumentor" : "2.1.*"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"HTML5" : "src"
+		}
+	},
+    "autoload-dev" : {
+        "psr-4" : {
+            "HTML5\\Tests\\" : "test/HTML5"
+        }
     }
-  ],
-  "require" : {
-    "ext-libxml" : "*",
-    "php" : ">=5.3.0"
-  },
-  "require-dev": {
-    "satooshi/php-coveralls": "0.6.*",
-    "phpunit/phpunit" : "*",
-    "phpdocumentor/phpdocumentor": "2.1.*"
-  },
-  "autoload": {
-    "psr-0": {"HTML5": "src"}
-  }
 }

@@ -1,9 +1,7 @@
 <?php
-namespace HTML5\Tests;
+namespace HTML5\Tests\Parser;
 
 use \HTML5\Parser\FileInputStream;
-
-require_once __DIR__ . '/../TestCase.php';
 
 class FileInputStreamTest extends \HTML5\Tests\TestCase {
 
@@ -61,7 +59,7 @@ class FileInputStreamTest extends \HTML5\Tests\TestCase {
     $this->assertEquals(2, $s->columnOffset());
     $s->next();
     $this->assertEquals(3, $s->columnOffset());
-    
+
     // Make sure we get to the second line
     $s->next(); $s->next(); $s->next(); $s->next();
     $s->next(); $s->next(); $s->next(); $s->next();

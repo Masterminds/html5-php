@@ -1,9 +1,7 @@
 <?php
-namespace HTML5\Tests;
+namespace HTML5\Tests\Parser;
 
 use \HTML5\Parser\StringInputStream;
-
-require_once __DIR__ . '/../TestCase.php';
 
 class StringInputStreamTest extends \HTML5\Tests\TestCase {
 
@@ -218,7 +216,7 @@ class StringInputStreamTest extends \HTML5\Tests\TestCase {
      }
 
      // MPB:
-     // It appears that iconv just leaves these alone. Not sure what to 
+     // It appears that iconv just leaves these alone. Not sure what to
      // do.
      /*
      $converted = array(
@@ -263,19 +261,19 @@ class StringInputStreamTest extends \HTML5\Tests\TestCase {
      $this->invalidParseErrorTestHandler("\x1D", 1, 'U+001D (C0 control)');
      $this->invalidParseErrorTestHandler("\x1E", 1, 'U+001E (C0 control)');
      $this->invalidParseErrorTestHandler("\x1F", 1, 'U+001F (C0 control)');
-    
+
      // DEL (U+007F)
      $this->invalidParseErrorTestHandler("\x7F", 1, 'U+007F');
-    
+
      // C1 Controls
      $this->invalidParseErrorTestHandler("\xC2\x80", 1, 'U+0080 (C1 control)');
      $this->invalidParseErrorTestHandler("\xC2\x9F", 1, 'U+009F (C1 control)');
      $this->invalidParseErrorTestHandler("\xC2\xA0", 0, 'U+00A0 (first codepoint above highest C1 control)');
-    
+
      // Charcters surrounding surrogates
      $this->invalidParseErrorTestHandler("\xED\x9F\xBF", 0, 'U+D7FF (one codepoint below lowest surrogate codepoint)');
      $this->invalidParseErrorTestHandler("\xEF\xBF\xBD", 0, 'U+DE00 (one codepoint above highest surrogate codepoint)');
-    
+
      // Permanent noncharacters
      $this->invalidParseErrorTestHandler("\xEF\xB7\x90", 1, 'U+FDD0 (permanent noncharacter)');
      $this->invalidParseErrorTestHandler("\xEF\xB7\xAF", 1, 'U+FDEF (permanent noncharacter)');
@@ -325,7 +323,7 @@ class StringInputStreamTest extends \HTML5\Tests\TestCase {
      $this->invalidParseErrorTestHandler("\xED\xB0\x80", 1, 'U+DC00 (UTF-16 surrogate character)');
      $this->invalidParseErrorTestHandler("\xED\xBE\x80", 1, 'U+DF80 (UTF-16 surrogate character)');
      $this->invalidParseErrorTestHandler("\xED\xBF\xBF", 1, 'U+DFFF (UTF-16 surrogate character)');
-    
+
      // Paired UTF-16 surrogates
      $this->invalidParseErrorTestHandler("\xED\xA0\x80\xED\xB0\x80", 2, 'U+D800 U+DC00 (paired UTF-16 surrogates)');
      $this->invalidParseErrorTestHandler("\xED\xA0\x80\xED\xBF\xBF", 2, 'U+D800 U+DFFF (paired UTF-16 surrogates)');

@@ -1,8 +1,6 @@
 <?php
 namespace HTML5\Tests;
 
-require_once 'TestCase.php';
-
 class Html5Test extends TestCase {
 
   /**

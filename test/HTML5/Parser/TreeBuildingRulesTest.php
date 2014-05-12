@@ -3,11 +3,16 @@
  * @file
  * Test the Tree Builder's special-case rules.
  */
-namespace HTML5\Parser;
+namespace HTML5\Tests\Parser;
 
 use HTML5\Elements;
+use HTML5\Parser\TreeBuildingRules;
+use HTML5\Parser\Tokenizer;
+use HTML5\Parser\Scanner;
+use HTML5\Parser\StringInputStream;
+use HTML5\Parser\DOMTreeBuilder;
 
-require_once __DIR__ . '/../TestCase.php';
+
 
 /**
  * These tests are functional, not necessarily unit tests.

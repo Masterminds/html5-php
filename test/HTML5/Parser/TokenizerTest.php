@@ -5,7 +5,8 @@ use HTML5\Parser\UTF8Utils;
 use HTML5\Parser\StringInputStream;
 use HTML5\Parser\Scanner;
 use HTML5\Parser\Tokenizer;
-require 'EventStack.php';class TokenizerTest extends \HTML5\Tests\TestCase {
+
+class TokenizerTest extends \HTML5\Tests\TestCase {
   // ================================================================
   // Additional assertions.
   // ================================================================

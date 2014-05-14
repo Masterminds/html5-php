@@ -346,22 +346,4 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('div', $div->tagName);
     $this->assertEquals('foo', $div->textContent);
   }
-}class InstructionProcessorMock implements \HTML5\InstructionProcessor {
-
-  public $name = NULL;
-  public $data = NULL;
-  public $count = 0;
-
-  public function process(\DOMElement $element, $name, $data) {
-    $this->name = $name;
-    $this->data = $data;
-    $this->count++;
-
-    $div = $element->ownerDocument->createElement("div");
-    $div->nodeValue = 'foo';
-
-    $element->appendChild($div);
-
-    return $div;
-  }
 }

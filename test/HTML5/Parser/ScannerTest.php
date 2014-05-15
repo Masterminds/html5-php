@@ -8,8 +8,6 @@ namespace HTML5\Tests\Parser;
 use \HTML5\Parser\StringInputStream;
 use \HTML5\Parser\Scanner;
 
-require_once __DIR__ . '/../TestCase.php';
-
 class ScannerTest extends \HTML5\Tests\TestCase {
 
   /**

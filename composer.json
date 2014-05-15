@@ -26,5 +26,8 @@
   },
   "autoload": {
     "psr-0": {"HTML5": "src"}
-  }
+  },
+  "autoload-dev": {
+    "psr-4": {"HTML5\\Tests\\": "test/HTML5"}
+  }  
 }

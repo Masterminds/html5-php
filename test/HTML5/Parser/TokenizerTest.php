@@ -1,7 +1,10 @@
 <?php
-namespace HTML5\Parser;
-require_once __DIR__ . '/../TestCase.php';
-require 'EventStack.php';
+namespace HTML5\Tests\Parser;
+
+use HTML5\Parser\UTF8Utils;
+use HTML5\Parser\StringInputStream;
+use HTML5\Parser\Scanner;
+use HTML5\Parser\Tokenizer;
 
 class TokenizerTest extends \HTML5\Tests\TestCase {
   // ================================================================

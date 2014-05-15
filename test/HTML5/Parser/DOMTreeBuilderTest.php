@@ -3,11 +3,13 @@
  * @file
  * Test the Tree Builder.
  */
-namespace HTML5\Parser;
+namespace HTML5\Tests\Parser;
 
 use HTML5\Elements;
-
-require_once __DIR__ . '/../TestCase.php';
+use HTML5\Parser\StringInputStream;
+use HTML5\Parser\Scanner;
+use HTML5\Parser\Tokenizer;
+use HTML5\Parser\DOMTreeBuilder;
 
 /**
  * These tests are functional, not necessarily unit tests.
@@ -108,7 +110,7 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
       <svg width='150' viewbox='2'>
       <rect textlength='2'/>
       <animatecolor>foo</animatecolor>
-      </svg> 
+      </svg>
       </body></html>";
     $doc = $this->parse($html);
     $root = $doc->documentElement;
@@ -208,7 +210,7 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $html = "<!DOCTYPE html><html><math><![CDATA[test";
     $doc = $this->parse($html);
 
-    // We're JUST testing that we can access errors. Actual testing of 
+    // We're JUST testing that we can access errors. Actual testing of
     // error messages happen in the Tokenizer's tests.
     $this->assertGreaterThan(0,  count($doc->errors));
     $this->assertTrue(is_string($doc->errors[0]));
@@ -343,25 +345,5 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('bar ', $is->data);
     $this->assertEquals('div', $div->tagName);
     $this->assertEquals('foo', $div->textContent);
-  }
-}
-
-class InstructionProcessorMock implements \HTML5\InstructionProcessor {
-
-  public $name = NULL;
-  public $data = NULL;
-  public $count = 0;
-
-  public function process(\DOMElement $element, $name, $data) {
-    $this->name = $name;
-    $this->data = $data;
-    $this->count++;
-
-    $div = $element->ownerDocument->createElement("div");
-    $div->nodeValue = 'foo';
-
-    $element->appendChild($div);
-
-    return $div;
   }
 }

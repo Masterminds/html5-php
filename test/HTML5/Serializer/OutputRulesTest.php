@@ -1,11 +1,9 @@
 <?php
-namespace HTML5\Tests;
+namespace HTML5\Tests\Serializer;
 
 use \HTML5\Serializer\OutputRules;
 use \HTML5\Serializer\Traverser;
 use \HTML5\Parser;
-
-require_once __DIR__ . '/../TestCase.php';
 
 class OutputRulesTest extends \HTML5\Tests\TestCase {
 

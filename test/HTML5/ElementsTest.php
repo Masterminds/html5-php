@@ -3,8 +3,6 @@ namespace HTML5\Tests;
 
 use \HTML5\Elements;
 
-require_once 'TestCase.php';
-
 class ElementsTest extends TestCase {
 
   public $html5Elements = array(

@@ -29,5 +29,10 @@
   },
   "autoload-dev": {
     "psr-4": {"HTML5\\Tests\\": "test/HTML5"}
-  }  
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  }
 }

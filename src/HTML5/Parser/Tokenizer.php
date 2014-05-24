@@ -141,8 +141,9 @@ class Tokenizer {
     }
     switch ($this->textMode) {
     case Elements::TEXT_RAW:
-    case Elements::TEXT_RCDATA:
       return $this->rawText();
+    case Elements::TEXT_RCDATA:
+      return $this->rcdata();
     default:
       $tok = $this->scanner->current();
       if (strspn($tok, "<&")) {
@@ -181,6 +182,31 @@ class Tokenizer {
     }
     $sequence = '</' . $this->untilTag . '>';
     $txt =  $this->readUntilSequence($sequence);
+    $this->events->text($txt);
+    $this->setTextMode(0);
+    return $this->endTag();
+  }
+
+  /**
+   * Read text in RCDATA mode.
+   */
+  protected function rcdata() {
+    if (is_null($this->untilTag)) {
+      return $this->text();
+    }
+    $sequence = '</' . $this->untilTag . '>';
+    $txt = '';
+    $tok = $this->scanner->current();
+    while ($tok !== FALSE && !($tok == '<' && ($this->sequenceMatches($sequence) || $this->sequenceMatches(strtoupper($sequence))))) {
+      if ($tok == '&') {
+        $txt .= $this->decodeCharacterReference();
+        $tok = $this->scanner->current();
+      }
+      else {
+        $txt .= $tok;
+        $tok = $this->scanner->next();
+      }
+    }
     $this->events->text($txt);
     $this->setTextMode(0);
     return $this->endTag();

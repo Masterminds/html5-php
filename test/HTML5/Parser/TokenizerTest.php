@@ -535,6 +535,13 @@ class TokenizerTest extends \HTML5\Tests\TestCase {
 
   }
 
+  public function testRcdata() {
+    list($tok, $events) = $this->createTokenizer('<title>&#x27;<!-- not a comment --></TITLE>');
+    $tok->setTextMode(\HTML5\Elements::TEXT_RCDATA, 'title');
+    $tok->parse();
+    $this->assertEventEquals('text', "'<!-- not a comment -->", $events->get(1));
+  }
+
   public function testText() {
 
     $events = $this->parse('a<br>b');

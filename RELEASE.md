@@ -1,5 +1,8 @@
 # Release Notes
 
+COMING
+- #40, #41: Fix entity handling in RCDATA sections. (KitaitiMakoto)
+
 1.0.4 (2014-04-29)
 - #30/#31 Don't throw an exception for invalid tag names.
 

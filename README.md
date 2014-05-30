@@ -164,6 +164,10 @@ issues known issues that are not presently on the roadmap:
 
 ## Thanks to...
 
+The dedicated (and patient) contributors of patches small and large,
+who have already made this library better.See the CREDITS file for
+a list of contributors.
+
 We owe a huge debt of gratitude to the original authors of html5lib.
 
 While not much of the orignal parser remains, we learned a lot from

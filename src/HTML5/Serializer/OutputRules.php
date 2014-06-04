@@ -98,7 +98,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *   The text node to write.
    */
   public function text($ele) {
-    if (isset($ele->parentNode) && isset($ele->parentNode->tagName) && Elements::isA($ele->parentNode->tagName, Elements::TEXT_RAW)) {
+    if (isset($ele->parentNode) && isset($ele->parentNode->tagName) && Elements::isA($ele->parentNode->localName, Elements::TEXT_RAW)) {
       $this->wr($ele->data);
       return;
     }
@@ -133,7 +133,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    *   The element being written.
    */
   protected function openTag($ele) {
-    $this->wr('<')->wr($ele->tagName);
+    $this->wr('<')->wr($this->traverser->isLocalElement($ele)?$ele->localName:$ele->tagName);
     $this->attrs($ele);
 
     if ($this->outputMode == static::IM_IN_HTML) {
@@ -198,7 +198,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    */
   protected function closeTag($ele) {
     if ($this->outputMode == static::IM_IN_HTML || $ele->hasChildNodes()) {
-      $this->wr('</')->wr($ele->tagName)->wr('>');
+      $this->wr('</')->wr($this->traverser->isLocalElement($ele)?$ele->localName:$ele->tagName)->wr('>');
     }
   }
 
@@ -242,7 +242,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    * The named character references are listed in section 8.5.
    *
    * @see http://www.w3.org/TR/2013/CR-html5-20130806/syntax.html#named-character-references
-   * 
+   *
    * True encoding will turn all named character references into their entities.
    * This includes such characters as +.# and many other common ones. By default
    * encoding here will just escape &'<>".

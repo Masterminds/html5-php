@@ -59,13 +59,14 @@ $html = <<< 'HERE'
 HERE;
 
 // Parse the document. $dom is a DOMDocument.
-$dom = HTML5::loadHTML($html);
+$html5 = new HTML5();
+$dom = $html5->loadHTML($html);
 
 // Render it as HTML5:
-print HTML5::saveHTML($dom);
+print $html5->saveHTML($dom);
 
 // Or save it to a file:
-HTML5::save($dom, 'out.html');
+$html5->save($dom, 'out.html');
 
 ?>
 ```

@@ -88,5 +88,3 @@ class EventStack implements EventHandler {
   }
 
 }
-class EventStackParseError extends \Exception {
-}

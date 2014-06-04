@@ -3,83 +3,98 @@ namespace HTML5\Tests;
 
 class Html5Test extends TestCase {
 
+    public function setUp()
+    {
+        $this->html5 = $this->getInstance();
+    }
   /**
    * Parse and serialize a string.
    */
   protected function cycle($html) {
-    $dom = \HTML5::loadHTML('<!DOCTYPE html><html><body>' . $html . '</body></html>');
-    $out = \HTML5::saveHTML($dom);
+
+    $dom = $this->html5->loadHTML('<!DOCTYPE html><html><body>' . $html . '</body></html>');
+    $out = $this->html5->saveHTML($dom);
 
     return $out;
   }
 
   protected function cycleFragment($fragment) {
-    $dom = \HTML5::loadHTMLFragment($fragment);
-    $out = \HTML5::saveHTML($dom);
+
+    $dom = $this->html5->loadHTMLFragment($fragment);
+    $out = $this->html5->saveHTML($dom);
 
     return $out;
   }
 
+  public function testErrors() {
+      $dom = $this->html5->loadHTML('<xx as>');
+      $this->assertInstanceOf('\DOMDocument', $dom);
+
+      $this->assertNotEmpty($this->html5->getErrors());
+      $this->assertTrue($this->html5->hasErrors());
+  }
+
   public function testLoad() {
-    $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
+    $dom = $this->html5->load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
+    $this->assertEmpty($this->html5->getErrors());
+    $this->assertFalse($this->html5->hasErrors());
 
     $file = fopen(__DIR__ . '/Html5Test.html', 'r');
-    $dom = \HTML5::load($file);
+    $dom = $this->html5->load($file);
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
+    $this->assertEmpty($this->html5->getErrors());
 
-    $dom = \HTML5::loadHTMLFile(__DIR__ . '/Html5Test.html');
+    $dom = $this->html5->loadHTMLFile(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
+    $this->assertEmpty($this->html5->getErrors());
   }
 
   public function testLoadHTML() {
     $contents = file_get_contents(__DIR__ . '/Html5Test.html');
-    $dom = \HTML5::loadHTML($contents);
+    $dom = $this->html5->loadHTML($contents);
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
+    $this->assertEmpty($this->html5->getErrors());
   }
 
   public function testLoadHTMLFragment() {
     $fragment = '<section id="Foo"><div class="Bar">Baz</div></section>';
-    $dom = \HTML5::loadHTMLFragment($fragment);
+    $dom = $this->html5->loadHTMLFragment($fragment);
     $this->assertInstanceOf('\DOMDocumentFragment', $dom);
-    $this->assertEmpty($dom->errors);
+    $this->assertEmpty($this->html5->getErrors());
   }
 
   public function testSaveHTML() {
-    $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
+    $dom = $this->html5->load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
+    $this->assertEmpty($this->html5->getErrors());
 
-    $saved = \HTML5::saveHTML($dom);
+    $saved = $this->html5->saveHTML($dom);
     $this->assertRegExp('|<p>This is a test.</p>|', $saved);
   }
 
   public function testSaveHTMLFragment() {
     $fragment = '<section id="Foo"><div class="Bar">Baz</div></section>';
-    $dom = \HTML5::loadHTMLFragment($fragment);
+    $dom = $this->html5->loadHTMLFragment($fragment);
 
-    $string = \HTML5::saveHTML($dom);
+    $string = $this->html5->saveHTML($dom);
     $this->assertEquals($fragment, $string);
   }
 
   public function testSave() {
-    $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
+    $dom = $this->html5->load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
+    $this->assertEmpty($this->html5->getErrors());
 
     // Test resource
     $file = fopen('php://temp', 'w');
-    \HTML5::save($dom, $file);
+    $this->html5->save($dom, $file);
     $content = stream_get_contents($file, -1, 0);
     $this->assertRegExp('|<p>This is a test.</p>|', $content);
 
     // Test file
     $tmpfname = tempnam(sys_get_temp_dir(), "html5-php");
-    \HTML5::save($dom, $tmpfname);
+    $this->html5->save($dom, $tmpfname);
     $content = file_get_contents($tmpfname);
     $this->assertRegExp('|<p>This is a test.</p>|', $content);
     unlink($tmpfname);
@@ -89,33 +104,35 @@ class Html5Test extends TestCase {
   // then tries to read that document again. This makes sure we are reading,
   // and generating a document that works at a high level.
   public function testItWorks() {
-    $dom = \HTML5::load(__DIR__ . '/Html5Test.html');
+    $dom = $this->html5->load(__DIR__ . '/Html5Test.html');
     $this->assertInstanceOf('\DOMDocument', $dom);
-    $this->assertEmpty($dom->errors);
+    $this->assertEmpty($this->html5->getErrors());
 
-    $saved = \HTML5::saveHTML($dom);
+    $saved = $this->html5->saveHTML($dom);
 
-    $dom2 = \HTML5::loadHTML($saved);
+    $dom2 = $this->html5->loadHTML($saved);
     $this->assertInstanceOf('\DOMDocument', $dom2);
-    $this->assertEmpty($dom2->errors);
+    $this->assertEmpty($this->html5->getErrors());
   }
 
   public function testConfig() {
-    $options = \HTML5::options();
+    $html5 = $this->getInstance();
+    $options = $html5->getOptions();
     $this->assertEquals(FALSE, $options['encode_entities']);
 
-    \HTML5::setOption('foo', 'bar');
-    \HTML5::setOption('encode_entities', TRUE);
-    $options = \HTML5::options();
+    $html5 = $this->getInstance(array('foo' => 'bar', 'encode_entities'=> TRUE));
+    $options = $html5->getOptions();
     $this->assertEquals('bar', $options['foo']);
     $this->assertEquals(TRUE, $options['encode_entities']);
 
     // Need to reset to original so future tests pass as expected.
-    \HTML5::setOption('encode_entities', FALSE);
+    //$this->getInstance()->setOption('encode_entities', FALSE);
+
   }
 
   public function testSvg() {
-    $dom = \HTML5::loadHTML('<!doctype html>
+
+    $dom = $this->html5->loadHTML('<!doctype html>
       <html lang="en">
         <body>
           <div id="foo" class="bar baz">foo bar baz</div>
@@ -132,7 +149,7 @@ class Html5Test extends TestCase {
         </body>
       </html>');
 
-    $this->assertEmpty($dom->errors, print_r($dom->errors, TRUE));
+    $this->assertEmpty($this->html5->getErrors());
 
     // Test a mixed case attribute.
     $list = $dom->getElementsByTagName('svg');
@@ -149,14 +166,14 @@ class Html5Test extends TestCase {
     $this->assertEquals('textPath', $textPath->tagName);
     $this->assertNotEquals('textpath', $textPath->tagName);
 
-    $html = \HTML5::saveHTML($dom);
+    $html = $this->html5->saveHTML($dom);
     $this->assertRegExp('|<svg width="150" height="100" viewBox="0 0 3 2">|',$html);
     $this->assertRegExp('|<rect width="1" height="2" x="0" fill="#008d46" />|',$html);
 
   }
 
   public function testMathMl() {
-    $dom = \HTML5::loadHTML('<!doctype html>
+    $dom = $this->html5->loadHTML('<!doctype html>
       <html lang="en">
         <body>
           <div id="foo" class="bar baz" definitionURL="http://example.com">foo bar baz</div>
@@ -170,7 +187,7 @@ class Html5Test extends TestCase {
         </body>
       </html>');
 
-    $this->assertEmpty($dom->errors);
+    $this->assertEmpty($this->html5->getErrors());
     $list = $dom->getElementsByTagName('math');
     $this->assertNotEmpty($list->length);
 
@@ -184,26 +201,25 @@ class Html5Test extends TestCase {
     $this->assertEquals('http://www.example.com/mathops/multiops.html#plusminus', $csymbol->getAttribute('definitionURL'));
     $this->assertFalse($csymbol->hasAttribute('definitionurl'));
 
-    $html = \HTML5::saveHTML($dom);
+    $html = $this->html5->saveHTML($dom);
     $this->assertRegExp('|<csymbol definitionURL="http://www.example.com/mathops/multiops.html#plusminus">|',$html);
     $this->assertRegExp('|<mi>y</mi>|',$html);
   }
 
   public function testUnknownElements() {
-    
     // The : should not have special handling accourding to section 2.9 of the
     // spec. This is differenant than XML. Since we don't know these elements
     // they are handled as normal elements. Note, to do this is really
     // an invalid example and you should not embed prefixed xml in html5.
-    $dom = \HTML5::loadHTMLFragment("<f:rug>
+    $dom = $this->html5->loadHTMLFragment("<f:rug>
       <f:name>Big rectangle thing</f:name>
       <f:width>40</f:width>
       <f:length>80</f:length>
     </f:rug>
     <sarcasm>um, yeah</sarcasm>");
 
-    $this->assertEmpty($dom->errors);
-    $markup = \HTML5::saveHTML($dom);
+    $this->assertEmpty($this->html5->getErrors());
+    $markup = $this->html5->saveHTML($dom);
     $this->assertRegExp('|<f:name>Big rectangle thing</f:name>|',$markup);
     $this->assertRegExp('|<sarcasm>um, yeah</sarcasm>|',$markup);
   }

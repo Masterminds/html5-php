@@ -274,7 +274,7 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('math', $math->tagName);
     $this->assertEquals('math', $math->nodeName);
     $this->assertEquals('math', $math->localName);
-    $this->assertEmpty($math->namespaceURI);
+    $this->assertEquals('http://www.w3.org/1998/Math/MathML', $math->namespaceURI);
   }
 
   public function testSVG() {
@@ -293,11 +293,13 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
       </html>';
 
     $doc = $this->parse($html);
+
     $svg = $doc->getElementsByTagName('svg')->item(0);
+
     $this->assertEquals('svg', $svg->tagName);
     $this->assertEquals('svg', $svg->nodeName);
     $this->assertEquals('svg', $svg->localName);
-    $this->assertEmpty($svg->namespaceURI);
+    $this->assertEquals('http://www.w3.org/2000/svg', $svg->namespaceURI);
 
     $textPath = $doc->getElementsByTagName('textPath')->item(0);
     $this->assertEquals('textPath', $textPath->tagName);
@@ -347,3 +349,4 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('foo', $div->textContent);
   }
 }
+

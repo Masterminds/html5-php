@@ -24,8 +24,8 @@ $html = <<< 'HERE'
   </body></html>
 HERE;
 
-$dom = \HTML5::loadHTML($html);
+$dom = \HTML5Helper::loadHTML($html);
 
 print "Converting to HTML 5\n";
 
-\HTML5::save($dom, fopen("php://stdin", 'w'));
+\HTML5Helper::save($dom, fopen("php://stdin", 'w'));

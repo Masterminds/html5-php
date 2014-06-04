@@ -22,7 +22,20 @@ use HTML5\Elements;
  */
 class DOMTreeBuilder implements EventHandler {
 
+  const NAMESPACE_HTML = 'http://www.w3.org/1999/xhtml';
+  const NAMESPACE_MATHML = 'http://www.w3.org/1998/Math/MathML';
+  const NAMESPACE_SVG = 'http://www.w3.org/2000/svg';
 
+  const NAMESPACE_XLINK = 'http://www.w3.org/1999/xlink';
+  const NAMESPACE_XML = 'http://www.w3.org/XML/1998/namespace';
+  const NAMESPACE_XMLNS = 'http://www.w3.org/2000/xmlns/';
+
+  protected $nsRoots = array(
+      'html'=>self::NAMESPACE_HTML,
+      'svg'=>self::NAMESPACE_SVG,
+      'math'=>self::NAMESPACE_MATHML,
+  );
+  protected $nsStack = array();
   /**
    * Defined in 8.2.5.
    */
@@ -55,6 +68,7 @@ class DOMTreeBuilder implements EventHandler {
   protected $stack = array();
   protected $current; // Pointer in the tag hierarchy.
   protected $doc;
+  protected $frag;
 
   protected $processor;
 
@@ -65,8 +79,6 @@ class DOMTreeBuilder implements EventHandler {
    * DT will be considered to be in quirks mode.
    */
   protected $quirks = TRUE;
-
-  public $isFragment = FALSE;
 
   public function __construct($isFragment = FALSE) {
     $impl = new \DOMImplementation();
@@ -84,12 +96,12 @@ class DOMTreeBuilder implements EventHandler {
     // Create a rules engine for tags.
     $this->rules = new TreeBuildingRules($this->doc);
 
+    array_unshift($this->nsStack, self::NAMESPACE_HTML);
+
     if ($isFragment) {
-      $this->isFragment = TRUE;
       $this->insertMode = static::IM_IN_BODY;
-      $ele = $this->doc->createElement('html');
-      $this->doc->appendChild($ele);
-      $this->current = $ele;
+      $this->frag = $this->doc->createDocumentFragment();
+      $this->current = $this->frag;
     }
   }
 
@@ -111,23 +123,8 @@ class DOMTreeBuilder implements EventHandler {
    * @return \DOMFragmentDocumentFragment
    */
   public function fragment() {
-    $append = $this->doc->documentElement->childNodes;
-    $frag = $this->doc->createDocumentFragment();
-
-    // appendChild() modifies the DOMNodeList, so we
-    // have to buffer up the items first, then use the
-    // array buffer and loop twice.
-    $buffer = array();
-    foreach ($append as $node) {
-      $buffer[] = $node;
-    }
-
-    foreach ($buffer as $node) {
-      $frag->appendChild($node);
-    }
-
-    $frag->errors = $this->doc->errors;
-    return $frag;
+    $this->frag->errors = $this->doc->errors;
+    return $this->frag;
   }
 
   /**
@@ -166,7 +163,7 @@ class DOMTreeBuilder implements EventHandler {
     $lname = $this->normalizeTagName($name);
 
     // Make sure we have an html element.
-    if (!$this->doc->documentElement && $name !== 'html') {
+    if (!$this->doc->documentElement && $name !== 'html' && !$this->frag) {
       $this->startTag('html');
     }
 
@@ -223,8 +220,17 @@ class DOMTreeBuilder implements EventHandler {
       $lname = Elements::normalizeSvgElement($lname);
     }
 
+    if (isset($this->nsRoots[$lname]) && $this->nsStack[0]!==$this->nsRoots[$lname]) {
+        array_unshift($this->nsStack, $this->nsRoots[$lname]);
+    }
     try {
-      $ele = $this->doc->createElement($lname);
+      if (Elements::isElement($lname)) {
+        $ele = $this->doc->createElementNS($this->nsStack[0], $lname);
+      }
+      else {
+        $ele = $this->doc->createElement($lname);
+      }
+
     }
     catch(\DOMException $e) {
       $this->parseError("Illegal tag name: <$lname>. Replaced with <invalid>.");
@@ -281,6 +287,10 @@ class DOMTreeBuilder implements EventHandler {
 
   public function endTag($name) {
     $lname = $this->normalizeTagName($name);
+
+    if (isset($this->nsRoots[$lname]) && $this->nsStack[0]===$this->nsRoots[$lname] && count($this->nsStack[0])>1) {
+        array_shift($this->nsStack);
+    }
 
     // Ignore closing tags for unary elements.
     if (Elements::isA($name, Elements::VOID_TAG)) {

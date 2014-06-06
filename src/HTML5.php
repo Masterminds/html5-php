@@ -99,8 +99,8 @@ class HTML5
    *   A DOM document. These object type is defined by the libxml
    *   library, and should have been included with your version of PHP.
    */
-  public function loadHTMLFile($string) {
-    return $this->load($string);
+  public function loadHTMLFile($file) {
+    return $this->load($file);
   }
   /**
    * Parse a HTML fragment from a string.

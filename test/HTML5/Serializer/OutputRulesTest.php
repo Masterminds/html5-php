@@ -97,6 +97,40 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('<div id="foo" class="bar baz">foo bar baz</div>', stream_get_contents($stream, -1, 0));
   }
 
+  function testElementWithScript() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <head>
+        <script>
+          var $jQ = jQuery.noConflict();
+          // Use jQuery via $jQ(...)
+          $jQ(document).ready(function(){
+            $jQ("#mktFrmSubmit").wrap("<div class=\'buttonSubmit\'></div>");
+            $jQ(".buttonSubmit").prepend("<span></span>");
+          });
+        </script>
+      </head>
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+      </body>
+    </html>');
+
+    $stream = fopen('php://temp', 'w');
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
+
+    $script = $dom->getElementsByTagName('script');
+    $r->element($script->item(0));
+    $this->assertEquals('<script>
+          var $jQ = jQuery.noConflict();
+          // Use jQuery via $jQ(...)
+          $jQ(document).ready(function(){
+            $jQ("#mktFrmSubmit").wrap("<div class=\'buttonSubmit\'></div>");
+            $jQ(".buttonSubmit").prepend("<span></span>");
+          });
+        </script>', stream_get_contents($stream, -1, 0));
+  }
+
   function testOpenTag() {
     $dom = \HTML5::loadHTML('<!doctype html>
     <html lang="en">

@@ -1,7 +1,10 @@
 # Release Notes
 
 COMING
+- #38: Set the dev-master branch as the 1.0.x branch for composer (goetas)
+- #34: Tests use PSR-4 for autoloading. (goetas)
 - #40, #41: Fix entity handling in RCDATA sections. (KitaitiMakoto)
+- #32: Fixed issue where wharacter references were being incorrectly encoded in style tags.
 
 1.0.4 (2014-04-29)
 - #30/#31 Don't throw an exception for invalid tag names.

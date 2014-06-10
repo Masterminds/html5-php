@@ -131,6 +131,34 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
         </script>', stream_get_contents($stream, -1, 0));
   }
 
+  function testElementWithStyle() {
+    $dom = \HTML5::loadHTML('<!doctype html>
+    <html lang="en">
+      <head>
+        <style>
+          body > .bar {
+            display: none;
+          }
+        </style>
+      </head>
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+      </body>
+    </html>');
+
+    $stream = fopen('php://temp', 'w');
+    $r = new OutputRules($stream, \HTML5::options());
+    $t = new Traverser($dom, $stream, $r, \HTML5::options());
+
+    $style = $dom->getElementsByTagName('style');
+    $r->element($style->item(0));
+    $this->assertEquals('<style>
+          body > .bar {
+            display: none;
+          }
+        </style>', stream_get_contents($stream, -1, 0));
+  }
+
   function testOpenTag() {
     $dom = \HTML5::loadHTML('<!doctype html>
     <html lang="en">

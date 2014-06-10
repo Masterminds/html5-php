@@ -148,7 +148,7 @@ class Elements {
     "source" => 9, // NORMAL | VOID_TAG
     "span" => 1,
     "strong" => 1,
-    "style" => 1,
+    "style" => 3, // NORMAL | TEXT_RAW
     "sub" => 1,
     "summary" => 17, // NORMAL | AUTOCLOSE_P,
     "sup" => 1,

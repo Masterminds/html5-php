@@ -288,13 +288,13 @@ class Html5Test extends TestCase {
     $this->assertRegExp('|2 < 1|', $res);
 
     $res = $this->cycle('<style>div>div>div</style>');
-    $this->assertRegExp('|div&gt;div&gt;div|', $res);
+    $this->assertRegExp('|div>div>div|', $res);
 
     $res = $this->cycleFragment('<script>2 < 1</script>');
     $this->assertRegExp('|2 < 1|', $res);
 
     $res = $this->cycleFragment('<style>div>div>div</style>');
-    $this->assertRegExp('|div&gt;div&gt;div|', $res);
+    $this->assertRegExp('|div>div>div|', $res);
   }
 
   public function testEntities() {

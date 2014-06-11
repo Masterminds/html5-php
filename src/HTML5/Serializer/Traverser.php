@@ -1,5 +1,5 @@
 <?php
-namespace HTML5\Serializer;
+namespace Masterminds\HTML5\Serializer;
 
 /**
  * Traverser for walking a DOM tree.

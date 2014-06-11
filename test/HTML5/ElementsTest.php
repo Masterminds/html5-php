@@ -1,7 +1,8 @@
 <?php
-namespace HTML5\Tests;
+namespace Masterminds\HTML5\Tests;
 
-use \HTML5\Elements;
+use Masterminds\HTML5\Elements;
+use Masterminds\HTML5\Tests\TestCase;
 
 class ElementsTest extends TestCase {
 
@@ -244,7 +245,7 @@ class ElementsTest extends TestCase {
   );
 
   public function testIsHtml5Element() {
-    
+
     foreach ($this->html5Elements as $element) {
       $this->assertTrue(Elements::isHtml5Element($element), 'html5 element test failed on: ' . $element);
 

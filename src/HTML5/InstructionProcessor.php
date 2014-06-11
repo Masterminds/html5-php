@@ -2,15 +2,15 @@
 /**
  * A handler for processor instructions.
  */
-namespace HTML5;
+namespace Masterminds\HTML5;
 
 /**
  * Provide an processor to handle embedded instructions.
  *
- * XML defines a mechanism for inserting instructions (like PHP) into a 
- * document. These are called "Processor Instructions." The HTML5 parser 
- * provides an opportunity to handle these processor instructions during 
- * the tree-building phase (before the DOM is constructed), which makes 
+ * XML defines a mechanism for inserting instructions (like PHP) into a
+ * document. These are called "Processor Instructions." The HTML5 parser
+ * provides an opportunity to handle these processor instructions during
+ * the tree-building phase (before the DOM is constructed), which makes
  * it possible to alter the document as it is being created.
  *
  * One could, for example, use this mechanism to execute well-formed PHP
@@ -24,7 +24,7 @@ interface InstructionProcessor {
    * The process() function is responsible for doing the following:
    * - Determining whether $name is an instruction type it can handle.
    * - Determining what to do with the data passed in.
-   * - Making any subsequent modifications to the DOM by modifying the 
+   * - Making any subsequent modifications to the DOM by modifying the
    * DOMElement or its attached DOM tree.
    *
    * @param DOMElement $element

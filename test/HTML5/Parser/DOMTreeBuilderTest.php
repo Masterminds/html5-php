@@ -3,18 +3,18 @@
  * @file
  * Test the Tree Builder.
  */
-namespace HTML5\Tests\Parser;
+namespace Masterminds\HTML5\Tests\Parser;
 
-use HTML5\Elements;
-use HTML5\Parser\StringInputStream;
-use HTML5\Parser\Scanner;
-use HTML5\Parser\Tokenizer;
-use HTML5\Parser\DOMTreeBuilder;
+use Masterminds\HTML5\Elements;
+use Masterminds\HTML5\Parser\StringInputStream;
+use Masterminds\HTML5\Parser\Scanner;
+use Masterminds\HTML5\Parser\Tokenizer;
+use Masterminds\HTML5\Parser\DOMTreeBuilder;
 
 /**
  * These tests are functional, not necessarily unit tests.
  */
-class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
+class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase {
 
   /**
    * Convenience function for parsing.

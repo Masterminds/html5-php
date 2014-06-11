@@ -1,6 +1,7 @@
 <?php
-namespace HTML5\Tests;
+namespace Masterminds\HTML5\Tests;
 
+use Masterminds\HTML5;
 class TestCase extends \PHPUnit_Framework_TestCase {
   const DOC_OPEN = '<!DOCTYPE html><html><head><title>test</title></head><body>';
   const DOC_CLOSE = '</body></html>';
@@ -11,7 +12,7 @@ class TestCase extends \PHPUnit_Framework_TestCase {
 
   public function getInstance(array $options = array())
   {
-      return new \HTML5($options);
+      return new HTML5($options);
   }
 
   protected function wrap($fragment) {

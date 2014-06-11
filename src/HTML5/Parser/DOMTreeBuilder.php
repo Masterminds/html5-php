@@ -1,7 +1,7 @@
 <?php
-namespace HTML5\Parser;
+namespace Masterminds\HTML5\Parser;
 
-use HTML5\Elements;
+use Masterminds\HTML5\Elements;
 /**
  * Create an HTML5 DOM tree from events.
  *
@@ -136,7 +136,7 @@ class DOMTreeBuilder implements EventHandler {
    * This is used for handling Processor Instructions as they are
    * inserted. If omitted, PI's are inserted directly into the DOM tree.
    */
-  public function setInstructionProcessor(\HTML5\InstructionProcessor $proc) {
+  public function setInstructionProcessor(\Masterminds\HTML5\InstructionProcessor $proc) {
     $this->processor = $proc;
   }
 

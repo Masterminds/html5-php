@@ -1,7 +1,7 @@
 <?php
-namespace HTML5\Parser;
+namespace Masterminds\HTML5\Parser;
 
-use HTML5\Elements;
+use Masterminds\HTML5\Elements;
 
 /**
  * Handles special-case rules for the DOM tree builder.

@@ -1,12 +1,14 @@
 <?php
 
-use HTML5\Parser\FileInputStream;
-use HTML5\Parser\StringInputStream;
-use HTML5\Parser\DOMTreeBuilder;
-use HTML5\Parser\Scanner;
-use HTML5\Parser\Tokenizer;
-use HTML5\Serializer\OutputRules;
-use HTML5\Serializer\Traverser;
+namespace Masterminds;
+
+use Masterminds\HTML5\Parser\FileInputStream;
+use Masterminds\HTML5\Parser\StringInputStream;
+use Masterminds\HTML5\Parser\DOMTreeBuilder;
+use Masterminds\HTML5\Parser\Scanner;
+use Masterminds\HTML5\Parser\Tokenizer;
+use Masterminds\HTML5\Serializer\OutputRules;
+use Masterminds\HTML5\Serializer\Traverser;
 
 /**
  * This class offers convenience methods for parsing and serializing HTML5.
@@ -137,7 +139,7 @@ class HTML5
    * Lower-level loading function. This requires an input stream instead
    * of a string, file, or resource.
    */
-  public function parse(\HTML5\Parser\InputStream $input) {
+  public function parse(\Masterminds\HTML5\Parser\InputStream $input) {
     $this->errors = array();
     $events = new DOMTreeBuilder();
     $scanner = new Scanner($input);
@@ -159,7 +161,7 @@ class HTML5
    * Lower-level loading function. This requires an input stream instead
    * of a string, file, or resource.
    */
-  public function parseFragment(\HTML5\Parser\InputStream $input) {
+  public function parseFragment(\Masterminds\HTML5\Parser\InputStream $input) {
     $events = new DOMTreeBuilder(TRUE);
     $scanner = new Scanner($input);
     $parser = new Tokenizer($scanner, $events);

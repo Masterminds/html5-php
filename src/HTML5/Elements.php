@@ -2,12 +2,12 @@
 /**
  * Provide general element functions.
  */
-namespace HTML5;
+namespace Masterminds\HTML5;
 
 /**
- * This class provides general information about HTML5 elements, 
- * including syntactic and semantic issues. Parsers and serializers can 
- * use this class as a reference point for information about the rules 
+ * This class provides general information about HTML5 elements,
+ * including syntactic and semantic issues. Parsers and serializers can
+ * use this class as a reference point for information about the rules
  * of various HTML5 elements.
  *
  * @todo consider using a bitmask table lookup. There is enough overlap in
@@ -39,8 +39,8 @@ class Elements {
   //  "pre", "listing"
   //  "form"
   //  "plaintext"
-  /** 
-   * Indicates that if a previous event is for a P tag, that element 
+  /**
+   * Indicates that if a previous event is for a P tag, that element
    * should be considered closed.
    */
   const AUTOCLOSE_P = 16;
@@ -82,7 +82,7 @@ class Elements {
     "command" => 9, // NORMAL | VOID_TAG
     //"data" => 1,    // This is highly experimental and only part of the whatwg spec (not w3c). See https://developer.mozilla.org/en-US/docs/HTML/Element/data
     "datalist" => 1,
-    "dd" => 65, // NORMAL | BLOCK_TAG 
+    "dd" => 65, // NORMAL | BLOCK_TAG
     "del" => 1,
     "details" => 17, // NORMAL | AUTOCLOSE_P,
     "dfn" => 1,
@@ -189,7 +189,7 @@ class Elements {
    *
    * In our case we are only concerned with presentation MathML and not content
    * MathML. There is a nice list of this subset at https://developer.mozilla.org/en-US/docs/MathML/Element.
-   * 
+   *
    * @var array
    */
   public static $mathml = array(
@@ -520,8 +520,8 @@ class Elements {
    *
    * This includes html5 elements along with other allowed embedded content
    * such as svg and mathml.
-   * 
-   * @param string $name 
+   *
+   * @param string $name
    *   The name of the element.
    *
    * @return bool
@@ -594,7 +594,7 @@ class Elements {
    * Normalize a MathML attribute name to its proper case and form.
    *
    * Note, all MathML element names are lowercase.
-   * 
+   *
    * @param string $name
    *   The name of the attribute.
    *

@@ -1,9 +1,9 @@
 <?php
-namespace HTML5\Tests\Parser;
+namespace Masterminds\HTML5\Tests\Parser;
 
-use \HTML5\Parser\StringInputStream;
+use Masterminds\HTML5\Parser\StringInputStream;
 
-class StringInputStreamTest extends \HTML5\Tests\TestCase {
+class StringInputStreamTest extends \Masterminds\HTML5\Tests\TestCase {
 
   /**
    * A canary test to make sure the basics are setup and working.
@@ -11,7 +11,7 @@ class StringInputStreamTest extends \HTML5\Tests\TestCase {
   public function testConstruct() {
     $s = new StringInputStream("abc");
 
-    $this->assertInstanceOf('\HTML5\Parser\StringInputStream', $s);
+    $this->assertInstanceOf('\Masterminds\HTML5\Parser\StringInputStream', $s);
   }
 
   public function testNext() {

@@ -2,7 +2,7 @@
 /**
  * Loads a string to be parsed.
  */
-namespace HTML5\Parser;
+namespace Masterminds\HTML5\Parser;
 
 /*
  *

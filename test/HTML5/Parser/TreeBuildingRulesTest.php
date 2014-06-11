@@ -3,21 +3,21 @@
  * @file
  * Test the Tree Builder's special-case rules.
  */
-namespace HTML5\Tests\Parser;
+namespace Masterminds\HTML5\Tests\Parser;
 
-use HTML5\Elements;
-use HTML5\Parser\TreeBuildingRules;
-use HTML5\Parser\Tokenizer;
-use HTML5\Parser\Scanner;
-use HTML5\Parser\StringInputStream;
-use HTML5\Parser\DOMTreeBuilder;
+use Masterminds\HTML5\Elements;
+use Masterminds\HTML5\Parser\TreeBuildingRules;
+use Masterminds\HTML5\Parser\Tokenizer;
+use Masterminds\HTML5\Parser\Scanner;
+use Masterminds\HTML5\Parser\StringInputStream;
+use Masterminds\HTML5\Parser\DOMTreeBuilder;
 
 
 
 /**
  * These tests are functional, not necessarily unit tests.
  */
-class TreeBuildingRulesTest extends \HTML5\Tests\TestCase {
+class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase {
 
   const HTML_STUB = '<!DOCTYPE html><html><head><title>test</title></head><body>%s</body></html>';
 

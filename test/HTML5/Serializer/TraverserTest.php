@@ -1,11 +1,11 @@
 <?php
-namespace HTML5\Tests\Serializer;
+namespace Masterminds\HTML5\Tests\Serializer;
 
-use \HTML5\Serializer\OutputRules;
-use \HTML5\Serializer\Traverser;
-use \HTML5\Parser;
+use Masterminds\HTML5\Serializer\OutputRules;
+use Masterminds\HTML5\Serializer\Traverser;
+use Masterminds\HTML5\Parser;
 
-class TraverserTest extends \HTML5\Tests\TestCase {
+class TraverserTest extends \Masterminds\HTML5\Tests\TestCase {
 
   protected $markup = '<!doctype html>
     <html lang="en">
@@ -31,7 +31,7 @@ class TraverserTest extends \HTML5\Tests\TestCase {
    *   \ReflectionMethod for the specified method
    */
   function getProtectedMethod($name) {
-    $class = new \ReflectionClass('\HTML5\Serializer\Traverser');
+    $class = new \ReflectionClass('\Masterminds\HTML5\Serializer\Traverser');
     $method = $class->getMethod($name);
     $method->setAccessible(true);
     return $method;
@@ -60,12 +60,12 @@ class TraverserTest extends \HTML5\Tests\TestCase {
 
     $t = new Traverser($dom, $stream, $r, $html5->getOptions());
 
-    $this->assertInstanceOf('\HTML5\Serializer\Traverser', $t);
+    $this->assertInstanceOf('\Masterminds\HTML5\Serializer\Traverser', $t);
   }
 
   function testFragment() {
     $html = '<span class="bar">foo</span><span></span><div>bar</div>';
-    $input = new \HTML5\Parser\StringInputStream($html);
+    $input = new \Masterminds\HTML5\Parser\StringInputStream($html);
     $dom = $this->html5->parseFragment($input);
 
     $this->assertInstanceOf('\DOMDocumentFragment', $dom);
@@ -80,7 +80,7 @@ class TraverserTest extends \HTML5\Tests\TestCase {
 
   function testProcessorInstruction() {
     $html = '<?foo bar ?>';
-    $input = new \HTML5\Parser\StringInputStream($html);
+    $input = new \Masterminds\HTML5\Parser\StringInputStream($html);
     $dom = $this->html5->parseFragment($input);
 
     $this->assertInstanceOf('\DOMDocumentFragment', $dom);

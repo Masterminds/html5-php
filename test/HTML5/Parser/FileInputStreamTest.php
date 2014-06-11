@@ -1,14 +1,14 @@
 <?php
-namespace HTML5\Tests\Parser;
+namespace Masterminds\HTML5\Tests\Parser;
 
-use \HTML5\Parser\FileInputStream;
+use Masterminds\HTML5\Parser\FileInputStream;
 
-class FileInputStreamTest extends \HTML5\Tests\TestCase {
+class FileInputStreamTest extends \Masterminds\HTML5\Tests\TestCase {
 
   function testConstruct() {
     $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
 
-    $this->assertInstanceOf('\HTML5\Parser\FileInputStream', $s);
+    $this->assertInstanceOf('\Masterminds\HTML5\Parser\FileInputStream', $s);
   }
 
   public function testNext() {

@@ -1,5 +1,5 @@
 <?php
-namespace HTML5\Parser;
+namespace Masterminds\HTML5\Parser;
 
 /**
  * The scanner.
@@ -19,7 +19,7 @@ class Scanner {
   /**
    * Create a new Scanner.
    *
-   * @param \HTML5\Parser\InputStream $input
+   * @param \Masterminds\HTML5\Parser\InputStream $input
    *   An InputStream to be scanned.
    */
   public function __construct($input) {

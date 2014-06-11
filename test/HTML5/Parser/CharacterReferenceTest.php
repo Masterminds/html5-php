@@ -3,10 +3,10 @@
  * @file
  * Test the Scanner. This requires the InputStream tests are all good.
  */
-namespace HTML5\Tests\Parser;
+namespace Masterminds\HTML5\Tests\Parser;
 
-use HTML5\Parser\CharacterReference;
-class CharacterReferenceTest extends \HTML5\Tests\TestCase {
+use Masterminds\HTML5\Parser\CharacterReference;
+class CharacterReferenceTest extends \Masterminds\HTML5\Tests\TestCase {
   public function testLookupName() {
     $this->assertEquals('&', CharacterReference::lookupName('amp'));
     $this->assertEquals('<', CharacterReference::lookupName('lt'));

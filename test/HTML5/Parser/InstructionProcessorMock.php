@@ -1,7 +1,7 @@
 <?php
-namespace HTML5\Tests\Parser;
+namespace Masterminds\HTML5\Tests\Parser;
 
-class InstructionProcessorMock implements \HTML5\InstructionProcessor {
+class InstructionProcessorMock implements \Masterminds\HTML5\InstructionProcessor {
 
     public $name = NULL;
     public $data = NULL;

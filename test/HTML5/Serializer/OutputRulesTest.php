@@ -1,11 +1,11 @@
 <?php
-namespace HTML5\Tests\Serializer;
+namespace Masterminds\HTML5\Tests\Serializer;
 
-use \HTML5\Serializer\OutputRules;
-use \HTML5\Serializer\Traverser;
-use \HTML5\Parser;
+use Masterminds\HTML5\Serializer\OutputRules;
+use Masterminds\HTML5\Serializer\Traverser;
+use Masterminds\HTML5\Parser;
 
-class OutputRulesTest extends \HTML5\Tests\TestCase {
+class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase {
 
   protected $markup = '<!doctype html>
     <html lang="en">
@@ -31,14 +31,14 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
    *   \ReflectionMethod for the specified method
    */
   function getProtectedMethod($name) {
-    $class = new \ReflectionClass('\HTML5\Serializer\OutputRules');
+    $class = new \ReflectionClass('\Masterminds\HTML5\Serializer\OutputRules');
     $method = $class->getMethod($name);
     $method->setAccessible(true);
     return $method;
   }
 
   function getTraverserProtectedProperty($name) {
-    $class = new \ReflectionClass('\HTML5\Serializer\Traverser');
+    $class = new \ReflectionClass('\Masterminds\HTML5\Serializer\Traverser');
     $property = $class->getProperty($name);
     $property->setAccessible(true);
     return $property;

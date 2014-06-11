@@ -6,14 +6,14 @@
  * These output rules are likely to generate output similar to the document that
  * was parsed. It is not intended to output exactly the document that was parsed.
  */
-namespace HTML5\Serializer;
+namespace Masterminds\HTML5\Serializer;
 
-use \HTML5\Elements;
+use Masterminds\HTML5\Elements;
 
 /**
  * Generate the output html5 based on element rules.
  */
-class OutputRules implements \HTML5\Serializer\RulesInterface {
+class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface {
 
   const IM_IN_HTML = 1;
   const IM_IN_SVG = 2;
@@ -36,7 +36,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
     $this->out = $output;
   }
 
-  public function setTraverser(\HTML5\Serializer\Traverser $traverser) {
+  public function setTraverser(\Masterminds\HTML5\Serializer\Traverser $traverser) {
     $this->traverser = $traverser;
 
     return $this;
@@ -208,7 +208,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
    * @param string $text
    *   The string to put into the output.
    *
-   * @return HTML5\Serializer\Traverser
+   * @return Masterminds\HTML5\Serializer\Traverser
    *   $this so it can be used in chaining.
    */
   protected function wr($text) {
@@ -219,7 +219,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
   /**
    * Write a new line character.
    *
-   * @return HTML5\Serializer\Traverser
+   * @return Masterminds\HTML5\Serializer\Traverser
    *   $this so it can be used in chaining.
    */
   protected function nl() {
@@ -274,7 +274,7 @@ class OutputRules implements \HTML5\Serializer\RulesInterface {
     // If a version earlier than 5.4 html5 entities are not entirely handled.
     // This manually handles them.
     else {
-      return strtr($text, \HTML5\Serializer\HTML5Entities::$map);
+      return strtr($text, \Masterminds\HTML5\Serializer\HTML5Entities::$map);
     }
   }
 

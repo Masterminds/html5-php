@@ -1,5 +1,5 @@
 <?php
-namespace HTML5\Parser;
+namespace Masterminds\HTML5\Parser;
 
 /**
  * Standard events for HTML5.

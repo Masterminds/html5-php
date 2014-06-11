@@ -1,7 +1,7 @@
 <?php
-namespace HTML5\Parser;
+namespace Masterminds\HTML5\Parser;
 
-use HTML5\Elements;
+use Masterminds\HTML5\Elements;
 
 /**
  * The HTML5 tokenizer.
@@ -48,9 +48,9 @@ class Tokenizer {
    * it a scanner (input) and an event handler (output), and then calling
    * the Tokenizer::parse() method.`
    *
-   * @param \HTML5\Parser\Scanner $scanner
+   * @param \Masterminds\HTML5\Parser\Scanner $scanner
    *   A scanner initialized with an input stream.
-   * @param \HTML5\Parser\EventHandler $eventHandler
+   * @param \Masterminds\HTML5\Parser\EventHandler $eventHandler
    *   An event handler, initialized and ready to receive
    *   events.
    */

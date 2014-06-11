@@ -1,8 +1,8 @@
 <?php
-namespace HTML5\Tests\Parser;
+namespace Masterminds\HTML5\Tests\Parser;
 
-use HTML5\Elements;
-use HTML5\Parser\EventHandler;
+use Masterminds\HTML5\Elements;
+use Masterminds\HTML5\Parser\EventHandler;
 
 /**
  * This testing class gathers events from a parser and builds a stack of events.

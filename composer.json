@@ -25,10 +25,10 @@
     "phpdocumentor/phpdocumentor": "2.*"
   },
   "autoload": {
-    "psr-0": {"HTML5": "src"}
+    "psr-4": {"Masterminds\\": "src"}
   },
   "autoload-dev": {
-    "psr-4": {"HTML5\\Tests\\": "test/HTML5"}
+    "psr-4": {"Masterminds\\HTML5\\Tests\\": "test/HTML5"}
   },
   "extra": {
     "branch-alias": {

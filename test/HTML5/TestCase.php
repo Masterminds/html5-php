@@ -9,6 +9,11 @@ class TestCase extends \PHPUnit_Framework_TestCase {
     // Placeholder. Why is PHPUnit emitting warnings about no tests?
   }
 
+  public function getInstance(array $options = array())
+  {
+      return new \HTML5($options);
+  }
+
   protected function wrap($fragment) {
     return self::DOC_OPEN . $fragment . self::DOC_CLOSE;
   }

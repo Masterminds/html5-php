@@ -347,3 +347,4 @@ class DOMTreeBuilderTest extends \HTML5\Tests\TestCase {
     $this->assertEquals('foo', $div->textContent);
   }
 }
+

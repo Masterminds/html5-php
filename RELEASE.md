@@ -1,6 +1,6 @@
 # Release Notes
 
-COMING
+1.0.5 (2014-06-10)
 - #38: Set the dev-master branch as the 1.0.x branch for composer (goetas)
 - #34: Tests use PSR-4 for autoloading. (goetas)
 - #40, #41: Fix entity handling in RCDATA sections. (KitaitiMakoto)

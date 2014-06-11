@@ -14,77 +14,103 @@ use Masterminds\HTML5\Parser\EventHandler;
  * script or pre tags. This is to match the behavior required by the HTML5 spec,
  * which says that the tree builder must tell the tokenizer when to switch states.
  */
-class EventStack implements EventHandler {
-  protected $stack;
+class EventStack implements EventHandler
+{
 
-  public function __construct() {
-    $this->stack = array();
-  }
+    protected $stack;
 
-  /**
-   * Get the event stack.
-   */
-  public function events() {
-    return $this->stack;
-  }
-
-  public function depth() {
-    return count($this->stack);
-  }
-
-  public function get($index) {
-    return $this->stack[$index];
-  }
-
-  protected function store($event, $data = NULL) {
-    $this->stack[] = array(
-      'name' => $event,
-      'data' => $data,
-    );
-  }
-
-  public function doctype($name, $type = 0, $id = NULL, $quirks = FALSE) {
-    $args = array($name, $type, $id, $quirks);
-    $this->store('doctype', $args);
-  }
-
-  public function startTag($name, $attributes = array(), $selfClosing = FALSE) {
-    $args = func_get_args();
-    $this->store('startTag', $args);
-    if ($name == 'pre' || $name == 'script') {
-      return Elements::TEXT_RAW;
+    public function __construct()
+    {
+        $this->stack = array();
     }
-  }
 
-  public function endTag($name) {
-    $this->store('endTag', array($name));
-  }
+    /**
+     * Get the event stack.
+     */
+    public function events()
+    {
+        return $this->stack;
+    }
 
-  public function comment($cdata) {
-    $this->store('comment', array($cdata));
-  }
+    public function depth()
+    {
+        return count($this->stack);
+    }
 
-  public function cdata($data) {
-    $this->store('cdata', func_get_args());
-  }
+    public function get($index)
+    {
+        return $this->stack[$index];
+    }
 
-  public function text($cdata) {
-    //fprintf(STDOUT, "Received TEXT event with: " . $cdata);
-    $this->store('text', array($cdata));
-  }
+    protected function store($event, $data = NULL)
+    {
+        $this->stack[] = array(
+            'name' => $event,
+            'data' => $data
+        );
+    }
 
-  public function eof() {
-    $this->store('eof');
-  }
+    public function doctype($name, $type = 0, $id = NULL, $quirks = FALSE)
+    {
+        $args = array(
+            $name,
+            $type,
+            $id,
+            $quirks
+        );
+        $this->store('doctype', $args);
+    }
 
-  public function parseError($msg, $line, $col) {
-    //throw new EventStackParseError(sprintf("%s (line %d, col %d)", $msg, $line, $col));
-    //$this->store(sprintf("%s (line %d, col %d)", $msg, $line, $col));
-    $this->store('error', func_get_args());
-  }
+    public function startTag($name, $attributes = array(), $selfClosing = FALSE)
+    {
+        $args = func_get_args();
+        $this->store('startTag', $args);
+        if ($name == 'pre' || $name == 'script') {
+            return Elements::TEXT_RAW;
+        }
+    }
 
-  public function processingInstruction($name, $data = NULL) {
-    $this->store('pi', func_get_args());
-  }
+    public function endTag($name)
+    {
+        $this->store('endTag', array(
+            $name
+        ));
+    }
 
+    public function comment($cdata)
+    {
+        $this->store('comment', array(
+            $cdata
+        ));
+    }
+
+    public function cdata($data)
+    {
+        $this->store('cdata', func_get_args());
+    }
+
+    public function text($cdata)
+    {
+        // fprintf(STDOUT, "Received TEXT event with: " . $cdata);
+        $this->store('text', array(
+            $cdata
+        ));
+    }
+
+    public function eof()
+    {
+        $this->store('eof');
+    }
+
+    public function parseError($msg, $line, $col)
+    {
+        // throw new EventStackParseError(sprintf("%s (line %d, col %d)", $msg, $line, $col));
+        // $this->store(sprintf("%s (line %d, col %d)", $msg, $line, $col));
+        $this->store('error', func_get_args());
+    }
+
+    public function processingInstruction($name, $data = NULL)
+    {
+        $this->store('pi', func_get_args());
+    }
 }

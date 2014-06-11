@@ -5,9 +5,10 @@ use Masterminds\HTML5\Serializer\OutputRules;
 use Masterminds\HTML5\Serializer\Traverser;
 use Masterminds\HTML5\Parser;
 
-class TraverserTest extends \Masterminds\HTML5\Tests\TestCase {
+class TraverserTest extends \Masterminds\HTML5\Tests\TestCase
+{
 
-  protected $markup = '<!doctype html>
+    protected $markup = '<!doctype html>
     <html lang="en">
       <head>
         <meta charset="utf-8">
@@ -17,79 +18,88 @@ class TraverserTest extends \Masterminds\HTML5\Tests\TestCase {
         <p>This is a test.</p>
       </body>
     </html>';
+
     public function setUp()
     {
         $this->html5 = $this->getInstance();
     }
-  /**
-   * Using reflection we make a protected method accessible for testing.
-   *
-   * @param string $name
-   *   The name of the method on the Traverser class to test.
-   *
-   * @return \ReflectionMethod
-   *   \ReflectionMethod for the specified method
-   */
-  function getProtectedMethod($name) {
-    $class = new \ReflectionClass('\Masterminds\HTML5\Serializer\Traverser');
-    $method = $class->getMethod($name);
-    $method->setAccessible(true);
-    return $method;
-  }
 
-  function getTraverser() {
-    $stream = fopen('php://temp', 'w');
+    /**
+     * Using reflection we make a protected method accessible for testing.
+     *
+     * @param string $name
+     *            The name of the method on the Traverser class to test.
+     *
+     * @return \ReflectionMethod \ReflectionMethod for the specified method
+     */
+    public function getProtectedMethod($name)
+    {
+        $class = new \ReflectionClass('\Masterminds\HTML5\Serializer\Traverser');
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
 
-    $dom =  $this->html5->loadHTML($this->markup);
-    $t = new Traverser($dom, $stream, $html5->getOptions());
+        return $method;
+    }
 
-    // We return both the traverser and stream so we can pull from it.
-    return array($t, $stream);
-  }
+    public function getTraverser()
+    {
+        $stream = fopen('php://temp', 'w');
 
-  function testConstruct() {
+        $dom = $this->html5->loadHTML($this->markup);
+        $t = new Traverser($dom, $stream, $html5->getOptions());
 
-    // The traverser needs a place to write the output to. In our case we
-    // use a stream in temp space.
-    $stream = fopen('php://temp', 'w');
+        // We return both the traverser and stream so we can pull from it.
+        return array(
+            $t,
+            $stream
+        );
+    }
 
-    $html5 = $this->getInstance();
+    public function testConstruct()
+    {
+        // The traverser needs a place to write the output to. In our case we
+        // use a stream in temp space.
+        $stream = fopen('php://temp', 'w');
 
-    $r = new OutputRules($stream,  $this->html5->getOptions());
-    $dom =  $this->html5->loadHTML($this->markup);
+        $html5 = $this->getInstance();
 
-    $t = new Traverser($dom, $stream, $r, $html5->getOptions());
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $dom = $this->html5->loadHTML($this->markup);
 
-    $this->assertInstanceOf('\Masterminds\HTML5\Serializer\Traverser', $t);
-  }
+        $t = new Traverser($dom, $stream, $r, $html5->getOptions());
 
-  function testFragment() {
-    $html = '<span class="bar">foo</span><span></span><div>bar</div>';
-    $input = new \Masterminds\HTML5\Parser\StringInputStream($html);
-    $dom = $this->html5->parseFragment($input);
+        $this->assertInstanceOf('\Masterminds\HTML5\Serializer\Traverser', $t);
+    }
 
-    $this->assertInstanceOf('\DOMDocumentFragment', $dom);
+    public function testFragment()
+    {
+        $html = '<span class="bar">foo</span><span></span><div>bar</div>';
+        $input = new \Masterminds\HTML5\Parser\StringInputStream($html);
+        $dom = $this->html5->parseFragment($input);
 
-    $stream = fopen('php://temp', 'w');
-    $r = new OutputRules($stream, $this->html5->getOptions());
-    $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+        $this->assertInstanceOf('\DOMDocumentFragment', $dom);
 
-    $out = $t->walk();
-    $this->assertEquals($html, stream_get_contents($stream, -1, 0));
-  }
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
 
-  function testProcessorInstruction() {
-    $html = '<?foo bar ?>';
-    $input = new \Masterminds\HTML5\Parser\StringInputStream($html);
-    $dom = $this->html5->parseFragment($input);
+        $out = $t->walk();
+        $this->assertEquals($html, stream_get_contents($stream, - 1, 0));
+    }
 
-    $this->assertInstanceOf('\DOMDocumentFragment', $dom);
+    public function testProcessorInstruction()
+    {
+        $html = '<?foo bar ?>';
+        $input = new \Masterminds\HTML5\Parser\StringInputStream($html);
+        $dom = $this->html5->parseFragment($input);
 
-    $stream = fopen('php://temp', 'w');
-    $r = new OutputRules($stream, $this->html5->getOptions());
-    $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+        $this->assertInstanceOf('\DOMDocumentFragment', $dom);
 
-    $out = $t->walk();
-    $this->assertEquals($html, stream_get_contents($stream, -1, 0));
-  }
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $out = $t->walk();
+        $this->assertEquals($html, stream_get_contents($stream, - 1, 0));
+    }
 }

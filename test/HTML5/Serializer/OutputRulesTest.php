@@ -101,7 +101,7 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
   }
 
   function testElementWithScript() {
-    $dom = \HTML5::loadHTML('<!doctype html>
+    $dom = $this->html5->loadHTML('<!doctype html>
     <html lang="en">
       <head>
         <script>
@@ -119,8 +119,8 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     </html>');
 
     $stream = fopen('php://temp', 'w');
-    $r = new OutputRules($stream, \HTML5::options());
-    $t = new Traverser($dom, $stream, $r, \HTML5::options());
+    $r = new OutputRules($stream, $this->html5->getOptions());
+    $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
 
     $script = $dom->getElementsByTagName('script');
     $r->element($script->item(0));
@@ -135,7 +135,7 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
   }
 
   function testElementWithStyle() {
-    $dom = \HTML5::loadHTML('<!doctype html>
+    $dom = $this->html5->loadHTML('<!doctype html>
     <html lang="en">
       <head>
         <style>
@@ -150,8 +150,8 @@ class OutputRulesTest extends \HTML5\Tests\TestCase {
     </html>');
 
     $stream = fopen('php://temp', 'w');
-    $r = new OutputRules($stream, \HTML5::options());
-    $t = new Traverser($dom, $stream, $r, \HTML5::options());
+    $r = new OutputRules($stream, $this->html5->getOptions());
+    $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
 
     $style = $dom->getElementsByTagName('style');
     $r->element($style->item(0));

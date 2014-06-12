@@ -58,7 +58,7 @@ class Dumper
      *            entities are encoded. If this is set to TRUE all entities will be encoded.
      *            Defaults to FALSE.
      */
-    public function save($dom, $file, $options = array())
+    public function dump($dom, $file, $options = array())
     {
         $close = TRUE;
         if (is_resource($file)) {
@@ -91,10 +91,10 @@ class Dumper
      *
      * @return string A HTML5 documented generated from the DOM.
      */
-    public function saveHTML($dom, $options = array())
+    public function dumpHTML($dom, $options = array())
     {
         $stream = fopen('php://temp', 'w');
-        $this->save($dom, $stream, array_merge($this->getOptions(), $options));
+        $this->dump($dom, $stream, array_merge($this->getOptions(), $options));
 
         return stream_get_contents($stream, - 1, 0);
     }

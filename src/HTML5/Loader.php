@@ -10,7 +10,7 @@ use Masterminds\HTML5\Serializer\OutputRules;
 use Masterminds\HTML5\Serializer\Traverser;
 
 /**
- * This class offers convenience methods for parsing and serializing HTML5.
+ * This class offers convenience methods for parsing HTML5.
  * It is roughly designed to mirror the \DOMDocument class that is
  * provided with most versions of PHP.
  *

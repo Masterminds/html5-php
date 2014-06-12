@@ -43,6 +43,7 @@ Here is how you use the high-level `HTML5` library API:
 <?php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
+use Masterminds/HTML5;
 
 
 // An example HTML document:

@@ -129,18 +129,18 @@ class Html5Test extends TestCase
     {
         $html5 = $this->getInstance();
         $options = $html5->getOptions();
-        $this->assertEquals(FALSE, $options['encode_entities']);
+        $this->assertEquals(false, $options['encode_entities']);
 
         $html5 = $this->getInstance(array(
             'foo' => 'bar',
-            'encode_entities' => TRUE
+            'encode_entities' => true
         ));
         $options = $html5->getOptions();
         $this->assertEquals('bar', $options['foo']);
-        $this->assertEquals(TRUE, $options['encode_entities']);
+        $this->assertEquals(true, $options['encode_entities']);
 
         // Need to reset to original so future tests pass as expected.
-        // $this->getInstance()->setOption('encode_entities', FALSE);
+        // $this->getInstance()->setOption('encode_entities', false);
     }
 
     public function testSvg()

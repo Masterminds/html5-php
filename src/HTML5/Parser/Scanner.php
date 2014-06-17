@@ -17,8 +17,8 @@ class Scanner
 
     protected $is;
 
-    // Flipping this to TRUE will give minisculely more debugging info.
-    public $debug = FALSE;
+    // Flipping this to true will give minisculely more debugging info.
+    public $debug = false;
 
     /**
      * Create a new Scanner.
@@ -67,7 +67,7 @@ class Scanner
             return $this->is->current();
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -83,7 +83,7 @@ class Scanner
             return $this->is->current();
         }
 
-        return FALSE;
+        return false;
     }
 
     /**

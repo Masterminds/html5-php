@@ -51,7 +51,7 @@ interface InputStream extends \Iterator
      *            Bytes to match.
      * @param int $max
      *            Maximum number of bytes to scan.
-     * @return mixed Index or FALSE if no match is found. You should use strong
+     * @return mixed Index or false if no match is found. You should use strong
      *         equality when checking the result, since index could be 0.
      */
     public function charsUntil($bytes, $max = null);

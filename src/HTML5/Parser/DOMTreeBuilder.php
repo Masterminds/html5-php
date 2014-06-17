@@ -143,9 +143,9 @@ class DOMTreeBuilder implements EventHandler
      * Any document that is missing the
      * DT will be considered to be in quirks mode.
      */
-    protected $quirks = TRUE;
+    protected $quirks = true;
 
-    public function __construct($isFragment = FALSE, array $options = array())
+    public function __construct($isFragment = false, array $options = array())
     {
         $this->options = $options;
 
@@ -155,7 +155,7 @@ class DOMTreeBuilder implements EventHandler
         // documents, and attempting to up-convert any older DTDs to HTML5.
         $dt = $impl->createDocumentType('html');
         // $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
-        $this->doc = $impl->createDocument(NULL, NULL, $dt);
+        $this->doc = $impl->createDocument(null, null, $dt);
         $this->doc->errors = array();
 
         $this->current = $this->doc; // ->documentElement;
@@ -210,7 +210,7 @@ class DOMTreeBuilder implements EventHandler
         $this->processor = $proc;
     }
 
-    public function doctype($name, $idType = 0, $id = NULL, $quirks = FALSE)
+    public function doctype($name, $idType = 0, $id = null, $quirks = false)
     {
         // This is used solely for setting quirks mode. Currently we don't
         // try to preserve the inbound DT. We convert it to HTML5.
@@ -232,7 +232,7 @@ class DOMTreeBuilder implements EventHandler
      *       - XLink, MathML and SVG namespace handling
      *       - Omission rules: 8.1.2.4 Optional tags
      */
-    public function startTag($name, $attributes = array(), $selfClosing = FALSE)
+    public function startTag($name, $attributes = array(), $selfClosing = false)
     {
         // fprintf(STDOUT, $name);
         $lname = $this->normalizeTagName($name);
@@ -244,7 +244,7 @@ class DOMTreeBuilder implements EventHandler
 
         // Set quirks mode if we're at IM_INITIAL with no doctype.
         if ($this->insertMode == static::IM_INITIAL) {
-            $this->quirks = TRUE;
+            $this->quirks = true;
             $this->parseError("No DOCTYPE specified.");
         }
 
@@ -301,7 +301,7 @@ class DOMTreeBuilder implements EventHandler
             $pushes ++;
         }
         if (isset($this->options["xmlNamespaces"]) && $this->options["xmlNamespaces"]) {
-            // when xmlNamespaces is TRUE a and we found a 'xmlns' or 'xmlns:*' attribute, we should add a new item to the $nsStack
+            // when xmlNamespaces is true a and we found a 'xmlns' or 'xmlns:*' attribute, we should add a new item to the $nsStack
             foreach ($attributes as $aName => $aVal) {
                 if ($aName === 'xmlns') {
                     array_unshift($this->nsStack, array(
@@ -364,7 +364,7 @@ class DOMTreeBuilder implements EventHandler
 
             // This is necessary on a non-DTD schema, like HTML5.
             if ($aName == 'id') {
-                $ele->setIdAttribute('id', TRUE);
+                $ele->setIdAttribute('id', true);
             }
         }
 
@@ -510,7 +510,7 @@ class DOMTreeBuilder implements EventHandler
         $this->current->appendChild($node);
     }
 
-    public function processingInstruction($name, $data = NULL)
+    public function processingInstruction($name, $data = null)
     {
         // XXX: Ignore initial XML declaration, per the spec.
         if ($this->insertMode == static::IM_INITIAL && 'xml' == strtolower($name)) {
@@ -550,7 +550,7 @@ class DOMTreeBuilder implements EventHandler
     protected function normalizeTagName($name)
     {
         /*
-         * Section 2.9 suggests that we should not do this. if (strpos($name, ':') !== FALSE) { // We know from the grammar that there must be at least one other // char besides :, since : is not a legal tag start. $parts = explode(':', $name); return array_pop($parts); }
+         * Section 2.9 suggests that we should not do this. if (strpos($name, ':') !== false) { // We know from the grammar that there must be at least one other // char besides :, since : is not a legal tag start. $parts = explode(':', $name); return array_pop($parts); }
          */
         return $name;
     }
@@ -568,38 +568,38 @@ class DOMTreeBuilder implements EventHandler
         $working = $this->current;
         do {
             if ($working->nodeType != XML_ELEMENT_NODE) {
-                return FALSE;
+                return false;
             }
             if ($working->tagName == $tag) {
                 $this->current = $working->parentNode;
 
-                return TRUE;
+                return true;
             }
         } while ($working = $working->parentNode);
-        return FALSE;
+        return false;
     }
 
     /**
      * Checks if the given tagname is an ancestor of the present candidate.
      *
      * If $this->current or anything above $this->current matches the given tag
-     * name, this returns TRUE.
+     * name, this returns true.
      */
     protected function isAncestor($tagname)
     {
         $candidate = $this->current;
         while ($candidate->nodeType === XML_ELEMENT_NODE) {
             if ($candidate->tagName == $tagname) {
-                return TRUE;
+                return true;
             }
             $candidate = $candidate->parentNode;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
-     * Returns TRUE if the immediate parent element is of the given tagname.
+     * Returns true if the immediate parent element is of the given tagname.
      */
     protected function isParent($tagname)
     {

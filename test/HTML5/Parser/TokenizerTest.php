@@ -21,11 +21,11 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
      */
     public function assertEventEquals($type, $expects, $event)
     {
-        $this->assertEquals($type, $event['name'], "Event $type for " . print_r($event, TRUE));
+        $this->assertEquals($type, $event['name'], "Event $type for " . print_r($event, true));
         if (is_array($expects)) {
-            $this->assertEquals($expects, $event['data'], "Event $type should equal " . print_r($expects, TRUE) . ": " . print_r($event, TRUE));
+            $this->assertEquals($expects, $event['data'], "Event $type should equal " . print_r($expects, true) . ": " . print_r($event, true));
         } else {
-            $this->assertEquals($expects, $event['data'][0], "Event $type should equal $expects: " . print_r($event, TRUE));
+            $this->assertEquals($expects, $event['data'][0], "Event $type should equal $expects: " . print_r($event, true));
         }
     }
 
@@ -34,7 +34,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
      */
     public function assertEventError($event)
     {
-        $this->assertEquals('error', $event['name'], "Expected error for event: " . print_r($event, TRUE));
+        $this->assertEquals('error', $event['name'], "Expected error for event: " . print_r($event, true));
     }
 
     /**
@@ -47,15 +47,15 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
      * - event name
      * - matches on event 0.
      */
-    protected function isAllGood($name, $depth, $tests, $debug = FALSE)
+    protected function isAllGood($name, $depth, $tests, $debug = false)
     {
         foreach ($tests as $try => $expects) {
             if ($debug) {
-                fprintf(STDOUT, "%s expects %s\n", $try, print_r($expects, TRUE));
+                fprintf(STDOUT, "%s expects %s\n", $try, print_r($expects, true));
             }
             $e = $this->parse($try);
             if ($depth > 0) {
-                $this->assertEquals($depth, $e->depth(), "Expected depth $depth for test $try." . print_r($e, TRUE));
+                $this->assertEquals($depth, $e->depth(), "Expected depth $depth for test $try." . print_r($e, true));
             }
             $this->assertEventEquals($name, $expects, $e->get(0));
         }
@@ -238,171 +238,171 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<!DOCTYPE html>' => array(
                 'html',
                 0,
-                NULL,
-                FALSE
+                null,
+                false
             ),
             '<!doctype html>' => array(
                 'html',
                 0,
-                NULL,
-                FALSE
+                null,
+                false
             ),
             '<!DocType html>' => array(
                 'html',
                 0,
-                NULL,
-                FALSE
+                null,
+                false
             ),
             "<!DOCTYPE\nhtml>" => array(
                 'html',
                 0,
-                NULL,
-                FALSE
+                null,
+                false
             ),
             "<!DOCTYPE\fhtml>" => array(
                 'html',
                 0,
-                NULL,
-                FALSE
+                null,
+                false
             ),
             '<!DOCTYPE html PUBLIC "foo bar">' => array(
                 'html',
                 EventStack::DOCTYPE_PUBLIC,
                 'foo bar',
-                FALSE
+                false
             ),
             "<!DOCTYPE html PUBLIC 'foo bar'>" => array(
                 'html',
                 EventStack::DOCTYPE_PUBLIC,
                 'foo bar',
-                FALSE
+                false
             ),
             '<!DOCTYPE      html      PUBLIC     "foo bar"    >' => array(
                 'html',
                 EventStack::DOCTYPE_PUBLIC,
                 'foo bar',
-                FALSE
+                false
             ),
             "<!DOCTYPE html \nPUBLIC\n'foo bar'>" => array(
                 'html',
                 EventStack::DOCTYPE_PUBLIC,
                 'foo bar',
-                FALSE
+                false
             ),
             '<!DOCTYPE html SYSTEM "foo bar">' => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo bar',
-                FALSE
+                false
             ),
             "<!DOCTYPE html SYSTEM 'foo bar'>" => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo bar',
-                FALSE
+                false
             ),
             '<!DOCTYPE      html      SYSTEM "foo/bar"    >' => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo/bar',
-                FALSE
+                false
             ),
             "<!DOCTYPE html \nSYSTEM\n'foo bar'>" => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo bar',
-                FALSE
+                false
             )
         );
         $this->isAllGood('doctype', 2, $good);
 
         $bad = array(
             '<!DOCTYPE>' => array(
-                NULL,
+                null,
                 EventStack::DOCTYPE_NONE,
-                NULL,
-                TRUE
+                null,
+                true
             ),
             '<!DOCTYPE    >' => array(
-                NULL,
+                null,
                 EventStack::DOCTYPE_NONE,
-                NULL,
-                TRUE
+                null,
+                true
             ),
             '<!DOCTYPE  foo' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
-                NULL,
-                TRUE
+                null,
+                true
             ),
             '<!DOCTYPE foo PUB' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
-                NULL,
-                TRUE
+                null,
+                true
             ),
             '<!DOCTYPE foo PUB>' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
-                NULL,
-                TRUE
+                null,
+                true
             ),
             '<!DOCTYPE  foo PUB "Looks good">' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
-                NULL,
-                TRUE
+                null,
+                true
             ),
             '<!DOCTYPE  foo SYSTME "Looks good"' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
-                NULL,
-                TRUE
+                null,
+                true
             ),
 
             // Can't tell whether these are ids or ID types, since the context is chopped.
             '<!DOCTYPE foo PUBLIC' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
-                NULL,
-                TRUE
+                null,
+                true
             ),
             '<!DOCTYPE  foo PUBLIC>' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
-                NULL,
-                TRUE
+                null,
+                true
             ),
             '<!DOCTYPE foo SYSTEM' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
-                NULL,
-                TRUE
+                null,
+                true
             ),
             '<!DOCTYPE  foo SYSTEM>' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
-                NULL,
-                TRUE
+                null,
+                true
             ),
 
             '<!DOCTYPE html SYSTEM "foo bar"' => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo bar',
-                TRUE
+                true
             ),
             '<!DOCTYPE html SYSTEM "foo bar" more stuff>' => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo bar',
-                TRUE
+                true
             )
         );
         foreach ($bad as $test => $expects) {
             $events = $this->parse($test);
             // fprintf(STDOUT, $test . PHP_EOL);
-            $this->assertEquals(3, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
+            $this->assertEquals(3, $events->depth(), "Counting events for '$test': " . print_r($events, true));
             $this->assertEventError($events->get(0));
             $this->assertEventEquals('doctype', $expects, $events->get(1));
         }
@@ -448,7 +448,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         );
         foreach ($selfClose as $test => $expects) {
             $events = $this->parse($test);
-            $this->assertEquals(3, $events->depth(), "Counting events for '$test'" . print_r($events, TRUE));
+            $this->assertEquals(3, $events->depth(), "Counting events for '$test'" . print_r($events, true));
             $this->assertEventEquals('startTag', $expects, $events->get(0));
             $this->assertEventEquals('endTag', $expects, $events->get(1));
         }
@@ -462,7 +462,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
 
         foreach ($bad as $test => $expects) {
             $events = $this->parse($test);
-            $this->assertEquals(3, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
+            $this->assertEquals(3, $events->depth(), "Counting events for '$test': " . print_r($events, true));
             $this->assertEventError($events->get(0));
             $this->assertEventEquals('startTag', $expects, $events->get(1));
         }
@@ -484,7 +484,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             $this->assertEventError($events->get(1));
             $this->assertEventError($events->get(2));
             $this->assertEventEquals('startTag', $expected, $events->get(3));
-            $this->assertEventEquals('eof', NULL, $events->get(4));
+            $this->assertEventEquals('eof', null, $events->get(4));
         }
     }
 
@@ -510,7 +510,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             $this->assertEventError($events->get(0));
             $this->assertEventEquals('startTag', $expected[0], $events->get(1));
             $this->assertEventEquals('startTag', $expected[1], $events->get(2));
-            $this->assertEventEquals('eof', NULL, $events->get(3));
+            $this->assertEventEquals('eof', null, $events->get(3));
         }
 
         $events = $this->parse('<span<>02</span>');
@@ -519,20 +519,20 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEventError($events->get(2));
         $this->assertEventEquals('text', '>02', $events->get(3));
         $this->assertEventEquals('endTag', 'span', $events->get(4));
-        $this->assertEventEquals('eof', NULL, $events->get(5));
+        $this->assertEventEquals('eof', null, $events->get(5));
 
         $events = $this->parse('<p</p>');
         $this->assertEventError($events->get(0));
         $this->assertEventEquals('startTag', 'p', $events->get(1));
         $this->assertEventEquals('endTag', 'p', $events->get(2));
-        $this->assertEventEquals('eof', NULL, $events->get(3));
+        $this->assertEventEquals('eof', null, $events->get(3));
 
         $events = $this->parse('<strong><WordPress</strong>');
         $this->assertEventEquals('startTag', 'strong', $events->get(0));
         $this->assertEventError($events->get(1));
         $this->assertEventEquals('startTag', 'wordpress', $events->get(2));
         $this->assertEventEquals('endTag', 'strong', $events->get(3));
-        $this->assertEventEquals('eof', NULL, $events->get(4));
+        $this->assertEventEquals('eof', null, $events->get(4));
 
         $events = $this->parse('<src=<a>');
         $this->assertEventError($events->get(0));
@@ -540,12 +540,12 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEventError($events->get(2));
         $this->assertEventEquals('startTag', 'src', $events->get(3));
         $this->assertEventEquals('startTag', 'a', $events->get(4));
-        $this->assertEventEquals('eof', NULL, $events->get(5));
+        $this->assertEventEquals('eof', null, $events->get(5));
 
         $events = $this->parse('<br...<a>');
         $this->assertEventError($events->get(0));
         $this->assertEventEquals('startTag', 'br', $events->get(1));
-        $this->assertEventEquals('eof', NULL, $events->get(2));
+        $this->assertEventEquals('eof', null, $events->get(2));
     }
 
     public function testIllegalTagNames()
@@ -579,35 +579,35 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                 array(
                     'bar' => 'baz'
                 ),
-                FALSE
+                false
             ),
             '<foo bar=" baz ">' => array(
                 'foo',
                 array(
                     'bar' => ' baz '
                 ),
-                FALSE
+                false
             ),
             "<foo bar=\"\nbaz\n\">" => array(
                 'foo',
                 array(
                     'bar' => "\nbaz\n"
                 ),
-                FALSE
+                false
             ),
             "<foo bar='baz'>" => array(
                 'foo',
                 array(
                     'bar' => 'baz'
                 ),
-                FALSE
+                false
             ),
             '<foo bar="A full sentence.">' => array(
                 'foo',
                 array(
                     'bar' => 'A full sentence.'
                 ),
-                FALSE
+                false
             ),
             "<foo a='1' b=\"2\">" => array(
                 'foo',
@@ -615,50 +615,50 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                     'a' => '1',
                     'b' => '2'
                 ),
-                FALSE
+                false
             ),
             "<foo ns:bar='baz'>" => array(
                 'foo',
                 array(
                     'ns:bar' => 'baz'
                 ),
-                FALSE
+                false
             ),
             "<foo a='blue&amp;red'>" => array(
                 'foo',
                 array(
                     'a' => 'blue&red'
                 ),
-                FALSE
+                false
             ),
             "<foo a='blue&&amp;red'>" => array(
                 'foo',
                 array(
                     'a' => 'blue&&red'
                 ),
-                FALSE
+                false
             ),
             "<foo\nbar='baz'\n>" => array(
                 'foo',
                 array(
                     'bar' => 'baz'
                 ),
-                FALSE
+                false
             ),
             '<doe a deer>' => array(
                 'doe',
                 array(
-                    'a' => NULL,
-                    'deer' => NULL
+                    'a' => null,
+                    'deer' => null
                 ),
-                FALSE
+                false
             ),
             '<foo bar=baz>' => array(
                 'foo',
                 array(
                     'bar' => 'baz'
                 ),
-                FALSE
+                false
             ),
 
             // Updated for 8.1.2.3
@@ -667,7 +667,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                 array(
                     'bar' => 'baz'
                 ),
-                FALSE
+                false
             ),
 
             // The spec allows an unquoted value '/'. This will not be a closing
@@ -677,14 +677,14 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                 array(
                     'bar' => '/'
                 ),
-                FALSE
+                false
             ),
             '<foo bar=baz/>' => array(
                 'foo',
                 array(
                     'bar' => 'baz/'
                 ),
-                FALSE
+                false
             )
         );
         $this->isAllGood('startTag', 2, $good);
@@ -696,21 +696,21 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                 array(
                     'bar' => 'baz'
                 ),
-                TRUE
+                true
             ),
             '<foo BAR="baz"/>' => array(
                 'foo',
                 array(
                     'bar' => 'baz'
                 ),
-                TRUE
+                true
             ),
             '<foo BAR="BAZ"/>' => array(
                 'foo',
                 array(
                     'bar' => 'BAZ'
                 ),
-                TRUE
+                true
             ),
             "<foo a='1' b=\"2\" c=3 d/>" => array(
                 'foo',
@@ -718,9 +718,9 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                     'a' => '1',
                     'b' => '2',
                     'c' => '3',
-                    'd' => NULL
+                    'd' => null
                 ),
-                TRUE
+                true
             )
         );
         $this->isAllGood('startTag', 3, $withEnd);
@@ -733,35 +733,35 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                 array(
                     'a' => 'blue&red'
                 ),
-                FALSE
+                false
             ),
             "<foo a='blue&&amp;&red'>" => array(
                 'foo',
                 array(
                     'a' => 'blue&&&red'
                 ),
-                FALSE
+                false
             ),
             '<foo bar=>' => array(
                 'foo',
                 array(
-                    'bar' => NULL
+                    'bar' => null
                 ),
-                FALSE
+                false
             ),
             '<foo bar="oh' => array(
                 'foo',
                 array(
                     'bar' => 'oh'
                 ),
-                FALSE
+                false
             ),
             '<foo bar=oh">' => array(
                 'foo',
                 array(
                     'bar' => 'oh"'
                 ),
-                FALSE
+                false
             ),
 
             // these attributes are ignored because of current implementation
@@ -770,28 +770,28 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<foo b"="baz">' => array(
                 'foo',
                 array(),
-                FALSE
+                false
             ),
             '<foo 2abc="baz">' => array(
                 'foo',
                 array(),
-                FALSE
+                false
             ),
             '<foo ?="baz">' => array(
                 'foo',
                 array(),
-                FALSE
+                false
             ),
             '<foo foo?bar="baz">' => array(
                 'foo',
                 array(),
-                FALSE
+                false
             )
         )
         ;
         foreach ($bad as $test => $expects) {
             $events = $this->parse($test);
-            $this->assertEquals(3, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
+            $this->assertEquals(3, $events->depth(), "Counting events for '$test': " . print_r($events, true));
             $this->assertEventError($events->get(0));
             $this->assertEventEquals('startTag', $expects, $events->get(1));
         }
@@ -801,15 +801,15 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<foo ="bar">' => array(
                 'foo',
                 array(
-                    '=' => NULL,
-                    '"bar"' => NULL
+                    '=' => null,
+                    '"bar"' => null
                 ),
-                FALSE
+                false
             ),
             '<foo////>' => array(
                 'foo',
                 array(),
-                TRUE
+                true
             ),
             // character "&" in unquoted attribute shouldn't cause an infinite loop
             '<foo bar=index.php?str=1&amp;id=29>' => array(
@@ -817,19 +817,19 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                 array(
                     'bar' => 'index.php?str=1&id=29'
                 ),
-                FALSE
+                false
             )
         );
         foreach ($reallyBad as $test => $expects) {
             $events = $this->parse($test);
-            // fprintf(STDOUT, $test . print_r($events, TRUE));
+            // fprintf(STDOUT, $test . print_r($events, true));
             $this->assertEventError($events->get(0));
             $this->assertEventError($events->get(1));
             // $this->assertEventEquals('startTag', $expects, $events->get(1));
         }
 
         // Regression: Malformed elements should be detected.
-        // '<foo baz="1" <bar></foo>' => array('foo', array('baz' => '1'), FALSE),
+        // '<foo baz="1" <bar></foo>' => array('foo', array('baz' => '1'), false),
         $events = $this->parse('<foo baz="1" <bar></foo>');
         $this->assertEventError($events->get(0));
         $this->assertEventEquals('startTag', array(
@@ -837,12 +837,12 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             array(
                 'baz' => '1'
             ),
-            FALSE
+            false
         ), $events->get(1));
         $this->assertEventEquals('startTag', array(
             'bar',
             array(),
-            FALSE
+            false
         ), $events->get(2));
         $this->assertEventEquals('endTag', array(
             'foo'
@@ -874,7 +874,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         );
         foreach ($bad as $test => $expects) {
             $events = $this->parse($test);
-            $this->assertEquals(4, $events->depth(), "Counting events for '$test': " . print_r($events, TRUE));
+            $this->assertEquals(4, $events->depth(), "Counting events for '$test': " . print_r($events, true));
             $this->assertEventEquals('startTag', 'script', $events->get(0));
             $this->assertEventError($events->get(1));
             $this->assertEventEquals('text', $expects, $events->get(2));
@@ -898,38 +898,38 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
     public function testText()
     {
         $events = $this->parse('a<br>b');
-        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, TRUE));
+        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, true));
         $this->assertEventEquals('text', 'a', $events->get(0));
         $this->assertEventEquals('startTag', 'br', $events->get(1));
         $this->assertEventEquals('text', 'b', $events->get(2));
 
         $events = $this->parse('<a>Test</a>');
-        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, TRUE));
+        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, true));
         $this->assertEventEquals('startTag', 'a', $events->get(0));
         $this->assertEventEquals('text', 'Test', $events->get(1));
         $this->assertEventEquals('endTag', 'a', $events->get(2));
 
         $events = $this->parse('a<![CDATA[test]]>b');
-        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, TRUE));
+        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, true));
         $this->assertEventEquals('text', 'a', $events->get(0));
         $this->assertEventEquals('cdata', 'test', $events->get(1));
         $this->assertEventEquals('text', 'b', $events->get(2));
 
         $events = $this->parse('a<!--test-->b');
-        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, TRUE));
+        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, true));
         $this->assertEventEquals('text', 'a', $events->get(0));
         $this->assertEventEquals('comment', 'test', $events->get(1));
         $this->assertEventEquals('text', 'b', $events->get(2));
 
         $events = $this->parse('a&amp;b');
-        $this->assertEquals(2, $events->depth(), "Events: " . print_r($events, TRUE));
+        $this->assertEquals(2, $events->depth(), "Events: " . print_r($events, true));
         $this->assertEventEquals('text', 'a&b', $events->get(0));
     }
 
     // ================================================================
     // Utility functions.
     // ================================================================
-    protected function createTokenizer($string, $debug = FALSE)
+    protected function createTokenizer($string, $debug = false)
     {
         $eventHandler = new EventStack();
         $stream = new StringInputStream($string);
@@ -943,7 +943,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         );
     }
 
-    public function parse($string, $debug = FALSE)
+    public function parse($string, $debug = false)
     {
         list ($tok, $events) = $this->createTokenizer($string, $debug);
         $tok->parse();

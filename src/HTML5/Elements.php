@@ -476,12 +476,12 @@ class Elements
      *            The element name.
      * @param int $mask
      *            One of the constants on this class.
-     * @return boolean TRUE if the element matches the mask, FALSE otherwise.
+     * @return boolean true if the element matches the mask, false otherwise.
      */
     public static function isA($name, $mask)
     {
         if (! static::isElement($name)) {
-            return FALSE;
+            return false;
         }
 
         return (static::element($name) & $mask) == $mask;
@@ -566,7 +566,7 @@ class Elements
             return static::$mathml[$name];
         }
 
-        return FALSE;
+        return false;
     }
 
     /**

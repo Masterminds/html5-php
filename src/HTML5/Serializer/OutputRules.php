@@ -24,7 +24,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
 
     protected $traverser;
 
-    protected $encode = FALSE;
+    protected $encode = false;
 
     protected $out;
 
@@ -179,7 +179,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         $len = $map->length;
         for ($i = 0; $i < $len; ++ $i) {
             $node = $map->item($i);
-            $val = $this->enc($node->value, TRUE);
+            $val = $this->enc($node->value, true);
 
             // XXX: The spec says that we need to ensure that anything in
             // the XML, XMLNS, or XLink NS's should use the canonical
@@ -249,7 +249,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
     /**
      * Encode text.
      *
-     * When encode is set to FALSE, the default value, the text passed in is
+     * When encode is set to false, the default value, the text passed in is
      * escaped per section 8.3 of the html5 spec. For details on how text is
      * escaped see the escape() method.
      *
@@ -275,7 +275,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
      *
      * @return string The encoded text.
      */
-    protected function enc($text, $attribute = FALSE)
+    protected function enc($text, $attribute = false)
     {
 
         // Escape the text rather than convert to named character references.
@@ -286,7 +286,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         // If we are in PHP 5.4+ we can use the native html5 entity functionality to
         // convert the named character references.
         if (defined('ENT_HTML5')) {
-            return htmlentities($text, ENT_HTML5 | ENT_SUBSTITUTE | ENT_QUOTES, 'UTF-8', FALSE);
+            return htmlentities($text, ENT_HTML5 | ENT_SUBSTITUTE | ENT_QUOTES, 'UTF-8', false);
         }         // If a version earlier than 5.4 html5 entities are not entirely handled.
         // This manually handles them.
         else {
@@ -313,7 +313,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
      * @param boolean $attribute
      *            True if we are escaping an attrubute, false otherwise
      */
-    protected function escape($text, $attribute = FALSE)
+    protected function escape($text, $attribute = false)
     {
 
         // Not using htmlspecialchars because, while it does escaping, it doesn't

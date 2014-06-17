@@ -40,7 +40,7 @@ interface EventHandler
      * @param boolean $quirks
      *            Indicates whether the builder should enter quirks mode.
      */
-    public function doctype($name, $idType = 0, $id = NULL, $quirks = FALSE);
+    public function doctype($name, $idType = 0, $id = null, $quirks = false);
 
     /**
      * A start tag.
@@ -71,7 +71,7 @@ interface EventHandler
      *            An indicator of whether or not this tag is self-closing (<foo/>)
      * @return numeric One of the Tokenizer::TEXTMODE_* constants.
      */
-    public function startTag($name, $attributes = array(), $selfClosing = FALSE);
+    public function startTag($name, $attributes = array(), $selfClosing = false);
 
     /**
      * An end-tag.
@@ -118,5 +118,5 @@ interface EventHandler
      * @param string $data
      *            The unparsed data.
      */
-    public function processingInstruction($name, $data = NULL);
+    public function processingInstruction($name, $data = null);
 }

@@ -21,7 +21,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
      */
     protected function parse($string, array $options = array())
     {
-        $treeBuilder = new DOMTreeBuilder(FALSE, $options);
+        $treeBuilder = new DOMTreeBuilder(false, $options);
         $input = new StringInputStream($string);
         $scanner = new Scanner($input);
         $parser = new Tokenizer($scanner, $treeBuilder);
@@ -36,7 +36,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
      */
     protected function parseFragment($string)
     {
-        $treeBuilder = new DOMTreeBuilder(TRUE);
+        $treeBuilder = new DOMTreeBuilder(true);
         $input = new StringInputStream($string);
         $scanner = new Scanner($input);
         $parser = new Tokenizer($scanner, $treeBuilder);

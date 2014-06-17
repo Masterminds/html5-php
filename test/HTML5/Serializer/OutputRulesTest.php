@@ -363,44 +363,44 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
     {
         return array(
             array(
-                FALSE,
+                false,
                 '&\'<>"',
                 '&amp;\'&lt;&gt;"',
                 '&amp;&apos;&lt;&gt;&quot;'
             ),
             array(
-                FALSE,
+                false,
                 'This + is. a < test',
                 'This + is. a &lt; test',
                 'This &plus; is&period; a &lt; test'
             ),
             array(
-                FALSE,
+                false,
                 '.+#',
                 '.+#',
                 '&period;&plus;&num;'
             ),
 
             array(
-                TRUE,
+                true,
                 '.+#\'',
                 '.+#\'',
                 '&period;&plus;&num;&apos;'
             ),
             array(
-                TRUE,
+                true,
                 '&".<',
                 '&amp;&quot;.<',
                 '&amp;&quot;&period;&lt;'
             ),
             array(
-                TRUE,
+                true,
                 '&\'<>"',
                 '&amp;\'<>&quot;',
                 '&amp;&apos;&lt;&gt;&quot;'
             ),
             array(
-                TRUE,
+                true,
                 "\xc2\xa0\"'",
                 '&nbsp;&quot;\'',
                 '&nbsp;&quot;&apos;'
@@ -420,7 +420,7 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals($expected, $m->invoke($o, $test, $isAttribute));
 
         list ($o, $s) = $this->getOutputRules(array(
-            'encode_entities' => TRUE
+            'encode_entities' => true
         ));
         $m = $this->getProtectedMethod('enc');
         $this->assertEquals($expectedEncoded, $m->invoke($o, $test, $isAttribute));

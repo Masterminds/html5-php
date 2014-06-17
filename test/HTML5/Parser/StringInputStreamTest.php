@@ -176,7 +176,7 @@ class StringInputStreamTest extends \Masterminds\HTML5\Tests\TestCase
         // Replace NULL with Unicode replacement.
         $stream = new StringInputStream("\0\0\0");
         $this->assertEquals("\xEF\xBF\xBD\xEF\xBF\xBD\xEF\xBF\xBD", $stream->remainingChars(), 'Null character should be replaced by U+FFFD');
-        $this->assertEquals(3, count($stream->errors), 'Null character should set parse error: ' . print_r($stream->errors, TRUE));
+        $this->assertEquals(3, count($stream->errors), 'Null character should set parse error: ' . print_r($stream->errors, true));
 
         // Remove CR when next to LF.
         $stream = new StringInputStream("\r\n");

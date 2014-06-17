@@ -4,9 +4,9 @@ namespace Masterminds\HTML5\Tests\Parser;
 class InstructionProcessorMock implements \Masterminds\HTML5\InstructionProcessor
 {
 
-    public $name = NULL;
+    public $name = null;
 
-    public $data = NULL;
+    public $data = null;
 
     public $count = 0;
 

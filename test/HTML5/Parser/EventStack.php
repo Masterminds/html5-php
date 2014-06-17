@@ -42,7 +42,7 @@ class EventStack implements EventHandler
         return $this->stack[$index];
     }
 
-    protected function store($event, $data = NULL)
+    protected function store($event, $data = null)
     {
         $this->stack[] = array(
             'name' => $event,
@@ -50,7 +50,7 @@ class EventStack implements EventHandler
         );
     }
 
-    public function doctype($name, $type = 0, $id = NULL, $quirks = FALSE)
+    public function doctype($name, $type = 0, $id = null, $quirks = false)
     {
         $args = array(
             $name,
@@ -61,7 +61,7 @@ class EventStack implements EventHandler
         $this->store('doctype', $args);
     }
 
-    public function startTag($name, $attributes = array(), $selfClosing = FALSE)
+    public function startTag($name, $attributes = array(), $selfClosing = false)
     {
         $args = func_get_args();
         $this->store('startTag', $args);
@@ -109,7 +109,7 @@ class EventStack implements EventHandler
         $this->store('error', func_get_args());
     }
 
-    public function processingInstruction($name, $data = NULL)
+    public function processingInstruction($name, $data = null)
     {
         $this->store('pi', func_get_args());
     }

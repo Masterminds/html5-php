@@ -86,7 +86,7 @@ class UTF8Utils
         // details.
         if (function_exists('mb_convert_encoding')) {
             // mb library has the following behaviors:
-            // - UTF-16 surrogates result in FALSE.
+            // - UTF-16 surrogates result in false.
             // - Overlongs and outside Plane 16 result in empty strings.
 
             // Before we run mb_convert_encoding we need to tell it what to do with
@@ -138,7 +138,7 @@ class UTF8Utils
         $errors = array();
 
         /*
-         * All U+0000 NULL characters in the input must be replaced by U+FFFD REPLACEMENT CHARACTERs. Any occurrences of such characters is a parse error.
+         * All U+0000 null characters in the input must be replaced by U+FFFD REPLACEMENT CHARACTERs. Any occurrences of such characters is a parse error.
          */
         for ($i = 0, $count = substr_count($data, "\0"); $i < $count; $i ++) {
             $errors[] = 'null-character';

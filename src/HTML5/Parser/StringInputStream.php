@@ -152,7 +152,7 @@ class StringInputStream implements InputStream
 
         // However, for here we want the length up until the next byte to be
         // processed, so add one to the current byte ($this->char).
-        if ($lastLine !== FALSE) {
+        if ($lastLine !== false) {
             $findLengthOf = substr($this->data, $lastLine + 1, $this->char - 1 - $lastLine);
         } else {
             // After a newline.
@@ -207,10 +207,10 @@ class StringInputStream implements InputStream
     public function valid()
     {
         if ($this->char < $this->EOF) {
-            return TRUE;
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -233,7 +233,7 @@ class StringInputStream implements InputStream
             return $data;
         }
 
-        return ''; // FALSE;
+        return ''; // false;
     }
 
     /**
@@ -248,13 +248,13 @@ class StringInputStream implements InputStream
      *            Bytes to match.
      * @param int $max
      *            Maximum number of bytes to scan.
-     * @return mixed Index or FALSE if no match is found. You should use strong
+     * @return mixed Index or false if no match is found. You should use strong
      *         equality when checking the result, since index could be 0.
      */
     public function charsUntil($bytes, $max = null)
     {
         if ($this->char >= $this->EOF) {
-            return FALSE;
+            return false;
         }
 
         if ($max === 0 || $max) {
@@ -285,7 +285,7 @@ class StringInputStream implements InputStream
     public function charsWhile($bytes, $max = null)
     {
         if ($this->char >= $this->EOF) {
-            return FALSE;
+            return false;
         }
 
         if ($max === 0 || $max) {
@@ -321,7 +321,7 @@ class StringInputStream implements InputStream
             return $this->data[$this->char + 1];
         }
 
-        return FALSE;
+        return false;
     }
 
     public function key()

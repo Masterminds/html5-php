@@ -26,7 +26,7 @@ class Traverser
 
     protected $options;
 
-    protected $encode = FALSE;
+    protected $encode = false;
 
     protected $rules;
 
@@ -43,7 +43,7 @@ class Traverser
      * @param array $options
      *            An array or options for the traverser as key/value pairs. These include:
      *            - encode_entities: A bool to specify if full encding should happen for all named
-     *            charachter references. Defaults to FALSE which escapes &'<>".
+     *            charachter references. Defaults to false which escapes &'<>".
      *            - output_rules: The path to the class handling the output rules.
      */
     public function __construct($dom, $out, RulesInterface $rules, $options = array())
@@ -142,7 +142,7 @@ class Traverser
     {
         $uri = $ele->namespaceURI;
         if (empty($uri)) {
-            return FALSE;
+            return false;
         }
 
         return isset(static::$local_ns[$uri]);

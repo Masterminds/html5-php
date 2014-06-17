@@ -30,7 +30,7 @@ class CharacterReference
     public static function lookupName($name)
     {
         // Do we really want to return NULL here? or FFFD
-        return isset(Entities::$byName[$name]) ? Entities::$byName[$name] : NULL;
+        return isset(Entities::$byName[$name]) ? Entities::$byName[$name] : null;
     }
 
     /**

@@ -26,7 +26,7 @@ class HTML5
      */
     private $options = array(
         // If the serializer should encode all entities.
-        'encode_entities' => FALSE
+        'encode_entities' => false
     );
 
     private $errors = array();
@@ -158,7 +158,7 @@ class HTML5
     public function parse(\Masterminds\HTML5\Parser\InputStream $input)
     {
         $this->errors = array();
-        $events = new DOMTreeBuilder(FALSE, $this->options);
+        $events = new DOMTreeBuilder(false, $this->options);
         $scanner = new Scanner($input);
         $parser = new Tokenizer($scanner, $events);
 
@@ -181,7 +181,7 @@ class HTML5
      */
     public function parseFragment(\Masterminds\HTML5\Parser\InputStream $input)
     {
-        $events = new DOMTreeBuilder(TRUE, $this->options);
+        $events = new DOMTreeBuilder(true, $this->options);
         $scanner = new Scanner($input);
         $parser = new Tokenizer($scanner, $events);
 
@@ -200,15 +200,15 @@ class HTML5
      * @param array $options
      *            Configuration options when serializing the DOM. These include:
      *            - encode_entities: Text written to the output is escaped by default and not all
-     *            entities are encoded. If this is set to TRUE all entities will be encoded.
-     *            Defaults to FALSE.
+     *            entities are encoded. If this is set to true all entities will be encoded.
+     *            Defaults to false.
      */
     public function save($dom, $file, $options = array())
     {
-        $close = TRUE;
+        $close = true;
         if (is_resource($file)) {
             $stream = $file;
-            $close = FALSE;
+            $close = false;
         } else {
             $stream = fopen($file, 'w');
         }
@@ -231,8 +231,8 @@ class HTML5
      * @param array $options
      *            Configuration options when serializing the DOM. These include:
      *            - encode_entities: Text written to the output is escaped by default and not all
-     *            entities are encoded. If this is set to TRUE all entities will be encoded.
-     *            Defaults to FALSE.
+     *            entities are encoded. If this is set to true all entities will be encoded.
+     *            Defaults to false.
      *
      * @return string A HTML5 documented generated from the DOM.
      */

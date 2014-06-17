@@ -44,7 +44,7 @@ class TreeBuildingRules
     }
 
     /**
-     * Returns TRUE if the given tagname has special processing rules.
+     * Returns true if the given tagname has special processing rules.
      */
     public function hasRules($tagname)
     {

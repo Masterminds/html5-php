@@ -41,8 +41,8 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
             'nodeName'=>'select',
             'attrName'=>'multiple',
 
-            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'],
-            'xpath' => "xh:option/@selected",
+            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'),
+            'xpath' => "@checked[../../xh:input[@type='radio' or @type='checkbox']]",
         ),
         */
         array(
@@ -62,12 +62,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         ),
         array(
             'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>['input', 'textarea', 'button', 'select', 'option', 'optgroup'],
-            'attrName'=>'disabled',
-        ),
-        array(
-            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>['input', 'textarea', 'button', 'select', 'option', 'optgroup'],
+            'nodeName'=>array('input', 'textarea', 'button', 'select', 'option', 'optgroup'),
             'attrName'=>'disabled',
         ),
         array(
@@ -75,21 +70,21 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
             'nodeName'=>'input',
             'attrName'=>'checked',
             'xpath' => "@checked[../../xh:input[@type='radio' or @type='checkbox']]",
-            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'],
+            'prefixes'=>array('xh'=>'http://www.w3.org/1999/xhtml'),
         ),
         array(
             'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>['input', 'textarea'],
+            'nodeName'=>array('input', 'textarea'),
             'attrName'=>'readonly',
             'xpath' => "@readonly[../../xh:input[@type='radio' or @type='checkbox']]|@readonly[../../xh:textarea]",
-            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'],
+            'prefixes'=>array('xh'=>'http://www.w3.org/1999/xhtml'),
         ),
         array(
             'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>['input', 'textarea'],
+            'nodeName'=>array('input', 'textarea'),
             'attrName'=>'readonly',
             'xpath' => "@readonly[../../xh:input[@type='radio' or @type='checkbox']]|@readonly[../../xh:textarea]",
-            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'],
+            'prefixes'=>array('xh'=>'http://www.w3.org/1999/xhtml'),
         ),
         array(
             'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
@@ -101,7 +96,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
             'nodeName'=>'input',
             'attrName'=>'ismap',
             'xpath' => "@checked[../../xh:input[@type='image']]",
-            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'],
+            'prefixes'=>array('xh'=>'http://www.w3.org/1999/xhtml'),
         ),
 
     );

@@ -136,7 +136,9 @@ issues known issues that are not presently on the roadmap:
 
 - Namespaces: HTML5 only [supports a selected list of namespaces](http://www.w3.org/TR/html5/infrastructure.html#namespaces)
   and they do not operate in the same way as XML namespaces. A `:` has no special
-  meaning. The parser does not support XML style namespaces via `:`.
+  meaning. 
+  By default the parser does not support XML style namespaces via `:`; 
+  to enable the XML namespaces see the  [XML Namespaces section](#xml-namespaces)
 - Scripts: This parser does not contain a JavaScript or a CSS
   interpreter. While one may be supplied, not all features will be
   supported.
@@ -163,6 +165,37 @@ issues known issues that are not presently on the roadmap:
 - HTML manifests: Unsupported.
 - PLAINTEXT: Unsupported.
 - Adoption Agency Algorithm: Not yet implemented. (8.2.5.4.7)
+
+##XML Namespaces
+
+To use XML style namespaces you have to configure well the main `HTML5` instance.
+
+```php
+$html = new HTML5(array(
+    "xmlNamespaces" => true
+));
+
+$dom = $html->loadHTML('<t:tag xmlns:t="http://www.example.com"/>');
+
+$dom->documentElement->namespaceURI; // http://www.example.com
+
+```
+
+You can also add some default prefixes that will not require the namespace declaration,
+but it's elements will be namespaced.
+
+```php
+$html = new HTML5(array(
+    "implicitNamespaces"=>array(
+        "t"=>"http://www.example.com"
+    )
+));
+
+$dom = $html->loadHTML('<t:tag/>');
+
+$dom->documentElement->namespaceURI; // http://www.example.com
+
+```
 
 ## Thanks to...
 

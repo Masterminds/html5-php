@@ -113,6 +113,44 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals('<div id="foo" class="bar baz">foo bar baz</div>', stream_get_contents($stream, - 1, 0));
     }
 
+    function testSerializeWithNamespaces()
+    {
+        $this->html5 = $this->getInstance(array(
+            'xmlNamespaces' => true
+        ));
+
+        $source = '<!DOCTYPE html>
+<html><body xmlns:x="http://www.prefixed.com" id="body">
+        <a id="bar1" xmlns="bar1">
+            <b id="bar4" xmlns="bar4"><x:prefixed id="prefixed">x</x:prefixed></b>
+        </a>
+        <svg id="svg">xx</svg>
+        <c id="bar2" xmlns="bar2">xx</c>
+        <div id="div">xx</div>
+        <d id="bar3">xx</d></body>
+</html>
+';
+
+        $dom = $this->html5->loadHTML($source, array(
+            'xmlNamespaces' => true
+        ));
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $t->walk();
+        $rendered = stream_get_contents($stream, - 1, 0);
+
+        $this->assertEquals(str_replace(array(
+            "\n",
+            "\r"
+        ), "", $rendered), str_replace(array(
+            "\n",
+            "\r"
+        ), "", $source));
+    }
+
     public function testElementWithScript()
     {
         $dom = $this->html5->loadHTML(

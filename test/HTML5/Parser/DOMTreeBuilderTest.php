@@ -19,9 +19,9 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
     /**
      * Convenience function for parsing.
      */
-    protected function parse($string)
+    protected function parse($string, array $options = array())
     {
-        $treeBuilder = new DOMTreeBuilder();
+        $treeBuilder = new DOMTreeBuilder(FALSE, $options);
         $input = new StringInputStream($string);
         $scanner = new Scanner($input);
         $parser = new Tokenizer($scanner, $treeBuilder);
@@ -87,6 +87,101 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $head = $kids->item(0);
         $this->assertEquals(1, $head->childNodes->length);
         $this->assertEquals('title', $head->childNodes->item(0)->tagName);
+    }
+
+    public function testImplicitNamespaces()
+    {
+        $dom = $this->parse('<!DOCTYPE html><html><body><a xlink:href="bar">foo</a></body></html>');
+        $a = $dom->getElementsByTagName('a')->item(0);
+        $attr = $a->getAttributeNode('xlink:href');
+        $this->assertEquals('http://www.w3.org/1999/xlink', $attr->namespaceURI);
+
+        $dom = $this->parse('<!DOCTYPE html><html><body><a xml:base="bar">foo</a></body></html>');
+        $a = $dom->getElementsByTagName('a')->item(0);
+        $attr = $a->getAttributeNode('xml:base');
+        $this->assertEquals('http://www.w3.org/XML/1998/namespace', $attr->namespaceURI);
+    }
+
+    public function testCustomImplicitNamespaces()
+    {
+        $dom = $this->parse('<!DOCTYPE html><html><body><a t:href="bar">foo</a></body></html>', array(
+            'implicitNamespaces' => array(
+                't' => 'http://www.example.com'
+            )
+        ));
+        $a = $dom->getElementsByTagName('a')->item(0);
+        $attr = $a->getAttributeNode('t:href');
+        $this->assertEquals('http://www.example.com', $attr->namespaceURI);
+
+        $dom = $this->parse('<!DOCTYPE html><html><body><t:a>foo</t:a></body></html>', array(
+            'implicitNamespaces' => array(
+                't' => 'http://www.example.com'
+            )
+        ));
+        $list = $dom->getElementsByTagNameNS('http://www.example.com', 'a');
+        $this->assertEquals(1, $list->length);
+    }
+
+    public function testXmlNamespaces()
+    {
+        $dom = $this->parse(
+            '<!DOCTYPE html><html>
+            <t:body xmlns:t="http://www.example.com">
+                <a t:href="bar">foo</a>
+            </body>
+            <div>foo</div>
+          </html>', array(
+                'xmlNamespaces' => true
+            ));
+        $a = $dom->getElementsByTagName('a')->item(0);
+        $attr = $a->getAttributeNode('t:href');
+        $this->assertEquals('http://www.example.com', $attr->namespaceURI);
+
+        $list = $dom->getElementsByTagNameNS('http://www.example.com', 'body');
+        $this->assertEquals(1, $list->length);
+    }
+
+    public function testXmlNamespaceNesting()
+    {
+        $dom = $this->parse(
+            '<!DOCTYPE html><html>
+            <body xmlns:x="http://www.prefixed.com" id="body">
+                <a id="bar1" xmlns="bar1">
+                    <b id="bar4" xmlns="bar4"><x:prefixed id="prefixed"/></b>
+                </a>
+                <svg id="svg"></svg>
+                <c id="bar2" xmlns="bar2"></c>
+                <div id="div"></div>
+                <d id="bar3"></d>
+
+            </body>
+          </html>', array(
+                'xmlNamespaces' => true
+            ));
+
+        $div = $dom->getElementById('div');
+        $this->assertEquals('http://www.w3.org/1999/xhtml', $div->namespaceURI);
+
+        $body = $dom->getElementById('body');
+        $this->assertEquals('http://www.w3.org/1999/xhtml', $body->namespaceURI);
+
+        $bar1 = $dom->getElementById('bar1');
+        $this->assertEquals('bar1', $bar1->namespaceURI);
+
+        $bar2 = $dom->getElementById('bar2');
+        $this->assertEquals("bar2", $bar2->namespaceURI);
+
+        $bar3 = $dom->getElementById('bar3');
+        $this->assertEquals("http://www.w3.org/1999/xhtml", $bar3->namespaceURI);
+
+        $bar4 = $dom->getElementById('bar4');
+        $this->assertEquals("bar4", $bar4->namespaceURI);
+
+        $svg = $dom->getElementById('svg');
+        $this->assertEquals("http://www.w3.org/2000/svg", $svg->namespaceURI);
+
+        $prefixed = $dom->getElementById('prefixed');
+        $this->assertEquals("http://www.prefixed.com", $prefixed->namespaceURI);
     }
 
     public function testAttributes()
@@ -290,7 +385,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals('math', $math->tagName);
         $this->assertEquals('math', $math->nodeName);
         $this->assertEquals('math', $math->localName);
-        $this->assertEmpty($math->namespaceURI);
+        $this->assertEquals('http://www.w3.org/1998/Math/MathML', $math->namespaceURI);
     }
 
     public function testSVG()
@@ -314,7 +409,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals('svg', $svg->tagName);
         $this->assertEquals('svg', $svg->nodeName);
         $this->assertEquals('svg', $svg->localName);
-        $this->assertEmpty($svg->namespaceURI);
+        $this->assertEquals('http://www.w3.org/2000/svg', $svg->namespaceURI);
 
         $textPath = $doc->getElementsByTagName('textPath')->item(0);
         $this->assertEquals('textPath', $textPath->tagName);

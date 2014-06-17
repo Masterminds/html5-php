@@ -108,9 +108,8 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
      */
     public function text($ele)
     {
-        if (isset($ele->parentNode) && isset($ele->parentNode->tagName) && Elements::isA($ele->parentNode->tagName, Elements::TEXT_RAW)) {
+        if (isset($ele->parentNode) && isset($ele->parentNode->tagName) && Elements::isA($ele->parentNode->localName, Elements::TEXT_RAW)) {
             $this->wr($ele->data);
-
             return;
         }
 
@@ -151,7 +150,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
      */
     protected function openTag($ele)
     {
-        $this->wr('<')->wr($ele->tagName);
+        $this->wr('<')->wr($this->traverser->isLocalElement($ele) ? $ele->localName : $ele->tagName);
         $this->attrs($ele);
 
         if ($this->outputMode == static::IM_IN_HTML) {
@@ -187,6 +186,9 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
             // prefix. It seems that DOM does this for us already, but there
             // may be exceptions.
             $name = $node->name;
+            if ($name == "xmlns:x___xmlns__x") {
+                $name = "xmlns";
+            }
 
             // Special handling for attributes in SVG and MathML.
             // Using if/elseif instead of switch because it's faster in PHP.
@@ -215,7 +217,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
     protected function closeTag($ele)
     {
         if ($this->outputMode == static::IM_IN_HTML || $ele->hasChildNodes()) {
-            $this->wr('</')->wr($ele->tagName)->wr('>');
+            $this->wr('</')->wr($this->traverser->isLocalElement($ele) ? $ele->localName : $ele->tagName)->wr('>');
         }
     }
 
@@ -225,24 +227,22 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
      * @param string $text
      *            The string to put into the output.
      *
-     * @return Masterminds\HTML5\Serializer\Traverser $this so it can be used in chaining.
+     * @return \Masterminds\HTML5\Serializer\Traverser $this so it can be used in chaining.
      */
     protected function wr($text)
     {
         fwrite($this->out, $text);
-
         return $this;
     }
 
     /**
      * Write a new line character.
      *
-     * @return Masterminds\HTML5\Serializer\Traverser $this so it can be used in chaining.
+     * @return \Masterminds\HTML5\Serializer\Traverser $this so it can be used in chaining.
      */
     protected function nl()
     {
         fwrite($this->out, PHP_EOL);
-
         return $this;
     }
 
@@ -277,6 +277,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
      */
     protected function enc($text, $attribute = FALSE)
     {
+
         // Escape the text rather than convert to named character references.
         if (! $this->encode) {
             return $this->escape($text, $attribute);
@@ -314,6 +315,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
      */
     protected function escape($text, $attribute = FALSE)
     {
+
         // Not using htmlspecialchars because, while it does escaping, it doesn't
         // match the requirements of section 8.5. For example, it doesn't handle
         // non-breaking spaces.

@@ -23,6 +23,56 @@ use Masterminds\HTML5\Elements;
  */
 class DOMTreeBuilder implements EventHandler
 {
+    /**
+     * Defined in http://www.w3.org/TR/html51/infrastructure.html#html-namespace-0
+     */
+    const NAMESPACE_HTML = 'http://www.w3.org/1999/xhtml';
+
+    const NAMESPACE_MATHML = 'http://www.w3.org/1998/Math/MathML';
+
+    const NAMESPACE_SVG = 'http://www.w3.org/2000/svg';
+
+    const NAMESPACE_XLINK = 'http://www.w3.org/1999/xlink';
+
+    const NAMESPACE_XML = 'http://www.w3.org/XML/1998/namespace';
+
+    const NAMESPACE_XMLNS = 'http://www.w3.org/2000/xmlns/';
+
+    /**
+     * Holds the HTML5 element names that causes a namespace switch
+     *
+     * @var array
+     */
+    protected $nsRoots = array(
+        'html' => self::NAMESPACE_HTML,
+        'svg' => self::NAMESPACE_SVG,
+        'math' => self::NAMESPACE_MATHML
+    );
+
+    /**
+     * Holds the always available namespaces (which does not require the XMLNS declaration).
+     *
+     * @var array
+     */
+    protected $implicitNamespaces = array(
+        'xml' => self::NAMESPACE_XML,
+        'xmlns' => self::NAMESPACE_XMLNS,
+        'xlink' => self::NAMESPACE_XLINK
+    );
+
+    /**
+     * Holds a stack of currently active namespaces.
+     *
+     * @var array
+     */
+    protected $nsStack = array();
+
+    /**
+     * Holds the number of namespaces declared by a node.
+     *
+     * @var array
+     */
+    protected $pushes = array();
 
     /**
      * Defined in 8.2.5.
@@ -75,10 +125,14 @@ class DOMTreeBuilder implements EventHandler
 
     const IM_IN_MATHML = 23;
 
+    protected $options = array();
+
     protected $stack = array();
 
     protected $current; // Pointer in the tag hierarchy.
     protected $doc;
+
+    protected $frag;
 
     protected $processor;
 
@@ -91,10 +145,10 @@ class DOMTreeBuilder implements EventHandler
      */
     protected $quirks = TRUE;
 
-    public $isFragment = FALSE;
-
-    public function __construct($isFragment = FALSE)
+    public function __construct($isFragment = FALSE, array $options = array())
     {
+        $this->options = $options;
+
         $impl = new \DOMImplementation();
         // XXX:
         // Create the doctype. For now, we are always creating HTML5
@@ -104,18 +158,20 @@ class DOMTreeBuilder implements EventHandler
         $this->doc = $impl->createDocument(NULL, NULL, $dt);
         $this->doc->errors = array();
 
-        // $this->current = $this->doc->documentElement;
         $this->current = $this->doc; // ->documentElement;
 
         // Create a rules engine for tags.
         $this->rules = new TreeBuildingRules($this->doc);
 
+        // Fill $nsStack with the defalut HTML5 namespaces, plus the "implicitNamespaces" array taken form $options
+        array_unshift($this->nsStack, (isset($this->options["implicitNamespaces"]) ? $this->options["implicitNamespaces"] : array()) + array(
+            '' => self::NAMESPACE_HTML
+        ) + $this->implicitNamespaces);
+
         if ($isFragment) {
-            $this->isFragment = TRUE;
             $this->insertMode = static::IM_IN_BODY;
-            $ele = $this->doc->createElement('html');
-            $this->doc->appendChild($ele);
-            $this->current = $ele;
+            $this->frag = $this->doc->createDocumentFragment();
+            $this->current = $this->frag;
         }
     }
 
@@ -139,24 +195,8 @@ class DOMTreeBuilder implements EventHandler
      */
     public function fragment()
     {
-        $append = $this->doc->documentElement->childNodes;
-        $frag = $this->doc->createDocumentFragment();
-
-        // appendChild() modifies the DOMNodeList, so we
-        // have to buffer up the items first, then use the
-        // array buffer and loop twice.
-        $buffer = array();
-        foreach ($append as $node) {
-            $buffer[] = $node;
-        }
-
-        foreach ($buffer as $node) {
-            $frag->appendChild($node);
-        }
-
-        $frag->errors = $this->doc->errors;
-
-        return $frag;
+        $this->frag->errors = $this->doc->errors;
+        return $this->frag;
     }
 
     /**
@@ -198,7 +238,7 @@ class DOMTreeBuilder implements EventHandler
         $lname = $this->normalizeTagName($name);
 
         // Make sure we have an html element.
-        if (! $this->doc->documentElement && $name !== 'html') {
+        if (! $this->doc->documentElement && $name !== 'html' && ! $this->frag) {
             $this->startTag('html');
         }
 
@@ -252,11 +292,51 @@ class DOMTreeBuilder implements EventHandler
             $lname = Elements::normalizeSvgElement($lname);
         }
 
+        $pushes = 0;
+        // when we found a tag thats appears inside $nsRoots, we have to switch the defalut namespace
+        if (isset($this->nsRoots[$lname]) && $this->nsStack[0][''] !== $this->nsRoots[$lname]) {
+            array_unshift($this->nsStack, array(
+                '' => $this->nsRoots[$lname]
+            ) + $this->nsStack[0]);
+            $pushes ++;
+        }
+        if (isset($this->options["xmlNamespaces"]) && $this->options["xmlNamespaces"]) {
+            // when xmlNamespaces is TRUE a and we found a 'xmlns' or 'xmlns:*' attribute, we should add a new item to the $nsStack
+            foreach ($attributes as $aName => $aVal) {
+                if ($aName === 'xmlns') {
+                    array_unshift($this->nsStack, array(
+                        '' => $aVal
+                    ) + $this->nsStack[0]);
+                    $pushes ++;
+                } elseif ((($pos = strpos($aName, ':')) ? substr($aName, 0, $pos) : '') === 'xmlns') {
+                    array_unshift($this->nsStack, array(
+                        substr($aName, $pos + 1) => $aVal
+                    ) + $this->nsStack[0]);
+                    $pushes ++;
+                }
+            }
+        }
+
         try {
-            $ele = $this->doc->createElement($lname);
+            $prefix = ($pos = strpos($lname, ':')) ? substr($lname, 0, $pos) : '';
+
+            if (isset($this->nsStack[0][$prefix])) {
+                $ele = $this->doc->createElementNS($this->nsStack[0][$prefix], $lname);
+            } else {
+                $ele = $this->doc->createElement($lname);
+            }
         } catch (\DOMException $e) {
             $this->parseError("Illegal tag name: <$lname>. Replaced with <invalid>.");
             $ele = $this->doc->createElement('invalid');
+        }
+
+
+        // when we add some namespacess, we have to track them. Later, when "endElement" is invoked, we have to remove them
+        if ($pushes > 0) {
+            // PHP tends to free the memory used by DOM,
+            // to avoid spl_object_hash collisions whe have to avoid garbage collection of $ele storing it into $pushes
+            // see https://bugs.php.net/bug.php?id=67459
+            $this->pushes[spl_object_hash($ele)] = array($pushes, $ele);
         }
 
         foreach ($attributes as $aName => $aVal) {
@@ -268,7 +348,15 @@ class DOMTreeBuilder implements EventHandler
             }
 
             try {
-                $ele->setAttribute($aName, $aVal);
+                $prefix = ($pos = strpos($aName, ':')) ? substr($aName, 0, $pos) : false;
+                if ($prefix!==false && $prefix !== 'xmlns' && isset($this->nsStack[0][$prefix])) {
+                    $ele->setAttributeNs($this->nsStack[0][$prefix], $aName, $aVal);
+                } elseif ($aName === 'xmlns') {
+                    // setAttribute('xmlns', '..') is not possible, so we have to add a fake attribute
+                    $ele->setAttribute("xmlns:x___xmlns__x", $aVal);
+                } else {
+                    $ele->setAttribute($aName, $aVal);
+                }
             } catch (\DOMException $e) {
                 $this->parseError("Illegal attribute name for tag $name. Ignoring: $aName");
                 continue;
@@ -350,7 +438,15 @@ class DOMTreeBuilder implements EventHandler
             return;
         }
 
-        // $this->current = $this->current->parentNode;
+        $cid = spl_object_hash($this->current);
+        // remove the namespaced definded by current node
+        if (isset($this->pushes[$cid])) {
+            for ($i = 0; $i < $this->pushes[$cid][0]; $i ++) {
+                $extr = array_shift($this->nsStack);
+            }
+            unset($this->pushes[$cid]);
+        }
+
         if (! $this->autoclose($lname)) {
             $this->parseError('Could not find closing tag for ' . $lname);
         }
@@ -480,7 +576,6 @@ class DOMTreeBuilder implements EventHandler
                 return TRUE;
             }
         } while ($working = $working->parentNode);
-
         return FALSE;
     }
 

@@ -158,7 +158,7 @@ class HTML5
     public function parse(\Masterminds\HTML5\Parser\InputStream $input)
     {
         $this->errors = array();
-        $events = new DOMTreeBuilder();
+        $events = new DOMTreeBuilder(FALSE, $this->options);
         $scanner = new Scanner($input);
         $parser = new Tokenizer($scanner, $events);
 
@@ -181,7 +181,7 @@ class HTML5
      */
     public function parseFragment(\Masterminds\HTML5\Parser\InputStream $input)
     {
-        $events = new DOMTreeBuilder(TRUE);
+        $events = new DOMTreeBuilder(TRUE, $this->options);
         $scanner = new Scanner($input);
         $parser = new Tokenizer($scanner, $events);
 

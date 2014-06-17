@@ -117,7 +117,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         $this->outputMode = static::IM_IN_HTML;
         $this->out = $output;
     }
-    public function addRules(array $rule)
+    public function addRule(array $rule)
     {
         $this->booleanAttributes[] = $rule;
     }

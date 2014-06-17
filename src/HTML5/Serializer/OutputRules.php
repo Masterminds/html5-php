@@ -30,6 +30,82 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
 
     protected $outputMode;
 
+    private $xpath;
+
+    protected $booleanAttributes = array(
+        /*
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'attrNamespace'=>'http://www.w3.org/1999/xhtml',
+
+            'nodeName'=>'select',
+            'attrName'=>'multiple',
+
+            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'],
+            'xpath' => "xh:option/@selected",
+        ),
+        */
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'nodeName'=>'select',
+            'attrName'=>'multiple',
+        ),
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'nodeName'=>'option',
+            'attrName'=>'selected',
+        ),
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'nodeName'=>'script',
+            'attrName'=>'defer',
+        ),
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'nodeName'=>['input', 'textarea', 'button', 'select', 'option', 'optgroup'],
+            'attrName'=>'disabled',
+        ),
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'nodeName'=>['input', 'textarea', 'button', 'select', 'option', 'optgroup'],
+            'attrName'=>'disabled',
+        ),
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'nodeName'=>'input',
+            'attrName'=>'checked',
+            'xpath' => "@checked[../../xh:input[@type='radio' or @type='checkbox']]",
+            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'],
+        ),
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'nodeName'=>['input', 'textarea'],
+            'attrName'=>'readonly',
+            'xpath' => "@readonly[../../xh:input[@type='radio' or @type='checkbox']]|@readonly[../../xh:textarea]",
+            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'],
+        ),
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'nodeName'=>['input', 'textarea'],
+            'attrName'=>'readonly',
+            'xpath' => "@readonly[../../xh:input[@type='radio' or @type='checkbox']]|@readonly[../../xh:textarea]",
+            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'],
+        ),
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'nodeName'=>'img',
+            'attrName'=>'ismap',
+        ),
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'nodeName'=>'input',
+            'attrName'=>'ismap',
+            'xpath' => "@checked[../../xh:input[@type='image']]",
+            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'],
+        ),
+
+    );
+
     const DOCTYPE = '<!DOCTYPE html>';
 
     public function __construct($output, $options = array())
@@ -40,6 +116,10 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
 
         $this->outputMode = static::IM_IN_HTML;
         $this->out = $output;
+    }
+    public function addRules(array $rule)
+    {
+        $this->booleanAttributes[] = $rule;
     }
 
     public function setTraverser(\Masterminds\HTML5\Serializer\Traverser $traverser)
@@ -177,6 +257,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         // value-less attributes.
         $map = $ele->attributes;
         $len = $map->length;
+
         for ($i = 0; $i < $len; ++ $i) {
             $node = $map->item($i);
             $val = $this->enc($node->value, true);
@@ -199,10 +280,55 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
             }
 
             $this->wr(' ')->wr($name);
-            if (isset($val) && $val !== '') {
+
+            if (!$this->isBooleanAttribute($node)) {
                 $this->wr('="')->wr($val)->wr('"');
             }
         }
+    }
+
+    protected function isBooleanAttribute(\DOMAttr $attr)
+    {
+        $ele = $attr->ownerElement;
+        foreach($this->booleanAttributes as $rule){
+
+            if(isset($rule['nodeNamespace']) && $rule['nodeNamespace']!==$ele->namespaceURI){
+                continue;
+            }
+            if(isset($rule['nodeName']) && !is_array($rule['nodeName']) && $rule['nodeName']!==$ele->localName){
+                continue;
+            }
+            if(isset($rule['nodeName']) && is_array($rule['nodeName']) && !in_array($ele->localName, $rule['nodeName'], true)){
+                continue;
+            }
+            if(isset($rule['attNamespace']) && $rule['attNamespace']!==$attr->namespaceURI){
+                continue;
+            }
+            if(isset($rule['attrName']) && $rule['attrName']!==$attr->localName){
+                continue;
+            }
+            if(isset($rule['xpath'])){
+
+                $xp = $this->getXPath($attr);
+                if(isset($rule['prefixes'])){
+                    foreach($rule['prefixes'] as $nsPrefix => $ns){
+                        $xp->registerNamespace($nsPrefix, $ns);
+                    }
+                }
+                if(!$xp->query($rule['xpath'], $attr->ownerElement)->length){
+                    continue;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private function getXPath(\DOMNode $node){
+        if(!$this->xpath){
+            $this->xpath = new \DOMXPath($node->ownerDocument);
+        }
+        return $this->xpath;
     }
 
     /**

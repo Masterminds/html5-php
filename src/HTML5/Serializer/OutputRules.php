@@ -22,6 +22,8 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
 
     const IM_IN_MATHML = 3;
 
+    private $hasHTML5 = false;
+
     protected $traverser;
 
     protected $encode = false;
@@ -40,6 +42,9 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
 
         $this->outputMode = static::IM_IN_HTML;
         $this->out = $output;
+
+        // If HHVM, see https://github.com/facebook/hhvm/issues/2727
+        $this->hasHTML5 = defined('ENT_HTML5') && !defined('HHVM_VERSION');
     }
 
     public function setTraverser(\Masterminds\HTML5\Serializer\Traverser $traverser)
@@ -83,15 +88,20 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         }
 
         $this->openTag($ele);
+        if (Elements::isA($name, Elements::TEXT_RAW)) {
+            foreach ($ele->childNodes as $child) {
+                $this->wr($child->data);
+            }
+        } else {
+            // Handle children.
+            if ($ele->hasChildNodes()) {
+                $this->traverser->children($ele->childNodes);
+            }
 
-        // Handle children.
-        if ($ele->hasChildNodes()) {
-            $this->traverser->children($ele->childNodes);
-        }
-
-        // Close out the SVG or MathML special handling.
-        if ($name == 'svg' || $name == 'math') {
-            $this->outputMode = static::IM_IN_HTML;
+            // Close out the SVG or MathML special handling.
+            if ($name == 'svg' || $name == 'math') {
+                $this->outputMode = static::IM_IN_HTML;
+            }
         }
 
         // If not unary, add a closing tag.
@@ -285,7 +295,8 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
 
         // If we are in PHP 5.4+ we can use the native html5 entity functionality to
         // convert the named character references.
-        if (defined('ENT_HTML5')) {
+
+        if ($this->hasHTML5) {
             return htmlentities($text, ENT_HTML5 | ENT_SUBSTITUTE | ENT_QUOTES, 'UTF-8', false);
         }         // If a version earlier than 5.4 html5 entities are not entirely handled.
         // This manually handles them.

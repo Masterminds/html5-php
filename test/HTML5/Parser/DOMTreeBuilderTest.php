@@ -15,7 +15,7 @@ use Masterminds\HTML5\Parser\DOMTreeBuilder;
  */
 class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
 {
-
+    protected $errors = array();
     /**
      * Convenience function for parsing.
      */
@@ -27,6 +27,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $parser = new Tokenizer($scanner, $treeBuilder);
 
         $parser->parse();
+        $this->errors = $treeBuilder->getErrors();
 
         return $treeBuilder->document();
     }
@@ -42,6 +43,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $parser = new Tokenizer($scanner, $treeBuilder);
 
         $parser->parse();
+        $this->errors = $treeBuilder->getErrors();
 
         return $treeBuilder->fragment();
     }
@@ -153,12 +155,10 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
                 <c id="bar2" xmlns="bar2"></c>
                 <div id="div"></div>
                 <d id="bar3"></d>
-
             </body>
           </html>', array(
                 'xmlNamespaces' => true
             ));
-
         $div = $dom->getElementById('div');
         $this->assertEquals('http://www.w3.org/1999/xhtml', $div->namespaceURI);
 
@@ -307,7 +307,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $html = "<!DOCTYPE html><html>
     Foo<head></head><body></body></html>";
         $doc = $this->parse($html);
-        $this->assertEquals('Line 0, Col 0: Unexpected text. Ignoring: Foo', $doc->errors[0]);
+        $this->assertEquals('Line 0, Col 0: Unexpected text. Ignoring: Foo', $this->errors[0]);
         $headElement = $doc->documentElement->firstChild;
         $this->assertEquals('head', $headElement->tagName);
     }
@@ -319,8 +319,8 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
 
         // We're JUST testing that we can access errors. Actual testing of
         // error messages happen in the Tokenizer's tests.
-        $this->assertGreaterThan(0, count($doc->errors));
-        $this->assertTrue(is_string($doc->errors[0]));
+        $this->assertGreaterThan(0, count($this->errors));
+        $this->assertTrue(is_string($this->errors[0]));
     }
 
     public function testProcessingInstruction()
@@ -419,7 +419,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
     {
         $html = '<!DOCTYPE html><html><head><noscript>No JS</noscript></head></html>';
         $doc = $this->parse($html);
-        $this->assertEmpty($doc->errors);
+        $this->assertEmpty($this->errors);
         $noscript = $doc->getElementsByTagName('noscript')->item(0);
         $this->assertEquals('noscript', $noscript->tagName);
     }
@@ -433,7 +433,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $doc = $this->parse($html);
         $span = $doc->getElementById('test');
 
-        $this->assertEmpty($doc->errors);
+        $this->assertEmpty($this->errors);
 
         $this->assertEquals('span', $span->tagName);
         $this->assertEquals('Test', $span->textContent);

@@ -7,6 +7,7 @@
     </testsuites>
     <filter>
         <blacklist>
+            <file>systemlib.phpreflection_hni</file>
             <file>src/HTML5/Parser/InputStream.php</file>
             <file>src/HTML5/Serializer/RulesInterface.php</file>
             <file>src/HTML5/Entities.php</file>

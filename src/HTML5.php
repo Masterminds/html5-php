@@ -163,14 +163,9 @@ class HTML5
         $parser = new Tokenizer($scanner, $events);
 
         $parser->parse();
+        $this->errors = $events->getErrors();
 
-        $document = $events->document();
-
-        if ($document) {
-            $this->errors = $document->errors;
-        }
-
-        return $document;
+        return $events->document();
     }
 
     /**
@@ -186,6 +181,7 @@ class HTML5
         $parser = new Tokenizer($scanner, $events);
 
         $parser->parse();
+        $this->errors = $events->getErrors();
 
         return $events->fragment();
     }

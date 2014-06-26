@@ -330,14 +330,14 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
     <html lang="en">
       <head id="foo"></head>
     </html>');
-        $dom->getElementById('foo')->appendChild(new \DOMText('<script>alert("hi");</script>'));
+        $foo = $dom->getElementById('foo');
+        $foo->appendChild(new \DOMText('<script>alert("hi");</script>'));
 
         $stream = fopen('php://temp', 'w');
         $r = new OutputRules($stream, $this->html5->getOptions());
         $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
 
-        $item = $dom->getElementById('foo');
-        $r->text($item->firstChild);
+        $r->text($foo->firstChild);
         $this->assertEquals('&lt;script&gt;alert("hi");&lt;/script&gt;', stream_get_contents($stream, - 1, 0));
     }
 

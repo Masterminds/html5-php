@@ -145,6 +145,8 @@ class DOMTreeBuilder implements EventHandler
      */
     protected $quirks = true;
 
+    protected $errors = array();
+
     public function __construct($isFragment = false, array $options = array())
     {
         $this->options = $options;
@@ -156,7 +158,7 @@ class DOMTreeBuilder implements EventHandler
         $dt = $impl->createDocumentType('html');
         // $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
         $this->doc = $impl->createDocument(null, null, $dt);
-        $this->doc->errors = array();
+        $this->errors = array();
 
         $this->current = $this->doc; // ->documentElement;
 
@@ -195,7 +197,6 @@ class DOMTreeBuilder implements EventHandler
      */
     public function fragment()
     {
-        $this->frag->errors = $this->doc->errors;
         return $this->frag;
     }
 
@@ -337,6 +338,9 @@ class DOMTreeBuilder implements EventHandler
             // to avoid spl_object_hash collisions whe have to avoid garbage collection of $ele storing it into $pushes
             // see https://bugs.php.net/bug.php?id=67459
             $this->pushes[spl_object_hash($ele)] = array($pushes, $ele);
+
+            // SEE https://github.com/facebook/hhvm/issues/2962
+            $ele->setAttribute('html5-php-fake-id-attribute', spl_object_hash($ele));
         }
 
         foreach ($attributes as $aName => $aVal) {
@@ -438,7 +442,13 @@ class DOMTreeBuilder implements EventHandler
             return;
         }
 
-        $cid = spl_object_hash($this->current);
+        // https://github.com/facebook/hhvm/issues/2962
+        if ($cid = $this->current->getAttribute('html5-php-fake-id-attribute')) {
+            $this->current->removeAttribute('html5-php-fake-id-attribute');
+        } else {
+            $cid = spl_object_hash($this->current);
+        }
+
         // remove the namespaced definded by current node
         if (isset($this->pushes[$cid])) {
             for ($i = 0; $i < $this->pushes[$cid][0]; $i ++) {
@@ -501,7 +511,12 @@ class DOMTreeBuilder implements EventHandler
 
     public function parseError($msg, $line = 0, $col = 0)
     {
-        $this->doc->errors[] = sprintf("Line %d, Col %d: %s", $line, $col, $msg);
+        $this->errors[] = sprintf("Line %d, Col %d: %s", $line, $col, $msg);
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     public function cdata($data)

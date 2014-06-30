@@ -441,12 +441,13 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
     public function booleanAttributes()
     {
         return array(
+            array('<img alt="" ismap>'),
+            array('<img alt="">'),
             array('<input type="radio" readonly>'),
             array('<input type="radio" checked disabled>'),
             array('<input type="checkbox" checked disabled>'),
             array('<select disabled></select>'),
-            array('<img alt="">'),
-            array('<img alt="" ismap>'),
+            array('<div ng-app>foo</div>'),
             array('<script defer></script>'),
         );
     }

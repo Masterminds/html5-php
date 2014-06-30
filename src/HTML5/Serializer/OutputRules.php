@@ -32,7 +32,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
 
     private $xpath;
 
-    protected $booleanAttributes = array(
+    protected $nonBooleanAttributes = array(
         /*
         array(
             'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
@@ -47,56 +47,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         */
         array(
             'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>'select',
-            'attrName'=>'multiple',
-        ),
-        array(
-            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>'option',
-            'attrName'=>'selected',
-        ),
-        array(
-            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>'script',
-            'attrName'=>'defer',
-        ),
-        array(
-            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>array('input', 'textarea', 'button', 'select', 'option', 'optgroup'),
-            'attrName'=>'disabled',
-        ),
-        array(
-            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>'input',
-            'attrName'=>'checked',
-            'xpath' => "@checked[../../xh:input[@type='radio' or @type='checkbox']]",
-            'prefixes'=>array('xh'=>'http://www.w3.org/1999/xhtml'),
-        ),
-        array(
-            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>array('input', 'textarea'),
-            'attrName'=>'readonly',
-            'xpath' => "@readonly[../../xh:input[@type='radio' or @type='checkbox']]|@readonly[../../xh:textarea]",
-            'prefixes'=>array('xh'=>'http://www.w3.org/1999/xhtml'),
-        ),
-        array(
-            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>array('input', 'textarea'),
-            'attrName'=>'readonly',
-            'xpath' => "@readonly[../../xh:input[@type='radio' or @type='checkbox']]|@readonly[../../xh:textarea]",
-            'prefixes'=>array('xh'=>'http://www.w3.org/1999/xhtml'),
-        ),
-        array(
-            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>'img',
-            'attrName'=>'ismap',
-        ),
-        array(
-            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'nodeName'=>'input',
-            'attrName'=>'ismap',
-            'xpath' => "@checked[../../xh:input[@type='image']]",
-            'prefixes'=>array('xh'=>'http://www.w3.org/1999/xhtml'),
+            'attrName'=>array('alt', 'title'),
         ),
 
     );
@@ -114,7 +65,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
     }
     public function addRule(array $rule)
     {
-        $this->booleanAttributes[] = $rule;
+        $this->nonBooleanAttributes[] = $rule;
     }
 
     public function setTraverser(\Masterminds\HTML5\Serializer\Traverser $traverser)
@@ -276,18 +227,22 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
 
             $this->wr(' ')->wr($name);
 
-            if (!$this->isBooleanAttribute($node)) {
+            if ((isset($val) && $val !== '') || $this->nonBooleanAttribute($node)) {
                 $this->wr('="')->wr($val)->wr('"');
             }
         }
     }
 
-    protected function isBooleanAttribute(\DOMAttr $attr)
+
+    protected function nonBooleanAttribute(\DOMAttr $attr)
     {
         $ele = $attr->ownerElement;
-        foreach($this->booleanAttributes as $rule){
+        foreach($this->nonBooleanAttributes as $rule){
 
             if(isset($rule['nodeNamespace']) && $rule['nodeNamespace']!==$ele->namespaceURI){
+                continue;
+            }
+            if(isset($rule['attNamespace']) && $rule['attNamespace']!==$attr->namespaceURI){
                 continue;
             }
             if(isset($rule['nodeName']) && !is_array($rule['nodeName']) && $rule['nodeName']!==$ele->localName){
@@ -296,10 +251,10 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
             if(isset($rule['nodeName']) && is_array($rule['nodeName']) && !in_array($ele->localName, $rule['nodeName'], true)){
                 continue;
             }
-            if(isset($rule['attNamespace']) && $rule['attNamespace']!==$attr->namespaceURI){
+            if(isset($rule['attrName']) && !is_array($rule['attrName']) && $rule['attrName']!==$attr->localName){
                 continue;
             }
-            if(isset($rule['attrName']) && $rule['attrName']!==$attr->localName){
+            if(isset($rule['attrName']) && is_array($rule['attrName']) && !in_array($attr->localName, $rule['attrName'], true)){
                 continue;
             }
             if(isset($rule['xpath'])){
@@ -314,8 +269,10 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
                     continue;
                 }
             }
+
             return true;
         }
+
         return false;
     }
 

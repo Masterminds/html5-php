@@ -56,6 +56,15 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertInstanceOf('\DOMDocument', $doc);
         $this->assertEquals('html', $doc->documentElement->tagName);
     }
+    public function testDocumentFakeAttrAbsence()
+    {
+        $html = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\"><body>foo</body></html>";
+        $doc = $this->parse($html, array('xmlNamespaces'=>true));
+
+        $xp = new \DOMXPath($doc);
+        $this->assertEquals(0, $xp->query("//@html5-php-fake-id-attribute")->length);
+
+    }
 
     public function testFragment()
     {

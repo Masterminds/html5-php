@@ -340,7 +340,9 @@ class DOMTreeBuilder implements EventHandler
             $this->pushes[spl_object_hash($ele)] = array($pushes, $ele);
 
             // SEE https://github.com/facebook/hhvm/issues/2962
-            $ele->setAttribute('html5-php-fake-id-attribute', spl_object_hash($ele));
+            if (defined('HHVM_VERSION')) {
+                $ele->setAttribute('html5-php-fake-id-attribute', spl_object_hash($ele));
+            }
         }
 
         foreach ($attributes as $aName => $aVal) {
@@ -431,6 +433,13 @@ class DOMTreeBuilder implements EventHandler
             $lname = Elements::normalizeSvgElement($lname);
         }
 
+        // See https://github.com/facebook/hhvm/issues/2962
+        if (defined('HHVM_VERSION') && ($cid = $this->current->getAttribute('html5-php-fake-id-attribute'))) {
+            $this->current->removeAttribute('html5-php-fake-id-attribute');
+        } else {
+            $cid = spl_object_hash($this->current);
+        }
+
         // XXX: Not sure whether we need this anymore.
         // if ($name != $lname) {
         // return $this->quirksTreeResolver($lname);
@@ -442,17 +451,10 @@ class DOMTreeBuilder implements EventHandler
             return;
         }
 
-        // https://github.com/facebook/hhvm/issues/2962
-        if ($cid = $this->current->getAttribute('html5-php-fake-id-attribute')) {
-            $this->current->removeAttribute('html5-php-fake-id-attribute');
-        } else {
-            $cid = spl_object_hash($this->current);
-        }
-
         // remove the namespaced definded by current node
         if (isset($this->pushes[$cid])) {
             for ($i = 0; $i < $this->pushes[$cid][0]; $i ++) {
-                $extr = array_shift($this->nsStack);
+                array_shift($this->nsStack);
             }
             unset($this->pushes[$cid]);
         }

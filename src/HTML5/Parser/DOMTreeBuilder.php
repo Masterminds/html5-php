@@ -301,10 +301,12 @@ class DOMTreeBuilder implements EventHandler
             ) + $this->nsStack[0]);
             $pushes ++;
         }
+        $needsWorkaround = false;
         if (isset($this->options["xmlNamespaces"]) && $this->options["xmlNamespaces"]) {
             // when xmlNamespaces is true a and we found a 'xmlns' or 'xmlns:*' attribute, we should add a new item to the $nsStack
             foreach ($attributes as $aName => $aVal) {
                 if ($aName === 'xmlns') {
+                    $needsWorkaround = $aVal;
                     array_unshift($this->nsStack, array(
                         '' => $aVal
                     ) + $this->nsStack[0]);
@@ -321,16 +323,28 @@ class DOMTreeBuilder implements EventHandler
         try {
             $prefix = ($pos = strpos($lname, ':')) ? substr($lname, 0, $pos) : '';
 
-            if (isset($this->nsStack[0][$prefix])) {
-                $ele = $this->doc->createElementNS($this->nsStack[0][$prefix], $lname);
+
+            if ($needsWorkaround!==false) {
+
+                $xml = "<$lname xmlns=\"$needsWorkaround\" ".(strlen($prefix) && isset($this->nsStack[0][$prefix])?("xmlns:$prefix=\"".$this->nsStack[0][$prefix]."\""):"")."/>";
+
+                $frag = new \DOMDocument('1.0', 'UTF-8');
+                $frag->loadXML($xml);
+
+                $ele = $this->doc->importNode($frag->documentElement, true);
+
             } else {
-                $ele = $this->doc->createElement($lname);
+                if (isset($this->nsStack[0][$prefix])) {
+                    $ele = $this->doc->createElementNS($this->nsStack[0][$prefix], $lname);
+                } else {
+                    $ele = $this->doc->createElement($lname);
+                }
             }
+
         } catch (\DOMException $e) {
             $this->parseError("Illegal tag name: <$lname>. Replaced with <invalid>.");
             $ele = $this->doc->createElement('invalid');
         }
-
 
         // when we add some namespacess, we have to track them. Later, when "endElement" is invoked, we have to remove them
         if ($pushes > 0) {
@@ -346,6 +360,10 @@ class DOMTreeBuilder implements EventHandler
         }
 
         foreach ($attributes as $aName => $aVal) {
+            // xmlns attributes can't be set
+            if ($aName === 'xmlns') {
+                continue;
+            }
 
             if ($this->insertMode == static::IM_IN_SVG) {
                 $aName = Elements::normalizeSvgAttribute($aName);
@@ -355,11 +373,11 @@ class DOMTreeBuilder implements EventHandler
 
             try {
                 $prefix = ($pos = strpos($aName, ':')) ? substr($aName, 0, $pos) : false;
-                if ($prefix!==false && $prefix !== 'xmlns' && isset($this->nsStack[0][$prefix])) {
+
+                if ($prefix==='xmlns') {
+                    $ele->setAttributeNs(self::NAMESPACE_XMLNS, $aName, $aVal);
+                } elseif ($prefix!==false && isset($this->nsStack[0][$prefix])) {
                     $ele->setAttributeNs($this->nsStack[0][$prefix], $aName, $aVal);
-                } elseif ($aName === 'xmlns') {
-                    // setAttribute('xmlns', '..') is not possible, so we have to add a fake attribute
-                    $ele->setAttribute("xmlns:x___xmlns__x", $aVal);
                 } else {
                     $ele->setAttribute($aName, $aVal);
                 }

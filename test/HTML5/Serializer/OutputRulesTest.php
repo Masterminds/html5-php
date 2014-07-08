@@ -119,21 +119,24 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
             'xmlNamespaces' => true
         ));
 
-        $source = '<!DOCTYPE html>
-<html><body xmlns:x="http://www.prefixed.com" id="body">
-        <a id="bar1" xmlns="bar1">
-            <b id="bar4" xmlns="bar4"><x:prefixed id="prefixed">x</x:prefixed></b>
-        </a>
-        <svg id="svg">xx</svg>
-        <c id="bar2" xmlns="bar2">xx</c>
-        <div id="div">xx</div>
-        <d id="bar3">xx</d></body>
-</html>
-';
+        $source = '
+            <!DOCTYPE html>
+            <html><body id="body" xmlns:x="http://www.prefixed.com">
+                    <a id="bar1" xmlns="http://www.prefixed.com/bar1">
+                        <b id="bar4" xmlns="http://www.prefixed.com/bar4"><x:prefixed id="prefixed">xy</x:prefixed></b>
+                    </a>
+                    <svg id="svg">svg</svg>
+                    <c id="bar2" xmlns="http://www.prefixed.com/bar2"></c>
+                    <div id="div"></div>
+                    <d id="bar3"></d>
+                    <xn:d id="bar5" xmlns="http://www.prefixed.com/bar5_x" xmlns:xn="http://www.prefixed.com/xn"><x id="bar5_x">y</x></xn:d>
+                </body>
+            </html>';
 
         $dom = $this->html5->loadHTML($source, array(
             'xmlNamespaces' => true
         ));
+        $this->assertFalse($this->html5->hasErrors(), print_r($this->html5->getErrors(), 1));
 
         $stream = fopen('php://temp', 'w');
         $r = new OutputRules($stream, $this->html5->getOptions());
@@ -142,13 +145,11 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $t->walk();
         $rendered = stream_get_contents($stream, - 1, 0);
 
-        $this->assertEquals(str_replace(array(
-            "\n",
-            "\r"
-        ), "", $rendered), str_replace(array(
-            "\n",
-            "\r"
-        ), "", $source));
+        $clear = function($s){
+            return trim(preg_replace('/[\s]+/', " ", $s));
+        };
+
+        $this->assertEquals($clear($source), $clear($rendered));
     }
 
     public function testElementWithScript()

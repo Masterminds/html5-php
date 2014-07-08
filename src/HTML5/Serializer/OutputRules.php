@@ -15,6 +15,32 @@ use Masterminds\HTML5\Elements;
  */
 class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
 {
+    /**
+     * Defined in http://www.w3.org/TR/html51/infrastructure.html#html-namespace-0
+     */
+    const NAMESPACE_HTML = 'http://www.w3.org/1999/xhtml';
+
+    const NAMESPACE_MATHML = 'http://www.w3.org/1998/Math/MathML';
+
+    const NAMESPACE_SVG = 'http://www.w3.org/2000/svg';
+
+    const NAMESPACE_XLINK = 'http://www.w3.org/1999/xlink';
+
+    const NAMESPACE_XML = 'http://www.w3.org/XML/1998/namespace';
+
+    const NAMESPACE_XMLNS = 'http://www.w3.org/2000/xmlns/';
+
+    /**
+     * Holds the HTML5 element names that causes a namespace switch
+     *
+     * @var array
+     */
+    protected $nsRoots = array(
+        'html' => self::NAMESPACE_HTML,
+        'svg' => self::NAMESPACE_SVG,
+        'math' => self::NAMESPACE_MATHML
+    );
+
 
     const IM_IN_HTML = 1;
 
@@ -27,6 +53,8 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
     protected $traverser;
 
     protected $encode = false;
+
+    protected $xpath;
 
     protected $out;
 
@@ -148,6 +176,39 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
             ->wr($ele->data)
             ->wr('?>');
     }
+    /**
+     * Write the namespace attributes
+     *
+     *
+     * @param \DOMNode $ele
+     *            The element being written.
+     */
+    protected function namespaceAttrs($ele)
+    {
+        $this->xpath = new \DOMXPath($ele->ownerDocument);
+        $declared = array();
+
+        $declared["xmlns:xml"] = "http://www.w3.org/XML/1998/namespace";
+
+        if ($ele->parentNode) {
+            foreach( $this->xpath->query('namespace::*', $ele->parentNode ) as $nsNode ) {
+                $declared[$nsNode->nodeName] = $nsNode->nodeValue;
+            }
+        }
+        foreach( $this->xpath->query('namespace::*', $ele ) as $nsNode ) {
+            if (isset($declared[$nsNode->nodeName]) && $declared[$nsNode->nodeName] === $nsNode->nodeValue) {
+                unset($declared[$nsNode->nodeName]);
+            } else {
+                $declared[$nsNode->nodeName] = $nsNode->nodeValue;
+            }
+        }
+
+        foreach( $declared as $aName => $aValue ) {
+            if (!in_array($aValue, $this->nsRoots)) {
+                $this->wr(' ')->wr($aName)->wr('="')->wr($aValue)->wr('"');
+            }
+        }
+    }
 
     /**
      * Write the opening tag.
@@ -161,7 +222,11 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
     protected function openTag($ele)
     {
         $this->wr('<')->wr($this->traverser->isLocalElement($ele) ? $ele->localName : $ele->tagName);
+
+
         $this->attrs($ele);
+        $this->namespaceAttrs($ele);
+
 
         if ($this->outputMode == static::IM_IN_HTML) {
             $this->wr('>');
@@ -196,9 +261,6 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
             // prefix. It seems that DOM does this for us already, but there
             // may be exceptions.
             $name = $node->name;
-            if ($name == "xmlns:x___xmlns__x") {
-                $name = "xmlns";
-            }
 
             // Special handling for attributes in SVG and MathML.
             // Using if/elseif instead of switch because it's faster in PHP.

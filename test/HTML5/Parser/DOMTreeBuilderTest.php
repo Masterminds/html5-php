@@ -157,17 +157,22 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $dom = $this->parse(
             '<!DOCTYPE html><html>
             <body xmlns:x="http://www.prefixed.com" id="body">
-                <a id="bar1" xmlns="bar1">
-                    <b id="bar4" xmlns="bar4"><x:prefixed id="prefixed"/></b>
+                <a id="bar1" xmlns="http://www.prefixed.com/bar1">
+                    <b id="bar4" xmlns="http://www.prefixed.com/bar4"><x:prefixed id="prefixed"/></b>
                 </a>
                 <svg id="svg"></svg>
-                <c id="bar2" xmlns="bar2"></c>
+                <c id="bar2" xmlns="http://www.prefixed.com/bar2"></c>
                 <div id="div"></div>
                 <d id="bar3"></d>
+                <xn:d xmlns:xn="http://www.prefixed.com/xn" xmlns="http://www.prefixed.com/bar5_x" id="bar5"><x id="bar5_x"/></xn:d>
             </body>
           </html>', array(
                 'xmlNamespaces' => true
             ));
+
+
+        $this->assertEmpty($this->errors);
+
         $div = $dom->getElementById('div');
         $this->assertEquals('http://www.w3.org/1999/xhtml', $div->namespaceURI);
 
@@ -175,22 +180,28 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals('http://www.w3.org/1999/xhtml', $body->namespaceURI);
 
         $bar1 = $dom->getElementById('bar1');
-        $this->assertEquals('bar1', $bar1->namespaceURI);
+        $this->assertEquals('http://www.prefixed.com/bar1', $bar1->namespaceURI);
 
         $bar2 = $dom->getElementById('bar2');
-        $this->assertEquals("bar2", $bar2->namespaceURI);
+        $this->assertEquals("http://www.prefixed.com/bar2", $bar2->namespaceURI);
 
         $bar3 = $dom->getElementById('bar3');
         $this->assertEquals("http://www.w3.org/1999/xhtml", $bar3->namespaceURI);
 
         $bar4 = $dom->getElementById('bar4');
-        $this->assertEquals("bar4", $bar4->namespaceURI);
+        $this->assertEquals("http://www.prefixed.com/bar4", $bar4->namespaceURI);
 
         $svg = $dom->getElementById('svg');
         $this->assertEquals("http://www.w3.org/2000/svg", $svg->namespaceURI);
 
         $prefixed = $dom->getElementById('prefixed');
         $this->assertEquals("http://www.prefixed.com", $prefixed->namespaceURI);
+
+        $prefixed = $dom->getElementById('bar5');
+        $this->assertEquals("http://www.prefixed.com/xn", $prefixed->namespaceURI);
+
+        $prefixed = $dom->getElementById('bar5_x');
+        $this->assertEquals("http://www.prefixed.com/bar5_x", $prefixed->namespaceURI);
     }
 
     public function testAttributes()

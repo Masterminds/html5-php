@@ -35,10 +35,12 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
      *
      * @var array
      */
-    protected $nsRoots = array(
-        'html' => self::NAMESPACE_HTML,
-        'svg' => self::NAMESPACE_SVG,
-        'math' => self::NAMESPACE_MATHML
+    protected $implicitNamespaces = array(
+        self::NAMESPACE_HTML,
+        self::NAMESPACE_SVG,
+        self::NAMESPACE_MATHML,
+        self::NAMESPACE_XML,
+        self::NAMESPACE_XMLNS,
     );
 
 
@@ -185,27 +187,13 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
      */
     protected function namespaceAttrs($ele)
     {
-        $this->xpath = new \DOMXPath($ele->ownerDocument);
-        $declared = array();
-
-        $declared["xmlns:xml"] = "http://www.w3.org/XML/1998/namespace";
-
-        if ($ele->parentNode) {
-            foreach( $this->xpath->query('namespace::*', $ele->parentNode ) as $nsNode ) {
-                $declared[$nsNode->nodeName] = $nsNode->nodeValue;
-            }
-        }
-        foreach( $this->xpath->query('namespace::*', $ele ) as $nsNode ) {
-            if (isset($declared[$nsNode->nodeName]) && $declared[$nsNode->nodeName] === $nsNode->nodeValue) {
-                unset($declared[$nsNode->nodeName]);
-            } else {
-                $declared[$nsNode->nodeName] = $nsNode->nodeValue;
-            }
+        if (!$this->xpath || $this->xpath->document !== $ele->ownerDocument){
+            $this->xpath = new \DOMXPath($ele->ownerDocument);
         }
 
-        foreach( $declared as $aName => $aValue ) {
-            if (!in_array($aValue, $this->nsRoots)) {
-                $this->wr(' ')->wr($aName)->wr('="')->wr($aValue)->wr('"');
+        foreach( $this->xpath->query('namespace::*[not(.=../../namespace::*)]', $ele ) as $nsNode ) {
+            if (!in_array($nsNode->nodeValue, $this->implicitNamespaces)) {
+                $this->wr(' ')->wr($nsNode->nodeName)->wr('="')->wr($nsNode->nodeValue)->wr('"');
             }
         }
     }

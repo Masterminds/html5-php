@@ -129,7 +129,7 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
                     <c id="bar2" xmlns="http://www.prefixed.com/bar2"></c>
                     <div id="div"></div>
                     <d id="bar3"></d>
-                    <xn:d id="bar5" xmlns="http://www.prefixed.com/bar5_x" xmlns:xn="http://www.prefixed.com/xn"><x id="bar5_x">y</x></xn:d>
+                    <xn:d id="bar5" xmlns:xn="http://www.prefixed.com/xn" xmlns="http://www.prefixed.com/bar5_x"><x id="bar5_x">y</x></xn:d>
                 </body>
             </html>';
 

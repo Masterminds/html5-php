@@ -346,8 +346,9 @@ class DOMTreeBuilder implements EventHandler
             $ele = $this->doc->createElement('invalid');
         }
 
-        // when we add some namespacess, we have to track them. Later, when "endElement" is invoked, we have to remove them
-        if ($pushes > 0) {
+        // When we add some namespacess, we have to track them. Later, when "endElement" is invoked, we have to remove them.
+        // When we are on a void tag, we do not need to care about namesapce nesting.
+        if ($pushes > 0 && !Elements::isA($name, Elements::VOID_TAG)) {
             // PHP tends to free the memory used by DOM,
             // to avoid spl_object_hash collisions whe have to avoid garbage collection of $ele storing it into $pushes
             // see https://bugs.php.net/bug.php?id=67459
@@ -411,6 +412,14 @@ class DOMTreeBuilder implements EventHandler
             $this->insertMode = static::IM_IN_BODY;
         }
 
+        // When we are on a void tag, we do not need to care about namesapce nesting,
+        // but we have to remove the namespaces pushed to $nsStack.
+        if ($pushes > 0 && Elements::isA($name, Elements::VOID_TAG)) {
+            // remove the namespaced definded by current node
+            for ($i = 0; $i < $pushes; $i ++) {
+                array_shift($this->nsStack);
+            }
+        }
         // Return the element mask, which the tokenizer can then use to set
         // various processing rules.
         return Elements::element($name);

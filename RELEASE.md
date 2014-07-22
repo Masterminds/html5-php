@@ -1,4 +1,11 @@
 # Release Notes
+2.0.0 (2014-08-01)
+- #52: Facebook HHVM compatibility
+- #48: Addopted PSR-2 as coding standard
+- #47: Moved everything to Masterminds namespace
+- #45: Added custom namespaces
+- #44: Added support to XML-style namespaces
+- #37: Refactored HTML5 class removing static methods
 
 1.0.5 (2014-06-10)
 - #38: Set the dev-master branch as the 1.0.x branch for composer (goetas)

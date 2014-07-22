@@ -1,7 +1,8 @@
 # Release Notes
-2.0.0 (2014-08-01)
+2.0.0 (2014-07-25)
+- #53: Improved boolean attributes handling
 - #52: Facebook HHVM compatibility
-- #48: Addopted PSR-2 as coding standard
+- #48: Adopted PSR-2 as coding standard
 - #47: Moved everything to Masterminds namespace
 - #45: Added custom namespaces
 - #44: Added support to XML-style namespaces

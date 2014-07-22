@@ -32,7 +32,7 @@ description: "Parsing and Serializing (Writing) HTML5 in PHP."
 <p>The best installation method is via <a href="http://getcomposer.org/">composer</a>. To install add <code>masterminds/html5-php</code> to your <code>composer.json</code> file.</p>
 <pre><code>{
   "require" : {
-    "masterminds/html5": "1.*"
+    "masterminds/html5": "2.*"
   },
 }</code></pre>
 
@@ -51,10 +51,12 @@ $html = "&lt;!DOCTYPE html&gt;
   &lt;/body&gt;
 &lt;/html&gt;";
 
+use Masterminds\HTML5;
+$html5 = new HTML5();
 // Parse the document. $dom is a DOMDocument.
-$dom = \HTML5::loadHTML($html);
+$dom = $html5->loadHTML($html);
 
-print \HTML5::saveHTML($dom);</code></pre>
+print $html5->saveHTML($dom);</code></pre>
           
 <p>It's that easy. See <a href="https://github.com/Masterminds/html5-php/wiki/Basic-Usage">the documentation</a> for all the wonderful ways to parse and write html5.</p>
 

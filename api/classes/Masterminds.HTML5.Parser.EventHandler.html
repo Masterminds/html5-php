@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>html5-php</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+        <script type="text/javascript">
+        function loadExternalCodeSnippets() {
+            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+                var src = pre.getAttribute('data-src');
+                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+                var language = 'php';
+
+                var code = document.createElement('code');
+                code.className = 'language-' + language;
+
+                pre.textContent = '';
+
+                code.textContent = 'Loading…';
+
+                pre.appendChild(code);
+
+                var xhr = new XMLHttpRequest();
+
+                xhr.open('GET', src, true);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+
+                        if (xhr.status < 400 && xhr.responseText) {
+                            code.textContent = xhr.responseText;
+
+                            Prism.highlightElement(code);
+                        }
+                        else if (xhr.status >= 400) {
+                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                        }
+                        else {
+                            code.textContent = '✖ Error: File does not exist or is empty';
+                        }
+                    }
+                };
+
+                xhr.send(null);
+            });
+        }
+
+        $(document).ready(function(){
+            loadExternalCodeSnippets();
+        });
+        $('#source-view').on('shown', function () {
+            loadExternalCodeSnippets();
+        })
+    </script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">html5-php</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/Masterminds.html">\Masterminds</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">143</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">15</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">2</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-770621935"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-770621935" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1402028453"></a>
+                                <a href="../namespaces/Masterminds.html" style="margin-left: 30px; padding-left: 0">Masterminds</a>
+            </div>
+            <div id="namespace-1402028453" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2143422184"></a>
+                                <a href="../namespaces/Masterminds.HTML5.html" style="margin-left: 30px; padding-left: 0">HTML5</a>
+            </div>
+            <div id="namespace-2143422184" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-381513850"></a>
+                                <a href="../namespaces/Masterminds.HTML5.Parser.html" style="margin-left: 30px; padding-left: 0">Parser</a>
+            </div>
+            <div id="namespace-381513850" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Masterminds.HTML5.Parser.EventHandler.html">EventHandler</a></li>
+                                                    <li class="interface"><a href="../classes/Masterminds.HTML5.Parser.InputStream.html">InputStream</a></li>
+                                                                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Parser.CharacterReference.html">CharacterReference</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Parser.DOMTreeBuilder.html">DOMTreeBuilder</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Parser.FileInputStream.html">FileInputStream</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Parser.ParseError.html">ParseError</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Parser.Scanner.html">Scanner</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Parser.StringInputStream.html">StringInputStream</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Parser.Tokenizer.html">Tokenizer</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Parser.TreeBuildingRules.html">TreeBuildingRules</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Parser.UTF8Utils.html">UTF8Utils</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-353334196"></a>
+                                <a href="../namespaces/Masterminds.HTML5.Serializer.html" style="margin-left: 30px; padding-left: 0">Serializer</a>
+            </div>
+            <div id="namespace-353334196" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Masterminds.HTML5.Serializer.RulesInterface.html">RulesInterface</a></li>
+                                                                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Serializer.HTML5Entities.html">HTML5Entities</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Serializer.OutputRules.html">OutputRules</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Serializer.Traverser.html">Traverser</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/Masterminds.HTML5.InstructionProcessor.html">InstructionProcessor</a></li>
+                                                                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Elements.html">Elements</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Entities.html">Entities</a></li>
+                                                    <li class="class"><a href="../classes/Masterminds.HTML5.Exception.html">Exception</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Masterminds.HTML5.html">HTML5</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/Masterminds.HTML5.Parser.html">\Masterminds\HTML5\Parser</a>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\Masterminds\HTML5\Parser</small>EventHandler</h1>
+                    <p><em>Standard events for HTML5.</em></p>
+                    <p>This is roughly analogous to a SAX2 or expat-style interface.
+However, it is tuned specifically for HTML5, according to section 8
+of the HTML5 specification.</p>
+<p>An event handler receives parser events. For a concrete
+implementation, see DOMTreeBuilder.</p>
+<p>Quirks support in the parser is limited to close-in syntax (malformed
+tags or attributes). Higher order syntax and semantic issues with a
+document (e.g. mismatched tags, illegal nesting, etc.) are the
+responsibility of the event handler implementation.</p>
+<p>See HTML5 spec section 8.2.4</p>
+
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span6">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span6">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span6">
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#method_doctype">doctype()</a><br />
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#method_startTag">startTag()</a><br />
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#method_endTag">endTag()</a><br />
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#method_comment">comment()</a><br />
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#method_text">text()</a><br />
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#method_eof">eof()</a><br />
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#method_parseError">parseError()</a><br />
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#method_cdata">cdata()</a><br />
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#method_processingInstruction">processingInstruction()</a><br />
+                                                            </section>
+                            <section class="span6">
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#constant_DOCTYPE_NONE">DOCTYPE_NONE</a><br />
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#constant_DOCTYPE_PUBLIC">DOCTYPE_PUBLIC</a><br />
+                                                                    <a href="../classes/Masterminds.HTML5.Parser.EventHandler.html#constant_DOCTYPE_SYSTEM">DOCTYPE_SYSTEM</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span6">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span6">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span6">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span6">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        <dl>
+                        <dt>File</dt>
+                            <dd>
+                                <a href="../files/HTML5.Parser.EventHandler.html"><div class="path-wrapper">HTML5/Parser/EventHandler.php</div></a>
+                            </dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper"></div></dd>
+                                                
+                                            </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
+            </div>
+
+                            <a id="constants" name="constants"></a>
+                <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DOCTYPE_NONE" name="constant_DOCTYPE_NONE" class="anchor"></a>
+            <article id="constant_DOCTYPE_NONE" class="constant">
+                <h3 class="">DOCTYPE_NONE</h3>
+                <pre class="signature">DOCTYPE_NONE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DOCTYPE_PUBLIC" name="constant_DOCTYPE_PUBLIC" class="anchor"></a>
+            <article id="constant_DOCTYPE_PUBLIC" class="constant">
+                <h3 class="">DOCTYPE_PUBLIC</h3>
+                <pre class="signature">DOCTYPE_PUBLIC</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DOCTYPE_SYSTEM" name="constant_DOCTYPE_SYSTEM" class="anchor"></a>
+            <article id="constant_DOCTYPE_SYSTEM" class="constant">
+                <h3 class="">DOCTYPE_SYSTEM</h3>
+                <pre class="signature">DOCTYPE_SYSTEM</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                        <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Methods</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_doctype" name="method_doctype" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">doctype()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">doctype(string <span class="argument">$name</span>, int <span class="argument">$idType</span>, string <span class="argument">$id</span>, boolean <span class="argument">$quirks</span>)</pre>
+                <p><em>A doctype declaration.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name </td>
+                                <td><p>The name of the root element.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>int</td>
+                                <td>$idType </td>
+                                <td><p>One of DOCTYPE_NONE, DOCTYPE_PUBLIC, or DOCTYPE_SYSTEM.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$id </td>
+                                <td><p>The identifier. For DOCTYPE_PUBLIC, this is the public ID. If DOCTYPE_SYSTEM,</p>
+<pre><code>       then this is a system ID.</code></pre></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$quirks </td>
+                                <td><p>Indicates whether the builder should enter quirks mode.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_startTag" name="method_startTag" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">startTag()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">startTag(string <span class="argument">$name</span>, array <span class="argument">$attributes</span>, boolean <span class="argument">$selfClosing</span>) : \Masterminds\HTML5\Parser\numeric</pre>
+                <p><em>A start tag.</em></p>
+                <p>IMPORTANT: The parser watches the return value of this event. If this returns
+an integer, the parser will switch TEXTMODE patters according to the int.</p>
+<p>This is how the Tree Builder can tell the Tokenizer when a certain tag should
+cause the parser to go into RAW text mode.</p>
+<p>The HTML5 standard requires that the builder is the one that initiates this
+step, and this is the only way short of a circular reference that we can
+do that.</p>
+<p>Example: if a startTag even for a <code>script</code> name is fired, and the startTag()
+implementation returns Tokenizer::TEXTMODE_RAW, then the tokenizer will
+switch into RAW text mode and consume data until it reaches a closing
+<code>script</code> tag.</p>
+<p>The textmode is automatically reset to Tokenizer::TEXTMODE_NORMAL when the
+closing tag is encounter. <strong>This behavior may change.</strong></p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name </td>
+                                <td><p>The tag name.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$attributes </td>
+                                <td><p>An array with all of the tag's attributes.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$selfClosing </td>
+                                <td><p>An indicator of whether or not this tag is self-closing (<foo/>)</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \Masterminds\HTML5\Parser\numeric
+                                            &mdash; <p>One of the Tokenizer::TEXTMODE_* constants.</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_endTag" name="method_endTag" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">endTag()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">endTag( <span class="argument">$name</span>)</pre>
+                <p><em>An end-tag.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$name </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_comment" name="method_comment" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">comment()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">comment( <span class="argument">$cdata</span>)</pre>
+                <p><em>A comment section (unparsed character data).</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$cdata </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_text" name="method_text" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">text()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">text( <span class="argument">$cdata</span>)</pre>
+                <p><em>A unit of parsed character data.</em></p>
+                <p>Entities in this text are <em>already decoded</em>.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$cdata </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_eof" name="method_eof" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">eof()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">eof()</pre>
+                <p><em>Indicates that the document has been entirely processed.</em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_parseError" name="method_parseError" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">parseError()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">parseError( <span class="argument">$msg</span>,  <span class="argument">$line</span>,  <span class="argument">$col</span>)</pre>
+                <p><em>Emitted when the parser encounters an error condition.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$msg </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$line </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$col </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_cdata" name="method_cdata" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">cdata()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">cdata(string <span class="argument">$data</span>)</pre>
+                <p><em>A CDATA section.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$data </td>
+                                <td><p>The unparsed character data.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_processingInstruction" name="method_processingInstruction" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">processingInstruction()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">processingInstruction(string <span class="argument">$name</span>, string <span class="argument">$data</span>)</pre>
+                <p><em>This is a holdover from the XML spec.</em></p>
+                <p>While user agents don't get PIs, server-side does.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$name </td>
+                                <td><p>The name of the processor (e.g. 'php').</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$data </td>
+                                <td><p>The unparsed data.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">EventHandler.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/HTML5/Parser/EventHandler.php.txt" class="language-php"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/Masterminds.html">\Masterminds</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on July 22nd, 2014 at 09:14.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

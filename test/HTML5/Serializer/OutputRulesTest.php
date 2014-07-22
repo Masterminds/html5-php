@@ -439,12 +439,46 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals($expected, $m->invoke($o, $test, $isAttribute));
     }
 
+    public function booleanAttributes()
+    {
+        return array(
+            array('<img alt="" ismap>'),
+            array('<img alt="">'),
+            array('<input type="radio" readonly>'),
+            array('<input type="radio" checked disabled>'),
+            array('<input type="checkbox" checked disabled>'),
+            array('<select disabled></select>'),
+            array('<div ng-app>foo</div>'),
+            array('<script defer></script>'),
+        );
+    }
+    /**
+     * @dataProvider booleanAttributes
+     */
+    public function testBooleanAttrs($html)
+    {
+        $dom = $this->html5->loadHTML('<!doctype html><html lang="en"><body>'.$html.'</body></html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $node = $dom->getElementsByTagName('body')->item(0)->firstChild;
+
+        $m = $this->getProtectedMethod('attrs');
+        $m->invoke($r, $node);
+
+        $content = stream_get_contents($stream, - 1, 0);
+        $this->assertContains($content, $html);
+
+    }
+
     public function testAttrs()
     {
         $dom = $this->html5->loadHTML('<!doctype html>
     <html lang="en">
       <body>
-        <div id="foo" class="bar baz" disabled>foo bar baz</div>
+        <div id="foo" class="bar baz">foo bar baz</div>
       </body>
     </html>');
 
@@ -458,7 +492,7 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $m->invoke($r, $list->item(0));
 
         $content = stream_get_contents($stream, - 1, 0);
-        $this->assertEquals(' id="foo" class="bar baz" disabled', $content);
+        $this->assertEquals(' id="foo" class="bar baz"', $content);
     }
 
     public function testSvg()

@@ -43,24 +43,48 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         self::NAMESPACE_XMLNS,
     );
 
-
     const IM_IN_HTML = 1;
 
     const IM_IN_SVG = 2;
 
     const IM_IN_MATHML = 3;
 
+    /**
+     * Used as cache to detect if is available ENT_HTML5
+     * @var boolean
+     */
     private $hasHTML5 = false;
 
     protected $traverser;
 
     protected $encode = false;
 
-    protected $xpath;
-
     protected $out;
 
     protected $outputMode;
+
+    private $xpath;
+
+    protected $nonBooleanAttributes = array(
+        /*
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'attrNamespace'=>'http://www.w3.org/1999/xhtml',
+
+            'nodeName'=>'img', 'nodeName'=>array('img', 'a'),
+            'attrName'=>'alt', 'attrName'=>array('title', 'alt'),
+
+
+            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'),
+            'xpath' => "@checked[../../xh:input[@type='radio' or @type='checkbox']]",
+        ),
+        */
+        array(
+            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
+            'attrName'=>array('alt', 'title'),
+        ),
+
+    );
 
     const DOCTYPE = '<!DOCTYPE html>';
 
@@ -75,6 +99,10 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
 
         // If HHVM, see https://github.com/facebook/hhvm/issues/2727
         $this->hasHTML5 = defined('ENT_HTML5') && !defined('HHVM_VERSION');
+    }
+    public function addRule(array $rule)
+    {
+        $this->nonBooleanAttributes[] = $rule;
     }
 
     public function setTraverser(\Masterminds\HTML5\Serializer\Traverser $traverser)
@@ -259,10 +287,61 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
             }
 
             $this->wr(' ')->wr($name);
-            if (isset($val) && $val !== '') {
+
+            if ((isset($val) && $val !== '') || $this->nonBooleanAttribute($node)) {
                 $this->wr('="')->wr($val)->wr('"');
             }
         }
+    }
+
+
+    protected function nonBooleanAttribute(\DOMAttr $attr)
+    {
+        $ele = $attr->ownerElement;
+        foreach($this->nonBooleanAttributes as $rule){
+
+            if(isset($rule['nodeNamespace']) && $rule['nodeNamespace']!==$ele->namespaceURI){
+                continue;
+            }
+            if(isset($rule['attNamespace']) && $rule['attNamespace']!==$attr->namespaceURI){
+                continue;
+            }
+            if(isset($rule['nodeName']) && !is_array($rule['nodeName']) && $rule['nodeName']!==$ele->localName){
+                continue;
+            }
+            if(isset($rule['nodeName']) && is_array($rule['nodeName']) && !in_array($ele->localName, $rule['nodeName'], true)){
+                continue;
+            }
+            if(isset($rule['attrName']) && !is_array($rule['attrName']) && $rule['attrName']!==$attr->localName){
+                continue;
+            }
+            if(isset($rule['attrName']) && is_array($rule['attrName']) && !in_array($attr->localName, $rule['attrName'], true)){
+                continue;
+            }
+            if(isset($rule['xpath'])){
+
+                $xp = $this->getXPath($attr);
+                if(isset($rule['prefixes'])){
+                    foreach($rule['prefixes'] as $nsPrefix => $ns){
+                        $xp->registerNamespace($nsPrefix, $ns);
+                    }
+                }
+                if(!$xp->query($rule['xpath'], $attr->ownerElement)->length){
+                    continue;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function getXPath(\DOMNode $node){
+        if(!$this->xpath){
+            $this->xpath = new \DOMXPath($node->ownerDocument);
+        }
+        return $this->xpath;
     }
 
     /**

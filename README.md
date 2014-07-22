@@ -119,7 +119,7 @@ different rule sets to be used.
 - The `Traverser`, which is a special-purpose tree walker. It visits
 each node node in the tree and uses the `OutputRules` to transform the node
 into a string.
-- `\HTML5` manages the `Traverser` and stores the resultant data
+- `HTML5` manages the `Traverser` and stores the resultant data
 in the correct place.
 
 The serializer (`save()`, `saveHTML()`) follows the 
@@ -172,6 +172,7 @@ issues known issues that are not presently on the roadmap:
 To use XML style namespaces you have to configure well the main `HTML5` instance.
 
 ```php
+use Masterminds\HTML5;
 $html = new HTML5(array(
     "xmlNamespaces" => true
 ));
@@ -186,6 +187,7 @@ You can also add some default prefixes that will not require the namespace decla
 but it's elements will be namespaced.
 
 ```php
+use Masterminds\HTML5;
 $html = new HTML5(array(
     "implicitNamespaces"=>array(
         "t"=>"http://www.example.com"

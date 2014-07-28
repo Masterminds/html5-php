@@ -13,6 +13,10 @@
         {
             "name": "Matt Farina",
             "email": "matt@mattfarina.com"
+        },
+        {
+            "name": "Asmir Mustafic",
+            "email": "goetas@gmail.com"
         }
     ],
     "require" : {

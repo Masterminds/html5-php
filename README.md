@@ -10,6 +10,7 @@ But after some initial refactoring work, we began a new parser.
 - Event-based (SAX-like) parser
 - DOM tree builder
 - Interoperability with QueryPath [[in progress](https://github.com/technosophos/querypath/issues/114)]
+- Runs on **PHP** 5.3.0 or newer and **HHVM** 3.2 or newer
 
 [![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php) [![Latest Stable Version](https://poser.pugx.org/masterminds/html5/v/stable.png)](https://packagist.org/packages/masterminds/html5) [![Coverage Status](https://coveralls.io/repos/Masterminds/html5-php/badge.png?branch=master)](https://coveralls.io/r/Masterminds/html5-php?branch=master)
 
@@ -22,12 +23,12 @@ To install, add `masterminds/html5` to your `composer.json` file:
 ```
 {
   "require" : {
-    "masterminds/html5": "1.*"
+    "masterminds/html5": "2.*"
   },
 }
 ```
 
-(You may substitute `1.*` for a more specific release tag, of
+(You may substitute `2.*` for a more specific release tag, of
 course.)
 
 From there, use the `composer install` or `composer update` commands to
@@ -118,7 +119,7 @@ different rule sets to be used.
 - The `Traverser`, which is a special-purpose tree walker. It visits
 each node node in the tree and uses the `OutputRules` to transform the node
 into a string.
-- `\HTML5` manages the `Traverser` and stores the resultant data
+- `HTML5` manages the `Traverser` and stores the resultant data
 in the correct place.
 
 The serializer (`save()`, `saveHTML()`) follows the 
@@ -171,6 +172,7 @@ issues known issues that are not presently on the roadmap:
 To use XML style namespaces you have to configure well the main `HTML5` instance.
 
 ```php
+use Masterminds\HTML5;
 $html = new HTML5(array(
     "xmlNamespaces" => true
 ));
@@ -185,6 +187,7 @@ You can also add some default prefixes that will not require the namespace decla
 but it's elements will be namespaced.
 
 ```php
+use Masterminds\HTML5;
 $html = new HTML5(array(
     "implicitNamespaces"=>array(
         "t"=>"http://www.example.com"

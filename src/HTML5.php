@@ -24,12 +24,12 @@ class HTML5
      *
      * @var array
      */
-    private $options = array(
+    protected $options = array(
         // If the serializer should encode all entities.
         'encode_entities' => false
     );
 
-    private $errors = array();
+    protected $errors = array();
 
     public function __construct(array $options = array())
     {

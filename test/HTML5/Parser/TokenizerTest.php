@@ -909,6 +909,18 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEventEquals('text', 'Test', $events->get(1));
         $this->assertEventEquals('endTag', 'a', $events->get(2));
 
+        $events = $this->parse('<p>0</p><p>1</p>');
+        $this->assertEquals(7, $events->depth(), "Events: " . print_r($events, true));
+
+        $this->assertEventEquals('startTag', 'p', $events->get(0));
+        $this->assertEventEquals('text', '0', $events->get(1));
+        $this->assertEventEquals('endTag', 'p', $events->get(2));
+
+        $this->assertEventEquals('startTag', 'p', $events->get(3));
+        $this->assertEventEquals('text', '1', $events->get(4));
+        $this->assertEventEquals('endTag', 'p', $events->get(5));
+
+
         $events = $this->parse('a<![CDATA[test]]>b');
         $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, true));
         $this->assertEventEquals('text', 'a', $events->get(0));

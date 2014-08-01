@@ -944,7 +944,7 @@ class Tokenizer
      */
     protected function flushBuffer()
     {
-        if (empty($this->text)) {
+        if ($this->text === '') {
             return;
         }
         $this->events->text($this->text);

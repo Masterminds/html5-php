@@ -394,7 +394,7 @@ class DOMTreeBuilder implements EventHandler
         }
 
         // Some elements have special processing rules. Handle those separately.
-        if ($this->rules->hasRules($name)) {
+        if ($this->rules->hasRules($name) && $this->frag !== $this->current) {
             $this->current = $this->rules->evaluate($ele, $this->current);
         }         // Otherwise, it's a standard element.
         else {

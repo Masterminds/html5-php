@@ -25,13 +25,35 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
     protected function parse($string)
     {
         $treeBuilder = new DOMTreeBuilder();
-        $input = new StringInputStream($string);
-        $scanner = new Scanner($input);
+        $scanner = new Scanner(new StringInputStream($string));
         $parser = new Tokenizer($scanner, $treeBuilder);
 
         $parser->parse();
-
         return $treeBuilder->document();
+    }
+    /**
+     * Convenience function for parsing fragments.
+     */
+    protected function parseFragment($string)
+    {
+        $events = new DOMTreeBuilder(true);
+        $scanner = new Scanner(new StringInputStream($string));
+        $parser = new Tokenizer($scanner, $events);
+
+        $parser->parse();
+        return $events->fragment();
+    }
+
+    public function testTDFragment()
+    {
+
+        $frag = $this->parseFragment("<td>This is a test of the HTML5 parser</td>");
+
+        $td = $frag->childNodes->item(0);
+
+        $this->assertEquals(1, $frag->childNodes->length);
+        $this->assertEquals('td', $td->tagName);
+        $this->assertEquals('This is a test of the HTML5 parser', $td->nodeValue);
     }
 
     public function testHasRules()

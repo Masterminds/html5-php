@@ -115,8 +115,10 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
     public function document($dom)
     {
         $this->doctype();
-        $this->traverser->node($dom->documentElement);
-        $this->nl();
+        if ($dom->documentElement) {
+            $this->traverser->node($dom->documentElement);
+            $this->nl();
+        }
     }
 
     protected function doctype()

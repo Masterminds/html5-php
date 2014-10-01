@@ -76,6 +76,19 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals($expected, stream_get_contents($stream, - 1, 0));
     }
 
+    public function testEmptyDocument()
+    {
+    	$dom = $this->html5->loadHTML('');
+
+    	$stream = fopen('php://temp', 'w');
+    	$r = new OutputRules($stream, $this->html5->getOptions());
+    	$t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+    	$r->document($dom);
+    	$expected = '<!DOCTYPE html>' . PHP_EOL;
+    	$this->assertEquals($expected, stream_get_contents($stream, - 1, 0));
+    }
+
     public function testDoctype()
     {
         $dom = $this->html5->loadHTML('<!doctype html><html lang="en"><body>foo</body></html>');

@@ -56,6 +56,29 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertInstanceOf('\DOMDocument', $doc);
         $this->assertEquals('html', $doc->documentElement->tagName);
     }
+
+    public function testStrangeCapitalization()
+    {
+        $html = "<!doctype html>
+        <html>
+            <head>
+                <Title>Hello, world!</Title>
+            </head>
+            <body>TheBody</body>
+        </html>";
+        $doc = $this->parse($html);
+
+        $this->assertInstanceOf('\DOMDocument', $doc);
+        $this->assertEquals('html', $doc->documentElement->tagName);
+
+        $xpath = new \DOMXPath( $doc );
+        $xpath->registerNamespace( "x", "http://www.w3.org/1999/xhtml" );
+
+        $this->assertEquals("Hello, world!", $xpath->query( "//x:title" )->item( 0 )->nodeValue);
+        $this->assertEquals("TheBody", $xpath->query( "//x:body" )->item( 0 )->nodeValue);
+
+    }
+
     public function testDocumentFakeAttrAbsence()
     {
         $html = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\"><body>foo</body></html>";

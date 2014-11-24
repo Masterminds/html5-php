@@ -203,7 +203,7 @@ class Tokenizer
         $sequence = '</' . $this->untilTag . '>';
         $txt = '';
         $tok = $this->scanner->current();
-        while ($tok !== false && ! ($tok == '<' && ($this->sequenceMatches($sequence) || $this->sequenceMatches(strtoupper($sequence))))) {
+        while ($tok !== false && ! ($tok == '<' && ($this->sequenceMatches($sequence, false)))) {
             if ($tok == '&') {
                 $txt .= $this->decodeCharacterReference();
                 $tok = $this->scanner->current();
@@ -891,7 +891,7 @@ class Tokenizer
             $buffer .= $this->scanner->charsUntil($first);
 
             // Stop as soon as we hit the stopping condition.
-            if ($this->sequenceMatches($sequence) || $this->sequenceMatches(strtoupper($sequence))) {
+            if ($this->sequenceMatches($sequence, false)) {
                 return $buffer;
             }
             $buffer .= $this->scanner->current();
@@ -916,7 +916,7 @@ class Tokenizer
      * see if the input stream is at the start of a
      * '</script>' string.
      */
-    protected function sequenceMatches($sequence)
+    protected function sequenceMatches($sequence, $caseSensitive = true)
     {
         $len = strlen($sequence);
         $buffer = '';
@@ -932,7 +932,7 @@ class Tokenizer
         }
 
         $this->scanner->unconsume($len);
-        return $buffer == $sequence;
+        return $caseSensitive ? $buffer == $sequence : strcasecmp($buffer, $sequence) === 0;
     }
 
     /**

@@ -259,6 +259,12 @@ class Html5Test extends TestCase
         $res = $this->cycleFragment('<span></span>');
         $this->assertRegExp('|<span></span>|', $res);
 
+        // Elements with dashes and underscores
+        $res = $this->cycleFragment('<sp-an></sp-an>');
+        $this->assertRegExp('|<sp-an></sp-an>|', $res);
+        $res = $this->cycleFragment('<sp_an></sp_an>');
+        $this->assertRegExp('|<sp_an></sp_an>|', $res);
+
         // Should have no closing tag.
         $res = $this->cycle('<hr>');
         $this->assertRegExp('|<hr></body>|', $res);

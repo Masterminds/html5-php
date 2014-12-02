@@ -353,7 +353,7 @@ class Tokenizer
         }
 
         // We know this is at least one char.
-        $name = strtolower($this->scanner->charsWhile(":0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"));
+        $name = strtolower($this->scanner->charsWhile(":_-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"));
         $attributes = array();
         $selfClose = false;
 

@@ -557,7 +557,6 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<static*all>' => 'static',
             '<h*0720/>' => 'h',
             '<st*ATTRIBUTE />' => 'st',
-            '<a-href="http://url.com/">' => 'a'
         );
 
         foreach ($cases as $html => $expected) {

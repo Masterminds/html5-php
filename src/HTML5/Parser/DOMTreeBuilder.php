@@ -157,13 +157,17 @@ class DOMTreeBuilder implements EventHandler
     {
         $this->options = $options;
 
-        $impl = new \DOMImplementation();
-        // XXX:
-        // Create the doctype. For now, we are always creating HTML5
-        // documents, and attempting to up-convert any older DTDs to HTML5.
-        $dt = $impl->createDocumentType('html');
-        // $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
-        $this->doc = $impl->createDocument(null, null, $dt);
+        if (isset($options['targetDocument'])) {
+            $this->doc = $options['targetDocument'];
+        } else {
+            $impl = new \DOMImplementation();
+            // XXX:
+            // Create the doctype. For now, we are always creating HTML5
+            // documents, and attempting to up-convert any older DTDs to HTML5.
+            $dt = $impl->createDocumentType('html');
+            // $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
+            $this->doc = $impl->createDocument(null, null, $dt);
+        }
         $this->errors = array();
 
         $this->current = $this->doc; // ->documentElement;
@@ -345,10 +349,10 @@ class DOMTreeBuilder implements EventHandler
                 $ele = $this->doc->importNode($frag->documentElement, true);
 
             } else {
-                if (isset($this->nsStack[0][$prefix])) {
-                    $ele = $this->doc->createElementNS($this->nsStack[0][$prefix], $lname);
-                } else {
+                if (!isset($this->nsStack[0][$prefix]) || ($prefix === "" && isset($this->options['disableHtmlNsInDom']) && $this->options['disableHtmlNsInDom'])) {
                     $ele = $this->doc->createElement($lname);
+                } else {
+                    $ele = $this->doc->createElementNS($this->nsStack[0][$prefix], $lname);
                 }
             }
 

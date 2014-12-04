@@ -338,7 +338,7 @@ class DOMTreeBuilder implements EventHandler
                 $ele = $this->doc->importNode($frag->documentElement, true);
 
             } else {
-                if (!isset($this->nsStack[0][$prefix]) || ($prefix === "" && isset($this->options['implicitHtmlNamespace']) && && $this->options['implicitHtmlNamespace'])) {
+                if (!isset($this->nsStack[0][$prefix]) || ($prefix === "" && isset($this->options['implicitHtmlNamespace']) && $this->options['implicitHtmlNamespace'])) {
                     $ele = $this->doc->createElement($lname);
                 } else {
                     $ele = $this->doc->createElementNS($this->nsStack[0][$prefix], $lname);

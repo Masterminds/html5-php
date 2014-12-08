@@ -151,8 +151,8 @@ class DOMTreeBuilder implements EventHandler
     {
         $this->options = $options;
 
-        if (isset($options['target'])) {
-            $this->doc = $options['target'];
+        if (isset($options['targetDocument'])) {
+            $this->doc = $options['targetDocument'];
         } else {
             $impl = new \DOMImplementation();
             // XXX:
@@ -338,7 +338,7 @@ class DOMTreeBuilder implements EventHandler
                 $ele = $this->doc->importNode($frag->documentElement, true);
 
             } else {
-                if (!isset($this->nsStack[0][$prefix]) || ($prefix === "" && isset($this->options['implicitHtmlNamespace']) && $this->options['implicitHtmlNamespace'])) {
+                if (!isset($this->nsStack[0][$prefix]) || ($prefix === "" && isset($this->options['disableHtmlNsInDom']) && $this->options['disableHtmlNsInDom'])) {
                     $ele = $this->doc->createElement($lname);
                 } else {
                     $ele = $this->doc->createElementNS($this->nsStack[0][$prefix], $lname);

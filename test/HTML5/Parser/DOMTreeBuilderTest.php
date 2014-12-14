@@ -62,9 +62,9 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $html = "<!doctype html>
         <html>
             <head>
-                <Title>Hello, world!</Title>
+                <Title>Hello, world!</TitlE>
             </head>
-            <body>TheBody</body>
+            <body>TheBody<script>foo</script></body>
         </html>";
         $doc = $this->parse($html);
 
@@ -75,8 +75,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $xpath->registerNamespace( "x", "http://www.w3.org/1999/xhtml" );
 
         $this->assertEquals("Hello, world!", $xpath->query( "//x:title" )->item( 0 )->nodeValue);
-        $this->assertEquals("TheBody", $xpath->query( "//x:body" )->item( 0 )->nodeValue);
-
+        $this->assertEquals("foo", $xpath->query( "//x:script" )->item( 0 )->nodeValue);
     }
 
     public function testDocumentFakeAttrAbsence()

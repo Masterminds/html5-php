@@ -67,6 +67,11 @@ class Elements
     const BLOCK_TAG = 64;
 
     /**
+     * Indicates that the tag allows only inline elements as child nodes.
+     */
+    const BLOCK_ONLY_INLINE = 128;
+
+    /**
      * The HTML5 elements as defined in http://dev.w3.org/html5/markup/elements.html.
      *
      * @var array
@@ -120,7 +125,7 @@ class Elements
         "head" => 1,
         "header" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
         "hgroup" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
-        "hr" => 73, // NORMAL | VOID_TAG | BLOCK_TAG
+        "hr" => 73, // NORMAL | VOID_TAG
         "html" => 1,
         "i" => 1,
         "iframe" => 3, // NORMAL | TEXT_RAW
@@ -145,7 +150,7 @@ class Elements
         "optgroup" => 1,
         "option" => 1,
         "output" => 65, // NORMAL | BLOCK_TAG
-        "p" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
+        "p" => 209, // NORMAL | AUTOCLOSE_P | BLOCK_TAG | BLOCK_ONLY_INLINE
         "param" => 9, // NORMAL | VOID_TAG
         "pre" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
         "progress" => 1,

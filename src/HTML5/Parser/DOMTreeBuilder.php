@@ -139,6 +139,12 @@ class DOMTreeBuilder implements EventHandler
     protected $insertMode = 0;
 
     /**
+     * Track if we are in an element that allows only inline child nodes
+     * @var string|null
+     */
+    protected $onlyInline;
+
+    /**
      * Quirks mode is enabled by default.
      * Any document that is missing the
      * DT will be considered to be in quirks mode.
@@ -320,6 +326,11 @@ class DOMTreeBuilder implements EventHandler
             }
         }
 
+        if ($this->onlyInline && Elements::isA($lname, Elements::BLOCK_TAG)) {
+        	$this->autoclose($this->onlyInline);
+        	$this->onlyInline = null;
+        }
+
         try {
             $prefix = ($pos = strpos($lname, ':')) ? substr($lname, 0, $pos) : '';
 
@@ -344,6 +355,10 @@ class DOMTreeBuilder implements EventHandler
         } catch (\DOMException $e) {
             $this->parseError("Illegal tag name: <$lname>. Replaced with <invalid>.");
             $ele = $this->doc->createElement('invalid');
+        }
+
+        if (Elements::isA($lname, Elements::BLOCK_ONLY_INLINE)) {
+        	$this->onlyInline = $lname;
         }
 
         // When we add some namespacess, we have to track them. Later, when "endElement" is invoked, we have to remove them.

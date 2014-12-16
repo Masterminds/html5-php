@@ -204,6 +204,15 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals("http://www.prefixed.com/bar5_x", $prefixed->namespaceURI);
     }
 
+    public function testMoveNonInlineElements()
+    {
+    	$doc = $this->parse('<p>line1<br/><hr/>line2</p>');
+		$this->assertEquals('<html xmlns="http://www.w3.org/1999/xhtml"><p>line1<br/></p><hr/>line2</html>', $doc->saveXML($doc->documentElement), 'Move non-inline elements outside of inline containers.');
+
+		$doc = $this->parse('<p>line1<div>line2</div></p>');
+		$this->assertEquals('<html xmlns="http://www.w3.org/1999/xhtml"><p>line1</p><div>line2</div></html>', $doc->saveXML($doc->documentElement), 'Move non-inline elements outside of inline containers.');
+    }
+
     public function testAttributes()
     {
         $html = "<!DOCTYPE html>

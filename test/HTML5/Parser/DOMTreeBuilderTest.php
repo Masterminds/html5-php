@@ -55,6 +55,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
 
         $this->assertInstanceOf('\DOMDocument', $doc);
         $this->assertEquals('html', $doc->documentElement->tagName);
+        $this->assertEquals('http://www.w3.org/1999/xhtml', $doc->documentElement->namespaceURI);
     }
 
     public function testStrangeCapitalization()
@@ -78,6 +79,28 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals("foo", $xpath->query( "//x:script" )->item( 0 )->nodeValue);
     }
 
+    public function testDocumentWithDisabledNamespaces()
+    {
+        $html = "<!DOCTYPE html><html></html>";
+        $doc = $this->parse($html, array('disable_html_ns' => true));
+
+        $this->assertInstanceOf('\DOMDocument', $doc);
+        $this->assertEquals('html', $doc->documentElement->tagName);
+        $this->assertNull($doc->documentElement->namespaceURI);
+    }
+
+    public function testDocumentWithATargetDocument()
+    {
+        $targetDom = new \DOMDocument();
+
+        $html = "<!DOCTYPE html><html></html>";
+        $doc = $this->parse($html, array('target_document' => $targetDom));
+
+        $this->assertInstanceOf('\DOMDocument', $doc);
+        $this->assertSame($doc, $targetDom);
+        $this->assertEquals('html', $doc->documentElement->tagName);
+    }
+    
     public function testDocumentFakeAttrAbsence()
     {
         $html = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\"><body>foo</body></html>";
@@ -85,7 +108,6 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
 
         $xp = new \DOMXPath($doc);
         $this->assertEquals(0, $xp->query("//@html5-php-fake-id-attribute")->length);
-
     }
 
     public function testFragment()

@@ -60,20 +60,22 @@ class HTML5
      *            The path to the file to parse. If this is a resource, it is
      *            assumed to be an open stream whose pointer is set to the first
      *            byte of input.
+     * @param array $options
+     *            Configuration options when parsing the HTML
      * @return \DOMDocument A DOM document. These object type is defined by the libxml
      *         library, and should have been included with your version of PHP.
      */
-    public function load($file)
+    public function load($file, array $options = array())
     {
         // Handle the case where file is a resource.
         if (is_resource($file)) {
             // FIXME: We need a StreamInputStream class.
-            return $this->loadHTML(stream_get_contents($file));
+            return $this->loadHTML(stream_get_contents($file), $options);
         }
 
         $input = new FileInputStream($file);
 
-        return $this->parse($input);
+        return $this->parse($input, $options);
     }
 
     /**
@@ -84,14 +86,16 @@ class HTML5
      *
      * @param string $string
      *            A html5 document as a string.
+     * @param array $options
+     *            Configuration options when parsing the HTML
      * @return \DOMDocument A DOM document. DOM is part of libxml, which is included with
      *         almost all distribtions of PHP.
      */
-    public function loadHTML($string)
+    public function loadHTML($string, array $options = array())
     {
         $input = new StringInputStream($string);
 
-        return $this->parse($input);
+        return $this->parse($input, $options);
     }
 
     /**
@@ -104,13 +108,15 @@ class HTML5
      *            The path to the file to parse. If this is a resource, it is
      *            assumed to be an open stream whose pointer is set to the first
      *            byte of input.
+     * @param array $options
+     *            Configuration options when parsing the HTML
      *
      * @return \DOMDocument A DOM document. These object type is defined by the libxml
      *         library, and should have been included with your version of PHP.
      */
-    public function loadHTMLFile($file)
+    public function loadHTMLFile($file, array $options = array())
     {
-        return $this->load($file);
+        return $this->load($file, $options);
     }
 
     /**
@@ -118,15 +124,17 @@ class HTML5
      *
      * @param string $string
      *            The html5 fragment as a string.
+     * @param array $options
+     *            Configuration options when parsing the HTML
      *
      * @return \DOMDocumentFragment A DOM fragment. The DOM is part of libxml, which is included with
      *         almost all distributions of PHP.
      */
-    public function loadHTMLFragment($string)
+    public function loadHTMLFragment($string, array $options = array())
     {
         $input = new StringInputStream($string);
 
-        return $this->parseFragment($input);
+        return $this->parseFragment($input, $options);
     }
 
     /**
@@ -155,10 +163,10 @@ class HTML5
      * Lower-level loading function. This requires an input stream instead
      * of a string, file, or resource.
      */
-    public function parse(\Masterminds\HTML5\Parser\InputStream $input)
+    public function parse(\Masterminds\HTML5\Parser\InputStream $input, array $options = array())
     {
         $this->errors = array();
-        $events = new DOMTreeBuilder(false, $this->options);
+        $events = new DOMTreeBuilder(false, array_merge($this->getOptions(), $options));
         $scanner = new Scanner($input);
         $parser = new Tokenizer($scanner, $events);
 
@@ -174,9 +182,9 @@ class HTML5
      * Lower-level loading function. This requires an input stream instead
      * of a string, file, or resource.
      */
-    public function parseFragment(\Masterminds\HTML5\Parser\InputStream $input)
+    public function parseFragment(\Masterminds\HTML5\Parser\InputStream $input, array $options = array())
     {
-        $events = new DOMTreeBuilder(true, $this->options);
+        $events = new DOMTreeBuilder(true, array_merge($this->getOptions(), $options));
         $scanner = new Scanner($input);
         $parser = new Tokenizer($scanner, $events);
 

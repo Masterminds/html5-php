@@ -28,6 +28,36 @@ class Html5Test extends TestCase
         return $out;
     }
 
+    public function testLoadOptions()
+    {
+        // doc
+        $dom = $this->html5->loadHTML($this->wrap('<t:tag/>'), array(
+                        'implicitNamespaces' => array('t' => 'http://example.com'),
+                        "xmlNamespaces" => true
+        ));
+        $this->assertInstanceOf('\DOMDocument', $dom);
+        $this->assertEmpty($this->html5->getErrors());
+        $this->assertFalse($this->html5->hasErrors());
+
+        $xpath = new \DOMXPath( $dom );
+        $xpath->registerNamespace( "t", "http://example.com" );
+        $this->assertEquals(1, $xpath->query( "//t:tag" )->length);
+
+        // doc fragment
+        $frag = $this->html5->loadHTMLFragment('<t:tag/>', array(
+                        'implicitNamespaces' => array('t' => 'http://example.com'),
+                        "xmlNamespaces" => true
+        ));
+        $this->assertInstanceOf('\DOMDocumentFragment', $frag);
+        $this->assertEmpty($this->html5->getErrors());
+        $this->assertFalse($this->html5->hasErrors());
+
+        $frag->ownerDocument->appendChild($frag);
+        $xpath = new \DOMXPath( $frag->ownerDocument );
+        $xpath->registerNamespace( "t", "http://example.com" );
+        $this->assertEquals(1, $xpath->query( "//t:tag" , $frag)->length);
+    }
+
     public function testErrors()
     {
         $dom = $this->html5->loadHTML('<xx as>');

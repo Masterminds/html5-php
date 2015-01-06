@@ -76,6 +76,35 @@ $html5->save($dom, 'out.html');
 The `$dom` created by the parser is a full `DOMDocument` object. And the
 `save()` and `saveHTML()` methods will take any DOMDocument.
 
+### Options
+
+It is possible to pass in an array of configuration options when loading
+an HTML5 document.
+
+```php
+// An associative array of options
+$options = array(
+  'option_name' => 'option_value',
+);
+
+// Provide the options to the constructor
+$html5 = new HTML5($options);
+
+$dom = $html5->loadHTML($html);
+```
+
+The following options are supported:
+
+* `encode_entities` (boolean): Indicates that the serializer should aggressively
+  encode characters as entities. Without this, it only encodes the bare
+  minimum.
+* `disable_html_ns` (boolean): Prevents the parser from automatically
+  assigning the HTML5 namespace to the DOM document. This is for
+  non-namespace aware DOM tools.
+* `target_doc` (\DOMDocument): A DOM document that will be used as the
+  destination for the parsed nodes.
+* `implicit_namespaces` (array): An assoc array of namespaces that should be
+  used by the parser. Name is tag prefix, value is NS URI.
 
 ## The Low-Level API
 

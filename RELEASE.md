@@ -1,5 +1,9 @@
 # Release Notes
 
+1.0.6 (2015-01-21)
+- #73: Fixed but with alpha lookup in scanner.
+- Migrated Travis CI to containers for testing.
+
 1.0.5 (2014-06-10)
 - #38: Set the dev-master branch as the 1.0.x branch for composer (goetas)
 - #34: Tests use PSR-4 for autoloading. (goetas)

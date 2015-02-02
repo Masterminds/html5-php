@@ -200,7 +200,7 @@ class Tokenizer
         if (is_null($this->untilTag)) {
             return $this->text();
         }
-        $sequence = '</' . $this->untilTag . '>';
+        $sequence = '</' . $this->untilTag;
         $txt = '';
         $tok = $this->scanner->current();
 
@@ -214,6 +214,13 @@ class Tokenizer
                 $tok = $this->scanner->next();
             }
         }
+        $len = strlen($sequence);
+        $this->scanner->consume($len);
+        $len += strlen($this->scanner->whitespace());
+        if ($this->scanner->current() !== '>') {
+            $this->parseError("Unclosed RCDATA end tag");
+        }
+        $this->scanner->unconsume($len);
         $this->events->text($txt);
         $this->setTextMode(0);
         return $this->endTag();

@@ -884,6 +884,12 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEventEquals('startTag', 'title', $events->get(0));
         $this->assertEventEquals('text', 'a test', $events->get(1));
         $this->assertEventEquals('endTag', 'title', $events->get(2));
+
+        // Testing end tags with whitespaces
+        $events = $this->parse('<title>Whitespaces are tasty</title >');
+        $this->assertEventEquals('startTag', 'title', $events->get(0));
+        $this->assertEventEquals('text', 'Whitespaces are tasty', $events->get(1));
+        $this->assertEventEquals('endTag', 'title', $events->get(2));
     }
 
     public function testRcdata()

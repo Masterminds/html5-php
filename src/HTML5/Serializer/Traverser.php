@@ -106,7 +106,7 @@ class Traverser {
         break;
       // Currently we don't support embedding DTDs.
       default:
-        print '<!-- Skipped -->';
+        //print '<!-- Skipped -->';
         break;
     }
   }

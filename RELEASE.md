@@ -1,4 +1,6 @@
 # Release Notes
+1.0.7 (2015-02-06)
+- #77: Don't output anything on parse.
 
 1.0.6 (2015-01-21)
 - #73: Fixed but with alpha lookup in scanner.

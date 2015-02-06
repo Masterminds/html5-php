@@ -1,4 +1,22 @@
 # Release Notes
+
+X.X.X (XXXX-XX-XX)
+- #73: Fixed alphabet, &szlig; now can be detected
+- #75 and #76: Allow whitespace in RCDATA tags
+- #77: Fixed parsing blunder for json embeds
+- #72: Add options to HTML methods
+
+2.0.2 (2014-12-17)
+- #50: empty document handling
+- #63: tags with strange capitalization
+- #65: dashes and underscores as allowed characters in tag names
+- #68: Fixed issue with non-inline elements inside inline containers
+
+2.0.1 (2014-09-23)
+- #59: Fixed issue parsing some fragments.
+- #56: Incorrectly saw 0 as empty string
+- Sami as new documentation generator
+
 2.0.0 (2014-07-28)
 - #53: Improved boolean attributes handling
 - #52: Facebook HHVM compatibility

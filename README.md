@@ -101,7 +101,7 @@ The following options are supported:
 * `disable_html_ns` (boolean): Prevents the parser from automatically
   assigning the HTML5 namespace to the DOM document. This is for
   non-namespace aware DOM tools.
-* `target_doc` (\DOMDocument): A DOM document that will be used as the
+* `target_document` (\DOMDocument): A DOM document that will be used as the
   destination for the parsed nodes.
 * `implicit_namespaces` (array): An assoc array of namespaces that should be
   used by the parser. Name is tag prefix, value is NS URI.

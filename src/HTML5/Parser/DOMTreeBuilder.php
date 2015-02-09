@@ -38,6 +38,12 @@ class DOMTreeBuilder implements EventHandler
 
     const NAMESPACE_XMLNS = 'http://www.w3.org/2000/xmlns/';
 
+    const OPT_DISABLE_HTML_NS = 'disable_html_ns';
+
+    const OPT_TARGET_DOC = 'target_document';
+
+    const OPT_IMPLICIT_NS = 'implicit_namespaces';
+
     /**
      * Holds the HTML5 element names that causes a namespace switch
      *
@@ -157,13 +163,17 @@ class DOMTreeBuilder implements EventHandler
     {
         $this->options = $options;
 
-        $impl = new \DOMImplementation();
-        // XXX:
-        // Create the doctype. For now, we are always creating HTML5
-        // documents, and attempting to up-convert any older DTDs to HTML5.
-        $dt = $impl->createDocumentType('html');
-        // $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
-        $this->doc = $impl->createDocument(null, null, $dt);
+        if (isset($options[self::OPT_TARGET_DOC])) {
+            $this->doc = $options[self::OPT_TARGET_DOC];
+        } else {
+            $impl = new \DOMImplementation();
+            // XXX:
+            // Create the doctype. For now, we are always creating HTML5
+            // documents, and attempting to up-convert any older DTDs to HTML5.
+            $dt = $impl->createDocumentType('html');
+            // $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
+            $this->doc = $impl->createDocument(null, null, $dt);
+        }
         $this->errors = array();
 
         $this->current = $this->doc; // ->documentElement;
@@ -171,8 +181,15 @@ class DOMTreeBuilder implements EventHandler
         // Create a rules engine for tags.
         $this->rules = new TreeBuildingRules($this->doc);
 
+        $implicitNS = array();
+        if (isset($this->options[self::OPT_IMPLICIT_NS])) {
+            $implicitNS = $this->options[self::OPT_IMPLICIT_NS];
+        } elseif (isset($this->options["implicitNamespaces"])) {
+            $implicitNS = $this->options["implicitNamespaces"];
+        }
+
         // Fill $nsStack with the defalut HTML5 namespaces, plus the "implicitNamespaces" array taken form $options
-        array_unshift($this->nsStack, (isset($this->options["implicitNamespaces"]) ? $this->options["implicitNamespaces"] : array()) + array(
+        array_unshift($this->nsStack, $implicitNS + array(
             '' => self::NAMESPACE_HTML
         ) + $this->implicitNamespaces);
 
@@ -345,10 +362,10 @@ class DOMTreeBuilder implements EventHandler
                 $ele = $this->doc->importNode($frag->documentElement, true);
 
             } else {
-                if (isset($this->nsStack[0][$prefix])) {
-                    $ele = $this->doc->createElementNS($this->nsStack[0][$prefix], $lname);
-                } else {
+                if (!isset($this->nsStack[0][$prefix]) || ($prefix === "" && isset($this->options[self::OPT_DISABLE_HTML_NS]) && $this->options[self::OPT_DISABLE_HTML_NS])) {
                     $ele = $this->doc->createElement($lname);
+                } else {
+                    $ele = $this->doc->createElementNS($this->nsStack[0][$prefix], $lname);
                 }
             }
 

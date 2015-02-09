@@ -1,6 +1,8 @@
 # Release Notes
 
-X.X.X (XXXX-XX-XX)
+2.1.0 (2015-02-01)
+- #74: Added `disable_html_ns` and `target_doc` dom parsing options
+- Unified option names
 - #73: Fixed alphabet, &szlig; now can be detected
 - #75 and #76: Allow whitespace in RCDATA tags
 - #77: Fixed parsing blunder for json embeds

@@ -2,8 +2,9 @@
 
 Copyright (c) 2013 The Authors of HTML5-PHP
 
-Matt Butcher - technosophos@gmail.com
+Matt Butcher - mattbutcher@google.com
 Matt Farina - matt@mattfarina.com
+Asmir Mustafic - goetas@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in 

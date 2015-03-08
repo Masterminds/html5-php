@@ -1,5 +1,8 @@
 # Release Notes
 
+X.X.X (XXXX-XX-XX)
+- #78: Fixes bug where unmatched entity like string drops everything after &.
+
 2.1.0 (2015-02-01)
 - #74: Added `disable_html_ns` and `target_doc` dom parsing options
 - Unified option names

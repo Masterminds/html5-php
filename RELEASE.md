@@ -1,6 +1,6 @@
 # Release Notes
 
-X.X.X (XXXX-XX-XX)
+2.1.1 (2015-03-23)
 - #78: Fixes bug where unmatched entity like string drops everything after &.
 
 2.1.0 (2015-02-01)

@@ -18,7 +18,7 @@ notifications:
 
 before_script:
   - composer self-update
-  - composer install --dev
+  - composer install
 
 script:
   - mkdir -p build/logs

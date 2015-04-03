@@ -14,7 +14,6 @@ use Masterminds\HTML5\Serializer\Traverser;
  * It is roughly designed to mirror the \DOMDocument class that is
  * provided with most versions of PHP.
  *
- * EXPERIMENTAL. This may change or be completely replaced.
  */
 class Html5
 {

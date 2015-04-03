@@ -1,7 +1,7 @@
 <?php
 namespace Masterminds\HTML5\Tests;
 
-use Masterminds\HTML5;
+use Masterminds\Html5;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
@@ -17,7 +17,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
     public function getInstance(array $options = array())
     {
-        return new HTML5($options);
+        return new Html5($options);
     }
 
     protected function wrap($fragment)

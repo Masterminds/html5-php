@@ -11,9 +11,9 @@ From 1.x to 2.x
         
     After:
 
-        use Masterminds\HTML5;
+        use Masterminds\Html5;
         
-        $html5 = new HTML5();
+        $html5 = new Html5();
         
         $dom = $html5->loadHTML('<html>....');
         echo $html5->saveHTML($dom);

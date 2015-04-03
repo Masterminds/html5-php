@@ -16,7 +16,7 @@ use Masterminds\HTML5\Serializer\Traverser;
  *
  * EXPERIMENTAL. This may change or be completely replaced.
  */
-class HTML5
+class Html5
 {
 
     /**

@@ -1,7 +1,7 @@
 From 2.x to 3.x
 ===============
 
-- The class `Masterminds\HTML5` has been renamed into `Masterminds\Html5`
+- The class `Masterminds\HTML5` has been renamed into `Masterminds\Html5` (classes using `Masterminds\HTML5` namespace too)
 
 Before:
 ```php    

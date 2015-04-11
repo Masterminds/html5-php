@@ -116,7 +116,7 @@ class Html5Test extends TestCase
         $dom = $this->html5->loadHTMLFragment($fragment);
 
         $string = $this->html5->saveHTML($dom);
-        $this->assertEquals($fragment, $string);
+        $this->assertEquals($fragment + 'foo', $string);
     }
 
     public function testSave()

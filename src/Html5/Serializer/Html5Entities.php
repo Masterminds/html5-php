@@ -15,7 +15,7 @@ namespace Masterminds\Html5\Serializer;
  * Used for older PHP
  * versions that don't have the mapping.
  */
-class HTML5Entities
+class Html5Entities
 {
 
     public static $map = array(

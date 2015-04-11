@@ -503,7 +503,7 @@ class OutputRules implements \Masterminds\Html5\Serializer\RulesInterface
         }         // If a version earlier than 5.4 html5 entities are not entirely handled.
         // This manually handles them.
         else {
-            return strtr($text, \Masterminds\Html5\Serializer\HTML5Entities::$map);
+            return strtr($text, \Masterminds\Html5\Serializer\Html5Entities::$map);
         }
     }
 

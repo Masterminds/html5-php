@@ -1,5 +1,5 @@
 <?php
-namespace Masterminds\HTML5\Parser;
+namespace Masterminds\Html5\Parser;
 /*
  *
 * Portions based on code from html5lib files with the following copyright:

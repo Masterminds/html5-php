@@ -1,5 +1,5 @@
 <?php
-namespace Masterminds\HTML5\Parser;
+namespace Masterminds\Html5\Parser;
 
 /**
  * Emit when the parser has an error.

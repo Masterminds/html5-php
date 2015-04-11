@@ -1,5 +1,5 @@
 <?php
-namespace Masterminds\HTML5;
+namespace Masterminds\Html5;
 
 /**
  * Entity lookup tables.

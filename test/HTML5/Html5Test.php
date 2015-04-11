@@ -1,5 +1,5 @@
 <?php
-namespace Masterminds\HTML5\Tests;
+namespace Masterminds\Html5\Tests;
 
 class Html5Test extends TestCase
 {

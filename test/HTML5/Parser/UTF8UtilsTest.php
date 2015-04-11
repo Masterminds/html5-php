@@ -1,10 +1,10 @@
 <?php
 
-namespace Masterminds\HTML5\Tests\Parser;
+namespace Masterminds\Html5\Tests\Parser;
 
-use Masterminds\HTML5\Parser\UTF8Utils;
+use Masterminds\Html5\Parser\UTF8Utils;
 
-class UTF8UtilsTest extends \Masterminds\HTML5\Tests\TestCase
+class UTF8UtilsTest extends \Masterminds\Html5\Tests\TestCase
 {
 	public function testConvertToUTF8() {
 		$out = UTF8Utils::convertToUTF8('éàa', 'ISO-8859-1');

@@ -2,7 +2,7 @@
 /**
  * Provide general element functions.
  */
-namespace Masterminds\HTML5;
+namespace Masterminds\Html5;
 
 /**
  * This class provides general information about HTML5 elements,

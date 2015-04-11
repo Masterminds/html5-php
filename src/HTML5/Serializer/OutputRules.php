@@ -6,14 +6,14 @@
  * These output rules are likely to generate output similar to the document that
  * was parsed. It is not intended to output exactly the document that was parsed.
  */
-namespace Masterminds\HTML5\Serializer;
+namespace Masterminds\Html5\Serializer;
 
-use Masterminds\HTML5\Elements;
+use Masterminds\Html5\Elements;
 
 /**
  * Generate the output html5 based on element rules.
  */
-class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
+class OutputRules implements \Masterminds\Html5\Serializer\RulesInterface
 {
     /**
      * Defined in http://www.w3.org/TR/html51/infrastructure.html#html-namespace-0
@@ -174,7 +174,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         $this->nonBooleanAttributes[] = $rule;
     }
 
-    public function setTraverser(\Masterminds\HTML5\Serializer\Traverser $traverser)
+    public function setTraverser(\Masterminds\Html5\Serializer\Traverser $traverser)
     {
         $this->traverser = $traverser;
 
@@ -439,7 +439,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
      * @param string $text
      *            The string to put into the output.
      *
-     * @return \Masterminds\HTML5\Serializer\Traverser $this so it can be used in chaining.
+     * @return \Masterminds\Html5\Serializer\Traverser $this so it can be used in chaining.
      */
     protected function wr($text)
     {
@@ -450,7 +450,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
     /**
      * Write a new line character.
      *
-     * @return \Masterminds\HTML5\Serializer\Traverser $this so it can be used in chaining.
+     * @return \Masterminds\Html5\Serializer\Traverser $this so it can be used in chaining.
      */
     protected function nl()
     {
@@ -503,7 +503,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         }         // If a version earlier than 5.4 html5 entities are not entirely handled.
         // This manually handles them.
         else {
-            return strtr($text, \Masterminds\HTML5\Serializer\HTML5Entities::$map);
+            return strtr($text, \Masterminds\Html5\Serializer\HTML5Entities::$map);
         }
     }
 

@@ -1,7 +1,7 @@
 <?php
-namespace Masterminds\HTML5\Tests;
+namespace Masterminds\Html5\Tests;
 
-use Masterminds\HTML5\Elements;
+use Masterminds\Html5\Elements;
 
 class ElementsTest extends TestCase
 {

@@ -1,13 +1,13 @@
 <?php
-namespace Masterminds\HTML5\Parser;
+namespace Masterminds\Html5\Parser;
 
-use Masterminds\HTML5\Entities;
+use Masterminds\Html5\Entities;
 
 /**
  * Manage entity references.
  *
  * This is a simple resolver for HTML5 character reference entitites.
- * See \Masterminds\HTML5\Entities for the list of supported entities.
+ * See \Masterminds\Html5\Entities for the list of supported entities.
  */
 class CharacterReference
 {

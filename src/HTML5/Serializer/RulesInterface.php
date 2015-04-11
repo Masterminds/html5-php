@@ -3,7 +3,7 @@
  * @file
  * The interface definition for Rules to generate output.
  */
-namespace Masterminds\HTML5\Serializer;
+namespace Masterminds\Html5\Serializer;
 
 /**
  * To create a new rule set for writing output the RulesInterface needs to be
@@ -11,7 +11,7 @@ namespace Masterminds\HTML5\Serializer;
  * The resulting class can be specified in the options with the
  * key of rules.
  *
- * For an example implementation see \Masterminds\HTML5\Serializer\OutputRules.
+ * For an example implementation see \Masterminds\Html5\Serializer\OutputRules.
  */
 interface RulesInterface
 {
@@ -33,11 +33,11 @@ interface RulesInterface
      *
      * Note, only one traverser can be used by the rules.
      *
-     * @param \Masterminds\HTML5\Serializer\Traverser $traverser
+     * @param \Masterminds\Html5\Serializer\Traverser $traverser
      *            The traverser used in the rules.
-     * @return \Masterminds\HTML5\Serializer\RulesInterface $this for the current object.
+     * @return \Masterminds\Html5\Serializer\RulesInterface $this for the current object.
      */
-    public function setTraverser(\Masterminds\HTML5\Serializer\Traverser $traverser);
+    public function setTraverser(\Masterminds\Html5\Serializer\Traverser $traverser);
 
     /**
      * Write a document element (\DOMDocument).
@@ -92,7 +92,7 @@ interface RulesInterface
     /**
      * Write a processor instruction.
      *
-     * To learn about processor instructions see \Masterminds\HTML5\InstructionProcessor
+     * To learn about processor instructions see \Masterminds\Html5\InstructionProcessor
      *
      * Instead of returning the result write it to the output stream ($output)
      * that was passed into the constructor.

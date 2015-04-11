@@ -1,12 +1,12 @@
 <?php
-namespace Masterminds\HTML5\Tests\Parser;
+namespace Masterminds\Html5\Tests\Parser;
 
-use Masterminds\HTML5\Parser\UTF8Utils;
-use Masterminds\HTML5\Parser\StringInputStream;
-use Masterminds\HTML5\Parser\Scanner;
-use Masterminds\HTML5\Parser\Tokenizer;
+use Masterminds\Html5\Parser\UTF8Utils;
+use Masterminds\Html5\Parser\StringInputStream;
+use Masterminds\Html5\Parser\Scanner;
+use Masterminds\Html5\Parser\Tokenizer;
 
-class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
+class TokenizerTest extends \Masterminds\Html5\Tests\TestCase
 {
     // ================================================================
     // Additional assertions.
@@ -895,7 +895,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
     public function testRcdata()
     {
         list ($tok, $events) = $this->createTokenizer('<title>&#x27;<!-- not a comment --></TITLE>');
-        $tok->setTextMode(\Masterminds\HTML5\Elements::TEXT_RCDATA, 'title');
+        $tok->setTextMode(\Masterminds\Html5\Elements::TEXT_RCDATA, 'title');
         $tok->parse();
         $this->assertEventEquals('text', "'<!-- not a comment -->", $events->get(1));
     }

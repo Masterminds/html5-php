@@ -3,11 +3,11 @@
  * @file
  * Test the Scanner. This requires the InputStream tests are all good.
  */
-namespace Masterminds\HTML5\Tests\Parser;
+namespace Masterminds\Html5\Tests\Parser;
 
-use Masterminds\HTML5\Parser\CharacterReference;
+use Masterminds\Html5\Parser\CharacterReference;
 
-class CharacterReferenceTest extends \Masterminds\HTML5\Tests\TestCase
+class CharacterReferenceTest extends \Masterminds\Html5\Tests\TestCase
 {
 
     public function testLookupName()

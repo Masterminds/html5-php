@@ -2,7 +2,7 @@
 /**
  * A handler for processor instructions.
  */
-namespace Masterminds\HTML5;
+namespace Masterminds\Html5;
 
 /**
  * Provide an processor to handle embedded instructions.

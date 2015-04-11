@@ -3,12 +3,12 @@
  * @file
  * Test the Scanner. This requires the InputStream tests are all good.
  */
-namespace Masterminds\HTML5\Tests\Parser;
+namespace Masterminds\Html5\Tests\Parser;
 
-use Masterminds\HTML5\Parser\StringInputStream;
-use Masterminds\HTML5\Parser\Scanner;
+use Masterminds\Html5\Parser\StringInputStream;
+use Masterminds\Html5\Parser\Scanner;
 
-class ScannerTest extends \Masterminds\HTML5\Tests\TestCase
+class ScannerTest extends \Masterminds\Html5\Tests\TestCase
 {
 
     /**
@@ -19,7 +19,7 @@ class ScannerTest extends \Masterminds\HTML5\Tests\TestCase
         $is = new StringInputStream("abc");
         $s = new Scanner($is);
 
-        $this->assertInstanceOf('\Masterminds\HTML5\Parser\Scanner', $s);
+        $this->assertInstanceOf('\Masterminds\Html5\Parser\Scanner', $s);
     }
 
     public function testNext()

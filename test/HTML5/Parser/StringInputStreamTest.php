@@ -1,9 +1,9 @@
 <?php
-namespace Masterminds\HTML5\Tests\Parser;
+namespace Masterminds\Html5\Tests\Parser;
 
-use Masterminds\HTML5\Parser\StringInputStream;
+use Masterminds\Html5\Parser\StringInputStream;
 
-class StringInputStreamTest extends \Masterminds\HTML5\Tests\TestCase
+class StringInputStreamTest extends \Masterminds\Html5\Tests\TestCase
 {
 
     /**
@@ -13,7 +13,7 @@ class StringInputStreamTest extends \Masterminds\HTML5\Tests\TestCase
     {
         $s = new StringInputStream("abc");
 
-        $this->assertInstanceOf('\Masterminds\HTML5\Parser\StringInputStream', $s);
+        $this->assertInstanceOf('\Masterminds\Html5\Parser\StringInputStream', $s);
     }
 
     public function testNext()

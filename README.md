@@ -12,7 +12,10 @@ But after some initial refactoring work, we began a new parser.
 - Interoperability with QueryPath [[in progress](https://github.com/technosophos/querypath/issues/114)]
 - Runs on **PHP** 5.3.0 or newer and **HHVM** 3.2 or newer
 
-[![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php) [![Latest Stable Version](https://poser.pugx.org/masterminds/html5/v/stable.png)](https://packagist.org/packages/masterminds/html5) [![Coverage Status](https://coveralls.io/repos/Masterminds/html5-php/badge.png?branch=master)](https://coveralls.io/r/Masterminds/html5-php?branch=master)
+[![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php) 
+[![Latest Stable Version](https://poser.pugx.org/masterminds/html5/v/stable.png)](https://packagist.org/packages/masterminds/html5) 
+[![Code Coverage](https://scrutinizer-ci.com/g/Masterminds/html5-php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Masterminds/html5-php/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Masterminds/html5-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Masterminds/html5-php/?branch=master)
 
 ## Installation
 

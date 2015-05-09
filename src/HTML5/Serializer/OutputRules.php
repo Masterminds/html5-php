@@ -73,17 +73,16 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
 
             'nodeName'=>'img', 'nodeName'=>array('img', 'a'),
             'attrName'=>'alt', 'attrName'=>array('title', 'alt'),
-
-
-            'prefixes'=>['xh'=>'http://www.w3.org/1999/xhtml'),
-            'xpath' => "@checked[../../xh:input[@type='radio' or @type='checkbox']]",
         ),
         */
         array(
-            'nodeNamespace'=>'http://www.w3.org/1999/xhtml',
-            'attrName'=>array('alt', 'title'),
+            'nodeNamespace' => 'http://www.w3.org/1999/xhtml',
+            'attrName' => array('alt', 'title', 'value', 'type', 'href', 'id', 'style'),
         ),
-
+        array(
+            'nodeNamespace' => 'http://www.w3.org/1999/xhtml',
+            'xpath' => 'starts-with(local-name(), \'data-\')',
+        ),
     );
 
     const DOCTYPE = '<!DOCTYPE html>';
@@ -328,7 +327,7 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
                         $xp->registerNamespace($nsPrefix, $ns);
                     }
                 }
-                if(!$xp->query($rule['xpath'], $attr->ownerElement)->length){
+                if(!$xp->evaluate($rule['xpath'], $attr)){
                     continue;
                 }
             }

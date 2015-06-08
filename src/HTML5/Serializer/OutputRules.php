@@ -185,7 +185,9 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
     {
         $this->doctype();
         if ($dom->documentElement) {
-            $this->traverser->node($dom->documentElement);
+            foreach ($dom->childNodes as $node) {
+                $this->traverser->node($node);
+            }
             $this->nl();
         }
     }

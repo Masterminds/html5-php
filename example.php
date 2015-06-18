@@ -1,7 +1,7 @@
 <?php
 
 require "vendor/autoload.php";
-use Masterminds\HTML5;
+use Masterminds\Html5;
 
 
 $html = <<< 'HERE'
@@ -25,7 +25,7 @@ $html = <<< 'HERE'
   </body></html>
 HERE;
 
-$html5 = new HTML5();
+$html5 = new Html5();
 $dom = $html5->loadHTML($html);
 
 print "Converting to HTML 5\n";

@@ -1,3 +1,22 @@
+From 2.x to 3.x
+===============
+
+- The class `Masterminds\HTML5` has been renamed into `Masterminds\Html5` (classes using `Masterminds\HTML5` namespace too)
+
+Before:
+```php    
+use Masterminds\HTML5;
+
+$html5 = new HTML5();
+```
+        
+After:
+```php  
+use Masterminds\Html5;
+        
+$html5 = new Html5();
+```        
+
 From 1.x to 2.x
 =================
 

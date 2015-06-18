@@ -557,7 +557,7 @@ class Elements
      * @param string $name
      *            The name of the element.
      *
-     * @return int The element mask.
+     * @return int|bool The element mask or false if element does not exist.
      */
     public static function element($name)
     {

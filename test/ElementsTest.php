@@ -351,7 +351,7 @@ class ElementsTest extends TestCase
             'baz'
         );
         foreach ($nonhtml5 as $element) {
-            $this->assertFalse(Elements::element($element));
+            $this->assertEquals(0, Elements::element($element));
         }
     }
 

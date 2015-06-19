@@ -198,8 +198,8 @@ class Html5
      *
      * @param mixed $dom
      *            The DOM to be serialized.
-     * @param string $file
-     *            The filename to be written.
+     * @param string|resource $file
+     *            The filename to be written or resource to write to.
      * @param array $options
      *            Configuration options when serializing the DOM. These include:
      *            - encode_entities: Text written to the output is escaped by default and not all

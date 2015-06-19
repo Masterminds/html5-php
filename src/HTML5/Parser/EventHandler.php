@@ -69,7 +69,7 @@ interface EventHandler
      *            An array with all of the tag's attributes.
      * @param boolean $selfClosing
      *            An indicator of whether or not this tag is self-closing (<foo/>)
-     * @return numeric One of the Tokenizer::TEXTMODE_* constants.
+     * @return int One of the Tokenizer::TEXTMODE_* constants.
      */
     public function startTag($name, $attributes = array(), $selfClosing = false);
 

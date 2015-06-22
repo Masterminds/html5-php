@@ -211,7 +211,8 @@ class Tokenizer
                 $tok = $this->scanner->current();
             } else {
                 $txt .= $tok;
-                $tok = $this->scanner->next();
+                $this->scanner->next();
+                $tok = $this->scanner->current();
             }
         }
         $len = strlen($sequence);
@@ -289,7 +290,8 @@ class Tokenizer
             return false;
         }
 
-        $tok = $this->scanner->next();
+        $this->scanner->next();
+        $tok = $this->scanner->current();
 
         // Comment:
         if ($tok == '-' && $this->scanner->peek() == '-') {
@@ -321,7 +323,8 @@ class Tokenizer
         if ($this->scanner->current() != '/') {
             return false;
         }
-        $tok = $this->scanner->next();
+        $this->scanner->next();
+        $tok = $this->scanner->current();
 
         // a-zA-Z -> tagname
         // > -> parse error
@@ -540,7 +543,8 @@ class Tokenizer
                 $tok = $this->scanner->current();
             } else {
                 $val .= $tok;
-                $tok = $this->scanner->next();
+                $this->scanner->next();
+                $tok = $this->scanner->current();
             }
         }
         $this->scanner->next();
@@ -561,7 +565,8 @@ class Tokenizer
                     $this->parseError("Unexpected chars in unquoted attribute value %s", $tok);
                 }
                 $val .= $tok;
-                $tok = $this->scanner->next();
+                $this->scanner->next();
+                $tok = $this->scanner->current();
             }
         }
         return $val;
@@ -590,7 +595,8 @@ class Tokenizer
         $tok = $this->scanner->current();
         do {
             $comment .= $tok;
-            $tok = $this->scanner->next();
+            $this->scanner->next();
+            $tok = $this->scanner->current();
         } while ($tok !== false && $tok != '>');
 
         $this->flushBuffer();
@@ -625,7 +631,8 @@ class Tokenizer
         }
         while (! $this->isCommentEnd()) {
             $comment .= $tok;
-            $tok = $this->scanner->next();
+            $this->scanner->next();
+            $tok = $this->scanner->current();
         }
 
         $this->events->comment($comment);
@@ -651,7 +658,8 @@ class Tokenizer
         }
 
         // Advance one, and test for '->'
-        if ($this->scanner->next() == '-' && $this->scanner->peek() == '>') {
+        $this->scanner->next();
+        if ($this->scanner->current() == '-' && $this->scanner->peek() == '>') {
             $this->scanner->next(); // Consume the last '>'
             return true;
         }
@@ -695,7 +703,8 @@ class Tokenizer
         if ($tok === "\0") {
             $this->parseError("Unexpected null character in DOCTYPE.");
             $doctypeName .= UTF8::FFFD;
-            $tok = $this->scanner->next();
+            $this->scanner->next();
+            $tok = $this->scanner->current();
         }
 
         $stop = " \n\f>";
@@ -817,7 +826,8 @@ class Tokenizer
             return $this->bogusComment('<![' . $chars);
         }
 
-        $tok = $this->scanner->next();
+        $this->scanner->next();
+        $tok = $this->scanner->current();
         do {
             if ($tok === false) {
                 $this->parseError('Unexpected EOF inside CDATA.');
@@ -825,7 +835,8 @@ class Tokenizer
                 return true;
             }
             $cdata .= $tok;
-            $tok = $this->scanner->next();
+            $this->scanner->next();
+            $tok = $this->scanner->current();
         } while (! $this->sequenceMatches(']]>'));
 
         // Consume ]]>
@@ -852,7 +863,8 @@ class Tokenizer
             return false;
         }
 
-        $tok = $this->scanner->next();
+        $this->scanner->next();
+        $tok = $this->scanner->current();
         $procName = $this->scanner->getAsciiAlpha();
         $white = strlen($this->scanner->whitespace());
 
@@ -868,7 +880,8 @@ class Tokenizer
         while (! ($this->scanner->current() == '?' && $this->scanner->peek() == '>')) {
             $data .= $this->scanner->current();
 
-            $tok = $this->scanner->next();
+            $this->scanner->next();
+            $tok = $this->scanner->current();
             if ($tok === false) {
                 $this->parseError("Unexpected EOF in processing instruction.");
                 $this->events->processingInstruction($procName, $data);
@@ -1010,7 +1023,8 @@ class Tokenizer
         }
 
         // Next char after &.
-        $tok = $this->scanner->next();
+        $this->scanner->next();
+        $tok = $this->scanner->current();
         $entity = '';
         $start = $this->scanner->position();
 
@@ -1027,13 +1041,15 @@ class Tokenizer
 
         // Numeric entity
         if ($tok == '#') {
-            $tok = $this->scanner->next();
+            $this->scanner->next();
+            $tok = $this->scanner->current();
 
             // Hexidecimal encoding.
             // X[0-9a-fA-F]+;
             // x[0-9a-fA-F]+;
             if ($tok == 'x' || $tok == 'X') {
-                $tok = $this->scanner->next(); // Consume x
+                $this->scanner->next(); // Consume x
+                $tok = $this->scanner->current();
 
                 // Convert from hex code to char.
                 $hex = $this->scanner->getHex();

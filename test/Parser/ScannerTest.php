@@ -26,8 +26,10 @@ class ScannerTest extends \Masterminds\Html5\Tests\TestCase
     {
         $s = new Scanner(new StringInputStream("abc"));
 
-        $this->assertEquals('b', $s->next());
-        $this->assertEquals('c', $s->next());
+        $s->next();
+        $this->assertEquals('b', $s->current());
+        $s->next();
+        $this->assertEquals('c', $s->current());
     }
 
     public function testPosition()

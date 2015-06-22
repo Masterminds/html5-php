@@ -55,19 +55,10 @@ class Scanner
      * Get the next character.
      *
      * Note: This advances the pointer.
-     *
-     * @return string The next character.
      */
     public function next()
     {
         $this->is->next();
-        if ($this->is->valid()) {
-            if ($this->debug)
-                fprintf(STDOUT, "> %s\n", $this->is->current());
-            return $this->is->current();
-        }
-
-        return false;
     }
 
     /**
@@ -75,11 +66,14 @@ class Scanner
      *
      * Note, this does not advance the pointer.
      *
-     * @return string The current character.
+     * @return mixed Any value can be returned. Typically the current character.
      */
     public function current()
     {
         if ($this->is->valid()) {
+            if ($this->debug) {
+                fprintf(STDOUT, "> %s\n", $this->is->current());
+            }
             return $this->is->current();
         }
 

@@ -299,7 +299,7 @@ class Tokenizer
         }
 
         elseif ($tok == 'D' || $tok == 'd') { // Doctype
-            return $this->doctype('');
+            return $this->doctype();
         }
 
         elseif ($tok == '[') { // CDATA section

@@ -103,7 +103,6 @@ class Traverser
             case XML_CDATA_SECTION_NODE:
                 $this->rules->cdata($node);
                 break;
-            // FIXME: It appears that the parser doesn't do PI's.
             case XML_PI_NODE:
                 $this->rules->processorInstruction($node);
                 break;

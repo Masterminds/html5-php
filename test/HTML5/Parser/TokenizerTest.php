@@ -198,7 +198,6 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<!-- 1 > 0 -->' => ' 1 > 0 ',
             '<!-- --$i -->' => ' --$i ',
             '<!----$i-->' => '--$i',
-            '<!-- 1 > 0 -->' => ' 1 > 0 ',
             "<!--\nHello World.\na-->" => "\nHello World.\na",
             '<!-- <!-- -->' => ' <!-- '
         );

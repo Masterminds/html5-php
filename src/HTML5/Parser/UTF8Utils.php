@@ -50,6 +50,8 @@ class UTF8Utils
         // Get the length for the string we need.
         if (function_exists('mb_strlen')) {
             return mb_strlen($string, 'utf-8');
+        } elseif (function_exists('iconv_strlen')) {
+            return iconv_strlen($string, 'utf-8');
         } elseif (function_exists('utf8_decode')) {
             // MPB: Will this work? Won't certain decodes lead to two chars
             // extrapolated out of 2-byte chars?

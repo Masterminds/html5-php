@@ -317,6 +317,9 @@ class Html5Test extends TestCase
 
     public function testAttributes()
     {
+        $res = $this->cycle('<use xlink:href="#svg-track" xmlns:xlink="http://www.w3.org/1999/xlink"></use>');
+        $this->assertContains('<use xlink:href="#svg-track" xmlns:xlink="http://www.w3.org/1999/xlink"></use>', $res);
+
         $res = $this->cycle('<div attr="val">FOO</div>');
         $this->assertRegExp('|<div attr="val">FOO</div>|', $res);
 

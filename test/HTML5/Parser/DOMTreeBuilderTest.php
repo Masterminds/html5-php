@@ -100,7 +100,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertSame($doc, $targetDom);
         $this->assertEquals('html', $doc->documentElement->tagName);
     }
-    
+
     public function testDocumentFakeAttrAbsence()
     {
         $html = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\"><body>foo</body></html>";
@@ -495,6 +495,12 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEmpty($this->errors);
         $noscript = $doc->getElementsByTagName('noscript')->item(0);
         $this->assertEquals('noscript', $noscript->tagName);
+
+        $html = '<!DOCTYPE html><html><body><noscript><p>No JS</p></noscript></body></html>';
+        $doc = $this->parse($html);
+        $this->assertEmpty($this->errors);
+        $p = $doc->getElementsByTagName('p')->item(0);
+        $this->assertEquals('p', $p->tagName);
     }
 
     /**

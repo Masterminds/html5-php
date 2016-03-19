@@ -94,10 +94,10 @@ class UTF8Utils
             // application executing this library so we store the value, change it
             // to our needs, and then change it back when we are done. This feels
             // a little excessive and it would be great if there was a better way.
-            $save = ini_get('mbstring.substitute_character');
-            ini_set('mbstring.substitute_character', "none");
+            $save = mb_substitute_character();
+            mb_substitute_character('none');
             $data = mb_convert_encoding($data, 'UTF-8', $encoding);
-            ini_set('mbstring.substitute_character', $save);
+            mb_substitute_character($save);
         }        // @todo Get iconv running in at least some environments if that is possible.
         elseif (function_exists('iconv') && $encoding != 'auto') {
             // fprintf(STDOUT, "iconv found\n");

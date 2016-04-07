@@ -9,7 +9,7 @@ But after some initial refactoring work, we began a new parser.
 - Composer support
 - Event-based (SAX-like) parser
 - DOM tree builder
-- Interoperability with QueryPath [[in progress](https://github.com/technosophos/querypath/issues/114)]
+- Interoperability with [QueryPath](https://github.com/technosophos/querypath)
 - Runs on **PHP** 5.3.0 or newer and **HHVM** 3.2 or newer
 
 [![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php)

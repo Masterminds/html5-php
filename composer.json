@@ -26,7 +26,7 @@
     "require-dev": {
         "satooshi/php-coveralls": "0.6.*",
         "phpunit/phpunit" : "4.*",
-        "sami/sami": "~2.0"
+        "sami/sami": "^3.0"
     },
     "autoload": {
         "psr-4": {"Masterminds\\": "src"}

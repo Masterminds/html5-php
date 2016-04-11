@@ -1,7 +1,19 @@
 # Release Notes
+2.2.0 (2015-04-11)
+
+- #105: Enable composer cache (for CI/CD)
+- #100: Use mb_substitute_character inset of ini_set for environments where
+  ini_set is disable (e.g., shared hosting)
+- #98: Allow link, meta, style tags in noscript tags
+- #96: Fixed xml:href on svgs that use the "use" breaking
+- #94: Counting UTF8 characters performance improvement
+- #93: Use newer version of coveralls package
+- #90: Remove duplicate test
+- #87: Allow multiple root nodes
+
 2.1.2 (2015-06-07)
 - #82: Support for PHP7
-- #84: Improved boolean attribute handling 
+- #84: Improved boolean attribute handling
 
 2.1.1 (2015-03-23)
 - #78: Fixes bug where unmatched entity like string drops everything after &.

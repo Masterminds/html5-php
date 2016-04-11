@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Masterminds\Html5\Parser\EventHandler | HTML5-PHP API</title>
+
+            <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/sami.css">
+        <script src="../../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script src="../../../js/typeahead.min.js"></script>
+        <script src="../../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Masterminds_Html5_Parser_EventHandler" data-root-path="../../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                    <form action="#" method="GET">
+                <select id="version-switcher" name="version">
+                                            <option value="../../../../2.0.0/index.html">2.0.0</option>
+                                            <option value="../../../../2.0.1/index.html">2.0.1</option>
+                                            <option value="../../../../2.0.2/index.html">2.0.2</option>
+                                            <option value="../../../../2.1.0/index.html">2.1.0</option>
+                                            <option value="../../../../2.1.1/index.html">2.1.1</option>
+                                            <option value="../../../../2.1.2/index.html">2.1.2</option>
+                                            <option value="../../../../2.2.0/index.html">2.2.0</option>
+                                            <option value="../../../../2.x/index.html">2.0 branch</option>
+                                            <option value="../../../../master/index.html" selected>master branch</option>
+                                    </select>
+            </form>
+                <form id="search-form" action="../../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../../index.html">HTML5-PHP API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../../classes.html">Classes</a></li>
+                                            <li><a href="../../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../../traits.html">Traits</a></li>
+                    <li><a href="../../../doc-index.html">Index</a></li>
+                    <li><a href="../../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">interface</span></li>
+                                                            <li><a href="../../../Masterminds.html">Masterminds</a></li>
+                                        <li><a href="../../../Masterminds/Html5.html">Html5</a></li>
+                                        <li><a href="../../../Masterminds/Html5/Parser.html">Parser</a></li>
+    
+                <li>EventHandler</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>EventHandler</h1>
+    </div>
+
+    <p>    interface
+    <strong>EventHandler</strong>        (<a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/EventHandler.php">View source</a>)
+</p>
+
+            <div class="description">
+            <p>Standard events for HTML5.</p>            <p>This is roughly analogous to a SAX2 or expat-style interface.
+However, it is tuned specifically for HTML5, according to section 8
+of the HTML5 specification.</p>
+
+<p>An event handler receives parser events. For a concrete
+implementation, see DOMTreeBuilder.</p>
+
+<p>Quirks support in the parser is limited to close-in syntax (malformed
+tags or attributes). Higher order syntax and semantic issues with a
+document (e.g. mismatched tags, illegal nesting, etc.) are the
+responsibility of the event handler implementation.</p>
+
+<p>See HTML5 spec section 8.2.4</p>        </div>
+    
+    
+            <h2>Constants</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td>DOCTYPE_NONE</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>DOCTYPE_PUBLIC</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>DOCTYPE_SYSTEM</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+            </table>
+
+    
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_doctype">doctype</a>(
+    string $name, 
+    int $idType, 
+    string $id = null, 
+    boolean $quirks = false)
+                                            <p>A doctype declaration.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    int
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_startTag">startTag</a>(
+    string $name, 
+    array $attributes = array(), 
+    boolean $selfClosing = false)
+                                            <p>A start tag.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_endTag">endTag</a>($name)
+                                            <p>An end-tag.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_comment">comment</a>($cdata)
+                                            <p>A comment section (unparsed character data).</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_text">text</a>($cdata)
+                                            <p>A unit of parsed character data.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_eof">eof</a>()
+                                            <p>Indicates that the document has been entirely processed.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_parseError">parseError</a>($msg, $line, $col)
+                                            <p>Emitted when the parser encounters an error condition.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_cdata">cdata</a>(
+    string $data)
+                                            <p>A CDATA section.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_processingInstruction">processingInstruction</a>(
+    string $name, 
+    string $data = null)
+                                            <p>This is a holdover from the XML spec.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_doctype">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/EventHandler.php#L43">line 43</a></div>
+        <code>                    
+    
+    <strong>doctype</strong>(
+    string $name, 
+    int $idType, 
+    string $id = null, 
+    boolean $quirks = false)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>A doctype declaration.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the root element.</td>
+            </tr>
+                    <tr>
+                <td>
+    int</td>
+                <td>$idType</td>
+                <td>One of DOCTYPE<em>NONE, DOCTYPE</em>PUBLIC, or DOCTYPE_SYSTEM.</td>
+            </tr>
+                    <tr>
+                <td>
+    string</td>
+                <td>$id</td>
+                <td>The identifier. For DOCTYPE<em>PUBLIC, this is the public ID. If DOCTYPE</em>SYSTEM,
+           then this is a system ID.</td>
+            </tr>
+                    <tr>
+                <td>
+    boolean</td>
+                <td>$quirks</td>
+                <td>Indicates whether the builder should enter quirks mode.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_startTag">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/EventHandler.php#L74">line 74</a></div>
+        <code>                    
+    int
+    <strong>startTag</strong>(
+    string $name, 
+    array $attributes = array(), 
+    boolean $selfClosing = false)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>A start tag.</p>                    <p>IMPORTANT: The parser watches the return value of this event. If this returns
+an integer, the parser will switch TEXTMODE patters according to the int.</p>
+
+<p>This is how the Tree Builder can tell the Tokenizer when a certain tag should
+cause the parser to go into RAW text mode.</p>
+
+<p>The HTML5 standard requires that the builder is the one that initiates this
+step, and this is the only way short of a circular reference that we can
+do that.</p>
+
+<p>Example: if a startTag even for a <code>script</code> name is fired, and the startTag()
+implementation returns Tokenizer::TEXTMODE_RAW, then the tokenizer will
+switch into RAW text mode and consume data until it reaches a closing
+<code>script</code> tag.</p>
+
+<p>The textmode is automatically reset to Tokenizer::TEXTMODE_NORMAL when the
+closing tag is encounter. <strong>This behavior may change.</strong></p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The tag name.</td>
+            </tr>
+                    <tr>
+                <td>
+    array</td>
+                <td>$attributes</td>
+                <td>An array with all of the tag's attributes.</td>
+            </tr>
+                    <tr>
+                <td>
+    boolean</td>
+                <td>$selfClosing</td>
+                <td>An indicator of whether or not this tag is self-closing (<foo/>)</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    int</td>
+            <td>One of the Tokenizer::TEXTMODE_* constants.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_endTag">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/EventHandler.php#L79">line 79</a></div>
+        <code>                    
+    
+    <strong>endTag</strong>($name)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>An end-tag.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_comment">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/EventHandler.php#L84">line 84</a></div>
+        <code>                    
+    
+    <strong>comment</strong>($cdata)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>A comment section (unparsed character data).</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$cdata</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_text">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/EventHandler.php#L91">line 91</a></div>
+        <code>                    
+    
+    <strong>text</strong>($cdata)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>A unit of parsed character data.</p>                    <p>Entities in this text are <em>already decoded</em>.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$cdata</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_eof">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/EventHandler.php#L96">line 96</a></div>
+        <code>                    
+    
+    <strong>eof</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Indicates that the document has been entirely processed.</p>                                </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_parseError">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/EventHandler.php#L101">line 101</a></div>
+        <code>                    
+    
+    <strong>parseError</strong>($msg, $line, $col)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Emitted when the parser encounters an error condition.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$msg</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$line</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$col</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_cdata">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/EventHandler.php#L109">line 109</a></div>
+        <code>                    
+    
+    <strong>cdata</strong>(
+    string $data)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>A CDATA section.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$data</td>
+                <td>The unparsed character data.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_processingInstruction">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/EventHandler.php#L121">line 121</a></div>
+        <code>                    
+    
+    <strong>processingInstruction</strong>(
+    string $name, 
+    string $data = null)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>This is a holdover from the XML spec.</p>                    <p>While user agents don't get PIs, server-side does.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the processor (e.g. 'php').</td>
+            </tr>
+                    <tr>
+                <td>
+    string</td>
+                <td>$data</td>
+                <td>The unparsed data.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

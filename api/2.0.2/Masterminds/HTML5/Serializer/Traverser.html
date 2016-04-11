@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Masterminds\HTML5\Serializer\Traverser | HTML5-PHP API</title>
+
+            <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/sami.css">
+        <script src="../../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script src="../../../js/typeahead.min.js"></script>
+        <script src="../../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Masterminds_HTML5_Serializer_Traverser" data-root-path="../../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                    <form action="#" method="GET">
+                <select id="version-switcher" name="version">
+                                            <option value="../../../../2.0.0/index.html" selected>2.0.0</option>
+                                            <option value="../../../../2.0.1/index.html">2.0.1</option>
+                                            <option value="../../../../2.0.2/index.html">2.0.2</option>
+                                            <option value="../../../../2.1.0/index.html">2.1.0</option>
+                                            <option value="../../../../2.1.1/index.html">2.1.1</option>
+                                            <option value="../../../../2.1.2/index.html">2.1.2</option>
+                                            <option value="../../../../2.2.0/index.html">2.2.0</option>
+                                            <option value="../../../../2.x/index.html">2.0 branch</option>
+                                            <option value="../../../../master/index.html">master branch</option>
+                                    </select>
+            </form>
+                <form id="search-form" action="../../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../../index.html">HTML5-PHP API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../../classes.html">Classes</a></li>
+                                            <li><a href="../../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../../traits.html">Traits</a></li>
+                    <li><a href="../../../doc-index.html">Index</a></li>
+                    <li><a href="../../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                                                            <li><a href="../../../Masterminds.html">Masterminds</a></li>
+                                        <li><a href="../../../Masterminds/HTML5.html">HTML5</a></li>
+                                        <li><a href="../../../Masterminds/HTML5/Serializer.html">Serializer</a></li>
+    
+                <li>Traverser</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>Traverser</h1>
+    </div>
+
+    <p>    class
+    <strong>Traverser</strong>        (<a href="https://github.com/Masterminds/html5-php/blob/2.0.0/HTML5-PHP/src/HTML5/Serializer/Traverser.php">View source</a>)
+</p>
+
+            <div class="description">
+            <p>Traverser for walking a DOM tree.</p>            <p>This is a concrete traverser designed to convert a DOM tree into an
+HTML5 document. It is not intended to be a generic DOMTreeWalker
+implementation.</p>        </div>
+    
+    
+    
+            <h2>Properties</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td class="type" id="property_local_ns">
+                    static                                                            
+    
+                </td>
+                <td>$local_ns</td>
+                <td class="last">Namespaces that should be treated as "local" to HTML5.</td>
+                <td></td>
+            </tr>
+            </table>
+
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method___construct">__construct</a>($dom, $out, 
+    <a href="../../../Masterminds/HTML5/Serializer/RulesInterface.html"><abbr title="Masterminds\HTML5\Serializer\RulesInterface">RulesInterface</abbr></a> $rules, $options = array())
+                                            <p>Create a traverser.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    resource
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_walk">walk</a>()
+                                            <p>Tell the traverser to walk the DOM.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_node">node</a>(
+    mixed $node)
+                                            <p>Process a node in the DOM.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_children">children</a>(
+    <a target="_blank" href="http://php.net/DOMNodeList">DOMNodeList</a> $nl)
+                                            <p>Walk through all the nodes on a node list.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isLocalElement">isLocalElement</a>(
+    mixed $ele)
+                                            <p>Is an element local?</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method___construct">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.0/HTML5-PHP/src/HTML5/Serializer/Traverser.php#L49">line 49</a></div>
+        <code>                    
+    
+    <strong>__construct</strong>($dom, $out, 
+    <a href="../../../Masterminds/HTML5/Serializer/RulesInterface.html"><abbr title="Masterminds\HTML5\Serializer\RulesInterface">RulesInterface</abbr></a> $rules, $options = array())</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Create a traverser.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$dom</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$out</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>
+    <a href="../../../Masterminds/HTML5/Serializer/RulesInterface.html"><abbr title="Masterminds\HTML5\Serializer\RulesInterface">RulesInterface</abbr></a></td>
+                <td>$rules</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$options</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_walk">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.0/HTML5-PHP/src/HTML5/Serializer/Traverser.php#L65">line 65</a></div>
+        <code>                    
+    resource
+    <strong>walk</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Tell the traverser to walk the DOM.</p>                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    resource</td>
+            <td>$out
+        Returns the output stream.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_node">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.0/HTML5-PHP/src/HTML5/Serializer/Traverser.php#L93">line 93</a></div>
+        <code>                    
+    
+    <strong>node</strong>(
+    mixed $node)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Process a node in the DOM.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    mixed</td>
+                <td>$node</td>
+                <td>A node implementing \DOMNode.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_children">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.0/HTML5-PHP/src/HTML5/Serializer/Traverser.php#L126">line 126</a></div>
+        <code>                    
+    
+    <strong>children</strong>(
+    <a target="_blank" href="http://php.net/DOMNodeList">DOMNodeList</a> $nl)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Walk through all the nodes on a node list.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    <a target="_blank" href="http://php.net/DOMNodeList">DOMNodeList</a></td>
+                <td>$nl</td>
+                <td>A list of child elements to walk through.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isLocalElement">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.0/HTML5-PHP/src/HTML5/Serializer/Traverser.php#L141">line 141</a></div>
+        <code>                    
+    bool
+    <strong>isLocalElement</strong>(
+    mixed $ele)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Is an element local?</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    mixed</td>
+                <td>$ele</td>
+                <td>An element that implement \DOMNode.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    bool</td>
+            <td>True if local and false otherwise.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

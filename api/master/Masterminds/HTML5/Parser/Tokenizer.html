@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Masterminds\Html5\Parser\Tokenizer | HTML5-PHP API</title>
+
+            <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/sami.css">
+        <script src="../../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script src="../../../js/typeahead.min.js"></script>
+        <script src="../../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Masterminds_Html5_Parser_Tokenizer" data-root-path="../../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                    <form action="#" method="GET">
+                <select id="version-switcher" name="version">
+                                            <option value="../../../../2.0.0/index.html">2.0.0</option>
+                                            <option value="../../../../2.0.1/index.html">2.0.1</option>
+                                            <option value="../../../../2.0.2/index.html">2.0.2</option>
+                                            <option value="../../../../2.1.0/index.html">2.1.0</option>
+                                            <option value="../../../../2.1.1/index.html">2.1.1</option>
+                                            <option value="../../../../2.1.2/index.html">2.1.2</option>
+                                            <option value="../../../../2.2.0/index.html">2.2.0</option>
+                                            <option value="../../../../2.x/index.html">2.0 branch</option>
+                                            <option value="../../../../master/index.html" selected>master branch</option>
+                                    </select>
+            </form>
+                <form id="search-form" action="../../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../../index.html">HTML5-PHP API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../../classes.html">Classes</a></li>
+                                            <li><a href="../../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../../traits.html">Traits</a></li>
+                    <li><a href="../../../doc-index.html">Index</a></li>
+                    <li><a href="../../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                                                            <li><a href="../../../Masterminds.html">Masterminds</a></li>
+                                        <li><a href="../../../Masterminds/Html5.html">Html5</a></li>
+                                        <li><a href="../../../Masterminds/Html5/Parser.html">Parser</a></li>
+    
+                <li>Tokenizer</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>Tokenizer</h1>
+    </div>
+
+    <p>    class
+    <strong>Tokenizer</strong>        (<a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/Tokenizer.php">View source</a>)
+</p>
+
+            <div class="description">
+            <p>The HTML5 tokenizer.</p>            <p>The tokenizer's role is reading data from the scanner and gathering it into
+semantic units. From the tokenizer, data is emitted to an event handler,
+which may (for example) create a DOM tree.</p>
+
+<p>The HTML5 specification has a detailed explanation of tokenizing HTML5. We
+follow that specification to the maximum extent that we can. If you find
+a discrepancy that is not documented, please file a bug and/or submit a
+patch.</p>
+
+<p>This tokenizer is implemented as a recursive descent parser.</p>
+
+<p>Within the API documentation, you may see references to the specific section
+of the HTML5 spec that the code attempts to reproduce. Example: 8.2.4.1.
+This refers to section 8.2.4.1 of the HTML5 CR specification.</p>        </div>
+    
+    
+            <h2>Constants</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td>WHITE</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+            </table>
+
+    
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method___construct">__construct</a>(
+    <a href="../../../Masterminds/Html5/Parser/Scanner.html"><abbr title="Masterminds\Html5\Parser\Scanner">Scanner</abbr></a> $scanner, 
+    <a href="../../../Masterminds/Html5/Parser/EventHandler.html"><abbr title="Masterminds\Html5\Parser\EventHandler">EventHandler</abbr></a> $eventHandler)
+                                            <p>Create a new tokenizer.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_parse">parse</a>()
+                                            <p>Begin parsing.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setTextMode">setTextMode</a>(
+    integer $textmode, 
+    string $untilTag = null)
+                                            <p>Set the text mode for the character data reader.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method___construct">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/Tokenizer.php#L61">line 61</a></div>
+        <code>                    
+    
+    <strong>__construct</strong>(
+    <a href="../../../Masterminds/Html5/Parser/Scanner.html"><abbr title="Masterminds\Html5\Parser\Scanner">Scanner</abbr></a> $scanner, 
+    <a href="../../../Masterminds/Html5/Parser/EventHandler.html"><abbr title="Masterminds\Html5\Parser\EventHandler">EventHandler</abbr></a> $eventHandler)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Create a new tokenizer.</p>                    <p>Typically, parsing a document involves creating a new tokenizer, giving
+it a scanner (input) and an event handler (output), and then calling
+the Tokenizer::parse() method.`</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    <a href="../../../Masterminds/Html5/Parser/Scanner.html"><abbr title="Masterminds\Html5\Parser\Scanner">Scanner</abbr></a></td>
+                <td>$scanner</td>
+                <td>A scanner initialized with an input stream.</td>
+            </tr>
+                    <tr>
+                <td>
+    <a href="../../../Masterminds/Html5/Parser/EventHandler.html"><abbr title="Masterminds\Html5\Parser\EventHandler">EventHandler</abbr></a></td>
+                <td>$eventHandler</td>
+                <td>An event handler, initialized and ready to receive
+           events.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_parse">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/Tokenizer.php#L78">line 78</a></div>
+        <code>                    
+    
+    <strong>parse</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Begin parsing.</p>                    <p>This will begin scanning the document, tokenizing as it goes.
+Tokens are emitted into the event handler.</p>
+
+<p>Tokenizing will continue until the document is completely
+read. Errors are emitted into the event handler, but
+the parser will attempt to continue parsing until the
+entire input stream is read.</p>            </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setTextMode">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/Tokenizer.php#L109">line 109</a></div>
+        <code>                    
+    
+    <strong>setTextMode</strong>(
+    integer $textmode, 
+    string $untilTag = null)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Set the text mode for the character data reader.</p>                    <p>HTML5 defines three different modes for reading text:
+- Normal: Read until a tag is encountered.
+- RCDATA: Read until a tag is encountered, but skip a few otherwise-
+special characters.
+- Raw: Read until a special closing tag is encountered (viz. pre, script)</p>
+
+<p>This allows those modes to be set.</p>
+
+<p>Normally, setting is done by the event handler via a special return code on
+startTag(), but it can also be set manually using this function.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    integer</td>
+                <td>$textmode</td>
+                <td>One of Elements::TEXT_*</td>
+            </tr>
+                    <tr>
+                <td>
+    string</td>
+                <td>$untilTag</td>
+                <td>The tag that should stop RAW or RCDATA mode. Normal mode does not
+           use this indicator.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

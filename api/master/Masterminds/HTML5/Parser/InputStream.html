@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Masterminds\Html5\Parser\InputStream | HTML5-PHP API</title>
+
+            <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/sami.css">
+        <script src="../../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script src="../../../js/typeahead.min.js"></script>
+        <script src="../../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Masterminds_Html5_Parser_InputStream" data-root-path="../../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                    <form action="#" method="GET">
+                <select id="version-switcher" name="version">
+                                            <option value="../../../../2.0.0/index.html">2.0.0</option>
+                                            <option value="../../../../2.0.1/index.html">2.0.1</option>
+                                            <option value="../../../../2.0.2/index.html">2.0.2</option>
+                                            <option value="../../../../2.1.0/index.html">2.1.0</option>
+                                            <option value="../../../../2.1.1/index.html">2.1.1</option>
+                                            <option value="../../../../2.1.2/index.html">2.1.2</option>
+                                            <option value="../../../../2.2.0/index.html">2.2.0</option>
+                                            <option value="../../../../2.x/index.html">2.0 branch</option>
+                                            <option value="../../../../master/index.html" selected>master branch</option>
+                                    </select>
+            </form>
+                <form id="search-form" action="../../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../../index.html">HTML5-PHP API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../../classes.html">Classes</a></li>
+                                            <li><a href="../../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../../traits.html">Traits</a></li>
+                    <li><a href="../../../doc-index.html">Index</a></li>
+                    <li><a href="../../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">interface</span></li>
+                                                            <li><a href="../../../Masterminds.html">Masterminds</a></li>
+                                        <li><a href="../../../Masterminds/Html5.html">Html5</a></li>
+                                        <li><a href="../../../Masterminds/Html5/Parser.html">Parser</a></li>
+    
+                <li>InputStream</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>InputStream</h1>
+    </div>
+
+    <p>    interface
+    <strong>InputStream</strong>        implements
+        <a target="_blank" href="http://php.net/Iterator">Iterator</a>        (<a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/InputStream.php">View source</a>)
+</p>
+
+            <div class="description">
+            <p>Interface for stream readers.</p>            <p>The parser only reads from streams. Various input sources can write
+an adapater to this InputStream.</p>
+
+<p>Currently provided InputStream implementations include
+FileInputStream and StringInputStream.</p>        </div>
+    
+    
+    
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_currentLine">currentLine</a>()
+                                            <p>Returns the current line that is being consumed.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    int
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_columnOffset">columnOffset</a>()
+                                            <p>Returns the current column of the current line that the tokenizer is at.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_remainingChars">remainingChars</a>()
+                                            <p>Get all characters until EOF.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_charsUntil">charsUntil</a>(
+    string $bytes, 
+    int $max = null)
+                                            <p>Read to a particular match (or until $max bytes are consumed).</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_charsWhile">charsWhile</a>(
+    string $bytes, 
+    int $max = null)
+                                            <p>Returns the string so long as $bytes matches.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_unconsume">unconsume</a>(
+    int $howMany = 1)
+                                            <p>Unconsume one character.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_peek">peek</a>()
+                                            <p>Retrieve the next character without advancing the pointer.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_currentLine">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/InputStream.php#L21">line 21</a></div>
+        <code>                    
+    
+    <strong>currentLine</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Returns the current line that is being consumed.</p>                    <p>TODO: Move this to the scanner.</p>            </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_columnOffset">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/InputStream.php#L32">line 32</a></div>
+        <code>                    
+    int
+    <strong>columnOffset</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Returns the current column of the current line that the tokenizer is at.</p>                    <p>Newlines are column 0. The first char after a newline is column 1.</p>            </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    int</td>
+            <td>The column number.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_remainingChars">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/InputStream.php#L39">line 39</a></div>
+        <code>                    
+    
+    <strong>remainingChars</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Get all characters until EOF.</p>                    <p>This consumes characters until the EOF.</p>            </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_charsUntil">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/InputStream.php#L57">line 57</a></div>
+        <code>                    
+    mixed
+    <strong>charsUntil</strong>(
+    string $bytes, 
+    int $max = null)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Read to a particular match (or until $max bytes are consumed).</p>                    <p>This operates on byte sequences, not characters.</p>
+
+<p>Matches as far as possible until we reach a certain set of bytes
+and returns the matched substring.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$bytes</td>
+                <td>Bytes to match.</td>
+            </tr>
+                    <tr>
+                <td>
+    int</td>
+                <td>$max</td>
+                <td>Maximum number of bytes to scan.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    mixed</td>
+            <td>Index or false if no match is found. You should use strong
+        equality when checking the result, since index could be 0.</td>
+        </tr>
+    </table>
+
+            
+            
+                            <h4>See also</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>strcspn</td>
+                <td></td>
+            </tr>
+            </table>
+
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_charsWhile">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/InputStream.php#L73">line 73</a></div>
+        <code>                    
+    
+    <strong>charsWhile</strong>(
+    string $bytes, 
+    int $max = null)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Returns the string so long as $bytes matches.</p>                    <p>Matches as far as possible with a certain set of bytes
+and returns the matched substring.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$bytes</td>
+                <td>A mask of bytes to match. If ANY byte in this mask matches the
+           current char, the pointer advances and the char is part of the
+           substring.</td>
+            </tr>
+                    <tr>
+                <td>
+    int</td>
+                <td>$max</td>
+                <td>The max number of chars to read.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                            <h4>See also</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>strspn</td>
+                <td></td>
+            </tr>
+            </table>
+
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_unconsume">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/InputStream.php#L81">line 81</a></div>
+        <code>                    
+    
+    <strong>unconsume</strong>(
+    int $howMany = 1)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Unconsume one character.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    int</td>
+                <td>$howMany</td>
+                <td>The number of characters to move the pointer back.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_peek">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Parser/InputStream.php#L86">line 86</a></div>
+        <code>                    
+    
+    <strong>peek</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Retrieve the next character without advancing the pointer.</p>                                </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

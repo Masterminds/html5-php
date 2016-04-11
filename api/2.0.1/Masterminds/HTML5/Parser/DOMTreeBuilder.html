@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Masterminds\HTML5\Parser\DOMTreeBuilder | HTML5-PHP API</title>
+
+            <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/sami.css">
+        <script src="../../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script src="../../../js/typeahead.min.js"></script>
+        <script src="../../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Masterminds_HTML5_Parser_DOMTreeBuilder" data-root-path="../../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                    <form action="#" method="GET">
+                <select id="version-switcher" name="version">
+                                            <option value="../../../../2.0.0/index.html">2.0.0</option>
+                                            <option value="../../../../2.0.1/index.html" selected>2.0.1</option>
+                                            <option value="../../../../2.0.2/index.html">2.0.2</option>
+                                            <option value="../../../../2.1.0/index.html">2.1.0</option>
+                                            <option value="../../../../2.1.1/index.html">2.1.1</option>
+                                            <option value="../../../../2.1.2/index.html">2.1.2</option>
+                                            <option value="../../../../2.2.0/index.html">2.2.0</option>
+                                            <option value="../../../../2.x/index.html">2.0 branch</option>
+                                            <option value="../../../../master/index.html">master branch</option>
+                                    </select>
+            </form>
+                <form id="search-form" action="../../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../../index.html">HTML5-PHP API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../../classes.html">Classes</a></li>
+                                            <li><a href="../../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../../traits.html">Traits</a></li>
+                    <li><a href="../../../doc-index.html">Index</a></li>
+                    <li><a href="../../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                                                            <li><a href="../../../Masterminds.html">Masterminds</a></li>
+                                        <li><a href="../../../Masterminds/HTML5.html">HTML5</a></li>
+                                        <li><a href="../../../Masterminds/HTML5/Parser.html">Parser</a></li>
+    
+                <li>DOMTreeBuilder</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>DOMTreeBuilder</h1>
+    </div>
+
+    <p>    class
+    <strong>DOMTreeBuilder</strong>        implements
+        <a href="../../../Masterminds/HTML5/Parser/EventHandler.html"><abbr title="Masterminds\HTML5\Parser\EventHandler">EventHandler</abbr></a>        (<a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php">View source</a>)
+</p>
+
+            <div class="description">
+            <p>Create an HTML5 DOM tree from events.</p>            <p>This attempts to create a DOM from events emitted by a parser. This
+attempts (but does not guarantee) to up-convert older HTML documents
+to HTML5. It does this by applying HTML5's rules, but it will not
+change the architecture of the document itself.</p>
+
+<p>Many of the error correction and quirks features suggested in the specification
+are implemented herein; however, not all of them are. Since we do not
+assume a graphical user agent, no presentation-specific logic is conducted
+during tree building.</p>
+
+<p>FIXME: The present tree builder does not exactly follow the state machine rules
+for insert modes as outlined in the HTML5 spec. The processor needs to be
+re-written to accomodate this. See, for example, the Go language HTML5
+parser.</p>        </div>
+    
+    
+            <h2>Constants</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td>NAMESPACE_HTML</td>
+                <td class="last">
+                    <p><em>Defined in http://www.w3.org/TR/html51/infrastructure.html#html-namespace-0</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>NAMESPACE_MATHML</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>NAMESPACE_SVG</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>NAMESPACE_XLINK</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>NAMESPACE_XML</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>NAMESPACE_XMLNS</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_INITIAL</td>
+                <td class="last">
+                    <p><em>Defined in 8.2.5.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_BEFORE_HTML</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_BEFORE_HEAD</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_HEAD</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_HEAD_NOSCRIPT</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_AFTER_HEAD</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_BODY</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_TEXT</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_TABLE</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_TABLE_TEXT</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_CAPTION</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_COLUMN_GROUP</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_TABLE_BODY</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_ROW</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_CELL</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_SELECT</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_SELECT_IN_TABLE</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_AFTER_BODY</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_FRAMESET</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_AFTER_FRAMESET</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_AFTER_AFTER_BODY</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_AFTER_AFTER_FRAMESET</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_SVG</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IM_IN_MATHML</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+            </table>
+
+    
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method___construct">__construct</a>($isFragment = false, 
+    array $options = array())
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_document">document</a>()
+                                            <p>Get the document.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    DOMFragmentDocumentFragment
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_fragment">fragment</a>()
+                                            <p>Get the DOM fragment for the body.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setInstructionProcessor">setInstructionProcessor</a>(
+    <a href="../../../Masterminds/HTML5/InstructionProcessor.html"><abbr title="Masterminds\HTML5\InstructionProcessor">InstructionProcessor</abbr></a> $proc)
+                                            <p>Provide an instruction processor.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_doctype">doctype</a>(
+    string $name, 
+    int $idType, 
+    string $id = null, 
+    boolean $quirks = false)
+                                            <p>A doctype declaration.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    <abbr title="Masterminds\HTML5\Parser\numeric">numeric</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_startTag">startTag</a>(
+    string $name, 
+    array $attributes = array(), 
+    boolean $selfClosing = false)
+                                            <p>Process the start tag.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_endTag">endTag</a>($name)
+                                            <p>An end-tag.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_comment">comment</a>($cdata)
+                                            <p>A comment section (unparsed character data).</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_text">text</a>($data)
+                                            <p>A unit of parsed character data.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_eof">eof</a>()
+                                            <p>Indicates that the document has been entirely processed.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_parseError">parseError</a>($msg, $line, $col)
+                                            <p>Emitted when the parser encounters an error condition.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getErrors">getErrors</a>()
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_cdata">cdata</a>(
+    string $data)
+                                            <p>A CDATA section.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_processingInstruction">processingInstruction</a>(
+    string $name, 
+    string $data = null)
+                                            <p>This is a holdover from the XML spec.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method___construct">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L150">line 150</a></div>
+        <code>                    
+    
+    <strong>__construct</strong>($isFragment = false, 
+    array $options = array())</code>
+    </h3>
+    <div class="details">
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$isFragment</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>
+    array</td>
+                <td>$options</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_document">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L183">line 183</a></div>
+        <code>                    
+    
+    <strong>document</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Get the document.</p>                                </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_fragment">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L198">line 198</a></div>
+        <code>                    
+    DOMFragmentDocumentFragment
+    <strong>fragment</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Get the DOM fragment for the body.</p>                    <p>This returns a DOMNodeList because a fragment may have zero or more
+DOMNodes at its root.</p>            </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    DOMFragmentDocumentFragment</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                            <h4>See also</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>http://www.w3.org/TR/2012/CR-html5-20121217/syntax.html#concept-frag-parse-context</td>
+                <td></td>
+            </tr>
+            </table>
+
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setInstructionProcessor">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L209">line 209</a></div>
+        <code>                    
+    
+    <strong>setInstructionProcessor</strong>(
+    <a href="../../../Masterminds/HTML5/InstructionProcessor.html"><abbr title="Masterminds\HTML5\InstructionProcessor">InstructionProcessor</abbr></a> $proc)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Provide an instruction processor.</p>                    <p>This is used for handling Processor Instructions as they are
+inserted. If omitted, PI's are inserted directly into the DOM tree.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    <a href="../../../Masterminds/HTML5/InstructionProcessor.html"><abbr title="Masterminds\HTML5\InstructionProcessor">InstructionProcessor</abbr></a></td>
+                <td>$proc</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_doctype">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L214">line 214</a></div>
+        <code>                    
+    
+    <strong>doctype</strong>(
+    string $name, 
+    int $idType, 
+    string $id = null, 
+    boolean $quirks = false)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>A doctype declaration.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the root element.</td>
+            </tr>
+                    <tr>
+                <td>
+    int</td>
+                <td>$idType</td>
+                <td>One of DOCTYPE<em>NONE, DOCTYPE</em>PUBLIC, or DOCTYPE_SYSTEM.</td>
+            </tr>
+                    <tr>
+                <td>
+    string</td>
+                <td>$id</td>
+                <td>The identifier. For DOCTYPE<em>PUBLIC, this is the public ID. If DOCTYPE</em>SYSTEM,
+           then this is a system ID.</td>
+            </tr>
+                    <tr>
+                <td>
+    boolean</td>
+                <td>$quirks</td>
+                <td>Indicates whether the builder should enter quirks mode.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_startTag">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L236">line 236</a></div>
+        <code>                    
+    <abbr title="Masterminds\HTML5\Parser\numeric">numeric</abbr>
+    <strong>startTag</strong>(
+    string $name, 
+    array $attributes = array(), 
+    boolean $selfClosing = false)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Process the start tag.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The tag name.</td>
+            </tr>
+                    <tr>
+                <td>
+    array</td>
+                <td>$attributes</td>
+                <td>An array with all of the tag's attributes.</td>
+            </tr>
+                    <tr>
+                <td>
+    boolean</td>
+                <td>$selfClosing</td>
+                <td>An indicator of whether or not this tag is self-closing (<foo/>)</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    <abbr title="Masterminds\HTML5\Parser\numeric">numeric</abbr></td>
+            <td>One of the Tokenizer::TEXTMODE_* constants.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_endTag">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L428">line 428</a></div>
+        <code>                    
+    
+    <strong>endTag</strong>($name)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>An end-tag.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$name</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_comment">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L508">line 508</a></div>
+        <code>                    
+    
+    <strong>comment</strong>($cdata)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>A comment section (unparsed character data).</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$cdata</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_text">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L515">line 515</a></div>
+        <code>                    
+    
+    <strong>text</strong>($data)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>A unit of parsed character data.</p>                    <p>Entities in this text are <em>already decoded</em>.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$data</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_eof">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L536">line 536</a></div>
+        <code>                    
+    
+    <strong>eof</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Indicates that the document has been entirely processed.</p>                                </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_parseError">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L541">line 541</a></div>
+        <code>                    
+    
+    <strong>parseError</strong>($msg, $line, $col)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Emitted when the parser encounters an error condition.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$msg</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$line</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$col</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getErrors">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L546">line 546</a></div>
+        <code>                    
+    
+    <strong>getErrors</strong>()</code>
+    </h3>
+    <div class="details">
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_cdata">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L551">line 551</a></div>
+        <code>                    
+    
+    <strong>cdata</strong>(
+    string $data)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>A CDATA section.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$data</td>
+                <td>The unparsed character data.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_processingInstruction">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/2.0.1/HTML5-PHP/src/HTML5/Parser/DOMTreeBuilder.php#L557">line 557</a></div>
+        <code>                    
+    
+    <strong>processingInstruction</strong>(
+    string $name, 
+    string $data = null)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>This is a holdover from the XML spec.</p>                    <p>While user agents don't get PIs, server-side does.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the processor (e.g. 'php').</td>
+            </tr>
+                    <tr>
+                <td>
+    string</td>
+                <td>$data</td>
+                <td>The unparsed data.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

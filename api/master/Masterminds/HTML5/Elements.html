@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Masterminds\Html5\Elements | HTML5-PHP API</title>
+
+            <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/sami.css">
+        <script src="../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../js/bootstrap.min.js"></script>
+        <script src="../../js/typeahead.min.js"></script>
+        <script src="../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Masterminds_Html5_Elements" data-root-path="../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                    <form action="#" method="GET">
+                <select id="version-switcher" name="version">
+                                            <option value="../../../2.0.0/index.html">2.0.0</option>
+                                            <option value="../../../2.0.1/index.html">2.0.1</option>
+                                            <option value="../../../2.0.2/index.html">2.0.2</option>
+                                            <option value="../../../2.1.0/index.html">2.1.0</option>
+                                            <option value="../../../2.1.1/index.html">2.1.1</option>
+                                            <option value="../../../2.1.2/index.html">2.1.2</option>
+                                            <option value="../../../2.2.0/index.html">2.2.0</option>
+                                            <option value="../../../2.x/index.html">2.0 branch</option>
+                                            <option value="../../../master/index.html" selected>master branch</option>
+                                    </select>
+            </form>
+                <form id="search-form" action="../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../index.html">HTML5-PHP API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../classes.html">Classes</a></li>
+                                            <li><a href="../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../traits.html">Traits</a></li>
+                    <li><a href="../../doc-index.html">Index</a></li>
+                    <li><a href="../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                                                            <li><a href="../../Masterminds.html">Masterminds</a></li>
+                                        <li><a href="../../Masterminds/Html5.html">Html5</a></li>
+    
+                <li>Elements</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>Elements</h1>
+    </div>
+
+    <p>    class
+    <strong>Elements</strong>        (<a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Elements.php">View source</a>)
+</p>
+
+            <div class="description">
+            <p>This class provides general information about HTML5 elements,
+including syntactic and semantic issues.</p>            <p>Parsers and serializers can
+use this class as a reference point for information about the rules
+of various HTML5 elements.</p>        </div>
+    
+    
+            <h2>Constants</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td>KNOWN_ELEMENT</td>
+                <td class="last">
+                    <p><em>Indicates an element is described in the specification.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>TEXT_RAW</td>
+                <td class="last">
+                    <p><em>Indicates the contained text should be processed as raw text.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>TEXT_RCDATA</td>
+                <td class="last">
+                    <p><em>Indicates the contained text should be processed as RCDATA.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>VOID_TAG</td>
+                <td class="last">
+                    <p><em>Indicates the tag cannot have content.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>AUTOCLOSE_P</td>
+                <td class="last">
+                    <p><em>Indicates that if a previous event is for a P tag, that element
+should be considered closed.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>TEXT_PLAINTEXT</td>
+                <td class="last">
+                    <p><em>Indicates that the text inside is plaintext (pre).</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>BLOCK_TAG</td>
+                <td class="last">
+                    <p><em>Indicates that the tag is a block.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>BLOCK_ONLY_INLINE</td>
+                <td class="last">
+                    <p><em>Indicates that the tag allows only inline elements as child nodes.</em></p>
+                    <p></p>
+                </td>
+            </tr>
+            </table>
+
+    
+            <h2>Properties</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td class="type" id="property_html5">
+                    static                                                            
+    array
+                </td>
+                <td>$html5</td>
+                <td class="last">The HTML5 elements as defined in http://dev.w3.org/html5/markup/elements.html.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_mathml">
+                    static                                                            
+    array
+                </td>
+                <td>$mathml</td>
+                <td class="last">The MathML elements.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_svg">
+                    static                                                            
+    array
+                </td>
+                <td>$svg</td>
+                <td class="last">The svg elements.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_svgCaseSensitiveAttributeMap">
+                    static                                                            
+    
+                </td>
+                <td>$svgCaseSensitiveAttributeMap</td>
+                <td class="last">Some attributes in SVG are case sensetitive.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_svgCaseSensitiveElementMap">
+                    static                                                            
+    
+                </td>
+                <td>$svgCaseSensitiveElementMap</td>
+                <td class="last">Some SVG elements are case sensetitive.</td>
+                <td></td>
+            </tr>
+            </table>
+
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;
+    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isA">isA</a>(
+    string $name, 
+    int $mask)
+                                            <p>Check whether the given element meets the given criterion.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;
+    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isHtml5Element">isHtml5Element</a>(
+    string $name)
+                                            <p>Test if an element is a valid html5 element.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;
+    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isMathMLElement">isMathMLElement</a>(
+    string $name)
+                                            <p>Test if an element name is a valid MathML presentation element.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;
+    boolean
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isSvgElement">isSvgElement</a>(
+    string $name)
+                                            <p>Test if an element is a valid SVG element.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;
+    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isElement">isElement</a>(
+    string $name)
+                                            <p>Is an element name valid in an html5 document.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;
+    int
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_element">element</a>(
+    string $name)
+                                            <p>Get the element mask for the given element name.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;
+    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_normalizeSvgElement">normalizeSvgElement</a>(
+    string $name)
+                                            <p>Normalize a SVG element name to its proper case and form.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;
+    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_normalizeSvgAttribute">normalizeSvgAttribute</a>(
+    string $name)
+                                            <p>Normalize a SVG attribute name to its proper case and form.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;
+    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_normalizeMathMlAttribute">normalizeMathMlAttribute</a>(
+    string $name)
+                                            <p>Normalize a MathML attribute name to its proper case and form.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_isA">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Elements.php#L486">line 486</a></div>
+        <code>        static            
+    boolean
+    <strong>isA</strong>(
+    string $name, 
+    int $mask)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Check whether the given element meets the given criterion.</p>                    <p>Example:</p>
+
+<p>Elements::isA('script', Elements::TEXT_RAW); // Returns true.</p>
+
+<p>Elements::isA('script', Elements::TEXT_RCDATA); // Returns false.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The element name.</td>
+            </tr>
+                    <tr>
+                <td>
+    int</td>
+                <td>$mask</td>
+                <td>One of the constants on this class.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    boolean</td>
+            <td>true if the element matches the mask, false otherwise.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isHtml5Element">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Elements.php#L503">line 503</a></div>
+        <code>        static            
+    bool
+    <strong>isHtml5Element</strong>(
+    string $name)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Test if an element is a valid html5 element.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the element.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    bool</td>
+            <td>True if a html5 element and false otherwise.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isMathMLElement">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Elements.php#L518">line 518</a></div>
+        <code>        static            
+    bool
+    <strong>isMathMLElement</strong>(
+    string $name)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Test if an element name is a valid MathML presentation element.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the element.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    bool</td>
+            <td>True if a MathML name and false otherwise.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isSvgElement">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Elements.php#L532">line 532</a></div>
+        <code>        static            
+    boolean
+    <strong>isSvgElement</strong>(
+    string $name)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Test if an element is a valid SVG element.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the element.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    boolean</td>
+            <td>True if a SVG element and false otherise.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isElement">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Elements.php#L549">line 549</a></div>
+        <code>        static            
+    bool
+    <strong>isElement</strong>(
+    string $name)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Is an element name valid in an html5 document.</p>                    <p>This includes html5 elements along with other allowed embedded content
+such as svg and mathml.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the element.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    bool</td>
+            <td>True if valid and false otherwise.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_element">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Elements.php#L562">line 562</a></div>
+        <code>        static            
+    int
+    <strong>element</strong>(
+    string $name)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Get the element mask for the given element name.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the element.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    int</td>
+            <td>The element mask.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_normalizeSvgElement">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Elements.php#L585">line 585</a></div>
+        <code>        static            
+    string
+    <strong>normalizeSvgElement</strong>(
+    string $name)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Normalize a SVG element name to its proper case and form.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the element.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    string</td>
+            <td>The normalized form of the element name.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_normalizeSvgAttribute">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Elements.php#L603">line 603</a></div>
+        <code>        static            
+    string
+    <strong>normalizeSvgAttribute</strong>(
+    string $name)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Normalize a SVG attribute name to its proper case and form.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the attribute.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    string</td>
+            <td>The normalized form of the attribute name.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_normalizeMathMlAttribute">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5/Elements.php#L623">line 623</a></div>
+        <code>        static            
+    string
+    <strong>normalizeMathMlAttribute</strong>(
+    string $name)</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Normalize a MathML attribute name to its proper case and form.</p>                    <p>Note, all MathML element names are lowercase.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$name</td>
+                <td>The name of the attribute.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    string</td>
+            <td>The normalized form of the attribute name.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

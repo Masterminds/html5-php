@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Masterminds\Html5 | HTML5-PHP API</title>
+
+            <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../css/sami.css">
+        <script src="../js/jquery-1.11.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script src="../js/typeahead.min.js"></script>
+        <script src="../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Masterminds_Html5" data-root-path="../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                    <form action="#" method="GET">
+                <select id="version-switcher" name="version">
+                                            <option value="../../2.0.0/index.html">2.0.0</option>
+                                            <option value="../../2.0.1/index.html">2.0.1</option>
+                                            <option value="../../2.0.2/index.html">2.0.2</option>
+                                            <option value="../../2.1.0/index.html">2.1.0</option>
+                                            <option value="../../2.1.1/index.html">2.1.1</option>
+                                            <option value="../../2.1.2/index.html">2.1.2</option>
+                                            <option value="../../2.2.0/index.html">2.2.0</option>
+                                            <option value="../../2.x/index.html">2.0 branch</option>
+                                            <option value="../../master/index.html" selected>master branch</option>
+                                    </select>
+            </form>
+                <form id="search-form" action="../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../index.html">HTML5-PHP API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../classes.html">Classes</a></li>
+                                            <li><a href="../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../interfaces.html">Interfaces</a></li>
+                    <li><a href="../traits.html">Traits</a></li>
+                    <li><a href="../doc-index.html">Index</a></li>
+                    <li><a href="../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                                                            <li><a href="../Masterminds.html">Masterminds</a></li>
+    
+                <li>Html5</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>Html5</h1>
+    </div>
+
+    <p>    class
+    <strong>Html5</strong>        (<a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php">View source</a>)
+</p>
+
+            <div class="description">
+            <p>This class offers convenience methods for parsing and serializing HTML5.</p>            <p>It is roughly designed to mirror the \DOMDocument class that is
+provided with most versions of PHP.</p>        </div>
+    
+    
+    
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method___construct">__construct</a>(
+    array $options = array())
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getOptions">getOptions</a>()
+                                            <p>Get the default options.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    <a target="_blank" href="http://php.net/DOMDocument">DOMDocument</a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_load">load</a>(
+    string $file, 
+    array $options = array())
+                                            <p>Load and parse an HTML file.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    <a target="_blank" href="http://php.net/DOMDocument">DOMDocument</a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_loadHTML">loadHTML</a>(
+    string $string, 
+    array $options = array())
+                                            <p>Parse a HTML Document from a string.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    <a target="_blank" href="http://php.net/DOMDocument">DOMDocument</a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_loadHTMLFile">loadHTMLFile</a>(
+    string $file, 
+    array $options = array())
+                                            <p>Convenience function to load an HTML file.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    <a target="_blank" href="http://php.net/DOMDocumentFragment">DOMDocumentFragment</a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_loadHTMLFragment">loadHTMLFragment</a>(
+    string $string, 
+    array $options = array())
+                                            <p>Parse a HTML fragment from a string.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getErrors">getErrors</a>()
+                                            <p>Return all errors encountered into parsing phase</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_hasErrors">hasErrors</a>()
+                                            <p>Return true it some errors were encountered into parsing phase</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_parse">parse</a>(
+    <a href="../Masterminds/Html5/Parser/InputStream.html"><abbr title="Masterminds\Html5\Parser\InputStream">InputStream</abbr></a> $input, 
+    array $options = array())
+                                            <p>Parse an input stream.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_parseFragment">parseFragment</a>(
+    <a href="../Masterminds/Html5/Parser/InputStream.html"><abbr title="Masterminds\Html5\Parser\InputStream">InputStream</abbr></a> $input, 
+    array $options = array())
+                                            <p>Parse an input stream where the stream is a fragment.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_save">save</a>(
+    mixed $dom, 
+    string|resource $file, 
+    array $options = array())
+                                            <p>Save a DOM into a given file as HTML5.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_saveHTML">saveHTML</a>(
+    mixed $dom, 
+    array $options = array())
+                                            <p>Convert a DOM into an HTML5 string.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method___construct">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L33">line 33</a></div>
+        <code>                    
+    
+    <strong>__construct</strong>(
+    array $options = array())</code>
+    </h3>
+    <div class="details">
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    array</td>
+                <td>$options</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getOptions">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L43">line 43</a></div>
+        <code>                    
+    array
+    <strong>getOptions</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Get the default options.</p>                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    array</td>
+            <td>The default options.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_load">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L67">line 67</a></div>
+        <code>                    
+    <a target="_blank" href="http://php.net/DOMDocument">DOMDocument</a>
+    <strong>load</strong>(
+    string $file, 
+    array $options = array())</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Load and parse an HTML file.</p>                    <p>This will apply the HTML5 parser, which is tolerant of many
+varieties of HTML, including XHTML 1, HTML 4, and well-formed HTML
+3. Note that in these cases, not all of the old data will be
+preserved. For example, XHTML's XML declaration will be removed.</p>
+
+<p>The rules governing parsing are set out in the HTML 5 spec.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$file</td>
+                <td>The path to the file to parse. If this is a resource, it is
+           assumed to be an open stream whose pointer is set to the first
+           byte of input.</td>
+            </tr>
+                    <tr>
+                <td>
+    array</td>
+                <td>$options</td>
+                <td>Configuration options when parsing the HTML</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    <a target="_blank" href="http://php.net/DOMDocument">DOMDocument</a></td>
+            <td>A DOM document. These object type is defined by the libxml
+        library, and should have been included with your version of PHP.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_loadHTML">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L93">line 93</a></div>
+        <code>                    
+    <a target="_blank" href="http://php.net/DOMDocument">DOMDocument</a>
+    <strong>loadHTML</strong>(
+    string $string, 
+    array $options = array())</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Parse a HTML Document from a string.</p>                    <p>Take a string of HTML 5 (or earlier) and parse it into a
+DOMDocument.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$string</td>
+                <td>A html5 document as a string.</td>
+            </tr>
+                    <tr>
+                <td>
+    array</td>
+                <td>$options</td>
+                <td>Configuration options when parsing the HTML</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    <a target="_blank" href="http://php.net/DOMDocument">DOMDocument</a></td>
+            <td>A DOM document. DOM is part of libxml, which is included with
+        almost all distribtions of PHP.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_loadHTMLFile">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L116">line 116</a></div>
+        <code>                    
+    <a target="_blank" href="http://php.net/DOMDocument">DOMDocument</a>
+    <strong>loadHTMLFile</strong>(
+    string $file, 
+    array $options = array())</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Convenience function to load an HTML file.</p>                    <p>This is here to provide backwards compatibility with the
+PHP DOM implementation. It simply calls load().</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$file</td>
+                <td>The path to the file to parse. If this is a resource, it is
+           assumed to be an open stream whose pointer is set to the first
+           byte of input.</td>
+            </tr>
+                    <tr>
+                <td>
+    array</td>
+                <td>$options</td>
+                <td>Configuration options when parsing the HTML</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    <a target="_blank" href="http://php.net/DOMDocument">DOMDocument</a></td>
+            <td>A DOM document. These object type is defined by the libxml
+        library, and should have been included with your version of PHP.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_loadHTMLFragment">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L132">line 132</a></div>
+        <code>                    
+    <a target="_blank" href="http://php.net/DOMDocumentFragment">DOMDocumentFragment</a>
+    <strong>loadHTMLFragment</strong>(
+    string $string, 
+    array $options = array())</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Parse a HTML fragment from a string.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    string</td>
+                <td>$string</td>
+                <td>The html5 fragment as a string.</td>
+            </tr>
+                    <tr>
+                <td>
+    array</td>
+                <td>$options</td>
+                <td>Configuration options when parsing the HTML</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    <a target="_blank" href="http://php.net/DOMDocumentFragment">DOMDocumentFragment</a></td>
+            <td>A DOM fragment. The DOM is part of libxml, which is included with
+        almost all distributions of PHP.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getErrors">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L144">line 144</a></div>
+        <code>                    
+    array
+    <strong>getErrors</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Return all errors encountered into parsing phase</p>                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_hasErrors">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L154">line 154</a></div>
+        <code>                    
+    bool
+    <strong>hasErrors</strong>()</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Return true it some errors were encountered into parsing phase</p>                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_parse">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L165">line 165</a></div>
+        <code>                    
+    
+    <strong>parse</strong>(
+    <a href="../Masterminds/Html5/Parser/InputStream.html"><abbr title="Masterminds\Html5\Parser\InputStream">InputStream</abbr></a> $input, 
+    array $options = array())</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Parse an input stream.</p>                    <p>Lower-level loading function. This requires an input stream instead
+of a string, file, or resource.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    <a href="../Masterminds/Html5/Parser/InputStream.html"><abbr title="Masterminds\Html5\Parser\InputStream">InputStream</abbr></a></td>
+                <td>$input</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>
+    array</td>
+                <td>$options</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_parseFragment">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L184">line 184</a></div>
+        <code>                    
+    
+    <strong>parseFragment</strong>(
+    <a href="../Masterminds/Html5/Parser/InputStream.html"><abbr title="Masterminds\Html5\Parser\InputStream">InputStream</abbr></a> $input, 
+    array $options = array())</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Parse an input stream where the stream is a fragment.</p>                    <p>Lower-level loading function. This requires an input stream instead
+of a string, file, or resource.</p>            </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    <a href="../Masterminds/Html5/Parser/InputStream.html"><abbr title="Masterminds\Html5\Parser\InputStream">InputStream</abbr></a></td>
+                <td>$input</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>
+    array</td>
+                <td>$options</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_save">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L209">line 209</a></div>
+        <code>                    
+    
+    <strong>save</strong>(
+    mixed $dom, 
+    string|resource $file, 
+    array $options = array())</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Save a DOM into a given file as HTML5.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    mixed</td>
+                <td>$dom</td>
+                <td>The DOM to be serialized.</td>
+            </tr>
+                    <tr>
+                <td>
+    string|resource</td>
+                <td>$file</td>
+                <td>The filename to be written or resource to write to.</td>
+            </tr>
+                    <tr>
+                <td>
+    array</td>
+                <td>$options</td>
+                <td>Configuration options when serializing the DOM. These include:
+           - encode_entities: Text written to the output is escaped by default and not all
+           entities are encoded. If this is set to true all entities will be encoded.
+           Defaults to false.</td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_saveHTML">
+        <div class="location">at line         <a href="https://github.com/Masterminds/html5-php/blob/master/HTML5-PHP/src/Html5.php#L242">line 242</a></div>
+        <code>                    
+    string
+    <strong>saveHTML</strong>(
+    mixed $dom, 
+    array $options = array())</code>
+    </h3>
+    <div class="details">
+                    <div class="method-description">
+                                    <p>Convert a DOM into an HTML5 string.</p>                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>
+    mixed</td>
+                <td>$dom</td>
+                <td>The DOM to be serialized.</td>
+            </tr>
+                    <tr>
+                <td>
+    array</td>
+                <td>$options</td>
+                <td>Configuration options when serializing the DOM. These include:
+           - encode_entities: Text written to the output is escaped by default and not all
+           entities are encoded. If this is set to true all entities will be encoded.
+           Defaults to false.</td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>
+    string</td>
+            <td>A HTML5 documented generated from the DOM.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

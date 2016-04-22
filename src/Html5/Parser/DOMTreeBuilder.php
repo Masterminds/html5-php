@@ -2,6 +2,8 @@
 namespace Masterminds\Html5\Parser;
 
 use Masterminds\Html5\Elements;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Create an HTML5 DOM tree from events.
@@ -54,6 +56,11 @@ class DOMTreeBuilder implements EventHandler
         'svg' => self::NAMESPACE_SVG,
         'math' => self::NAMESPACE_MATHML
     );
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * Holds the always available namespaces (which does not require the XMLNS declaration).
@@ -159,9 +166,10 @@ class DOMTreeBuilder implements EventHandler
 
     protected $errors = array();
 
-    public function __construct($isFragment = false, array $options = array())
+    public function __construct($isFragment = false, array $options = array(), LoggerInterface $logger = null)
     {
         $this->options = $options;
+        $this->logger = $logger ?: new NullLogger();
 
         if (isset($options[self::OPT_TARGET_DOC])) {
             $this->doc = $options[self::OPT_TARGET_DOC];
@@ -258,7 +266,7 @@ class DOMTreeBuilder implements EventHandler
      */
     public function startTag($name, $attributes = array(), $selfClosing = false)
     {
-        // fprintf(STDOUT, $name);
+        $this->logger->debug("Starting tag $name");
         $lname = $this->normalizeTagName($name);
 
         // Make sure we have an html element.
@@ -554,13 +562,12 @@ class DOMTreeBuilder implements EventHandler
             // expected here so recording a parse error is necessary.
             $dataTmp = trim($data, " \t\n\r\f");
             if (! empty($dataTmp)) {
-                // fprintf(STDOUT, "Unexpected insert mode: %d", $this->insertMode);
+                $this->logger->debug(sprintf("Unexpected insert mode: %d", $this->insertMode));
                 $this->parseError("Unexpected text. Ignoring: " . $dataTmp);
             }
 
             return;
         }
-        // fprintf(STDOUT, "Appending text %s.", $data);
         $node = $this->doc->createTextNode($data);
         $this->current->appendChild($node);
     }
@@ -572,6 +579,7 @@ class DOMTreeBuilder implements EventHandler
 
     public function parseError($msg, $line = 0, $col = 0)
     {
+        $this->logger->error(sprintf("Line %d, Col %d: %s", $line, $col, $msg));
         $this->errors[] = sprintf("Line %d, Col %d: %s", $line, $col, $msg);
     }
 

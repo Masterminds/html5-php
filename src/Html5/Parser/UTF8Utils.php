@@ -100,7 +100,6 @@ class UTF8Utils
             ini_set('mbstring.substitute_character', $save);
         }        // @todo Get iconv running in at least some environments if that is possible.
         elseif (function_exists('iconv') && $encoding != 'auto') {
-            // fprintf(STDOUT, "iconv found\n");
             // iconv has the following behaviors:
             // - Overlong representations are ignored.
             // - Beyond Plane 16 is replaced with a lower char.

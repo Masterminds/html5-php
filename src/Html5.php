@@ -2,12 +2,15 @@
 namespace Masterminds;
 
 use Masterminds\Html5\Parser\FileInputStream;
+use Masterminds\Html5\Parser\InputStream;
 use Masterminds\Html5\Parser\StringInputStream;
 use Masterminds\Html5\Parser\DOMTreeBuilder;
 use Masterminds\Html5\Parser\Scanner;
 use Masterminds\Html5\Parser\Tokenizer;
 use Masterminds\Html5\Serializer\OutputRules;
 use Masterminds\Html5\Serializer\Traverser;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * This class offers convenience methods for parsing and serializing HTML5.
@@ -28,11 +31,17 @@ class Html5
         'encode_entities' => false
     );
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     protected $errors = array();
 
-    public function __construct(array $options = array())
+    public function __construct(array $options = array(), LoggerInterface $logger = null)
     {
         $this->options = array_merge($this->options, $options);
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
@@ -165,7 +174,7 @@ class Html5
     public function parse(\Masterminds\Html5\Parser\InputStream $input, array $options = array())
     {
         $this->errors = array();
-        $events = new DOMTreeBuilder(false, array_merge($this->getOptions(), $options));
+        $events = new DOMTreeBuilder(false, array_merge($this->getOptions(), $options), $this->logger);
         $scanner = new Scanner($input);
         $parser = new Tokenizer($scanner, $events);
 
@@ -181,9 +190,9 @@ class Html5
      * Lower-level loading function. This requires an input stream instead
      * of a string, file, or resource.
      */
-    public function parseFragment(\Masterminds\Html5\Parser\InputStream $input, array $options = array())
+    public function parseFragment(InputStream $input, array $options = array())
     {
-        $events = new DOMTreeBuilder(true, array_merge($this->getOptions(), $options));
+        $events = new DOMTreeBuilder(true, array_merge($this->getOptions(), $options), $this->logger);
         $scanner = new Scanner($input);
         $parser = new Tokenizer($scanner, $events);
 

@@ -1,5 +1,7 @@
 <?php
 namespace Masterminds\Html5\Parser;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * The scanner.
@@ -17,18 +19,21 @@ class Scanner
 
     protected $is;
 
-    // Flipping this to true will give minisculely more debugging info.
-    public $debug = false;
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * Create a new Scanner.
      *
-     * @param \Masterminds\Html5\Parser\InputStream $input
-     *            An InputStream to be scanned.
+     * @param InputStream $input An InputStream to be scanned.
+     * @param LoggerInterface $logger
      */
-    public function __construct($input)
+    public function __construct(InputStream $input, LoggerInterface $logger = null)
     {
         $this->is = $input;
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
@@ -71,9 +76,7 @@ class Scanner
     public function current()
     {
         if ($this->is->valid()) {
-            if ($this->debug) {
-                fprintf(STDOUT, "> %s\n", $this->is->current());
-            }
+            $this->logger->debug(sprintf("> %s\n", $this->is->current()));
             return $this->is->current();
         }
 

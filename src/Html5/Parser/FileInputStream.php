@@ -22,11 +22,11 @@ class FileInputStream extends StringInputStream implements InputStream
      * @param string $data
      *            The file or url path to load.
      */
-    public function __construct($data, $encoding = 'UTF-8', $debug = '')
+    public function __construct($data, $encoding = 'UTF-8')
     {
         // Get the contents of the file.
         $content = file_get_contents($data);
 
-        parent::__construct($content, $encoding, $debug);
+        parent::__construct($content, $encoding);
     }
 }

@@ -171,7 +171,6 @@ class Tokenizer
         if ($tok === "\00") {
             $this->parseError("Received null character.");
         }
-        // fprintf(STDOUT, "Writing '%s'", $tok);
         $this->buffer($tok);
         $this->scanner->next();
         return true;
@@ -233,7 +232,6 @@ class Tokenizer
     protected function eof()
     {
         if ($this->scanner->current() === false) {
-            // fprintf(STDOUT, "EOF");
             $this->flushBuffer();
             $this->events->eof();
             $this->carryOn = false;
@@ -385,7 +383,6 @@ class Tokenizer
         if ($selfClose) {
             $this->events->endTag($name);
         } elseif (is_int($mode)) {
-            // fprintf(STDOUT, "Event response says move into mode %d for tag %s", $mode, $name);
             $this->setTextMode($mode, $name);
         }
 

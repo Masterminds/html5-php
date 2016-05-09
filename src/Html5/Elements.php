@@ -79,7 +79,7 @@ class Elements
     public static $html5 = array(
         "a" => 1,
         "abbr" => 1,
-        "address" => 89, // NORMAL | VOID_TAG | AUTOCLOSE_P | BLOCK_TAG
+        "address" => 65, // NORMAL | BLOCK_TAG
         "area" => 9, // NORMAL | VOID_TAG
         "article" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
         "aside" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG

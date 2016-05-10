@@ -1,4 +1,9 @@
 # Release Notes
+
+2.2.1 (2015-05-10)
+
+- #109: Fixed issue where address tag could be written without closing tag
+
 2.2.0 (2015-04-11)
 
 - #105: Enable composer cache (for CI/CD)

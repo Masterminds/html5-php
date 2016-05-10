@@ -584,4 +584,33 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $content = stream_get_contents($stream, - 1, 0);
         $this->assertRegExp('|<\?foo bar \?>|', $content);
     }
+
+    public function testAddressTag()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!doctype html>
+    <html lang="en">
+      <body>
+        <address>
+            <a href="../People/Raggett/">Dave Raggett</a>,
+            <a href="../People/Arnaud/">Arnaud Le Hors</a>,
+            contact persons for the <a href="Activity">W3C HTML Activity</a>
+        </address>
+      </body>
+    </html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $list = $dom->getElementsByTagName('address');
+        $r->element($list->item(0));
+        $contents = stream_get_contents($stream, - 1, 0);
+
+        $this->assertRegExp('|<address>|', $contents);
+        $this->assertRegExp('|<a href="../People/Raggett/">Dave Raggett</a>,|', $contents);
+        $this->assertRegExp('|<a href="../People/Arnaud/">Arnaud Le Hors</a>,|', $contents);
+        $this->assertRegExp('|contact persons for the <a href="Activity">W3C HTML Activity</a>|', $contents);
+        $this->assertRegExp('|</address>|', $contents);
+    }
 }

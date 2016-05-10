@@ -2,7 +2,7 @@
 
 2.2.1 (2015-05-10)
 
-- #109: Fixed issue where address tag could be written without closing tag
+- #109: Fixed issue where address tag could be written without closing tag (thanks sylus)
 
 2.2.0 (2015-04-11)
 

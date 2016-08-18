@@ -3,6 +3,7 @@ namespace Masterminds\HTML5\Tests\Serializer;
 
 use Masterminds\HTML5\Serializer\OutputRules;
 use Masterminds\HTML5\Serializer\Traverser;
+use Masterminds\HTML5;
 
 class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
 {
@@ -18,6 +19,11 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
       </body>
     </html>';
 
+    /**
+     * @var HTML5
+     */
+    protected $html5;
+
     public function setUp()
     {
         $this->html5 = $this->getInstance();
@@ -29,7 +35,7 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
      * @param string $name
      *            The name of the method on the Traverser class to test.
      *
-     * @return \ReflectionMethod \ReflectionMethod for the specified method
+     * @return \ReflectionMethod for the specified method
      */
     public function getProtectedMethod($name)
     {
@@ -612,5 +618,43 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertRegExp('|<a href="../People/Arnaud/">Arnaud Le Hors</a>,|', $contents);
         $this->assertRegExp('|contact persons for the <a href="Activity">W3C HTML Activity</a>|', $contents);
         $this->assertRegExp('|</address>|', $contents);
+    }
+
+    /**
+     * Ensure direct DOM manipulation doesn't break TEXT_RAW elements (iframe, script, etc...)
+     */
+    public function testHandlingInvalidRawContent()
+    {
+        $dom = $this->html5->loadHTML(
+    '<!doctype html>
+    <html lang="en" id="base">
+        <body>
+            <p>Foo</p>
+            <style id="test">
+                blah
+            </style>
+            <p>Baz</p>
+        </body>
+    </html>');
+
+        // modify the content of the TEXT_RAW element
+        $badNode = $dom->createElement("p");
+        $badNode->appendChild($dom->createTextNode("Bar"));
+
+        $styleElement = $dom->getElementById("test");
+        $styleElement->appendChild($badNode);
+
+        // create the OutputRules instance and run the tests
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $r->element($dom->getElementById('base'));
+        $contents = stream_get_contents($stream, - 1, 0);
+        
+        $this->assertRegExp('|<p>Foo</p>|', $contents);
+        $this->assertNotRegExp('|<p>Bar</p>|', $contents);
+        $this->assertRegExp('|<p>Baz</p>|', $contents);
+
     }
 }

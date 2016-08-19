@@ -627,34 +627,24 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
     {
         $dom = $this->html5->loadHTML(
     '<!doctype html>
-    <html lang="en" id="base">
-        <body>
-            <p>Foo</p>
-            <style id="test">
-                blah
-            </style>
-            <p>Baz</p>
-        </body>
-    </html>');
+<html lang="en" id="base">
+    <body>
+       <script id="template" type="x-tmpl-mustache">
+           <h1>Hello!</h1>
+       </script>
+    </body>
+</html>');
 
-        // modify the content of the TEXT_RAW element
-        $badNode = $dom->createElement("p");
-        $badNode->appendChild($dom->createTextNode("Bar"));
+        $badNode = $dom->createElement("p", "Bar");
 
-        $styleElement = $dom->getElementById("test");
+        // modify the content of the TEXT_RAW element: <script id="template"> appending dom nodes
+        $styleElement = $dom->getElementById("template");
         $styleElement->appendChild($badNode);
 
-        // create the OutputRules instance and run the tests
-        $stream = fopen('php://temp', 'w');
-        $r = new OutputRules($stream, $this->html5->getOptions());
-        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+        $contents = $this->html5->saveHTML($dom);
 
-        $r->element($dom->getElementById('base'));
-        $contents = stream_get_contents($stream, - 1, 0);
-        
-        $this->assertRegExp('|<p>Foo</p>|', $contents);
-        $this->assertNotRegExp('|<p>Bar</p>|', $contents);
-        $this->assertRegExp('|<p>Baz</p>|', $contents);
-
+        $this->assertTrue(strpos($contents, '<script id="template" type="x-tmpl-mustache">
+           <h1>Hello!</h1>
+       <p>Bar</p></script>')!==false);
     }
 }

@@ -223,6 +223,8 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
             foreach ($ele->childNodes as $child) {
                 if ($child instanceof \DOMCharacterData) {
                     $this->wr($child->data);
+                } elseif ($child instanceof \DOMElement) {
+                    $this->element($child);
                 }
             }
         } else {

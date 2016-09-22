@@ -90,17 +90,17 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals('dd', $list->lastChild->tagName);
     }
 
-    public function testHandleOption()
+    public function testHandleOptionGroupAndOption()
     {
-        $html = sprintf(self::HTML_STUB, '<optgroup id="foo" label="foo" ><option value="foo" >bar</option></optgroup>');
+        $html = sprintf(self::HTML_STUB, '<optgroup id="foo" label="foo" ><option value="foo">bar</option></optgroup>');
         $doc = $this->parse($html);
 
         $list = $doc->getElementById('foo');
 
         $this->assertEquals(1, $list->childNodes->length);
-        foreach ($list->childNodes as $ele) {
-            $this->assertEquals('option', $ele->tagName);
-        }
+
+        $option = $list->childNodes->item(0);
+        $this->assertEquals('option', $option->tagName);
     }
 
     public function testTable()

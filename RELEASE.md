@@ -1,10 +1,17 @@
 # Release Notes
 
-2.2.1 (2015-05-10)
+2.2.2 (2016-10-22)
+
+- #116: In XML mode, tags are case sensitive
+- #115: Fix PHP Notice in OutputRules
+- #112: fix parsing of options of an optgroup
+- #111: Adding test for the address tag
+
+2.2.1 (2016-05-10)
 
 - #109: Fixed issue where address tag could be written without closing tag (thanks sylus)
 
-2.2.0 (2015-04-11)
+2.2.0 (2016-04-11)
 
 - #105: Enable composer cache (for CI/CD)
 - #100: Use mb_substitute_character inset of ini_set for environments where

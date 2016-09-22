@@ -24,7 +24,7 @@ class Elements
     const KNOWN_ELEMENT = 1;
 
     // From section 8.1.2: "script", "style"
-    // From 8.2.5.4.7 ("in body" insertion mode): "noembed", "noscript"
+    // From 8.2.5.4.7 ("in body" insertion mode): "noembed"
     // From 8.4 "style", "xmp", "iframe", "noembed", "noframes"
     /**
      * Indicates the contained text should be processed as raw text.
@@ -144,7 +144,7 @@ class Elements
         "meta" => 9, // NORMAL | VOID_TAG
         "meter" => 1,
         "nav" => 17, // NORMAL | AUTOCLOSE_P,
-        "noscript" => 67, // NORMAL | TEXT_RAW | BLOCK_TAG
+        "noscript" => 65, // NORMAL | BLOCK_TAG
         "object" => 1,
         "ol" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
         "optgroup" => 1,
@@ -557,7 +557,7 @@ class Elements
      * @param string $name
      *            The name of the element.
      *
-     * @return int The element mask.
+     * @return int|bool The element mask or false if element does not exist.
      */
     public static function element($name)
     {

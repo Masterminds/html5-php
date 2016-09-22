@@ -100,7 +100,7 @@ class DOMTreeBuilderTest extends \Masterminds\Html5\Tests\TestCase
         $this->assertSame($doc, $targetDom);
         $this->assertEquals('html', $doc->documentElement->tagName);
     }
-    
+
     public function testDocumentFakeAttrAbsence()
     {
         $html = "<!DOCTYPE html><html xmlns=\"http://www.w3.org/1999/xhtml\"><body>foo</body></html>";
@@ -495,6 +495,12 @@ class DOMTreeBuilderTest extends \Masterminds\Html5\Tests\TestCase
         $this->assertEmpty($this->errors);
         $noscript = $doc->getElementsByTagName('noscript')->item(0);
         $this->assertEquals('noscript', $noscript->tagName);
+
+        $html = '<!DOCTYPE html><html><body><noscript><p>No JS</p></noscript></body></html>';
+        $doc = $this->parse($html);
+        $this->assertEmpty($this->errors);
+        $p = $doc->getElementsByTagName('p')->item(0);
+        $this->assertEquals('p', $p->tagName);
     }
 
     /**
@@ -533,5 +539,34 @@ class DOMTreeBuilderTest extends \Masterminds\Html5\Tests\TestCase
         $this->assertEquals('bar ', $is->data);
         $this->assertEquals('div', $div->tagName);
         $this->assertEquals('foo', $div->textContent);
+    }
+
+    public function testSelectGroupedOptions()
+    {
+        $html = <<<EOM
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>testSelectGroupedOptions</title>
+    </head>
+    <body>
+        <select>
+            <optgroup id="first" label="first">
+                <option value="foo">foo</option>
+                <option value="bar">bar</option>
+                <option value="baz">baz</option>
+            </optgroup>
+            <optgroup id="second" label="second">
+                <option value="lorem">lorem</option>
+                <option value="ipsum">ipsum</option>
+            </optgroup>
+         </select>
+    </body>
+</html>
+EOM;
+        $dom  = $this->parse($html);
+
+        $this->assertSame(3, $dom->getElementById('first')->getElementsByTagName('option')->length);
+        $this->assertSame(2, $dom->getElementById('second')->getElementsByTagName('option')->length);
     }
 }

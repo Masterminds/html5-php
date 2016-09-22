@@ -221,7 +221,11 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         $this->openTag($ele);
         if (Elements::isA($name, Elements::TEXT_RAW)) {
             foreach ($ele->childNodes as $child) {
-                $this->wr($child->data);
+                if ($child instanceof \DOMCharacterData) {
+                    $this->wr($child->data);
+                } elseif ($child instanceof \DOMElement) {
+                    $this->element($child);
+                }
             }
         } else {
             // Handle children.

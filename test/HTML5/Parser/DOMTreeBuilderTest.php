@@ -540,4 +540,33 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals('div', $div->tagName);
         $this->assertEquals('foo', $div->textContent);
     }
+
+    public function testSelectGroupedOptions()
+    {
+        $html = <<<EOM
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>testSelectGroupedOptions</title>
+    </head>
+    <body>
+        <select>
+            <optgroup id="first" label="first">
+                <option value="foo">foo</option>
+                <option value="bar">bar</option>
+                <option value="baz">baz</option>
+            </optgroup>
+            <optgroup id="second" label="second">
+                <option value="lorem">lorem</option>
+                <option value="ipsum">ipsum</option>
+            </optgroup>
+         </select>
+    </body>
+</html>
+EOM;
+        $dom  = $this->parse($html);
+
+        $this->assertSame(3, $dom->getElementById('first')->getElementsByTagName('option')->length);
+        $this->assertSame(2, $dom->getElementById('second')->getElementsByTagName('option')->length);
+    }
 }

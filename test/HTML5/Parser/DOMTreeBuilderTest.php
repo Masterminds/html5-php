@@ -556,7 +556,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
                 <option value="bar">bar</option>
                 <option value="baz">baz</option>
             </optgroup>
-            <optgroup id="second" label="first">
+            <optgroup id="second" label="second">
                 <option value="lorem">lorem</option>
                 <option value="ipsum">ipsum</option>
             </optgroup>

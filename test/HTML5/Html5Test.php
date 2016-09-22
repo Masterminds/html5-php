@@ -399,6 +399,18 @@ class Html5Test extends TestCase
         $this->assertRegExp('|R&amp;D|', $res);
     }
 
+    public function testCaseSensitiveTags()
+    {
+        $dom = $this->html5->loadHTML(
+            '<html><body><Button color="red">Error</Button></body></html>',
+            array(
+                "xmlNamespaces" => true
+            )
+        );
+        $out = $this->html5->saveHTML($dom);
+        $this->assertRegExp('|<html><body><Button color="red">Error</Button></body></html>|', $out);
+    }
+
     public function testComment()
     {
         $res = $this->cycle('a<!-- This is a test. -->b');

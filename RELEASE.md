@@ -1,6 +1,6 @@
 # Release Notes
 
-2.2.2 (2016-10-22)
+2.2.2 (2016-09-22)
 
 - #116: In XML mode, tags are case sensitive
 - #115: Fix PHP Notice in OutputRules

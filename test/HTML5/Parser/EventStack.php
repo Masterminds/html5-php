@@ -16,7 +16,9 @@ use Masterminds\HTML5\Parser\EventHandler;
  */
 class EventStack implements EventHandler
 {
-
+    /**
+     * @var array
+     */
     protected $stack;
 
     public function __construct()
@@ -37,11 +39,19 @@ class EventStack implements EventHandler
         return count($this->stack);
     }
 
+    /**
+     * @param $index
+     * @return mixed
+     */
     public function get($index)
     {
         return $this->stack[$index];
     }
 
+    /**
+     * @param $event
+     * @param null $data
+     */
     protected function store($event, $data = null)
     {
         $this->stack[] = array(
@@ -50,6 +60,12 @@ class EventStack implements EventHandler
         );
     }
 
+    /**
+     * @param string $name
+     * @param int $type
+     * @param null $id
+     * @param bool $quirks
+     */
     public function doctype($name, $type = 0, $id = null, $quirks = false)
     {
         $args = array(
@@ -61,15 +77,25 @@ class EventStack implements EventHandler
         $this->store('doctype', $args);
     }
 
+    /**
+     * @param string $name
+     * @param array $attributes
+     * @param bool $selfClosing
+     *
+     * @return int
+     */
     public function startTag($name, $attributes = array(), $selfClosing = false)
     {
         $args = func_get_args();
         $this->store('startTag', $args);
-        if ($name == 'pre' || $name == 'script') {
+        if ($name === 'pre' || $name === 'script') {
             return Elements::TEXT_RAW;
         }
     }
 
+    /**
+     * @param $name
+     */
     public function endTag($name)
     {
         $this->store('endTag', array(
@@ -77,6 +103,9 @@ class EventStack implements EventHandler
         ));
     }
 
+    /**
+     * @param $cdata
+     */
     public function comment($cdata)
     {
         $this->store('comment', array(
@@ -84,11 +113,17 @@ class EventStack implements EventHandler
         ));
     }
 
+    /**
+     * @param string $data
+     */
     public function cdata($data)
     {
         $this->store('cdata', func_get_args());
     }
 
+    /**
+     * @param $cdata
+     */
     public function text($cdata)
     {
         // fprintf(STDOUT, "Received TEXT event with: " . $cdata);
@@ -102,6 +137,11 @@ class EventStack implements EventHandler
         $this->store('eof');
     }
 
+    /**
+     * @param $msg
+     * @param $line
+     * @param $col
+     */
     public function parseError($msg, $line, $col)
     {
         // throw new EventStackParseError(sprintf("%s (line %d, col %d)", $msg, $line, $col));
@@ -109,6 +149,10 @@ class EventStack implements EventHandler
         $this->store('error', func_get_args());
     }
 
+    /**
+     * @param string $name
+     * @param null $data
+     */
     public function processingInstruction($name, $data = null)
     {
         $this->store('pi', func_get_args());

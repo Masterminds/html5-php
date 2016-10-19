@@ -2,6 +2,7 @@
 namespace Masterminds\HTML5\Parser;
 
 use Masterminds\HTML5\Entities;
+use voku\helper\UTF8;
 
 /**
  * Manage entity references.
@@ -11,46 +12,41 @@ use Masterminds\HTML5\Entities;
  */
 class CharacterReference
 {
-
-    protected static $numeric_mask = array(
-        0x0,
-        0x2FFFF,
-        0,
-        0xFFFF
-    );
-
     /**
-     * Given a name (e.g.
-     * 'amp'), lookup the UTF-8 character ('&')
+     * Given a name (e.g. 'amp'), lookup the UTF-8 character ('&')
      *
-     * @param string $name
-     *            The name to look up.
-     * @return string The character sequence. In UTF-8 this may be more than one byte.
+     * @param string $name <p>The name to look up.</p>
+     * @return string <p>The character sequence. In UTF-8 this may be more than one byte.</p>
      */
     public static function lookupName($name)
     {
-        // Do we really want to return NULL here? or FFFD
-        return isset(Entities::$byName[$name]) ? Entities::$byName[$name] : null;
-    }
+        // init
+        $name = (string)$name;
 
-    /**
-     * Given a Unicode codepoint, return the UTF-8 character.
-     *
-     * (NOT USED ANYWHERE)
-     */
-    /*
-     * public static function lookupCode($codePoint) { return 'POINT'; }
-     */
+        if (!isset($name[0])) {
+            return null;
+        }
+
+        // good performance
+        if (isset(Entities::$byName[$name])) {
+            return Entities::$byName[$name];
+        }
+
+        // fallback
+        $tmpName = UTF8::html_entity_decode('&' . $name . ';');
+        if ($tmpName !== '&' . $name . ';') {
+            return $tmpName;
+        }
+
+        return null;
+    }
 
     /**
      * Given a decimal number, return the UTF-8 character.
      */
     public static function lookupDecimal($int)
     {
-        $entity = '&#' . $int . ';';
-        // UNTESTED: This may fail on some planes. Couldn't find full documentation
-        // on the value of the mask array.
-        return mb_decode_numericentity($entity, static::$numeric_mask, 'utf-8');
+        return UTF8::decimal_to_chr($int);
     }
 
     /**
@@ -58,6 +54,6 @@ class CharacterReference
      */
     public static function lookupHex($hexdec)
     {
-        return static::lookupDecimal(hexdec($hexdec));
+        return UTF8::hex_to_chr($hexdec);
     }
 }

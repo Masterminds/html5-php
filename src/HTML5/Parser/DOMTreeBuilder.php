@@ -2,6 +2,7 @@
 namespace Masterminds\HTML5\Parser;
 
 use Masterminds\HTML5\Elements;
+use voku\helper\UTF8;
 
 /**
  * Create an HTML5 DOM tree from events.
@@ -43,6 +44,11 @@ class DOMTreeBuilder implements EventHandler
     const OPT_TARGET_DOC = 'target_document';
 
     const OPT_IMPLICIT_NS = 'implicit_namespaces';
+
+    /**
+     * @var TreeBuildingRules
+     */
+    protected $rules;
 
     /**
      * Holds the HTML5 element names that causes a namespace switch
@@ -131,17 +137,39 @@ class DOMTreeBuilder implements EventHandler
 
     const IM_IN_MATHML = 23;
 
+    /**
+     * @var array
+     */
     protected $options = array();
 
+    /**
+     * @var array
+     */
     protected $stack = array();
 
+    /**
+     * @var \DOMDocumentFragment
+     */
     protected $current; // Pointer in the tag hierarchy.
+
+    /**
+     * @var \DOMDocument
+     */
     protected $doc;
 
+    /**
+     * @var \DOMDocumentFragment
+     */
     protected $frag;
 
+    /**
+     * @var \Masterminds\HTML5\InstructionProcessor
+     */
     protected $processor;
 
+    /**
+     * @var int
+     */
     protected $insertMode = 0;
 
     /**
@@ -216,7 +244,7 @@ class DOMTreeBuilder implements EventHandler
      *
      * @see http://www.w3.org/TR/2012/CR-html5-20121217/syntax.html#concept-frag-parse-context
      *
-     * @return \DOMFragmentDocumentFragment
+     * @return \DOMDocumentFragment
      */
     public function fragment()
     {
@@ -258,7 +286,9 @@ class DOMTreeBuilder implements EventHandler
      */
     public function startTag($name, $attributes = array(), $selfClosing = false)
     {
-        // fprintf(STDOUT, $name);
+        // DEBUG
+        // var_dump($name);
+
         $lname = $this->normalizeTagName($name);
 
         // Make sure we have an html element.
@@ -274,7 +304,7 @@ class DOMTreeBuilder implements EventHandler
 
         // SPECIAL TAG HANDLING:
         // Spec says do this, and "don't ask."
-        if ($name == 'image') {
+        if ($name === 'image') {
             $name = 'img';
         }
 
@@ -319,7 +349,8 @@ class DOMTreeBuilder implements EventHandler
         $pushes = 0;
         // when we found a tag thats appears inside $nsRoots, we have to switch the defalut namespace
         if (isset($this->nsRoots[$lname]) && $this->nsStack[0][''] !== $this->nsRoots[$lname]) {
-            array_unshift($this->nsStack, array(
+          /** @noinspection AdditionOperationOnArraysInspection */
+          array_unshift($this->nsStack, array(
                 '' => $this->nsRoots[$lname]
             ) + $this->nsStack[0]);
             $pushes ++;
@@ -330,13 +361,15 @@ class DOMTreeBuilder implements EventHandler
             foreach ($attributes as $aName => $aVal) {
                 if ($aName === 'xmlns') {
                     $needsWorkaround = $aVal;
-                    array_unshift($this->nsStack, array(
+                  /** @noinspection AdditionOperationOnArraysInspection */
+                  array_unshift($this->nsStack, array(
                         '' => $aVal
                     ) + $this->nsStack[0]);
                     $pushes ++;
-                } elseif ((($pos = strpos($aName, ':')) ? substr($aName, 0, $pos) : '') === 'xmlns') {
-                    array_unshift($this->nsStack, array(
-                        substr($aName, $pos + 1) => $aVal
+                } elseif ((($pos = UTF8::strpos($aName, ':')) ? UTF8::substr($aName, 0, $pos) : '') === 'xmlns') {
+                  /** @noinspection AdditionOperationOnArraysInspection */
+                  array_unshift($this->nsStack, array(
+                        UTF8::substr($aName, $pos + 1) => $aVal
                     ) + $this->nsStack[0]);
                     $pushes ++;
                 }
@@ -349,12 +382,11 @@ class DOMTreeBuilder implements EventHandler
         }
 
         try {
-            $prefix = ($pos = strpos($lname, ':')) ? substr($lname, 0, $pos) : '';
-
+            $prefix = ($pos = UTF8::strpos($lname, ':')) ? UTF8::substr($lname, 0, $pos) : '';
 
             if ($needsWorkaround!==false) {
 
-                $xml = "<$lname xmlns=\"$needsWorkaround\" ".(strlen($prefix) && isset($this->nsStack[0][$prefix])?("xmlns:$prefix=\"".$this->nsStack[0][$prefix]."\""):"")."/>";
+                $xml = "<$lname xmlns=\"$needsWorkaround\" ".(UTF8::strlen($prefix) && isset($this->nsStack[0][$prefix])?("xmlns:$prefix=\"".$this->nsStack[0][$prefix]."\""):"")."/>";
 
                 $frag = new \DOMDocument('1.0', 'UTF-8');
                 $frag->loadXML($xml);
@@ -362,7 +394,17 @@ class DOMTreeBuilder implements EventHandler
                 $ele = $this->doc->importNode($frag->documentElement, true);
 
             } else {
-                if (!isset($this->nsStack[0][$prefix]) || ($prefix === "" && isset($this->options[self::OPT_DISABLE_HTML_NS]) && $this->options[self::OPT_DISABLE_HTML_NS])) {
+                if (
+                    !isset($this->nsStack[0][$prefix])
+                    ||
+                    (
+                        $prefix === ""
+                        &&
+                        isset($this->options[self::OPT_DISABLE_HTML_NS])
+                        &&
+                        $this->options[self::OPT_DISABLE_HTML_NS]
+                    )
+                ) {
                     $ele = $this->doc->createElement($lname);
                 } else {
                     $ele = $this->doc->createElementNS($this->nsStack[0][$prefix], $lname);
@@ -405,12 +447,12 @@ class DOMTreeBuilder implements EventHandler
             }
 
             try {
-                $prefix = ($pos = strpos($aName, ':')) ? substr($aName, 0, $pos) : false;
+                $prefix = ($pos = UTF8::strpos($aName, ':')) ? UTF8::substr($aName, 0, $pos) : false;
 
                 if ($prefix==='xmlns') {
-                    $ele->setAttributeNs(self::NAMESPACE_XMLNS, $aName, $aVal);
+                    $ele->setAttributeNS(self::NAMESPACE_XMLNS, $aName, $aVal);
                 } elseif ($prefix!==false && isset($this->nsStack[0][$prefix])) {
-                    $ele->setAttributeNs($this->nsStack[0][$prefix], $aName, $aVal);
+                    $ele->setAttributeNS($this->nsStack[0][$prefix], $aName, $aVal);
                 } else {
                     $ele->setAttribute($aName, $aVal);
                 }
@@ -420,7 +462,7 @@ class DOMTreeBuilder implements EventHandler
             }
 
             // This is necessary on a non-DTD schema, like HTML5.
-            if ($aName == 'id') {
+            if ($aName === 'id') {
                 $ele->setIdAttribute('id', true);
             }
         }
@@ -440,7 +482,7 @@ class DOMTreeBuilder implements EventHandler
 
         // This is sort of a last-ditch attempt to correct for cases where no head/body
         // elements are provided.
-        if ($this->insertMode <= static::IM_BEFORE_HEAD && $name != 'head' && $name != 'html') {
+        if ($this->insertMode <= static::IM_BEFORE_HEAD && $name !== 'head' && $name !== 'html') {
             $this->insertMode = static::IM_IN_BODY;
         }
 
@@ -473,7 +515,7 @@ class DOMTreeBuilder implements EventHandler
                 'br',
                 'head',
                 'title'
-            ))) {
+            ), true)) {
                 $this->startTag('html');
                 $this->endTag($name);
                 $this->insertMode = static::IM_BEFORE_HEAD;
@@ -506,7 +548,7 @@ class DOMTreeBuilder implements EventHandler
 
         // XXX: HTML has no parent. What do we do, though,
         // if this element appears in the wrong place?
-        if ($lname == 'html') {
+        if ($lname === 'html') {
             return;
         }
 
@@ -589,7 +631,7 @@ class DOMTreeBuilder implements EventHandler
     public function processingInstruction($name, $data = null)
     {
         // XXX: Ignore initial XML declaration, per the spec.
-        if ($this->insertMode == static::IM_INITIAL && 'xml' == strtolower($name)) {
+        if ($this->insertMode == static::IM_INITIAL && 'XML' === UTF8::strtoupper($name)) {
             return;
         }
 
@@ -626,7 +668,7 @@ class DOMTreeBuilder implements EventHandler
     protected function normalizeTagName($name)
     {
         /*
-         * Section 2.9 suggests that we should not do this. if (strpos($name, ':') !== false) { // We know from the grammar that there must be at least one other // char besides :, since : is not a legal tag start. $parts = explode(':', $name); return array_pop($parts); }
+         * Section 2.9 suggests that we should not do this. if (UTF8::strpos($name, ':') !== false) { // We know from the grammar that there must be at least one other // char besides :, since : is not a legal tag start. $parts = explode(':', $name); return array_pop($parts); }
          */
         return $name;
     }

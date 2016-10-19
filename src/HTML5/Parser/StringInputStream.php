@@ -39,6 +39,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 // - // indicates regular comments
 
+use voku\helper\UTF8;
+
 class StringInputStream implements InputStream
 {
 
@@ -49,8 +51,10 @@ class StringInputStream implements InputStream
 
     /**
      * The current integer byte position we are in $data
+     *
+     * @var int
      */
-    private $char;
+    private $char = 0;
 
     /**
      * Length of $data; when $char === $data, we are at the end-of-file.
@@ -65,18 +69,21 @@ class StringInputStream implements InputStream
     /**
      * Create a new InputStream wrapper.
      *
-     * @param $data Data
-     *            to parse
+     * @param string $data <p>Data to parse.</p>
+     * @param string $encoding
+     * @param string $debug
      */
     public function __construct($data, $encoding = 'UTF-8', $debug = '')
     {
         $data = UTF8Utils::convertToUTF8($data, $encoding);
-        if ($debug)
-            fprintf(STDOUT, $debug, $data, strlen($data));
 
-            // There is good reason to question whether it makes sense to
-            // do this here, since most of these checks are done during
-            // parsing, and since this check doesn't actually *do* anything.
+        if ($debug) {
+            fprintf(STDOUT, $debug, $data, strlen($data));
+        }
+
+        // There is good reason to question whether it makes sense to
+        // do this here, since most of these checks are done during
+        // parsing, and since this check doesn't actually *do* anything.
         $this->errors = UTF8Utils::checkForIllegalCodepoints($data);
         // if (!empty($e)) {
         // throw new ParseError("UTF-8 encoding issues: " . implode(', ', $e));
@@ -91,6 +98,10 @@ class StringInputStream implements InputStream
 
     /**
      * Replace linefeed characters according to the spec.
+     *
+     * @param $data
+     *
+     * @return string
      */
     protected function replaceLinefeeds($data)
     {
@@ -103,7 +114,7 @@ class StringInputStream implements InputStream
             "\r" => "\n"
         );
 
-        return strtr($data, $crlfTable);
+        return UTF8::strtr($data, $crlfTable);
     }
 
     /**
@@ -111,22 +122,21 @@ class StringInputStream implements InputStream
      */
     public function currentLine()
     {
-        if (empty($this->EOF) || $this->char == 0) {
+        if (empty($this->EOF) || $this->char === 0) {
             return 1;
         }
+
         // Add one to $this->char because we want the number for the next
         // byte to be processed.
         return substr_count($this->data, "\n", 0, min($this->char, $this->EOF)) + 1;
     }
 
     /**
-     *
      * @deprecated
-     *
      */
     public function getCurrentLine()
     {
-        return currentLine();
+        return $this->currentLine();
     }
 
     /**
@@ -139,9 +149,10 @@ class StringInputStream implements InputStream
     public function columnOffset()
     {
         // Short circuit for the first char.
-        if ($this->char == 0) {
+        if ($this->char === 0) {
             return 0;
         }
+
         // strrpos is weird, and the offset needs to be negative for what we
         // want (i.e., the last \n before $this->char). This needs to not have
         // one (to make it point to the next character, the one we want the
@@ -159,7 +170,7 @@ class StringInputStream implements InputStream
             $findLengthOf = substr($this->data, 0, $this->char);
         }
 
-        return UTF8Utils::countChars($findLengthOf);
+        return strlen($findLengthOf);
     }
 
     /**
@@ -221,8 +232,8 @@ class StringInputStream implements InputStream
      *
      * @note This performs bounds checking
      *
-     * @return string Returns the remaining text. If called when the InputStream is
-     *         already exhausted, it returns an empty string.
+     * @return string <p>Returns the remaining text. If called when the InputStream is
+     *         already exhausted, it returns an empty string.</p>
      */
     public function remainingChars()
     {
@@ -244,12 +255,10 @@ class StringInputStream implements InputStream
      * Matches as far as possible until we reach a certain set of bytes
      * and returns the matched substring.
      *
-     * @param string $bytes
-     *            Bytes to match.
-     * @param int $max
-     *            Maximum number of bytes to scan.
-     * @return mixed Index or false if no match is found. You should use strong
-     *         equality when checking the result, since index could be 0.
+     * @param string $bytes <p>Bytes to match.</p>
+     * @param int $max <p>Maximum number of bytes to scan.</p>
+     * @return mixed <p>Index or false if no match is found. You should use strong
+     *         equality when checking the result, since index could be 0.</p>
      */
     public function charsUntil($bytes, $max = null)
     {
@@ -276,11 +285,14 @@ class StringInputStream implements InputStream
      * and returns the matched substring.
      *
      * @param string $bytes
+     *            <p>
      *            A mask of bytes to match. If ANY byte in this mask matches the
      *            current char, the pointer advances and the char is part of the
      *            substring.
-     * @param int $max
-     *            The max number of chars to read.
+     *            </p>
+     * @param int $max <p>The max number of chars to read.</p>
+     *
+     * @return bool|string
      */
     public function charsWhile($bytes, $max = null)
     {
@@ -294,6 +306,7 @@ class StringInputStream implements InputStream
             $len = strspn($this->data, $bytes, $this->char);
         }
         $string = (string) substr($this->data, $this->char, $len);
+
         $this->char += $len;
 
         return $string;
@@ -302,18 +315,19 @@ class StringInputStream implements InputStream
     /**
      * Unconsume characters.
      *
-     * @param int $howMany
-     *            The number of characters to unconsume.
+     * @param int $howMany <p>The number of characters to unconsume.</p>
      */
     public function unconsume($howMany = 1)
     {
         if (($this->char - $howMany) >= 0) {
-            $this->char = $this->char - $howMany;
+            $this->char -= $howMany;
         }
     }
 
     /**
      * Look ahead without moving cursor.
+     *
+     * @return bool
      */
     public function peek()
     {
@@ -324,6 +338,9 @@ class StringInputStream implements InputStream
         return false;
     }
 
+    /**
+     * @return int
+     */
     public function key()
     {
         return $this->char;

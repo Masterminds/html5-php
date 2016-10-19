@@ -4,6 +4,8 @@
  */
 namespace Masterminds\HTML5;
 
+use voku\helper\UTF8;
+
 /**
  * This class provides general information about HTML5 elements,
  * including syntactic and semantic issues.
@@ -504,7 +506,7 @@ class Elements
     {
         // html5 element names are case insensetitive. Forcing lowercase for the check.
         // Do we need this check or will all data passed here already be lowercase?
-        return isset(static::$html5[strtolower($name)]);
+        return isset(static::$html5[UTF8::strtolower($name)]);
     }
 
     /**
@@ -584,7 +586,7 @@ class Elements
      */
     public static function normalizeSvgElement($name)
     {
-        $name = strtolower($name);
+        $name = UTF8::strtolower($name);
         if (isset(static::$svgCaseSensitiveElementMap[$name])) {
             $name = static::$svgCaseSensitiveElementMap[$name];
         }
@@ -602,7 +604,7 @@ class Elements
      */
     public static function normalizeSvgAttribute($name)
     {
-        $name = strtolower($name);
+        $name = UTF8::strtolower($name);
         if (isset(static::$svgCaseSensitiveAttributeMap[$name])) {
             $name = static::$svgCaseSensitiveAttributeMap[$name];
         }
@@ -622,10 +624,10 @@ class Elements
      */
     public static function normalizeMathMlAttribute($name)
     {
-        $name = strtolower($name);
+        $name = UTF8::strtolower($name);
 
         // Only one attribute has a mixed case form for MathML.
-        if ($name == 'definitionurl') {
+        if ($name === 'definitionurl') {
             $name = 'definitionURL';
         }
 

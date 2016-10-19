@@ -1,5 +1,6 @@
 <?php
 namespace Masterminds\HTML5\Parser;
+use voku\helper\UTF8;
 
 /**
  * The FileInputStream loads a file to be parsed.
@@ -13,14 +14,15 @@ namespace Masterminds\HTML5\Parser;
  *
  * @todo A buffered input stream would be useful.
  */
-class FileInputStream extends StringInputStream implements InputStream
+class FileInputStream extends StringInputStream
 {
 
     /**
      * Load a file input stream.
      *
-     * @param string $data
-     *            The file or url path to load.
+     * @param string $data <p>The file or url path to load.</p>
+     * @param string $encoding
+     * @param string $debug
      */
     public function __construct($data, $encoding = 'UTF-8', $debug = '')
     {

@@ -10,7 +10,7 @@ class FileInputStreamTest extends \Masterminds\HTML5\Tests\TestCase
     {
         $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
 
-        $this->assertInstanceOf('\Masterminds\HTML5\Parser\FileInputStream', $s);
+        self::assertInstanceOf('\Masterminds\HTML5\Parser\FileInputStream', $s);
     }
 
     public function testNext()
@@ -18,54 +18,54 @@ class FileInputStreamTest extends \Masterminds\HTML5\Tests\TestCase
         $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
 
         $s->next();
-        $this->assertEquals('!', $s->current());
+        self::assertEquals('!', $s->current());
         $s->next();
-        $this->assertEquals('d', $s->current());
+        self::assertEquals('d', $s->current());
     }
 
     public function testKey()
     {
         $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
 
-        $this->assertEquals(0, $s->key());
+        self::assertEquals(0, $s->key());
 
         $s->next();
-        $this->assertEquals(1, $s->key());
+        self::assertEquals(1, $s->key());
     }
 
     public function testPeek()
     {
         $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
 
-        $this->assertEquals('!', $s->peek());
+        self::assertEquals('!', $s->peek());
 
         $s->next();
-        $this->assertEquals('d', $s->peek());
+        self::assertEquals('d', $s->peek());
     }
 
     public function testCurrent()
     {
         $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
 
-        $this->assertEquals('<', $s->current());
+        self::assertEquals('<', $s->current());
 
         $s->next();
-        $this->assertEquals('!', $s->current());
+        self::assertEquals('!', $s->current());
 
         $s->next();
-        $this->assertEquals('d', $s->current());
+        self::assertEquals('d', $s->current());
     }
 
     public function testColumnOffset()
     {
         $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
-        $this->assertEquals(0, $s->columnOffset());
+        self::assertEquals(0, $s->columnOffset());
         $s->next();
-        $this->assertEquals(1, $s->columnOffset());
+        self::assertEquals(1, $s->columnOffset());
         $s->next();
-        $this->assertEquals(2, $s->columnOffset());
+        self::assertEquals(2, $s->columnOffset());
         $s->next();
-        $this->assertEquals(3, $s->columnOffset());
+        self::assertEquals(3, $s->columnOffset());
 
         // Make sure we get to the second line
         $s->next();
@@ -81,19 +81,19 @@ class FileInputStreamTest extends \Masterminds\HTML5\Tests\TestCase
         $s->next();
         $s->next();
         $s->next();
-        $this->assertEquals(0, $s->columnOffset());
+        self::assertEquals(0, $s->columnOffset());
 
         $s->next();
         $canary = $s->current(); // h
-        $this->assertEquals('h', $canary);
-        $this->assertEquals(1, $s->columnOffset());
+        self::assertEquals('h', $canary);
+        self::assertEquals(1, $s->columnOffset());
     }
 
     public function testCurrentLine()
     {
         $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
 
-        $this->assertEquals(1, $s->currentLine());
+        self::assertEquals(1, $s->currentLine());
 
         // Make sure we get to the second line
         $s->next();
@@ -112,7 +112,7 @@ class FileInputStreamTest extends \Masterminds\HTML5\Tests\TestCase
         $s->next();
         $s->next();
         $s->next();
-        $this->assertEquals(2, $s->currentLine());
+        self::assertEquals(2, $s->currentLine());
 
         // Make sure we get to the third line
         $s->next();
@@ -132,44 +132,50 @@ class FileInputStreamTest extends \Masterminds\HTML5\Tests\TestCase
         $s->next();
         $s->next();
         $s->next();
-        $this->assertEquals(3, $s->currentLine());
+        self::assertEquals(3, $s->currentLine());
     }
 
     public function testRemainingChars()
     {
         $text = file_get_contents(__DIR__ . '/FileInputStreamTest.html');
         $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
-        $this->assertEquals($text, $s->remainingChars());
+        self::assertEquals(
+            str_replace(array("\n", "\r", "\r\n"), "", $text),
+            str_replace(array("\n", "\r", "\r\n"), "", $s->remainingChars())
+        );
 
         $text = substr(file_get_contents(__DIR__ . '/FileInputStreamTest.html'), 1);
         $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
         $s->next(); // Pop one.
-        $this->assertEquals($text, $s->remainingChars());
+        self::assertEquals(
+            str_replace(array("\n", "\r", "\r\n"), "", $text),
+            str_replace(array("\n", "\r", "\r\n"), "", $s->remainingChars())
+        );
     }
 
     public function testCharsUnitl()
     {
         $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
 
-        $this->assertEquals('', $s->charsUntil('<'));
+        self::assertEquals('', $s->charsUntil('<'));
         // Pointer at '<', moves to ' '
-        $this->assertEquals('<!doctype', $s->charsUntil(' ', 20));
+        self::assertEquals('<!doctype', $s->charsUntil(' ', 20));
 
         // Pointer at ' ', moves to '>'
-        $this->assertEquals(' html', $s->charsUntil('>'));
+        self::assertEquals(' html', $s->charsUntil('>'));
 
         // Pointer at '>', moves to '\n'.
-        $this->assertEquals('>', $s->charsUntil("\n"));
+        self::assertEquals('>', $s->charsUntil("\n"));
 
         // Pointer at '\n', move forward then to the next'\n'.
         $s->next();
-        $this->assertEquals('<html lang="en">', $s->charsUntil("\n"));
+        self::assertEquals('<html lang="en">', $s->charsUntil("\n"));
 
         // Ony get one of the spaces.
-        $this->assertEquals("\n ", $s->charsUntil('<', 2));
+        self::assertEquals("\n ", $s->charsUntil('<', 2));
 
         // Get the other space.
-        $this->assertEquals(" ", $s->charsUntil('<'));
+        self::assertEquals(" ", $s->charsUntil('<'));
 
         // This should scan to the end of the file.
         $text = "<head>
@@ -180,16 +186,19 @@ class FileInputStreamTest extends \Masterminds\HTML5\Tests\TestCase
     <p>This is a test.</p>
   </body>
 </html>";
-        $this->assertEquals($text, $s->charsUntil("\t"));
+        self::assertEquals(
+            str_replace(array("\n", "\r", "\r\n"), "", $text),
+            str_replace(array("\n", "\r", "\r\n"), "", $s->charsUntil("\t"))
+        );
     }
 
     public function testCharsWhile()
     {
         $s = new FileInputStream(__DIR__ . '/FileInputStreamTest.html');
 
-        $this->assertEquals('<!', $s->charsWhile('!<'));
-        $this->assertEquals('', $s->charsWhile('>'));
-        $this->assertEquals('doctype', $s->charsWhile('odcyept'));
-        $this->assertEquals(' htm', $s->charsWhile('html ', 4));
+        self::assertEquals('<!', $s->charsWhile('!<'));
+        self::assertEquals('', $s->charsWhile('>'));
+        self::assertEquals('doctype', $s->charsWhile('odcyept'));
+        self::assertEquals(' htm', $s->charsWhile('html ', 4));
     }
 }

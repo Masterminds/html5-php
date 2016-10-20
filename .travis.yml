@@ -4,10 +4,7 @@ language: php
 # VMs to run the tests. For more details see:
 # - http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 # - http://docs.travis-ci.com/user/workers/standard-infrastructure/
-#sudo: false
-
-sudo: required
-dist: trusty
+sudo: false
 
 git:
   depth: 2

@@ -357,6 +357,10 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         }
     }
 
+    /**
+     * @param $ele
+     * @return $this
+     */
     protected function attrs($ele)
     {
         // FIXME: Needs support for xml, xmlns, xlink, and namespaced elements.
@@ -394,6 +398,10 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         }
     }
 
+    /**
+     * @param \DOMAttr $attr
+     * @return bool
+     */
     protected function nonBooleanAttribute(\DOMAttr $attr)
     {
         $ele = $attr->ownerElement;
@@ -436,6 +444,10 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
         return false;
     }
 
+    /**
+     * @param \DOMNode $node
+     * @return \DOMXPath
+     */
     private function getXPath(\DOMNode $node)
     {
         if (!$this->xpath) {
@@ -554,10 +566,10 @@ class OutputRules implements \Masterminds\HTML5\Serializer\RulesInterface
      *
      * @see http://www.w3.org/TR/2013/CR-html5-20130806/syntax.html#escapingString
      *
-     * @param string $text
-     *            text to escape.
-     * @param boolean $attribute
-     *            True if we are escaping an attrubute, false otherwise
+     * @param string $text <p>Text to escape.</p>
+     * @param boolean $attribute <p>True if we are escaping an attribute, false otherwise</p>
+     *
+     * @return string
      */
     protected function escape($text, $attribute = false)
     {

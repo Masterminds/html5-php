@@ -170,7 +170,7 @@ class StringInputStream implements InputStream
             $findLengthOf = substr($this->data, 0, $this->char);
         }
 
-        return UTF8::strlen($findLengthOf);
+        return strlen($findLengthOf);
     }
 
     /**

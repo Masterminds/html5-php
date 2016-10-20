@@ -83,14 +83,14 @@ class Html5Test extends TestCase
     public function testLoadHTMLWithComments()
     {
         $contents = '<!--[if lte IE 8]> <html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]> <!--><html class="no-js" lang="en"><head></head><body><白>lall</白></body><!--<![endif]-->
+<!--[if gt IE 8]> <!--><html class="no-js" lang="en"><白>lall</白><!--<![endif]-->
 </html>';
 
         $dom = $this->html5->loadHTML($contents);
         self::assertInstanceOf('\DOMDocument', $dom);
 
         $expected = '<!DOCTYPE html>
-<!--[if lte IE 8]> <html class="no-js lt-ie9" lang="en"> <![endif]--><!--[if gt IE 8]> <!--><html class="no-js" lang="en"><head></head><body><白>lall</白></body><!--<![endif]--></html>
+<!--[if lte IE 8]> <html class="no-js lt-ie9" lang="en"> <![endif]--><!--[if gt IE 8]> <!--><html class="no-js" lang="en"><白>lall</白><!--<![endif]--></html>
 ';
         self::assertEquals(
             str_replace(array("\n", "\r", "\r\n"), "", $expected),

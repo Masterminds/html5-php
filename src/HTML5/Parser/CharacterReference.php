@@ -16,6 +16,7 @@ class CharacterReference
      * Given a name (e.g. 'amp'), lookup the UTF-8 character ('&')
      *
      * @param string $name <p>The name to look up.</p>
+     *
      * @return string <p>The character sequence. In UTF-8 this may be more than one byte.</p>
      */
     public static function lookupName($name)
@@ -43,6 +44,10 @@ class CharacterReference
 
     /**
      * Given a decimal number, return the UTF-8 character.
+     *
+     * @param $int
+     *
+     * @return string
      */
     public static function lookupDecimal($int)
     {
@@ -51,6 +56,10 @@ class CharacterReference
 
     /**
      * Given a hexidecimal number, return the UTF-8 character.
+     *
+     * @param $hexdec
+     *
+     * @return false|string
      */
     public static function lookupHex($hexdec)
     {

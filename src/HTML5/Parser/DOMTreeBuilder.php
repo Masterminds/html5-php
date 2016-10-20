@@ -218,8 +218,8 @@ class DOMTreeBuilder implements EventHandler
 
         // Fill $nsStack with the defalut HTML5 namespaces, plus the "implicitNamespaces" array taken form $options
         array_unshift($this->nsStack, $implicitNS + array(
-            '' => self::NAMESPACE_HTML
-        ) + $this->implicitNamespaces);
+                '' => self::NAMESPACE_HTML
+            ) + $this->implicitNamespaces);
 
         if ($isFragment) {
             $this->insertMode = static::IM_IN_BODY;
@@ -287,17 +287,23 @@ class DOMTreeBuilder implements EventHandler
     public function startTag($name, $attributes = array(), $selfClosing = false)
     {
         // DEBUG
-        // var_dump($name);
+        var_dump($name);
 
         $lname = $this->normalizeTagName($name);
 
         // Make sure we have an html element.
-        if (! $this->doc->documentElement && $name !== 'html' && ! $this->frag) {
+        if (
+            !$this->doc->documentElement
+            &&
+            $name !== 'html'
+            &&
+            !$this->frag
+        ) {
             $this->startTag('html');
         }
 
         // Set quirks mode if we're at IM_INITIAL with no doctype.
-        if ($this->insertMode == static::IM_INITIAL) {
+        if ($this->insertMode === static::IM_INITIAL) {
             $this->quirks = true;
             $this->parseError("No DOCTYPE specified.");
         }
@@ -309,7 +315,11 @@ class DOMTreeBuilder implements EventHandler
         }
 
         // Autoclose p tags where appropriate.
-        if ($this->insertMode >= static::IM_IN_BODY && Elements::isA($name, Elements::AUTOCLOSE_P)) {
+        if (
+            $this->insertMode >= static::IM_IN_BODY
+            &&
+            Elements::isA($name, Elements::AUTOCLOSE_P)
+        ) {
             $this->autoclose('p');
         }
 
@@ -342,51 +352,65 @@ class DOMTreeBuilder implements EventHandler
         }
 
         // Special case handling for SVG.
-        if ($this->insertMode == static::IM_IN_SVG) {
+        if ($this->insertMode === static::IM_IN_SVG) {
             $lname = Elements::normalizeSvgElement($lname);
         }
 
         $pushes = 0;
         // when we found a tag thats appears inside $nsRoots, we have to switch the defalut namespace
-        if (isset($this->nsRoots[$lname]) && $this->nsStack[0][''] !== $this->nsRoots[$lname]) {
-          /** @noinspection AdditionOperationOnArraysInspection */
-          array_unshift($this->nsStack, array(
-                '' => $this->nsRoots[$lname]
-            ) + $this->nsStack[0]);
-            $pushes ++;
+        if (
+            isset($this->nsRoots[$lname])
+            &&
+            $this->nsStack[0][''] !== $this->nsRoots[$lname]
+        ) {
+            /** @noinspection AdditionOperationOnArraysInspection */
+            array_unshift($this->nsStack, array(
+                    '' => $this->nsRoots[$lname]
+                ) + $this->nsStack[0]);
+            $pushes++;
         }
+
         $needsWorkaround = false;
-        if (isset($this->options["xmlNamespaces"]) && $this->options["xmlNamespaces"]) {
+
+        if (
+            isset($this->options["xmlNamespaces"])
+            &&
+            $this->options["xmlNamespaces"]
+        ) {
             // when xmlNamespaces is true a and we found a 'xmlns' or 'xmlns:*' attribute, we should add a new item to the $nsStack
             foreach ($attributes as $aName => $aVal) {
                 if ($aName === 'xmlns') {
                     $needsWorkaround = $aVal;
-                  /** @noinspection AdditionOperationOnArraysInspection */
-                  array_unshift($this->nsStack, array(
-                        '' => $aVal
-                    ) + $this->nsStack[0]);
-                    $pushes ++;
+                    /** @noinspection AdditionOperationOnArraysInspection */
+                    array_unshift($this->nsStack, array(
+                            '' => $aVal
+                        ) + $this->nsStack[0]);
+                    $pushes++;
                 } elseif ((($pos = UTF8::strpos($aName, ':')) ? UTF8::substr($aName, 0, $pos) : '') === 'xmlns') {
-                  /** @noinspection AdditionOperationOnArraysInspection */
-                  array_unshift($this->nsStack, array(
-                        UTF8::substr($aName, $pos + 1) => $aVal
-                    ) + $this->nsStack[0]);
-                    $pushes ++;
+                    /** @noinspection AdditionOperationOnArraysInspection */
+                    array_unshift($this->nsStack, array(
+                            UTF8::substr($aName, $pos + 1) => $aVal
+                        ) + $this->nsStack[0]);
+                    $pushes++;
                 }
             }
         }
 
         if ($this->onlyInline && Elements::isA($lname, Elements::BLOCK_TAG)) {
-        	$this->autoclose($this->onlyInline);
-        	$this->onlyInline = null;
+            $this->autoclose($this->onlyInline);
+            $this->onlyInline = null;
         }
 
         try {
-            $prefix = ($pos = UTF8::strpos($lname, ':')) ? UTF8::substr($lname, 0, $pos) : '';
+            $prefix = '';
+            $pos = UTF8::strpos($lname, ':');
+            if ($pos) {
+                $prefix = UTF8::substr($lname, 0, $pos);
+            }
 
-            if ($needsWorkaround!==false) {
+            if ($needsWorkaround !== false) {
 
-                $xml = "<$lname xmlns=\"$needsWorkaround\" ".(UTF8::strlen($prefix) && isset($this->nsStack[0][$prefix])?("xmlns:$prefix=\"".$this->nsStack[0][$prefix]."\""):"")."/>";
+                $xml = "<$lname xmlns=\"$needsWorkaround\" " . (UTF8::strlen($prefix) && isset($this->nsStack[0][$prefix]) ? ("xmlns:$prefix=\"" . $this->nsStack[0][$prefix] . "\"") : "") . "/>";
 
                 $frag = new \DOMDocument('1.0', 'UTF-8');
                 $frag->loadXML($xml);
@@ -417,7 +441,7 @@ class DOMTreeBuilder implements EventHandler
         }
 
         if (Elements::isA($lname, Elements::BLOCK_ONLY_INLINE)) {
-        	$this->onlyInline = $lname;
+            $this->onlyInline = $lname;
         }
 
         // When we add some namespacess, we have to track them. Later, when "endElement" is invoked, we have to remove them.
@@ -449,9 +473,9 @@ class DOMTreeBuilder implements EventHandler
             try {
                 $prefix = ($pos = UTF8::strpos($aName, ':')) ? UTF8::substr($aName, 0, $pos) : false;
 
-                if ($prefix==='xmlns') {
+                if ($prefix === 'xmlns') {
                     $ele->setAttributeNS(self::NAMESPACE_XMLNS, $aName, $aVal);
-                } elseif ($prefix!==false && isset($this->nsStack[0][$prefix])) {
+                } elseif ($prefix !== false && isset($this->nsStack[0][$prefix])) {
                     $ele->setAttributeNS($this->nsStack[0][$prefix], $aName, $aVal);
                 } else {
                     $ele->setAttribute($aName, $aVal);
@@ -475,7 +499,7 @@ class DOMTreeBuilder implements EventHandler
             $this->current->appendChild($ele);
 
             // XXX: Need to handle self-closing tags and unary tags.
-            if (! Elements::isA($name, Elements::VOID_TAG)) {
+            if (!Elements::isA($name, Elements::VOID_TAG)) {
                 $this->current = $ele;
             }
         }
@@ -490,7 +514,7 @@ class DOMTreeBuilder implements EventHandler
         // but we have to remove the namespaces pushed to $nsStack.
         if ($pushes > 0 && Elements::isA($name, Elements::VOID_TAG)) {
             // remove the namespaced definded by current node
-            for ($i = 0; $i < $pushes; $i ++) {
+            for ($i = 0; $i < $pushes; $i++) {
                 array_shift($this->nsStack);
             }
         }
@@ -554,13 +578,13 @@ class DOMTreeBuilder implements EventHandler
 
         // remove the namespaced definded by current node
         if (isset($this->pushes[$cid])) {
-            for ($i = 0; $i < $this->pushes[$cid][0]; $i ++) {
+            for ($i = 0; $i < $this->pushes[$cid][0]; $i++) {
                 array_shift($this->nsStack);
             }
             unset($this->pushes[$cid]);
         }
 
-        if (! $this->autoclose($lname)) {
+        if (!$this->autoclose($lname)) {
             $this->parseError('Could not find closing tag for ' . $lname);
         }
 
@@ -595,7 +619,7 @@ class DOMTreeBuilder implements EventHandler
             // practical as most documents contain these characters. Other text is not
             // expected here so recording a parse error is necessary.
             $dataTmp = trim($data, " \t\n\r\f");
-            if (! empty($dataTmp)) {
+            if (!empty($dataTmp)) {
                 // fprintf(STDOUT, "Unexpected insert mode: %d", $this->insertMode);
                 $this->parseError("Unexpected text. Ignoring: " . $dataTmp);
             }
@@ -639,7 +663,7 @@ class DOMTreeBuilder implements EventHandler
         // it sees fit.
         if (isset($this->processor)) {
             $res = $this->processor->process($this->current, $name, $data);
-            if (! empty($res)) {
+            if (!empty($res)) {
                 $this->current = $res;
             }
 

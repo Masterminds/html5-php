@@ -1,8 +1,9 @@
 # HTML5-PHP
 
-The need for an HTML5 parser in PHP is clear. This project initially
-began with the seemingly abandoned `html5lib` project [original source](https://code.google.com/p/html5lib/source/checkout).
-But after some initial refactoring work, we began a new parser.
+HTML5 is a standards-compliant HTML5 parser and writer written entirely in PHP with
+well over [one million downloads](https://packagist.org/packages/masterminds/html5).
+
+HTML5 is stable and used in many large production sites. It supports the following features:
 
 - An HTML5 serializer
 - Support for PHP namespaces
@@ -16,6 +17,7 @@ But after some initial refactoring work, we began a new parser.
 [![Latest Stable Version](https://poser.pugx.org/masterminds/html5/v/stable.png)](https://packagist.org/packages/masterminds/html5)
 [![Code Coverage](https://scrutinizer-ci.com/g/Masterminds/html5-php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Masterminds/html5-php/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Masterminds/html5-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Masterminds/html5-php/?branch=master)
+[![Stability: Sustained](https://masterminds.github.io/stability/sustained.svg)](https://masterminds.github.io/stability/sustained.html)
 
 ## Installation
 

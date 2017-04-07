@@ -1,15 +1,16 @@
 # HTML5-PHP
 
-HTML5 is a standards-compliant HTML5 parser and writer written entirely in PHP with
+HTML5 is a standards-compliant HTML5 parser and writer written entirely in PHP.
+It is stable and used in many production websites, and has
 well over [one million downloads](https://packagist.org/packages/masterminds/html5).
 
-HTML5 is stable and used in many large production sites. It supports the following features:
+HTML5 provides the following features.
 
 - An HTML5 serializer
 - Support for PHP namespaces
 - Composer support
 - Event-based (SAX-like) parser
-- DOM tree builder
+- A DOM tree builder
 - Interoperability with [QueryPath](https://github.com/technosophos/querypath)
 - Runs on **PHP** 5.3.0 or newer and **HHVM** 3.2 or newer
 
@@ -25,7 +26,7 @@ Install HTML5-PHP using [composer](http://getcomposer.org/).
 
 To install, add `masterminds/html5` to your `composer.json` file:
 
-```
+```json
 {
   "require" : {
     "masterminds/html5": "2.*"

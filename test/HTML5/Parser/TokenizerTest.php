@@ -199,7 +199,9 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<!-- --$i -->' => ' --$i ',
             '<!----$i-->' => '--$i',
             "<!--\nHello World.\na-->" => "\nHello World.\na",
-            '<!-- <!-- -->' => ' <!-- '
+            "<!--\0Hello-->" => 'Hello',
+            "<!--" . UTF8Utils::FFFD . 'Hello-->' => 'Hello',
+            '<!-- <!-- -->' => ' <!-- ',
         );
         foreach ($good as $test => $expected) {
             $events = $this->parse($test);
@@ -209,7 +211,6 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         $fail = array(
             '<!-->' => '',
             '<!--Hello' => 'Hello',
-            "<!--\0Hello" => UTF8Utils::FFFD . 'Hello',
             '<!--' => ''
         );
         foreach ($fail as $test => $expected) {
@@ -854,6 +855,8 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<script><not/><the/><tag></script>' => '<not/><the/><tag>',
             '<script><<<<<<<<</script>' => '<<<<<<<<',
             '<script>hello</script</script>' => 'hello</script',
+            "<script>\0Hello</script>" => 'Hello',
+            '<script>' . UTF8Utils::FFFD . 'Hello</script>' => 'Hello',
             "<script>\nhello</script\n</script>" => "\nhello</script\n",
             '<script>&amp;</script>' => '&amp;',
             '<script><!--not a comment--></script>' => '<!--not a comment-->',

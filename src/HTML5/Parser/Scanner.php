@@ -8,16 +8,22 @@ namespace Masterminds\HTML5\Parser;
  */
 class Scanner
 {
-
     const CHARS_HEX = 'abcdefABCDEF01234567890';
 
     const CHARS_ALNUM = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890';
 
     const CHARS_ALPHA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+    /**
+     * @var InputStream
+     */
     protected $is;
 
-    // Flipping this to true will give minisculely more debugging info.
+    /**
+     * Flipping this to true will give minisculely more debugging info.
+     *
+     * @var bool
+     */
     public $debug = false;
 
     /**
@@ -34,7 +40,7 @@ class Scanner
     /**
      * Get the current position.
      *
-     * @return int The current intiger byte position.
+     * @return int The current integer byte position.
      */
     public function position()
     {
@@ -62,8 +68,9 @@ class Scanner
     {
         $this->is->next();
         if ($this->is->valid()) {
-            if ($this->debug)
+            if ($this->debug) {
                 fprintf(STDOUT, "> %s\n", $this->is->current());
+            }
             return $this->is->current();
         }
 
@@ -88,6 +95,8 @@ class Scanner
 
     /**
      * Silently consume N chars.
+     *
+     * @param int $count
      */
     public function consume($count = 1)
     {
@@ -182,6 +191,10 @@ class Scanner
 
     /**
      * Read chars until something in the mask is encountered.
+     *
+     * @param $mask
+     *
+     * @return mixed
      */
     public function charsUntil($mask)
     {
@@ -190,6 +203,10 @@ class Scanner
 
     /**
      * Read chars as long as the mask matches.
+     *
+     * @param $mask
+     *
+     * @return mixed
      */
     public function charsWhile($mask)
     {

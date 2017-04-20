@@ -21,11 +21,11 @@
     ],
     "require" : {
         "ext-libxml" : "*",
-        "php" : ">=5.3.0"
+        "php" : ">=5.3.0",
+        "voku/portable-utf8": "~3.1"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "1.0.*",
-        "phpunit/phpunit" : "4.*",
+        "phpunit/phpunit" : "~4.0",
         "sami/sami": "~2.0"
     },
     "autoload": {

@@ -14,7 +14,9 @@ namespace Masterminds\HTML5\Parser;
  */
 class TreeBuildingRules
 {
-
+    /**
+     * @var array
+     */
     protected static $tags = array(
         'li' => 1,
         'dd' => 1,
@@ -102,6 +104,11 @@ class TreeBuildingRules
         return $current;
     }
 
+    /**
+     * @param $ele
+     * @param $current
+     * @return mixed
+     */
     protected function handleLI($ele, $current)
     {
         return $this->closeIfCurrentMatches($ele, $current, array(
@@ -109,6 +116,11 @@ class TreeBuildingRules
         ));
     }
 
+    /**
+     * @param $ele
+     * @param $current
+     * @return mixed
+     */
     protected function handleDT($ele, $current)
     {
         return $this->closeIfCurrentMatches($ele, $current, array(
@@ -117,6 +129,11 @@ class TreeBuildingRules
         ));
     }
 
+    /**
+     * @param $ele
+     * @param $current
+     * @return mixed
+     */
     protected function handleRT($ele, $current)
     {
         return $this->closeIfCurrentMatches($ele, $current, array(
@@ -125,10 +142,15 @@ class TreeBuildingRules
         ));
     }
 
+    /**
+     * @param $ele
+     * @param $current
+     * @param $match
+     * @return mixed
+     */
     protected function closeIfCurrentMatches($ele, $current, $match)
     {
-        $tname = $current->tagName;
-        if (in_array($current->tagName, $match)) {
+        if (in_array($current->tagName, $match, true)) {
             $current->parentNode->appendChild($ele);
         } else {
             $current->appendChild($ele);

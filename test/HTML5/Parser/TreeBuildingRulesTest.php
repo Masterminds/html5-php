@@ -5,11 +5,11 @@
  */
 namespace Masterminds\HTML5\Tests\Parser;
 
-use Masterminds\HTML5\Parser\TreeBuildingRules;
-use Masterminds\HTML5\Parser\Tokenizer;
+use Masterminds\HTML5\Parser\DOMTreeBuilder;
 use Masterminds\HTML5\Parser\Scanner;
 use Masterminds\HTML5\Parser\StringInputStream;
-use Masterminds\HTML5\Parser\DOMTreeBuilder;
+use Masterminds\HTML5\Parser\Tokenizer;
+use Masterminds\HTML5\Parser\TreeBuildingRules;
 
 /**
  * These tests are functional, not necessarily unit tests.
@@ -31,6 +31,7 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $parser->parse();
         return $treeBuilder->document();
     }
+
     /**
      * Convenience function for parsing fragments.
      */
@@ -51,9 +52,9 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
 
         $td = $frag->childNodes->item(0);
 
-        $this->assertEquals(1, $frag->childNodes->length);
-        $this->assertEquals('td', $td->tagName);
-        $this->assertEquals('This is a test of the HTML5 parser', $td->nodeValue);
+        self::assertSame(1, $frag->childNodes->length);
+        self::assertSame('td', $td->tagName);
+        self::assertSame('This is a test of the HTML5 parser', $td->nodeValue);
     }
 
     public function testHasRules()
@@ -61,8 +62,8 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $doc = new \DOMDocument('1.0');
         $engine = new TreeBuildingRules($doc);
 
-        $this->assertTrue($engine->hasRules('li'));
-        $this->assertFalse($engine->hasRules('imaginary'));
+        self::assertTrue($engine->hasRules('li'));
+        self::assertFalse($engine->hasRules('imaginary'));
     }
 
     public function testHandleLI()
@@ -72,9 +73,9 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
 
         $list = $doc->getElementById('a');
 
-        $this->assertEquals(2, $list->childNodes->length);
+        self::assertEquals(2, $list->childNodes->length);
         foreach ($list->childNodes as $ele) {
-            $this->assertEquals('li', $ele->tagName);
+            self::assertEquals('li', $ele->tagName);
         }
     }
 
@@ -85,9 +86,9 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
 
         $list = $doc->getElementById('a');
 
-        $this->assertEquals(2, $list->childNodes->length);
-        $this->assertEquals('dt', $list->firstChild->tagName);
-        $this->assertEquals('dd', $list->lastChild->tagName);
+        self::assertEquals(2, $list->childNodes->length);
+        self::assertEquals('dt', $list->firstChild->tagName);
+        self::assertEquals('dd', $list->lastChild->tagName);
     }
 
     public function testHandleOptionGroupAndOption()
@@ -97,10 +98,10 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
 
         $list = $doc->getElementById('foo');
 
-        $this->assertEquals(1, $list->childNodes->length);
+        self::assertEquals(1, $list->childNodes->length);
 
         $option = $list->childNodes->item(0);
-        $this->assertEquals('option', $option->tagName);
+        self::assertEquals('option', $option->tagName);
     }
 
     public function testTable()
@@ -110,8 +111,8 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
 
         $list = $doc->getElementById('a');
 
-        $this->assertEquals(3, $list->childNodes->length);
-        $this->assertEquals('th', $list->firstChild->tagName);
-        $this->assertEquals('td', $list->lastChild->tagName);
+        self::assertEquals(3, $list->childNodes->length);
+        self::assertEquals('th', $list->firstChild->tagName);
+        self::assertEquals('td', $list->lastChild->tagName);
     }
 }

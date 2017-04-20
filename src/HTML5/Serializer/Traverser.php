@@ -12,39 +12,59 @@ namespace Masterminds\HTML5\Serializer;
  */
 class Traverser
 {
-
     /**
      * Namespaces that should be treated as "local" to HTML5.
      */
-    static $local_ns = array(
+    public static $local_ns = array(
         'http://www.w3.org/1999/xhtml' => 'html',
         'http://www.w3.org/1998/Math/MathML' => 'math',
         'http://www.w3.org/2000/svg' => 'svg'
     );
 
+    /**
+     * @var \DOMNode|\DOMNodeList
+     */
     protected $dom;
 
+    /**
+     * @var array
+     */
     protected $options;
 
+    /**
+     * @var bool
+     */
     protected $encode = false;
 
+    /**
+     * @var RulesInterface
+     */
     protected $rules;
 
+    /**
+     * @var resource
+     */
     protected $out;
 
     /**
      * Create a traverser.
      *
-     * @param DOMNode|DOMNodeList $dom
+     * @param \DOMNode|\DOMNodeList $dom
+     *            <p>
      *            The document or node to traverse.
+     *            </p>
      * @param resource $out
+     *            <p>
      *            A stream that allows writing. The traverser will output into this
      *            stream.
+     *            </p>
      * @param array $options
+     *            <p>
      *            An array or options for the traverser as key/value pairs. These include:
      *            - encode_entities: A bool to specify if full encding should happen for all named
      *            charachter references. Defaults to false which escapes &'<>".
      *            - output_rules: The path to the class handling the output rules.
+     *            </p>
      */
     public function __construct($dom, $out, RulesInterface $rules, $options = array())
     {
@@ -59,8 +79,7 @@ class Traverser
     /**
      * Tell the traverser to walk the DOM.
      *
-     * @return resource $out
-     *         Returns the output stream.
+     * @return resource $out <p>Returns the output stream.</p>
      */
     public function walk()
     {
@@ -87,8 +106,7 @@ class Traverser
     /**
      * Process a node in the DOM.
      *
-     * @param mixed $node
-     *            A node implementing \DOMNode.
+     * @param mixed $node <p>A node implementing \DOMNode.</p>
      */
     public function node($node)
     {
@@ -119,8 +137,7 @@ class Traverser
     /**
      * Walk through all the nodes on a node list.
      *
-     * @param \DOMNodeList $nl
-     *            A list of child elements to walk through.
+     * @param \DOMNodeList $nl <p>A list of child elements to walk through.</p>
      */
     public function children($nl)
     {
@@ -132,8 +149,7 @@ class Traverser
     /**
      * Is an element local?
      *
-     * @param mixed $ele
-     *            An element that implement \DOMNode.
+     * @param mixed $ele <p>An element that implement \DOMNode.</p>
      *
      * @return bool True if local and false otherwise.
      */

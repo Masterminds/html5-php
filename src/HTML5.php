@@ -1,10 +1,10 @@
 <?php
 namespace Masterminds;
 
-use Masterminds\HTML5\Parser\FileInputStream;
-use Masterminds\HTML5\Parser\StringInputStream;
 use Masterminds\HTML5\Parser\DOMTreeBuilder;
+use Masterminds\HTML5\Parser\FileInputStream;
 use Masterminds\HTML5\Parser\Scanner;
+use Masterminds\HTML5\Parser\StringInputStream;
 use Masterminds\HTML5\Parser\Tokenizer;
 use Masterminds\HTML5\Serializer\OutputRules;
 use Masterminds\HTML5\Serializer\Traverser;
@@ -169,7 +169,7 @@ class HTML5
         $options = array_merge($this->getOptions(), $options);
         $events = new DOMTreeBuilder(false, $options);
         $scanner = new Scanner($input);
-        $parser = new Tokenizer($scanner, $events, !empty($options['xmlNamespaces']) ? Tokenizer::CONFORMANT_XML: Tokenizer::CONFORMANT_HTML);
+        $parser = new Tokenizer($scanner, $events, !empty($options['xmlNamespaces']) ? Tokenizer::CONFORMANT_XML : Tokenizer::CONFORMANT_HTML);
 
         $parser->parse();
         $this->errors = $events->getErrors();
@@ -188,7 +188,7 @@ class HTML5
         $options = array_merge($this->getOptions(), $options);
         $events = new DOMTreeBuilder(true, $options);
         $scanner = new Scanner($input);
-        $parser = new Tokenizer($scanner, $events, !empty($options['xmlNamespaces']) ? Tokenizer::CONFORMANT_XML: Tokenizer::CONFORMANT_HTML);
+        $parser = new Tokenizer($scanner, $events, !empty($options['xmlNamespaces']) ? Tokenizer::CONFORMANT_XML : Tokenizer::CONFORMANT_HTML);
 
         $parser->parse();
         $this->errors = $events->getErrors();
@@ -247,6 +247,6 @@ class HTML5
         $stream = fopen('php://temp', 'w');
         $this->save($dom, $stream, array_merge($this->getOptions(), $options));
 
-        return stream_get_contents($stream, - 1, 0);
+        return stream_get_contents($stream, -1, 0);
     }
 }

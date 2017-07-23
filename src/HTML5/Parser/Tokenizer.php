@@ -83,9 +83,9 @@ class Tokenizer
      */
     public function parse()
     {
-        $p = 0;
+        //$p = 0;
         do {
-            $p = $this->scanner->position();
+            //$p = $this->scanner->position();
             $this->consumeData();
 
             // FIXME: Add infinite loop protection.
@@ -128,10 +128,12 @@ class Tokenizer
         /*
          * $this->characterReference() || $this->tagOpen() || $this->eof() || $this->characterData();
          */
-        $this->characterReference();
-        $this->tagOpen();
-        $this->eof();
-        $this->characterData();
+        $current = $this->scanner->current();
+        
+        $this->characterReference($current);
+        $this->tagOpen($current);
+        $this->eof($current);
+        $this->characterData($current);
 
         return $this->carryOn;
     }
@@ -143,9 +145,13 @@ class Tokenizer
      *
      * @see Elements::TEXT_RAW Elements::TEXT_RCDATA.
      */
-    protected function characterData()
+    protected function characterData($current = null)
     {
-        if ($this->scanner->current() === false) {
+        if ($current === null) {
+            $current = $this->scanner->current();
+        }
+        
+        if ($current === false) {
             return false;
         }
         switch ($this->textMode) {
@@ -154,21 +160,22 @@ class Tokenizer
             case Elements::TEXT_RCDATA:
                 return $this->rcdata();
             default:
-                $tok = $this->scanner->current();
-                if (strspn($tok, "<&")) {
+                if (strspn($current, "<&")) {
                     return false;
                 }
-                return $this->text();
+                return $this->text($current);
         }
     }
 
     /**
      * This buffers the current token as character data.
      */
-    protected function text()
+    protected function text($tok = null)
     {
-        $tok = $this->scanner->current();
-
+        if ($tok === null) {
+            $tok = $this->scanner->current();
+        }
+        
         // This should never happen...
         if ($tok === false) {
             return false;
@@ -213,7 +220,7 @@ class Tokenizer
         $caseSensitive = !Elements::isHtml5Element($this->untilTag);
         while ($tok !== false && ! ($tok == '<' && ($this->sequenceMatches($sequence, $caseSensitive)))) {
             if ($tok == '&') {
-                $txt .= $this->decodeCharacterReference();
+                $txt .= $this->decodeCharacterReference(false, $tok);
                 $tok = $this->scanner->current();
             } else {
                 $txt .= $tok;
@@ -235,9 +242,13 @@ class Tokenizer
     /**
      * If the document is read, emit an EOF event.
      */
-    protected function eof()
+    protected function eof($current = null)
     {
-        if ($this->scanner->current() === false) {
+        if ($current === null) {
+            $current = $this->scanner->current();
+        }
+        
+        if ($current === false) {
             // fprintf(STDOUT, "EOF");
             $this->flushBuffer();
             $this->events->eof();
@@ -255,9 +266,13 @@ class Tokenizer
      *
      * HTML5 8.2.4.2
      */
-    protected function characterReference()
+    protected function characterReference($current = null)
     {
-        $ref = $this->decodeCharacterReference();
+        if ($current === null) {
+            $current = $this->scanner->current();
+        }
+        
+        $ref = $this->decodeCharacterReference(false, $current);
         if ($ref !== false) {
             $this->buffer($ref);
             return true;
@@ -270,9 +285,13 @@ class Tokenizer
      *
      * 8.2.4.8
      */
-    protected function tagOpen()
+    protected function tagOpen($current = null)
     {
-        if ($this->scanner->current() != '<') {
+        if ($current === null) {
+            $current = $this->scanner->current();
+        }
+        
+        if ($current != '<') {
             return false;
         }
 
@@ -408,24 +427,26 @@ class Tokenizer
         if ($tok == '/') {
             $this->scanner->next();
             $this->scanner->whitespace();
-            if ($this->scanner->current() == '>') {
+            $tok = $this->scanner->current();
+            
+            if ($tok == '>') {
                 $selfClose = true;
                 return true;
             }
-            if ($this->scanner->current() === false) {
+            if ($tok === false) {
                 $this->parseError("Unexpected EOF inside of tag.");
                 return true;
             }
             // Basically, we skip the / token and go on.
             // See 8.2.4.43.
-            $this->parseError("Unexpected '%s' inside of a tag.", $this->scanner->current());
+            $this->parseError("Unexpected '%s' inside of a tag.", $tok);
             return false;
         }
 
-        if ($this->scanner->current() == '>') {
+        if ($tok == '>') {
             return true;
         }
-        if ($this->scanner->current() === false) {
+        if ($tok === false) {
             $this->parseError("Unexpected EOF inside of tag.");
             return true;
         }
@@ -541,16 +562,25 @@ class Tokenizer
     {
         $stoplist = "\f" . $quote;
         $val = '';
-        $tok = $this->scanner->current();
-        while (strspn($tok, $stoplist) == 0 && $tok !== false) {
-            if ($tok == '&') {
-                $val .= $this->decodeCharacterReference(true);
-                $tok = $this->scanner->current();
-            } else {
-                $val .= $tok;
-                $tok = $this->scanner->next();
+        
+        while (true) {
+            $tokens = $this->scanner->charsUntil($stoplist.'&');
+            if ($tokens !== false) {
+                $val .= $tokens;
             }
+            else {
+                break;
+            }
+
+            $tok = $this->scanner->current();
+            if ($tok == '&') {
+                $val .= $this->decodeCharacterReference(true, $tok);
+                continue;
+            }
+
+            break;
         }
+
         $this->scanner->next();
         return $val;
     }
@@ -562,7 +592,7 @@ class Tokenizer
         $tok = $this->scanner->current();
         while (strspn($tok, $stoplist) == 0 && $tok !== false) {
             if ($tok == '&') {
-                $val .= $this->decodeCharacterReference(true);
+                $val .= $this->decodeCharacterReference(true, $tok);
                 $tok = $this->scanner->current();
             } else {
                 if (strspn($tok, "\"'<=`") > 0) {
@@ -591,18 +621,18 @@ class Tokenizer
      */
     protected function bogusComment($leading = '')
     {
-
-        // TODO: This can be done more efficiently when the
-        // scanner exposes a readUntil() method.
         $comment = $leading;
+        $tokens = $this->scanner->charsUntil('>');
+        if ($tokens !== false) {
+            $comment .= $tokens;
+        }
         $tok = $this->scanner->current();
-        do {
+        if ($tok !== false) {
             $comment .= $tok;
-            $tok = $this->scanner->next();
-        } while ($tok !== false && $tok != '>');
-
+        }
+        
         $this->flushBuffer();
-        $this->events->comment($comment . $tok);
+        $this->events->comment($comment);
         $this->scanner->next();
 
         return true;
@@ -646,15 +676,17 @@ class Tokenizer
      */
     protected function isCommentEnd()
     {
+        $tok = $this->scanner->current();
+        
         // EOF
-        if ($this->scanner->current() === false) {
+        if ($tok === false) {
             // Hit the end.
             $this->parseError("Unexpected EOF in a comment.");
             return true;
         }
 
         // If it doesn't start with -, not the end.
-        if ($this->scanner->current() != '-') {
+        if ($tok != '-') {
             return false;
         }
 
@@ -694,7 +726,7 @@ class Tokenizer
         // EOF: die.
         if ($tok === false) {
             $this->events->doctype('html5', EventHandler::DOCTYPE_NONE, '', true);
-            return $this->eof();
+            return $this->eof($tok);
         }
 
         $doctypeName = '';
@@ -1009,11 +1041,14 @@ class Tokenizer
      *            Set to true if the text is inside of an attribute value.
      *            false otherwise.
      */
-    protected function decodeCharacterReference($inAttribute = false)
+    protected function decodeCharacterReference($inAttribute = false, $current = null)
     {
-
+        if ($current === null) {
+            $current = $this->scanner->current();
+        }
+        
         // If it fails this, it's definitely not an entity.
-        if ($this->scanner->current() != '&') {
+        if ($current != '&') {
             return false;
         }
 

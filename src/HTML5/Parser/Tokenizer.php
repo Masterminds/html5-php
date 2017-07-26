@@ -1071,7 +1071,7 @@ class Tokenizer
         else {
             // Attempt to consume a string up to a ';'.
             // [a-zA-Z0-9]+;
-            $cname = $this->scanner->getAsciiAlpha();
+            $cname = $this->scanner->getAsciiAlphaNum();
             $entity = CharacterReference::lookupName($cname);
 
             // When no entity is found provide the name of the unmatched string

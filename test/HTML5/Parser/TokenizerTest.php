@@ -940,6 +940,10 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         $events = $this->parse('a&amp;b');
         $this->assertEquals(2, $events->depth(), "Events: " . print_r($events, true));
         $this->assertEventEquals('text', 'a&b', $events->get(0));
+
+        $events = $this->parse('a&sup2;b');
+        $this->assertEquals(2, $events->depth(), "Events: " . print_r($events, true));
+        $this->assertEventEquals('text', 'a²b', $events->get(0));
     }
 
     // ================================================================

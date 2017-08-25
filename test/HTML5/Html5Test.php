@@ -28,6 +28,25 @@ class Html5Test extends TestCase
         return $out;
     }
 
+
+    public function testImageTagsInSvg()
+    {
+        $html = "<!DOCTYPE html>
+                    <html>
+                        <head>
+                            <title>foo</title>
+                        </head>
+                        <body>
+                            <svg>
+                                <image height=\"10\" width=\"10\"></image>
+                            </svg>
+                        </body>
+                    </html>";
+        $doc = $this->html5->loadHTML($html);
+        $this->assertInstanceOf('DOMElement', $doc->getElementsByTagName('image')->item(0));
+        $this->assertEmpty($this->html5->getErrors());
+    }
+
     public function testLoadOptions()
     {
         // doc

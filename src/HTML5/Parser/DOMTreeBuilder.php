@@ -274,7 +274,8 @@ class DOMTreeBuilder implements EventHandler
 
         // SPECIAL TAG HANDLING:
         // Spec says do this, and "don't ask."
-        if ($name == 'image') {
+        // find the spec where this is defined... looks problematic
+        if ($name == 'image' && !($this->insertMode === static::IM_IN_SVG || $this->insertMode === static::IM_IN_MATHML)) {
             $name = 'img';
         }
 

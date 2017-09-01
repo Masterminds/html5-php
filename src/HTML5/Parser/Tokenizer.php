@@ -1074,8 +1074,10 @@ class Tokenizer
                 }
                 $entity = CharacterReference::lookupDecimal($numeric);
             }
-        }         // String entity.
-        else {
+        } elseif ($tok === '=' && $inAttribute) {
+            return '&';
+        } else { // String entity.
+
             // Attempt to consume a string up to a ';'.
             // [a-zA-Z0-9]+;
             $cname = $this->scanner->getAsciiAlphaNum();
@@ -1085,7 +1087,9 @@ class Tokenizer
             // and continue on as the & is not part of an entity. The & will
             // be converted to &amp; elsewhere.
             if ($entity == null) {
-                $this->parseError("No match in entity table for '%s'", $cname);
+                if (!$inAttribute || strlen($cname) === 0) {
+                    $this->parseError("No match in entity table for '%s'", $cname);
+                }
                 $this->scanner->unconsume($this->scanner->position() - $start);
                 return '&';
             }

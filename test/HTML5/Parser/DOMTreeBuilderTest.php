@@ -58,6 +58,80 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals('http://www.w3.org/1999/xhtml', $doc->documentElement->namespaceURI);
     }
 
+    public function testBareAmpersand()
+    {
+        $html = "<!doctype html>
+        <html>
+            <body> 
+                <img src='a&b' />
+                <img src='a&=' />
+                <img src='a&=c' />
+                <img src='a&=9' />
+            </body>
+        </html>";
+        $doc = $this->parse($html);
+
+        $this->assertEmpty($this->errors);
+        $this->assertXmlStringEqualsXmlString('
+        <!DOCTYPE html>
+        <html xmlns="http://www.w3.org/1999/xhtml"><body> 
+                <img src="a&amp;b"/>
+                <img src="a&amp;="/>
+                <img src="a&amp;=c"/>
+                <img src="a&amp;=9"/>
+            </body>
+        </html>', $doc->saveXML());
+    }
+
+    public function testBareAmpersandNotAllowedInAttributes()
+    {
+        $html = "<!doctype html>
+        <html>
+            <body>
+                <img src='a&' />
+                <img src='a&+' />
+            </body>
+        </html>";
+        $doc = $this->parse($html);
+
+        $this->assertCount(2, $this->errors);
+        $this->assertXmlStringEqualsXmlString('
+        <!DOCTYPE html>
+        <html xmlns="http://www.w3.org/1999/xhtml"><body> 
+                <img src="a&amp;"/>
+                <img src="a&amp;+"/>
+            </body>
+        </html>', $doc->saveXML());
+    }
+    public function testBareAmpersandNotAllowedInBody()
+    {
+        $html = "<!doctype html>
+        <html>
+            <body> 
+                a&b
+                a&=
+                a&=c
+                a&=9
+                a&+
+                a& -- valid
+            </body>
+        </html>";
+        $doc = $this->parse($html);
+
+        $this->assertCount(5, $this->errors);
+        $this->assertXmlStringEqualsXmlString('
+        <!DOCTYPE html>
+        <html xmlns="http://www.w3.org/1999/xhtml"><body> 
+                a&amp;b
+                a&amp;=
+                a&amp;=c
+                a&amp;=9
+                a&amp;+
+                a&amp; -- valid
+            </body>
+        </html>', $doc->saveXML());
+    }
+
     public function testStrangeCapitalization()
     {
         $html = "<!doctype html>

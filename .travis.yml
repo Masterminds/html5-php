@@ -36,4 +36,4 @@ script:
 after_script:
   - bash -c 'if [ "$TRAVIS_PHP_VERSION" == "5.6" ] ; then wget https://scrutinizer-ci.com/ocular.phar; fi;'
   - bash -c 'if [ "$TRAVIS_PHP_VERSION" == "5.6" ] ; then php ocular.phar code-coverage:upload --format=php-clover coverage.xml; fi;'
-  - php test/benchmark/run.php 50
+  - php test/benchmark/run.php 10

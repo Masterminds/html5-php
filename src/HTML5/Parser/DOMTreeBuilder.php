@@ -433,9 +433,15 @@ class DOMTreeBuilder implements EventHandler
         else {
             $this->current->appendChild($ele);
 
-            // XXX: Need to handle self-closing tags and unary tags.
             if (! Elements::isA($name, Elements::VOID_TAG)) {
                 $this->current = $ele;
+            }
+
+            // Self-closing tags should only be respected on foreign elements
+            // (and are implied on void elements)
+            // See: https://www.w3.org/TR/html5/syntax.html#start-tags
+            if (Elements::isHtml5Element($name)) {
+                $selfClosing = false;
             }
         }
 
@@ -453,6 +459,11 @@ class DOMTreeBuilder implements EventHandler
                 array_shift($this->nsStack);
             }
         }
+
+        if ($selfClosing) {
+            $this->endTag($name);
+        }
+
         // Return the element mask, which the tokenizer can then use to set
         // various processing rules.
         return Elements::element($name);

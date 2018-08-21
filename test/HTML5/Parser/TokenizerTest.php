@@ -449,7 +449,8 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             $events = $this->parse($test);
             $this->assertEquals(2, $events->depth(), "Counting events for '$test'" . print_r($events, true));
             $this->assertEventEquals('startTag', $expects, $events->get(0));
-            $this->assertTrue($events->get(0)['data'][2]);
+            $event = $events->get(0);
+            $this->assertTrue($event['data'][2]);
         }
 
         $bad = array(

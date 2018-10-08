@@ -643,4 +643,40 @@ EOM;
         $this->assertSame(3, $dom->getElementById('first')->getElementsByTagName('option')->length);
         $this->assertSame(2, $dom->getElementById('second')->getElementsByTagName('option')->length);
     }
+
+    public function testVoidTag() {
+        $html = <<<EOM
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>testVoidTag</title>
+        <meta>
+        <meta>
+    </head>
+    <body></body>
+</html>
+EOM;
+
+        $dom = $this->parse($html);
+        $this->assertSame(2, $dom->getElementsByTagName('meta')->length);
+        $this->assertSame(0, $dom->getElementsByTagName('meta')->item(0)->childNodes->length);
+        $this->assertSame(0, $dom->getElementsByTagName('meta')->item(1)->childNodes->length);
+    }
+
+    public function testIgnoreSelfClosingTag() {
+        $html = <<<EOM
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>testIllegalSelfClosingTag</title>
+    </head>
+    <body>
+        <div /><span>Hello, World!</span></div>
+    </body>
+</html>
+EOM;
+
+        $dom = $this->parse($html);
+        $this->assertSame(1, $dom->getElementsByTagName('div')->item(0)->childNodes->length);
+    }
 }

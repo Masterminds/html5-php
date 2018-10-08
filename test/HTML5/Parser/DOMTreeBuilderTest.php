@@ -679,4 +679,30 @@ EOM;
         $dom = $this->parse($html);
         $this->assertSame(1, $dom->getElementsByTagName('div')->item(0)->childNodes->length);
     }
+
+    public function testIAudioInParagraph() {
+        $html = <<<EOM
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>testIllegalSelfClosingTag</title>
+    </head>
+    <body>
+    <p>
+        <audio preload="none" controls="controls">
+            <source src="https://example.com/test.mp3" type="audio/mpeg" />
+            Your browser does not support the audio element.
+        </audio>
+     </p>
+    </body>
+</html>>
+</html>
+EOM;
+
+        $dom = $this->parse($html);
+        $audio = $dom->getElementsByTagName('audio')->item(0);
+
+        $this->assertSame('p', $audio->parentNode->nodeName);
+        $this->assertSame(3, $audio->childNodes->length);
+    }
 }

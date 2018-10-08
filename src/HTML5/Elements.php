@@ -83,7 +83,7 @@ class Elements
         "area" => 9, // NORMAL | VOID_TAG
         "article" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
         "aside" => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
-        "audio" => 65, // NORMAL | BLOCK_TAG
+        "audio" => 1, // NORMAL
         "b" => 1,
         "base" => 9, // NORMAL | VOID_TAG
         "bdi" => 1,

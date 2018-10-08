@@ -202,7 +202,7 @@ issues known issues that are not presently on the roadmap:
 - PLAINTEXT: Unsupported.
 - Adoption Agency Algorithm: Not yet implemented. (8.2.5.4.7)
 
-##XML Namespaces
+## XML Namespaces
 
 To use XML style namespaces you have to configure well the main `HTML5` instance.
 
@@ -219,7 +219,7 @@ $dom->documentElement->namespaceURI; // http://www.example.com
 ```
 
 You can also add some default prefixes that will not require the namespace declaration,
-but it's elements will be namespaced.
+but its elements will be namespaced.
 
 ```php
 use Masterminds\HTML5;
@@ -243,7 +243,7 @@ a list of contributors.
 
 We owe a huge debt of gratitude to the original authors of html5lib.
 
-While not much of the orignal parser remains, we learned a lot from
+While not much of the original parser remains, we learned a lot from
 reading the html5lib library. And some pieces remain here. In
 particular, much of the UTF-8 and Unicode handling is derived from the
 html5lib project.

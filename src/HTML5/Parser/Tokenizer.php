@@ -431,6 +431,12 @@ class Tokenizer
 
     /**
      * Parse attributes from inside of a tag.
+     *
+     * @param string[] $attributes
+     *
+     * @return bool
+     *
+     * @throws ParseError
      */
     protected function attribute(&$attributes)
     {
@@ -489,6 +495,8 @@ class Tokenizer
     /**
      * Consume an attribute value.
      * 8.2.4.37 and after.
+     *
+     * @return string|null
      */
     protected function attributeValue()
     {
@@ -590,6 +598,8 @@ class Tokenizer
      *            Prepend any leading characters. This essentially
      *            negates the need to backtrack, but it's sort of
      *            a hack.
+     *
+     * @return bool
      */
     protected function bogusComment($leading = '')
     {
@@ -614,6 +624,8 @@ class Tokenizer
      * Read a comment.
      *
      * Expects the first tok to be inside of the comment.
+     *
+     * @return bool
      */
     protected function comment()
     {
@@ -645,6 +657,8 @@ class Tokenizer
 
     /**
      * Check if the scanner has reached the end of a comment.
+     *
+     * @return bool
      */
     protected function isCommentEnd()
     {
@@ -679,6 +693,8 @@ class Tokenizer
      * not Quirksmode is enabled on the event handler.
      *
      * @todo This method is a little long. Should probably refactor.
+     *
+     * @return bool
      */
     protected function doctype()
     {
@@ -701,13 +717,9 @@ class Tokenizer
             return $this->eof();
         }
 
-        $doctypeName = '';
-
         // NULL char: convert.
         if ($tok === "\0") {
             $this->parseError("Unexpected null character in DOCTYPE.");
-            $doctypeName .= UTF8::FFFD;
-            $tok = $this->scanner->next();
         }
 
         $stop = " \n\f>";
@@ -792,6 +804,7 @@ class Tokenizer
      * @param string $stopchars
      *            Characters (in addition to a close-quote) that should stop the string.
      *            E.g. sometimes '>' is higher precedence than '"' or "'".
+     *
      * @return mixed String if one is found (quotations omitted)
      */
     protected function quotedString($stopchars)
@@ -813,6 +826,8 @@ class Tokenizer
 
     /**
      * Handle a CDATA section.
+     *
+     * @return bool
      */
     protected function cdataSection()
     {
@@ -856,6 +871,8 @@ class Tokenizer
      * treated as "bogus comments". However, since we're not a user
      * agent, we allow them. We consume until ?> and then issue a
      * EventListener::processingInstruction() event.
+     *
+     * @return bool
      */
     protected function processingInstruction()
     {
@@ -900,6 +917,10 @@ class Tokenizer
     /**
      * Read from the input stream until we get to the desired sequene
      * or hit the end of the input stream.
+     *
+     * @param string $sequence
+     *
+     * @return string
      */
     protected function readUntilSequence($sequence)
     {
@@ -935,6 +956,11 @@ class Tokenizer
      * Example: $this->sequenceMatches('</script>') will
      * see if the input stream is at the start of a
      * '</script>' string.
+     *
+     * @param string $sequence
+     * @param bool $caseSensitive
+     *
+     * @return bool
      */
     protected function sequenceMatches($sequence, $caseSensitive = true)
     {
@@ -976,6 +1002,8 @@ class Tokenizer
      * Add text to the temporary buffer.
      *
      * @see flushBuffer()
+     *
+     * @param string $str
      */
     protected function buffer($str)
     {
@@ -987,6 +1015,10 @@ class Tokenizer
      *
      * A parse error always returns false because it never consumes any
      * characters.
+     *
+     * @param string $msg
+     *
+     * @return string
      */
     protected function parseError($msg)
     {
@@ -1009,9 +1041,11 @@ class Tokenizer
      * Returns false if the entity could not be found. If $inAttribute is set
      * to true, a bare & will be returned as-is.
      *
-     * @param boolean $inAttribute
+     * @param bool $inAttribute
      *            Set to true if the text is inside of an attribute value.
      *            false otherwise.
+     *
+     * @return bool|string
      */
     protected function decodeCharacterReference($inAttribute = false)
     {
@@ -1023,7 +1057,6 @@ class Tokenizer
 
         // Next char after &.
         $tok = $this->scanner->next();
-        $entity = '';
         $start = $this->scanner->position();
 
         if ($tok == false) {

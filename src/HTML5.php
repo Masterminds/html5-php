@@ -2,6 +2,7 @@
 namespace Masterminds;
 
 use Masterminds\HTML5\Parser\FileInputStream;
+use Masterminds\HTML5\Parser\InputStream;
 use Masterminds\HTML5\Parser\StringInputStream;
 use Masterminds\HTML5\Parser\DOMTreeBuilder;
 use Masterminds\HTML5\Parser\Scanner;
@@ -160,8 +161,13 @@ class HTML5
      *
      * Lower-level loading function. This requires an input stream instead
      * of a string, file, or resource.
+     *
+     * @param InputStream $input
+     * @param array $options
+     *
+     * @return \DOMDocument
      */
-    public function parse(\Masterminds\HTML5\Parser\InputStream $input, array $options = array())
+    public function parse(InputStream $input, array $options = array())
     {
         $this->errors = array();
         $options = array_merge($this->getOptions(), $options);
@@ -180,8 +186,15 @@ class HTML5
      *
      * Lower-level loading function. This requires an input stream instead
      * of a string, file, or resource.
+     *
+     * @param InputStream $input
+     *            The input data to parse in the form of a InputStream instance.
+     * @param array $options
+     *            An array of options
+     *
+     * @return \DOMDocumentFragment
      */
-    public function parseFragment(\Masterminds\HTML5\Parser\InputStream $input, array $options = array())
+    public function parseFragment(InputStream $input, array $options = array())
     {
         $options = array_merge($this->getOptions(), $options);
         $events = new DOMTreeBuilder(true, $options);

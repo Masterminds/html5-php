@@ -136,6 +136,7 @@ class DOMTreeBuilder implements EventHandler
     protected $stack = array();
 
     protected $current; // Pointer in the tag hierarchy.
+    protected $rules;
     protected $doc;
 
     protected $frag;
@@ -216,7 +217,7 @@ class DOMTreeBuilder implements EventHandler
      *
      * @see http://www.w3.org/TR/2012/CR-html5-20121217/syntax.html#concept-frag-parse-context
      *
-     * @return \DOMFragmentDocumentFragment
+     * @return \DOMDocumentFragment
      */
     public function fragment()
     {
@@ -650,15 +651,19 @@ class DOMTreeBuilder implements EventHandler
 
     /**
      * Automatically climb the tree and close the closest node with the matching $tag.
+     *
+     * @param string $tagName
+     *
+     * @return bool
      */
-    protected function autoclose($tag)
+    protected function autoclose($tagName)
     {
         $working = $this->current;
         do {
             if ($working->nodeType != XML_ELEMENT_NODE) {
                 return false;
             }
-            if ($working->tagName == $tag) {
+            if ($working->tagName == $tagName) {
                 $this->current = $working->parentNode;
 
                 return true;
@@ -672,12 +677,16 @@ class DOMTreeBuilder implements EventHandler
      *
      * If $this->current or anything above $this->current matches the given tag
      * name, this returns true.
+     *
+     * @param string $tagName
+     *
+     * @return bool
      */
-    protected function isAncestor($tagname)
+    protected function isAncestor($tagName)
     {
         $candidate = $this->current;
         while ($candidate->nodeType === XML_ELEMENT_NODE) {
-            if ($candidate->tagName == $tagname) {
+            if ($candidate->tagName == $tagName) {
                 return true;
             }
             $candidate = $candidate->parentNode;
@@ -688,9 +697,13 @@ class DOMTreeBuilder implements EventHandler
 
     /**
      * Returns true if the immediate parent element is of the given tagname.
+     *
+     * @param string $tagName
+     *
+     * @return bool
      */
-    protected function isParent($tagname)
+    protected function isParent($tagName)
     {
-        return $this->current->tagName == $tagname;
+        return $this->current->tagName == $tagName;
     }
 }

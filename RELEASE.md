@@ -1,5 +1,11 @@
 # Release Notes
 
+2.3.1 (2018-10-18)
+
+- #121: Audio is not a block tag (fixed by #141)
+- #136: Handle illegal self-closing according to spec (fixed by #137)
+- #141: Minor fixes in the README
+
 2.3.0 (2017-09-04)
 
 - #129: image within inline svg breaks system (fixed by #133) 

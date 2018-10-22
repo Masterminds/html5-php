@@ -393,7 +393,6 @@ class ElementsTest extends TestCase
             'address',
             'article',
             'aside',
-            'audio',
             'blockquote',
             'canvas',
             'dd',

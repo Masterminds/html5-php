@@ -65,22 +65,21 @@ class StringInputStream implements InputStream
     /**
      * Create a new InputStream wrapper.
      *
-     * @param $data Data
-     *            to parse
+     * @param string $data Data to parse
+     * @param string $encoding The encoding to use for the data.
+     * @param string $debug A fprintf format to use to echo the data on stdout.
      */
     public function __construct($data, $encoding = 'UTF-8', $debug = '')
     {
         $data = UTF8Utils::convertToUTF8($data, $encoding);
-        if ($debug)
+        if ($debug) {
             fprintf(STDOUT, $debug, $data, strlen($data));
+        }
 
-            // There is good reason to question whether it makes sense to
-            // do this here, since most of these checks are done during
-            // parsing, and since this check doesn't actually *do* anything.
+        // There is good reason to question whether it makes sense to
+        // do this here, since most of these checks are done during
+        // parsing, and since this check doesn't actually *do* anything.
         $this->errors = UTF8Utils::checkForIllegalCodepoints($data);
-        // if (!empty($e)) {
-        // throw new ParseError("UTF-8 encoding issues: " . implode(', ', $e));
-        // }
 
         $data = $this->replaceLinefeeds($data);
 
@@ -95,7 +94,11 @@ class StringInputStream implements InputStream
     protected function replaceLinefeeds($data)
     {
         /*
-         * U+000D CARRIAGE RETURN (CR) characters and U+000A LINE FEED (LF) characters are treated specially. Any CR characters that are followed by LF characters must be removed, and any CR characters not followed by LF characters must be converted to LF characters. Thus, newlines in HTML DOMs are represented by LF characters, and there are never any CR characters in the input to the tokenization stage.
+         * U+000D CARRIAGE RETURN (CR) characters and U+000A LINE FEED (LF) characters are treated specially.
+         * Any CR characters that are followed by LF characters must be removed, and any CR characters not
+         * followed by LF characters must be converted to LF characters. Thus, newlines in HTML DOMs are
+         * represented by LF characters, and there are never any CR characters in the input to the tokenization
+         * stage.
          */
         $crlfTable = array(
             "\0" => "\xEF\xBF\xBD",
@@ -126,7 +129,7 @@ class StringInputStream implements InputStream
      */
     public function getCurrentLine()
     {
-        return currentLine();
+        return $this->currentLine();
     }
 
     /**
@@ -281,6 +284,8 @@ class StringInputStream implements InputStream
      *            substring.
      * @param int $max
      *            The max number of chars to read.
+     *
+     * @return string
      */
     public function charsWhile($bytes, $max = null)
     {

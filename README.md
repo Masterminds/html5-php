@@ -75,8 +75,6 @@ print $html5->saveHTML($dom);
 
 // Or save it to a file:
 $html5->save($dom, 'out.html');
-
-?>
 ```
 
 The `$dom` created by the parser is a full `DOMDocument` object. And the

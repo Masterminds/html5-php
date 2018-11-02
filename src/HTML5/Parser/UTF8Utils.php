@@ -26,6 +26,9 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
+
+use Masterminds\HTML5\Exception;
+
 /**
  * UTF-8 Utilities
  */
@@ -44,6 +47,10 @@ class UTF8Utils
      * MB, libxml, and finally a custom counter.
      *
      * @todo Move this to a general utility class.
+     *
+     * @param string $string
+     *
+     * @return int
      */
     public static function countChars($string)
     {
@@ -73,6 +80,8 @@ class UTF8Utils
      *            The data to convert.
      * @param string $encoding
      *            A valid encoding. Examples: http://www.php.net/manual/en/mbstring.supported-encodings.php
+     *
+     * @return string
      */
     public static function convertToUTF8($data, $encoding = 'UTF-8')
     {
@@ -107,7 +116,6 @@ class UTF8Utils
             // - Incomplete sequences generate a warning.
             $data = @iconv($encoding, 'UTF-8//IGNORE', $data);
         } else {
-            // we can make a conforming native implementation
             throw new Exception('Not implemented, please install mbstring or iconv');
         }
 
@@ -124,16 +132,12 @@ class UTF8Utils
     /**
      * Checks for Unicode code points that are not valid in a document.
      *
-     * @param string $data
-     *            A string to analyze.
+     * @param string $data A string to analyze.
+     *
      * @return array An array of (string) error messages produced by the scanning.
      */
     public static function checkForIllegalCodepoints($data)
     {
-        if (! function_exists('preg_match_all')) {
-            throw\Exception('The PCRE library is not loaded or is not available.');
-        }
-
         // Vestigal error handling.
         $errors = array();
 

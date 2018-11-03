@@ -2,7 +2,6 @@
 namespace Masterminds\HTML5\Tests\Parser;
 
 use Masterminds\HTML5\Parser\UTF8Utils;
-use Masterminds\HTML5\Parser\StringInputStream;
 use Masterminds\HTML5\Parser\Scanner;
 use Masterminds\HTML5\Parser\Tokenizer;
 
@@ -960,8 +959,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
     protected function createTokenizer($string, $debug = false)
     {
         $eventHandler = new EventStack();
-        $stream = new StringInputStream($string);
-        $scanner = new Scanner($stream);
+        $scanner = new Scanner($string);
 
         $scanner->debug = $debug;
 

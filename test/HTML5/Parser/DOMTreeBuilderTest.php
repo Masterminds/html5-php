@@ -5,7 +5,6 @@
  */
 namespace Masterminds\HTML5\Tests\Parser;
 
-use Masterminds\HTML5\Parser\StringInputStream;
 use Masterminds\HTML5\Parser\Scanner;
 use Masterminds\HTML5\Parser\Tokenizer;
 use Masterminds\HTML5\Parser\DOMTreeBuilder;
@@ -16,14 +15,14 @@ use Masterminds\HTML5\Parser\DOMTreeBuilder;
 class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
 {
     protected $errors = array();
+
     /**
      * Convenience function for parsing.
      */
     protected function parse($string, array $options = array())
     {
         $treeBuilder = new DOMTreeBuilder(false, $options);
-        $input = new StringInputStream($string);
-        $scanner = new Scanner($input);
+        $scanner = new Scanner($string);
         $parser = new Tokenizer($scanner, $treeBuilder);
 
         $parser->parse();
@@ -38,8 +37,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
     protected function parseFragment($string)
     {
         $treeBuilder = new DOMTreeBuilder(true);
-        $input = new StringInputStream($string);
-        $scanner = new Scanner($input);
+        $scanner = new Scanner($string);
         $parser = new Tokenizer($scanner, $treeBuilder);
 
         $parser->parse();
@@ -600,8 +598,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $is = new InstructionProcessorMock();
         $treeBuilder->setInstructionProcessor($is);
 
-        $input = new StringInputStream($string);
-        $scanner = new Scanner($input);
+        $scanner = new Scanner($string);
         $parser = new Tokenizer($scanner, $treeBuilder);
 
         $parser->parse();

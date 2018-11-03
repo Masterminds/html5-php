@@ -50,8 +50,8 @@ Here is how you use the high-level `HTML5` library API:
 <?php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";
-use Masterminds\HTML5;
 
+use Masterminds\HTML5;
 
 // An example HTML document:
 $html = <<< 'HERE'
@@ -115,8 +115,6 @@ The following options are supported:
 This library provides the following low-level APIs that you can use to
 create more customized HTML5 tools:
 
-- An `InputStream` abstraction that can work with different kinds of
-input source (not just files and strings).
 - A SAX-like event-based parser that you can hook into for special kinds
 of parsing.
 - A flexible error-reporting mechanism that can be tuned to document
@@ -130,7 +128,6 @@ is well-documented.
 
 The parser is designed as follows:
 
-- The `InputStream` portion handles direct I/O.
 - The `Scanner` handles scanning on behalf of the parser.
 - The `Tokenizer` requests data off of the scanner, parses it, clasifies
 it, and sends it to an `EventHandler`. It is a *recursive descent parser.*

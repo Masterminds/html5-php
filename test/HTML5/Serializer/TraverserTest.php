@@ -71,7 +71,7 @@ class TraverserTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertInstanceOf('\Masterminds\HTML5\Serializer\Traverser', $t);
     }
 
-    public function testFragment()
+    public function testFragmentDeprecated()
     {
         $html = '<span class="bar">foo</span><span></span><div>bar</div>';
         $input = new \Masterminds\HTML5\Parser\StringInputStream($html);
@@ -82,12 +82,27 @@ class TraverserTest extends \Masterminds\HTML5\Tests\TestCase
         $stream = fopen('php://temp', 'w');
         $r = new OutputRules($stream, $this->html5->getOptions());
         $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+        $t->walk();
 
-        $out = $t->walk();
         $this->assertEquals($html, stream_get_contents($stream, - 1, 0));
     }
 
-    public function testProcessorInstruction()
+    public function testFragment()
+    {
+        $html = '<span class="bar">foo</span><span></span><div>bar</div>';
+        $dom = $this->html5->parseFragment($html);
+
+        $this->assertInstanceOf('\DOMDocumentFragment', $dom);
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+        $t->walk();
+
+        $this->assertEquals($html, stream_get_contents($stream, - 1, 0));
+    }
+
+    public function testProcessorInstructionDeprecated()
     {
         $html = '<?foo bar ?>';
         $input = new \Masterminds\HTML5\Parser\StringInputStream($html);
@@ -97,9 +112,26 @@ class TraverserTest extends \Masterminds\HTML5\Tests\TestCase
 
         $stream = fopen('php://temp', 'w');
         $r = new OutputRules($stream, $this->html5->getOptions());
-        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
 
-        $out = $t->walk();
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+        $t->walk();
+
+        $this->assertEquals($html, stream_get_contents($stream, - 1, 0));
+    }
+
+    public function testProcessorInstruction()
+    {
+        $html = '<?foo bar ?>';
+        $dom = $this->html5->parseFragment($html);
+
+        $this->assertInstanceOf('\DOMDocumentFragment', $dom);
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+        $t->walk();
+
         $this->assertEquals($html, stream_get_contents($stream, - 1, 0));
     }
 }

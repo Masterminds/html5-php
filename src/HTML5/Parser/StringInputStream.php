@@ -39,9 +39,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 // - // indicates regular comments
 
+/**
+ * @deprecated since 2.4, to remove in 3.0. Use a string in the scanner instead.
+ */
 class StringInputStream implements InputStream
 {
-
     /**
      * The string data we're parsing.
      */
@@ -86,6 +88,11 @@ class StringInputStream implements InputStream
         $this->data = $data;
         $this->char = 0;
         $this->EOF = strlen($data);
+    }
+
+    public function __toString()
+    {
+        return $this->data;
     }
 
     /**

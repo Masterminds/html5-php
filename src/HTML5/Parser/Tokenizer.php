@@ -121,16 +121,30 @@ class Tokenizer
      */
     protected function consumeData()
     {
-        // Character Ref
-        /*
-         * $this->characterReference() || $this->tagOpen() || $this->eof() || $this->characterData();
-         */
+        // Character reference
         $this->characterReference();
-        $this->tagOpen();
-        $this->eof();
 
-        // Inline the parsing of characters as it's the critical performance path
+        // Parse tag
+        if ($this->scanner->current() === '<') {
+            // Any buffered text data can go out now.
+            $this->flushBuffer();
+
+            $tok = $this->scanner->next();
+
+            $this->markupDeclaration($tok)
+                || $this->endTag()
+                || $this->processingInstruction()
+                || $this->tagName()
+                // This always returns false.
+                || $this->parseError("Illegal tag opening")
+                || $this->characterData();
+        }
+
+        // Handle end of document
         $tok = $this->scanner->current();
+        $this->eof($tok);
+
+        // Parse character
         if ($tok !== false) {
             switch ($this->textMode) {
                 case Elements::TEXT_RAW:
@@ -272,15 +286,17 @@ class Tokenizer
     /**
      * If the document is read, emit an EOF event.
      */
-    protected function eof()
+    protected function eof($tok)
     {
-        if ($this->scanner->current() === false) {
+        if ($tok === false) {
             // fprintf(STDOUT, "EOF");
             $this->flushBuffer();
             $this->events->eof();
             $this->carryOn = false;
+
             return true;
         }
+
         return false;
     }
 
@@ -303,32 +319,11 @@ class Tokenizer
     }
 
     /**
-     * Emit a tagStart event on encountering a tag.
-     *
-     * 8.2.4.8
-     */
-    protected function tagOpen()
-    {
-        if ($this->scanner->current() != '<') {
-            return false;
-        }
-
-        // Any buffered text data can go out now.
-        $this->flushBuffer();
-
-        $this->scanner->next();
-
-        return $this->markupDeclaration() || $this->endTag() || $this->processingInstruction() || $this->tagName() ||
-          // This always returns false.
-          $this->parseError("Illegal tag opening") || $this->characterData();
-    }
-
-    /**
      * Look for markup.
      */
-    protected function markupDeclaration()
+    protected function markupDeclaration($tok)
     {
-        if ($this->scanner->current() != '!') {
+        if ($tok != '!') {
             return false;
         }
 
@@ -756,7 +751,7 @@ class Tokenizer
         // EOF: die.
         if ($tok === false) {
             $this->events->doctype('html5', EventHandler::DOCTYPE_NONE, '', true);
-            return $this->eof();
+            return $this->eof($tok);
         }
 
         // NULL char: convert.

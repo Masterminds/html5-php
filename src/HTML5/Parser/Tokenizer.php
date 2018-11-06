@@ -124,8 +124,10 @@ class Tokenizer
         // Character reference
         $this->characterReference();
 
+        $tok = $this->scanner->current();
+
         // Parse tag
-        if ($this->scanner->current() === '<') {
+        if ($tok === '<') {
             // Any buffered text data can go out now.
             $this->flushBuffer();
 
@@ -138,10 +140,11 @@ class Tokenizer
                 // This always returns false.
                 || $this->parseError("Illegal tag opening")
                 || $this->characterData();
+
+            $tok = $this->scanner->current();
         }
 
         // Handle end of document
-        $tok = $this->scanner->current();
         $this->eof($tok);
 
         // Parse character

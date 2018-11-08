@@ -263,7 +263,7 @@ class Tokenizer
         $txt = '';
 
         $caseSensitive = !Elements::isHtml5Element($this->untilTag);
-        while ($tok !== false && ! ($tok == '<' && ($this->sequenceMatches($sequence, $caseSensitive)))) {
+        while ($tok !== false && ! ($tok == '<' && ($this->scanner->sequenceMatches($sequence, $caseSensitive)))) {
             if ($tok == '&') {
                 $txt .= $this->decodeCharacterReference();
                 $tok = $this->scanner->current();
@@ -313,12 +313,13 @@ class Tokenizer
      */
     protected function characterReference()
     {
-        $ref = $this->decodeCharacterReference();
-        if ($ref !== false) {
-            $this->buffer($ref);
-            return true;
+        if ($this->scanner->current() !== '&') {
+            return false;
         }
-        return false;
+
+        $ref = $this->decodeCharacterReference();
+        $this->buffer($ref);
+        return true;
     }
 
     /**
@@ -892,7 +893,7 @@ class Tokenizer
             }
             $cdata .= $tok;
             $tok = $this->scanner->next();
-        } while (! $this->sequenceMatches(']]>'));
+        } while (! $this->scanner->sequenceMatches(']]>'));
 
         // Consume ]]>
         $this->scanner->consume(3);
@@ -972,7 +973,7 @@ class Tokenizer
             $buffer .= $this->scanner->charsUntil($first);
 
             // Stop as soon as we hit the stopping condition.
-            if ($this->sequenceMatches($sequence, false)) {
+            if ($this->scanner->sequenceMatches($sequence, false)) {
                 return $buffer;
             }
             $buffer .= $this->scanner->current();
@@ -993,7 +994,7 @@ class Tokenizer
      * will still need to read the next sequence, even if
      * this returns true.
      *
-     * Example: $this->sequenceMatches('</script>') will
+     * Example: $this->scanner->sequenceMatches('</script>') will
      * see if the input stream is at the start of a
      * '</script>' string.
      *
@@ -1004,22 +1005,9 @@ class Tokenizer
      */
     protected function sequenceMatches($sequence, $caseSensitive = true)
     {
-        $len = strlen($sequence);
-        $buffer = '';
-        for ($i = 0; $i < $len; ++ $i) {
-            $tok = $this->scanner->current();
-            $buffer .= $tok;
+        @trigger_error(__METHOD__ . ' method is deprecated since version 2.4 and will be removed in 3.0. Use Scanner::sequenceMatches() instead.', E_USER_DEPRECATED);
 
-            // EOF. Rewind and let the caller handle it.
-            if ($tok === false) {
-                $this->scanner->unconsume($i);
-                return false;
-            }
-            $this->scanner->next();
-        }
-
-        $this->scanner->unconsume($len);
-        return $caseSensitive ? $buffer == $sequence : strcasecmp($buffer, $sequence) === 0;
+        return $this->scanner->sequenceMatches($sequence, $caseSensitive);
     }
 
     /**
@@ -1079,22 +1067,16 @@ class Tokenizer
     /**
      * Decode a character reference and return the string.
      *
-     * Returns false if the entity could not be found. If $inAttribute is set
-     * to true, a bare & will be returned as-is.
+     * If $inAttribute is set to true, a bare & will be returned as-is.
      *
      * @param bool $inAttribute
      *            Set to true if the text is inside of an attribute value.
      *            false otherwise.
      *
-     * @return bool|string
+     * @return string
      */
     protected function decodeCharacterReference($inAttribute = false)
     {
-        // If it fails this, it's definitely not an entity.
-        if ($this->scanner->current() != '&') {
-            return false;
-        }
-
         // Next char after &.
         $tok = $this->scanner->next();
         $start = $this->scanner->position();

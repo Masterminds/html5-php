@@ -62,6 +62,30 @@ class Scanner
     }
 
     /**
+     * Check if upcomming chars match the given sequence.
+     *
+     * This will read the stream for the $sequence. If it's
+     * found, this will return true. If not, return false.
+     * Since this unconsumes any chars it reads, the caller
+     * will still need to read the next sequence, even if
+     * this returns true.
+     *
+     * Example: $this->scanner->sequenceMatches('</script>') will
+     * see if the input stream is at the start of a
+     * '</script>' string.
+     *
+     * @param string $sequence
+     * @param bool $caseSensitive
+     *
+     * @return bool
+     */
+    public function sequenceMatches($sequence, $caseSensitive = true)
+    {
+        $portion = substr($this->data, $this->char, strlen($sequence));
+        return $caseSensitive ? $portion === $sequence : strcasecmp($portion, $sequence) === 0;
+    }
+
+    /**
      * Get the current position.
      *
      * @return int The current intiger byte position.

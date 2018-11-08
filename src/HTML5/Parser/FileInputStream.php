@@ -11,11 +11,10 @@ namespace Masterminds\HTML5\Parser;
  * really like to rewrite this class to efficiently handle lower level
  * stream reads (and thus efficiently handle large documents).
  *
- * @todo A buffered input stream would be useful.
+ * @deprecated since 2.4, to remove in 3.0. Use a string in the scanner instead.
  */
 class FileInputStream extends StringInputStream implements InputStream
 {
-
     /**
      * Load a file input stream.
      *

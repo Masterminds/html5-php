@@ -8,7 +8,6 @@ namespace Masterminds\HTML5\Tests\Parser;
 use Masterminds\HTML5\Parser\TreeBuildingRules;
 use Masterminds\HTML5\Parser\Tokenizer;
 use Masterminds\HTML5\Parser\Scanner;
-use Masterminds\HTML5\Parser\StringInputStream;
 use Masterminds\HTML5\Parser\DOMTreeBuilder;
 
 /**
@@ -25,7 +24,7 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
     protected function parse($string)
     {
         $treeBuilder = new DOMTreeBuilder();
-        $scanner = new Scanner(new StringInputStream($string));
+        $scanner = new Scanner($string);
         $parser = new Tokenizer($scanner, $treeBuilder);
 
         $parser->parse();
@@ -37,7 +36,7 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
     protected function parseFragment($string)
     {
         $events = new DOMTreeBuilder(true);
-        $scanner = new Scanner(new StringInputStream($string));
+        $scanner = new Scanner($string);
         $parser = new Tokenizer($scanner, $events);
 
         $parser->parse();

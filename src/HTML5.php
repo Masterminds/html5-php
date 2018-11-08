@@ -55,7 +55,7 @@ class HTML5
      *
      * The rules governing parsing are set out in the HTML 5 spec.
      *
-     * @param string $file
+     * @param string|resource $file
      *            The path to the file to parse. If this is a resource, it is
      *            assumed to be an open stream whose pointer is set to the first
      *            byte of input.
@@ -68,13 +68,10 @@ class HTML5
     {
         // Handle the case where file is a resource.
         if (is_resource($file)) {
-            // FIXME: We need a StreamInputStream class.
-            return $this->loadHTML(stream_get_contents($file), $options);
+            return $this->parse(stream_get_contents($file), $options);
         }
 
-        $input = new FileInputStream($file);
-
-        return $this->parse($input, $options);
+        return $this->parse(file_get_contents($file), $options);
     }
 
     /**
@@ -92,9 +89,7 @@ class HTML5
      */
     public function loadHTML($string, array $options = array())
     {
-        $input = new StringInputStream($string);
-
-        return $this->parse($input, $options);
+        return $this->parse($string, $options);
     }
 
     /**
@@ -121,19 +116,15 @@ class HTML5
     /**
      * Parse a HTML fragment from a string.
      *
-     * @param string $string
-     *            The html5 fragment as a string.
-     * @param array $options
-     *            Configuration options when parsing the HTML
+     * @param string $string The HTML5 fragment as a string.
+     * @param array $options Configuration options when parsing the HTML
      *
      * @return \DOMDocumentFragment A DOM fragment. The DOM is part of libxml, which is included with
      *         almost all distributions of PHP.
      */
     public function loadHTMLFragment($string, array $options = array())
     {
-        $input = new StringInputStream($string);
-
-        return $this->parseFragment($input, $options);
+        return $this->parseFragment($string, $options);
     }
 
     /**
@@ -162,12 +153,12 @@ class HTML5
      * Lower-level loading function. This requires an input stream instead
      * of a string, file, or resource.
      *
-     * @param InputStream $input
+     * @param string $input
      * @param array $options
      *
      * @return \DOMDocument
      */
-    public function parse(InputStream $input, array $options = array())
+    public function parse($input, array $options = array())
     {
         $this->errors = array();
         $options = array_merge($this->getOptions(), $options);
@@ -187,14 +178,12 @@ class HTML5
      * Lower-level loading function. This requires an input stream instead
      * of a string, file, or resource.
      *
-     * @param InputStream $input
-     *            The input data to parse in the form of a InputStream instance.
-     * @param array $options
-     *            An array of options
+     * @param string $input The input data to parse in the form of a string.
+     * @param array $options An array of options
      *
      * @return \DOMDocumentFragment
      */
-    public function parseFragment(InputStream $input, array $options = array())
+    public function parseFragment($input, array $options = array())
     {
         $options = array_merge($this->getOptions(), $options);
         $events = new DOMTreeBuilder(true, $options);

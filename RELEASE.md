@@ -1,5 +1,14 @@
 # Release Notes
 
+2.4.0 (2018-11-17)
+
+- #148: Improve performance by moving sequence matching 
+- #147: Improve the Tokenizer performance 
+- #146: Improve performance by relying on a native string instead of InputStream 
+- #144: Add DOM extension in composer.json
+- #145: Add more extensions on composer.json, improve phpdocs and remove dead code 
+- #143: Remove experimental comment 
+
 2.3.1 (2018-10-18)
 
 - #121: Audio is not a block tag (fixed by #141)

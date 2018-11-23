@@ -2,7 +2,7 @@
 
 HTML5 is a standards-compliant HTML5 parser and writer written entirely in PHP.
 It is stable and used in many production websites, and has
-well over [one million downloads](https://packagist.org/packages/masterminds/html5).
+well over [five million downloads](https://packagist.org/packages/masterminds/html5).
 
 HTML5 provides the following features.
 

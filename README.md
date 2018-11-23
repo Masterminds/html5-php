@@ -24,21 +24,21 @@ HTML5 provides the following features.
 
 Install HTML5-PHP using [composer](http://getcomposer.org/).
 
-To install, add `masterminds/html5` to your `composer.json` file:
+By adding the `masterminds/html5` dependency to your `composer.json` file:
 
 ```json
 {
   "require" : {
-    "masterminds/html5": "2.*"
+    "masterminds/html5": "^2.0"
   },
 }
 ```
 
-(You may substitute `2.*` for a more specific release tag, of
-course.)
+By invoking require command via composer executable:
 
-From there, use the `composer install` or `composer update` commands to
-install.
+```bash
+composer require masterminds/html5
+```
 
 ## Basic Usage
 

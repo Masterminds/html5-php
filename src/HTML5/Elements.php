@@ -557,7 +557,7 @@ class Elements
      * @param string $name
      *            The name of the element.
      *
-     * @return int|bool The element mask or false if element does not exist.
+     * @return int The element mask.
      */
     public static function element($name)
     {
@@ -571,7 +571,7 @@ class Elements
             return static::$mathml[$name];
         }
 
-        return false;
+        return 0;
     }
 
     /**

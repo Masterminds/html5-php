@@ -223,10 +223,20 @@ class Scanner
      * Consume whitespace.
      *
      * Whitespace in HTML5 is: formfeed, tab, newline, space.
+     *
+     * @return int The length of the matched whitespaces
      */
     public function whitespace()
     {
-        return $this->doCharsWhile("\n\t\f ");
+        if ($this->char >= $this->EOF) {
+            return false;
+        }
+
+        $len = strspn($this->data, "\n\t\f ", $this->char);
+
+        $this->char += $len;
+
+        return $len;
     }
 
     /**

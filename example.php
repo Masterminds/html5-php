@@ -1,8 +1,7 @@
 <?php
 
-require "vendor/autoload.php";
+require 'vendor/autoload.php';
 use Masterminds\HTML5;
-
 
 $html = <<< 'HERE'
   <html>
@@ -28,6 +27,6 @@ HERE;
 $html5 = new HTML5();
 $dom = $html5->loadHTML($html);
 
-print "Converting to HTML 5\n";
+echo "Converting to HTML 5\n";
 
-$html5->save($dom, fopen("php://stdin", 'w'));
+$html5->save($dom, fopen('php://stdin', 'w'));

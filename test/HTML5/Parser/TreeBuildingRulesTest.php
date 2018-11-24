@@ -3,6 +3,7 @@
  * @file
  * Test the Tree Builder's special-case rules.
  */
+
 namespace Masterminds\HTML5\Tests\Parser;
 
 use Masterminds\HTML5\Parser\TreeBuildingRules;
@@ -15,7 +16,6 @@ use Masterminds\HTML5\Parser\DOMTreeBuilder;
  */
 class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
 {
-
     const HTML_STUB = '<!DOCTYPE html><html><head><title>test</title></head><body>%s</body></html>';
 
     /**
@@ -28,8 +28,10 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $parser = new Tokenizer($scanner, $treeBuilder);
 
         $parser->parse();
+
         return $treeBuilder->document();
     }
+
     /**
      * Convenience function for parsing fragments.
      */
@@ -40,13 +42,13 @@ class TreeBuildingRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $parser = new Tokenizer($scanner, $events);
 
         $parser->parse();
+
         return $events->fragment();
     }
 
     public function testTDFragment()
     {
-
-        $frag = $this->parseFragment("<td>This is a test of the HTML5 parser</td>");
+        $frag = $this->parseFragment('<td>This is a test of the HTML5 parser</td>');
 
         $td = $frag->childNodes->item(0);
 

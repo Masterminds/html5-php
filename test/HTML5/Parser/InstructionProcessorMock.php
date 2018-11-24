@@ -1,9 +1,9 @@
 <?php
+
 namespace Masterminds\HTML5\Tests\Parser;
 
 class InstructionProcessorMock implements \Masterminds\HTML5\InstructionProcessor
 {
-
     public $name = null;
 
     public $data = null;
@@ -14,9 +14,9 @@ class InstructionProcessorMock implements \Masterminds\HTML5\InstructionProcesso
     {
         $this->name = $name;
         $this->data = $data;
-        $this->count ++;
+        ++$this->count;
 
-        $div = $element->ownerDocument->createElement("div");
+        $div = $element->ownerDocument->createElement('div');
         $div->nodeValue = 'foo';
 
         $element->appendChild($div);

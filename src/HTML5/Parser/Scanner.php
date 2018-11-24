@@ -1,4 +1,5 @@
 <?php
+
 namespace Masterminds\HTML5\Parser;
 
 use Masterminds\HTML5\Exception;
@@ -18,7 +19,7 @@ class Scanner
     private $data;
 
     /**
-     * The current integer byte position we are in $data
+     * The current integer byte position we are in $data.
      */
     private $char;
 
@@ -35,10 +36,10 @@ class Scanner
     /**
      * Create a new Scanner.
      *
-     * @param string $data Data to parse
-     * @param string $encoding The encoding to use for the data.
+     * @param string $data     Data to parse
+     * @param string $encoding the encoding to use for the data
      *
-     * @throws Exception If the given data cannot be encoded to UTF-8.
+     * @throws Exception if the given data cannot be encoded to UTF-8
      */
     public function __construct($data, $encoding = 'UTF-8')
     {
@@ -75,20 +76,21 @@ class Scanner
      * '</script>' string.
      *
      * @param string $sequence
-     * @param bool $caseSensitive
+     * @param bool   $caseSensitive
      *
      * @return bool
      */
     public function sequenceMatches($sequence, $caseSensitive = true)
     {
         $portion = substr($this->data, $this->char, strlen($sequence));
-        return $caseSensitive ? $portion === $sequence : strcasecmp($portion, $sequence) === 0;
+
+        return $caseSensitive ? $portion === $sequence : 0 === strcasecmp($portion, $sequence);
     }
 
     /**
      * Get the current position.
      *
-     * @return int The current intiger byte position.
+     * @return int the current intiger byte position
      */
     public function position()
     {
@@ -98,7 +100,7 @@ class Scanner
     /**
      * Take a peek at the next character in the data.
      *
-     * @return string The next character.
+     * @return string the next character
      */
     public function peek()
     {
@@ -114,11 +116,11 @@ class Scanner
      *
      * Note: This advances the pointer.
      *
-     * @return string The next character.
+     * @return string the next character
      */
     public function next()
     {
-        $this->char++;
+        ++$this->char;
 
         if ($this->char < $this->EOF) {
             return $this->data[$this->char];
@@ -132,7 +134,7 @@ class Scanner
      *
      * Note, this does not advance the pointer.
      *
-     * @return string The current character.
+     * @return string the current character
      */
     public function current()
     {
@@ -157,13 +159,12 @@ class Scanner
      * Unconsume some of the data.
      * This moves the data pointer backwards.
      *
-     * @param int $howMany
-     *            The number of characters to move the pointer back.
+     * @param int $howMany The number of characters to move the pointer back
      */
     public function unconsume($howMany = 1)
     {
         if (($this->char - $howMany) >= 0) {
-            $this->char = $this->char - $howMany;
+            $this->char -= $howMany;
         }
     }
 
@@ -173,7 +174,7 @@ class Scanner
      * Note, along with getting the characters the pointer in the data will be
      * moved as well.
      *
-     * @return string The next group that is hex characters.
+     * @return string the next group that is hex characters
      */
     public function getHex()
     {
@@ -186,7 +187,7 @@ class Scanner
      * Note, along with getting the characters the pointer in the data will be
      * moved as well.
      *
-     * @return string The next group of ASCII alpha characters.
+     * @return string the next group of ASCII alpha characters
      */
     public function getAsciiAlpha()
     {
@@ -199,7 +200,7 @@ class Scanner
      * Note, along with getting the characters the pointer in the data will be
      * moved as well.
      *
-     * @return string The next group of ASCII alpha characters and numbers.
+     * @return string the next group of ASCII alpha characters and numbers
      */
     public function getAsciiAlphaNum()
     {
@@ -212,7 +213,7 @@ class Scanner
      * Note, along with getting the characters the pointer in the data will be
      * moved as well.
      *
-     * @return string The next group of numbers.
+     * @return string the next group of numbers
      */
     public function getNumeric()
     {
@@ -242,11 +243,11 @@ class Scanner
     /**
      * Returns the current line that is being consumed.
      *
-     * @return int The current line number.
+     * @return int the current line number
      */
     public function currentLine()
     {
-        if (empty($this->EOF) || $this->char == 0) {
+        if (empty($this->EOF) || 0 === $this->char) {
             return 1;
         }
 
@@ -284,12 +285,12 @@ class Scanner
      *
      * Newlines are column 0. The first char after a newline is column 1.
      *
-     * @return int The column number.
+     * @return int the column number
      */
     public function columnOffset()
     {
         // Short circuit for the first char.
-        if ($this->char == 0) {
+        if (0 === $this->char) {
             return 0;
         }
 
@@ -303,7 +304,7 @@ class Scanner
 
         // However, for here we want the length up until the next byte to be
         // processed, so add one to the current byte ($this->char).
-        if ($lastLine !== false) {
+        if (false !== $lastLine) {
             $findLengthOf = substr($this->data, $lastLine + 1, $this->char - 1 - $lastLine);
         } else {
             // After a newline.
@@ -318,7 +319,7 @@ class Scanner
      *
      * This consumes characters until the EOF.
      *
-     * @return int The number of characters remaining.
+     * @return int the number of characters remaining
      */
     public function remainingChars()
     {
@@ -351,7 +352,7 @@ class Scanner
         $crlfTable = array(
             "\0" => "\xEF\xBF\xBD",
             "\r\n" => "\n",
-            "\r" => "\n"
+            "\r" => "\n",
         );
 
         return strtr($data, $crlfTable);
@@ -365,12 +366,11 @@ class Scanner
      * Matches as far as possible until we reach a certain set of bytes
      * and returns the matched substring.
      *
-     * @param string $bytes
-     *            Bytes to match.
-     * @param int $max
-     *            Maximum number of bytes to scan.
+     * @param string $bytes Bytes to match
+     * @param int    $max   Maximum number of bytes to scan
+     *
      * @return mixed Index or false if no match is found. You should use strong
-     *         equality when checking the result, since index could be 0.
+     *               equality when checking the result, since index could be 0.
      */
     private function doCharsUntil($bytes, $max = null)
     {
@@ -378,7 +378,7 @@ class Scanner
             return false;
         }
 
-        if ($max === 0 || $max) {
+        if (0 === $max || $max) {
             $len = strcspn($this->data, $bytes, $this->char, $max);
         } else {
             $len = strcspn($this->data, $bytes, $this->char);
@@ -396,12 +396,10 @@ class Scanner
      * Matches as far as possible with a certain set of bytes
      * and returns the matched substring.
      *
-     * @param string $bytes
-     *            A mask of bytes to match. If ANY byte in this mask matches the
-     *            current char, the pointer advances and the char is part of the
-     *            substring.
-     * @param int $max
-     *            The max number of chars to read.
+     * @param string $bytes A mask of bytes to match. If ANY byte in this mask matches the
+     *                      current char, the pointer advances and the char is part of the
+     *                      substring.
+     * @param int    $max   The max number of chars to read
      *
      * @return string
      */
@@ -411,7 +409,7 @@ class Scanner
             return false;
         }
 
-        if ($max === 0 || $max) {
+        if (0 === $max || $max) {
             $len = strspn($this->data, $bytes, $this->char, $max);
         } else {
             $len = strspn($this->data, $bytes, $this->char);

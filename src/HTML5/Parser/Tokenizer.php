@@ -47,8 +47,6 @@ class Tokenizer
     const CONFORMANT_HTML = 'html';
     protected $mode = self::CONFORMANT_HTML;
 
-    const WHITE = "\t\n\f ";
-
     /**
      * Create a new tokenizer.
      *
@@ -159,7 +157,7 @@ class Tokenizer
                     break;
 
                 default:
-                    if (!strspn($tok, '<&')) {
+                    if ('<' !== $tok && '&' !== $tok) {
                         // NULL character
                         if ("\00" === $tok) {
                             $this->parseError('Received null character.');
@@ -193,7 +191,7 @@ class Tokenizer
             case Elements::TEXT_RCDATA:
                 return $this->rcdata($tok);
             default:
-                if (strspn($tok, '<&')) {
+                if ('<' === $tok || '&' === $tok) {
                     return false;
                 }
 
@@ -1093,7 +1091,7 @@ class Tokenizer
 
         // These indicate not an entity. We return just
         // the &.
-        if (1 === strspn($tok, static::WHITE . '&<')) {
+        if ("\t" === $tok || "\n" === $tok || "\f" === $tok || ' ' === $tok || '&' === $tok || '<' === $tok) {
             // $this->scanner->next();
             return '&';
         }

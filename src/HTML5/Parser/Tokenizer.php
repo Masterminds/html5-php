@@ -166,7 +166,7 @@ class Tokenizer
                         }
 
                         $this->text .= $tok;
-                        $this->scanner->next();
+                        $this->scanner->consume();
                     }
             }
         }
@@ -221,7 +221,7 @@ class Tokenizer
         }
 
         $this->buffer($tok);
-        $this->scanner->next();
+        $this->scanner->consume();
 
         return true;
     }
@@ -317,8 +317,8 @@ class Tokenizer
 
         // Comment:
         if ('-' == $tok && '-' == $this->scanner->peek()) {
-            $this->scanner->next(); // Consume the other '-'
-            $this->scanner->next(); // Next char.
+            $this->scanner->consume(2);
+
             return $this->comment();
         } elseif ('D' == $tok || 'd' == $tok) { // Doctype
             return $this->doctype();
@@ -369,7 +369,7 @@ class Tokenizer
         }
 
         $this->events->endTag($name);
-        $this->scanner->next();
+        $this->scanner->consume();
 
         return true;
     }
@@ -407,7 +407,7 @@ class Tokenizer
             $this->setTextMode($mode, $name);
         }
 
-        $this->scanner->next();
+        $this->scanner->consume();
 
         return true;
     }
@@ -419,7 +419,7 @@ class Tokenizer
     {
         $tok = $this->scanner->current();
         if ('/' == $tok) {
-            $this->scanner->next();
+            $this->scanner->consume();
             $this->scanner->whitespace();
             $tok = $this->scanner->current();
 
@@ -484,7 +484,7 @@ class Tokenizer
             // Really, only '=' can be the char here. Everything else gets absorbed
             // under one rule or another.
             $name = $tok;
-            $this->scanner->next();
+            $this->scanner->consume();
         }
 
         $isValidAttribute = true;
@@ -526,7 +526,7 @@ class Tokenizer
         if ('=' != $this->scanner->current()) {
             return null;
         }
-        $this->scanner->next();
+        $this->scanner->consume();
         // 8.1.2.3
         $this->scanner->whitespace();
 
@@ -540,7 +540,7 @@ class Tokenizer
                 return null;
             case '"':
             case "'":
-                $this->scanner->next();
+                $this->scanner->consume();
 
                 return $this->quotedAttributeValue($tok);
             case '>':
@@ -587,7 +587,7 @@ class Tokenizer
             }
             break;
         }
-        $this->scanner->next();
+        $this->scanner->consume();
 
         return $val;
     }
@@ -641,7 +641,7 @@ class Tokenizer
 
         $this->flushBuffer();
         $this->events->comment($comment);
-        $this->scanner->next();
+        $this->scanner->consume();
 
         return true;
     }
@@ -662,7 +662,7 @@ class Tokenizer
             // Parse error. Emit the comment token.
             $this->parseError("Expected comment data, got '>'");
             $this->events->comment('');
-            $this->scanner->next();
+            $this->scanner->consume();
 
             return true;
         }
@@ -677,7 +677,7 @@ class Tokenizer
         }
 
         $this->events->comment($comment);
-        $this->scanner->next();
+        $this->scanner->consume();
 
         return true;
     }
@@ -706,7 +706,7 @@ class Tokenizer
 
         // Advance one, and test for '->'
         if ('-' == $this->scanner->next() && '>' == $this->scanner->peek()) {
-            $this->scanner->next(); // Consume the last '>'
+            $this->scanner->consume(); // Consume the last '>'
             return true;
         }
         // Unread '-';
@@ -774,12 +774,12 @@ class Tokenizer
             if (0 == strlen($doctypeName)) {
                 $this->parseError('Expected a DOCTYPE name. Got nothing.');
                 $this->events->doctype($doctypeName, 0, null, true);
-                $this->scanner->next();
+                $this->scanner->consume();
 
                 return true;
             }
             $this->events->doctype($doctypeName);
-            $this->scanner->next();
+            $this->scanner->consume();
 
             return true;
         }
@@ -811,7 +811,7 @@ class Tokenizer
             $this->scanner->whitespace();
             if ('>' == $this->scanner->current()) {
                 $this->events->doctype($doctypeName, $type, $id, false);
-                $this->scanner->next();
+                $this->scanner->consume();
 
                 return true;
             }
@@ -821,7 +821,7 @@ class Tokenizer
             $this->scanner->charsUntil('>');
             $this->parseError('Malformed DOCTYPE.');
             $this->events->doctype($doctypeName, $type, $id, true);
-            $this->scanner->next();
+            $this->scanner->consume();
 
             return true;
         }
@@ -832,7 +832,7 @@ class Tokenizer
 
         $this->parseError('Expected PUBLIC or SYSTEM. Got %s.', $pub);
         $this->events->doctype($doctypeName, 0, null, true);
-        $this->scanner->next();
+        $this->scanner->consume();
 
         return true;
     }
@@ -849,10 +849,10 @@ class Tokenizer
     {
         $tok = $this->scanner->current();
         if ('"' == $tok || "'" == $tok) {
-            $this->scanner->next();
+            $this->scanner->consume();
             $ret = $this->scanner->charsUntil($tok . $stopchars);
             if ($this->scanner->current() == $tok) {
-                $this->scanner->next();
+                $this->scanner->consume();
             } else {
                 // Parse error because no close quote.
                 $this->parseError('Expected %s, got %s', $tok, $this->scanner->current());
@@ -875,7 +875,7 @@ class Tokenizer
             return false;
         }
         $cdata = '';
-        $this->scanner->next();
+        $this->scanner->consume();
 
         $chars = $this->scanner->charsWhile('CDAT');
         if ('CDATA' != $chars || '[' != $this->scanner->current()) {
@@ -950,8 +950,7 @@ class Tokenizer
             }
         }
 
-        $this->scanner->next(); // >
-        $this->scanner->next(); // Next token.
+        $this->scanner->consume(2); // Consume the closing tag
         $this->events->processingInstruction($procName, $data);
 
         return true;
@@ -983,7 +982,7 @@ class Tokenizer
                 return $buffer;
             }
             $buffer .= $this->scanner->current();
-            $this->scanner->next();
+            $this->scanner->consume();
         }
 
         // If we get here, we hit the EOF.
@@ -1160,7 +1159,7 @@ class Tokenizer
 
         // We have an entity. We're done here.
         if (';' === $tok) {
-            $this->scanner->next();
+            $this->scanner->consume();
 
             return $entity;
         }

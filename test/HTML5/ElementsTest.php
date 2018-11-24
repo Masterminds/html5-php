@@ -269,7 +269,7 @@ class ElementsTest extends TestCase
         foreach ($this->mathmlElements as $element) {
             $this->assertTrue(Elements::isMathMLElement($element), 'MathML element test failed on: ' . $element);
 
-            // MathML is case sensetitive so these should all fail.
+            // MathML is case sensitive so these should all fail.
             $this->assertFalse(Elements::isMathMLElement(strtoupper($element)), 'MathML element test failed on: ' . strtoupper($element));
         }
 
@@ -288,7 +288,7 @@ class ElementsTest extends TestCase
         foreach ($this->svgElements as $element) {
             $this->assertTrue(Elements::isSvgElement($element), 'SVG element test failed on: ' . $element);
 
-            // SVG is case sensetitive so these should all fail.
+            // SVG is case sensitive so these should all fail.
             $this->assertFalse(Elements::isSvgElement(strtoupper($element)), 'SVG element test failed on: ' . strtoupper($element));
         }
 
@@ -313,15 +313,15 @@ class ElementsTest extends TestCase
         foreach ($this->mathmlElements as $element) {
             $this->assertTrue(Elements::isElement($element), 'MathML element test failed on: ' . $element);
 
-            // MathML is case sensetitive so these should all fail.
+            // MathML is case sensitive so these should all fail.
             $this->assertFalse(Elements::isElement(strtoupper($element)), 'MathML element test failed on: ' . strtoupper($element));
         }
 
         foreach ($this->svgElements as $element) {
             $this->assertTrue(Elements::isElement($element), 'SVG element test failed on: ' . $element);
 
-            // SVG is case sensetitive so these should all fail. But, there is duplication
-            // html5 and SVG. Since html5 is case insensetitive we need to make sure
+            // SVG is case sensitive so these should all fail. But, there is duplication
+            // html5 and SVG. Since html5 is case insensitive we need to make sure
             // it's not a html5 element first.
             if (! in_array($element, $this->html5Elements)) {
                 $this->assertFalse(Elements::isElement(strtoupper($element)), 'SVG element test failed on: ' . strtoupper($element));

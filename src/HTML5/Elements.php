@@ -352,7 +352,7 @@ class Elements
     );
 
     /**
-     * Some attributes in SVG are case sensetitive.
+     * Some attributes in SVG are case sensitive.
      *
      * This map contains key/value pairs with the key as the lowercase attribute
      * name and the value with the correct casing.
@@ -423,7 +423,7 @@ class Elements
     );
 
     /**
-     * Some SVG elements are case sensetitive.
+     * Some SVG elements are case sensitive.
      * This map contains these.
      *
      * The map contains key/value store of the name is lowercase as the keys and
@@ -502,7 +502,7 @@ class Elements
      */
     public static function isHtml5Element($name)
     {
-        // html5 element names are case insensetitive. Forcing lowercase for the check.
+        // html5 element names are case insensitive. Forcing lowercase for the check.
         // Do we need this check or will all data passed here already be lowercase?
         return isset(static::$html5[strtolower($name)]);
     }
@@ -517,7 +517,7 @@ class Elements
      */
     public static function isMathMLElement($name)
     {
-        // MathML is case-sensetitive unlike html5 elements.
+        // MathML is case-sensitive unlike html5 elements.
         return isset(static::$mathml[$name]);
     }
 
@@ -531,7 +531,7 @@ class Elements
      */
     public static function isSvgElement($name)
     {
-        // SVG is case-sensetitive unlike html5 elements.
+        // SVG is case-sensitive unlike html5 elements.
         return isset(static::$svg[$name]);
     }
 

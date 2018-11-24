@@ -594,19 +594,37 @@ class Tokenizer
 
     protected function unquotedAttributeValue()
     {
-        $stoplist = "\t\n\f >";
         $val = '';
         $tok = $this->scanner->current();
-        while (0 == strspn($tok, $stoplist) && false !== $tok) {
-            if ('&' == $tok) {
-                $val .= $this->decodeCharacterReference(true);
-                $tok = $this->scanner->current();
-            } else {
-                if (strspn($tok, "\"'<=`") > 0) {
+        while (false !== $tok) {
+            switch ($tok) {
+                case "\n":
+                case "\f":
+                case ' ':
+                case "\t":
+                case '>':
+                    break 2;
+
+                case '&':
+                    $val .= $this->decodeCharacterReference(true);
+                    $tok = $this->scanner->current();
+
+                    break;
+
+                case "'":
+                case '"':
+                case '<':
+                case '=':
+                case '`':
                     $this->parseError('Unexpected chars in unquoted attribute value %s', $tok);
-                }
-                $val .= $tok;
-                $tok = $this->scanner->next();
+                    $val .= $tok;
+                    $tok = $this->scanner->next();
+                    break;
+
+                default:
+                    $val .= $this->scanner->charsUntil("\t\n\f >&\"'<=`");
+
+                    $tok = $this->scanner->current();
             }
         }
 

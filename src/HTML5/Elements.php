@@ -485,10 +485,6 @@ class Elements
      */
     public static function isA($name, $mask)
     {
-        if (! static::isElement($name)) {
-            return false;
-        }
-
         return (static::element($name) & $mask) == $mask;
     }
 

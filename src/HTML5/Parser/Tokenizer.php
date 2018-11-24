@@ -144,11 +144,11 @@ class Tokenizer
             $tok = $this->scanner->current();
         }
 
-        // Handle end of document
-        $this->eof($tok);
-
-        // Parse character
-        if (false !== $tok) {
+        if (false === $tok) {
+            // Handle end of document
+            $this->eof();
+        } else {
+            // Parse character
             switch ($this->textMode) {
                 case Elements::TEXT_RAW:
                     $this->rawText($tok);
@@ -290,18 +290,12 @@ class Tokenizer
     /**
      * If the document is read, emit an EOF event.
      */
-    protected function eof($tok)
+    protected function eof()
     {
-        if (false === $tok) {
-            // fprintf(STDOUT, "EOF");
-            $this->flushBuffer();
-            $this->events->eof();
-            $this->carryOn = false;
-
-            return true;
-        }
-
-        return false;
+        // fprintf(STDOUT, "EOF");
+        $this->flushBuffer();
+        $this->events->eof();
+        $this->carryOn = false;
     }
 
     /**
@@ -744,8 +738,9 @@ class Tokenizer
         // EOF: die.
         if (false === $tok) {
             $this->events->doctype('html5', EventHandler::DOCTYPE_NONE, '', true);
+            $this->eof();
 
-            return $this->eof($tok);
+            return true;
         }
 
         // NULL char: convert.

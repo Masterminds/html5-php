@@ -865,9 +865,6 @@ class Tokenizer
      */
     protected function cdataSection()
     {
-        if ('[' != $this->scanner->current()) {
-            return false;
-        }
         $cdata = '';
         $this->scanner->consume();
 

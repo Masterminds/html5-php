@@ -279,7 +279,7 @@ class Tokenizer
         }
         $len = strlen($sequence);
         $this->scanner->consume($len);
-        $len += strlen($this->scanner->whitespace());
+        $len += $this->scanner->whitespace();
         if ($this->scanner->current() !== '>') {
             $this->parseError("Unclosed RCDATA end tag");
         }
@@ -779,7 +779,7 @@ class Tokenizer
         $this->scanner->whitespace();
 
         $pub = strtoupper($this->scanner->getAsciiAlpha());
-        $white = strlen($this->scanner->whitespace());
+        $white = $this->scanner->whitespace();
 
         // Get ID, and flag it as pub or system.
         if (($pub == 'PUBLIC' || $pub == 'SYSTEM') && $white > 0) {
@@ -909,7 +909,7 @@ class Tokenizer
 
         $tok = $this->scanner->next();
         $procName = $this->scanner->getAsciiAlpha();
-        $white = strlen($this->scanner->whitespace());
+        $white = $this->scanner->whitespace();
 
         // If not a PI, send to bogusComment.
         if (strlen($procName) == 0 || $white == 0 || $this->scanner->current() == false) {

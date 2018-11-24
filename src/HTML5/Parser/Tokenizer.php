@@ -486,7 +486,7 @@ class Tokenizer
         }
 
         if ($tok == '<') {
-            $this->parseError("Unexepcted '<' inside of attributes list.");
+            $this->parseError("Unexpected '<' inside of attributes list.");
             // Push the < back onto the stack.
             $this->scanner->unconsume();
             // Let the caller figure out how to handle this.

@@ -721,12 +721,11 @@ class Tokenizer
      */
     protected function doctype()
     {
-        if (strcasecmp($this->scanner->current(), 'D')) {
-            return false;
-        }
         // Check that string is DOCTYPE.
-        $chars = $this->scanner->charsWhile('DOCTYPEdoctype');
-        if (strcasecmp($chars, 'DOCTYPE')) {
+        if ($this->scanner->sequenceMatches('DOCTYPE', false)) {
+            $this->scanner->consume(7);
+        } else {
+            $chars = $this->scanner->charsWhile('DOCTYPEdoctype');
             $this->parseError('Expected DOCTYPE, got %s', $chars);
 
             return $this->bogusComment('<!' . $chars);

@@ -237,7 +237,7 @@ class Html5Test extends TestCase
         $this->assertFalse($svg->hasAttribute('viewbox'));
 
         // Test a mixed case tag.
-        // Note: getElementsByTagName is not case sensetitive.
+        // Note: getElementsByTagName is not case sensitive.
         $list = $dom->getElementsByTagName('textPath');
         $this->assertNotEmpty($list->length);
         $textPath = $list->item(0);

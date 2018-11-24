@@ -121,10 +121,15 @@ class Tokenizer
      */
     protected function consumeData()
     {
-        // Character reference
-        $this->characterReference();
-
         $tok = $this->scanner->current();
+
+        if ($tok === '&') {
+            // Character reference
+            $ref = $this->decodeCharacterReference();
+            $this->buffer($ref);
+
+            $tok = $this->scanner->current();
+        }
 
         // Parse tag
         if ($tok === '<') {
@@ -301,25 +306,6 @@ class Tokenizer
         }
 
         return false;
-    }
-
-    /**
-     * Handle character references (aka entities).
-     *
-     * This version is specific to PCDATA, as it buffers data into the
-     * text buffer. For a generic version, see decodeCharacterReference().
-     *
-     * HTML5 8.2.4.2
-     */
-    protected function characterReference()
-    {
-        if ($this->scanner->current() !== '&') {
-            return false;
-        }
-
-        $ref = $this->decodeCharacterReference();
-        $this->buffer($ref);
-        return true;
     }
 
     /**

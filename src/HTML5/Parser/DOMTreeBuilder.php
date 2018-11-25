@@ -626,19 +626,18 @@ class DOMTreeBuilder implements EventHandler
 
     /**
      * Apply normalization rules to a tag name.
-     *
      * See sections 2.9 and 8.1.2.
      *
-     * @param string $name The tag name
+     * @param string $tagName
      *
-     * @return string the normalized tag name
+     * @return string The normalized tag name.
      */
-    protected function normalizeTagName($name)
+    protected function normalizeTagName($tagName)
     {
         /*
          * Section 2.9 suggests that we should not do this. if (strpos($name, ':') !== false) { // We know from the grammar that there must be at least one other // char besides :, since : is not a legal tag start. $parts = explode(':', $name); return array_pop($parts); }
          */
-        return $name;
+        return $tagName;
     }
 
     protected function quirksTreeResolver($name)

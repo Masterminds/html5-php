@@ -477,10 +477,10 @@ class Elements
      *
      * Elements::isA('script', Elements::TEXT_RCDATA); // Returns false.
      *
-     * @param string $name The element name
-     * @param int    $mask One of the constants on this class
+     * @param string $name The element name.
+     * @param int    $mask One of the constants on this class.
      *
-     * @return bool true if the element matches the mask, false otherwise
+     * @return bool true if the element matches the mask, false otherwise.
      */
     public static function isA($name, $mask)
     {
@@ -490,9 +490,9 @@ class Elements
     /**
      * Test if an element is a valid html5 element.
      *
-     * @param string $name The name of the element
+     * @param string $name The name of the element.
      *
-     * @return bool true if a html5 element and false otherwise
+     * @return bool true if a html5 element and false otherwise.
      */
     public static function isHtml5Element($name)
     {
@@ -504,9 +504,9 @@ class Elements
     /**
      * Test if an element name is a valid MathML presentation element.
      *
-     * @param string $name The name of the element
+     * @param string $name The name of the element.
      *
-     * @return bool true if a MathML name and false otherwise
+     * @return bool true if a MathML name and false otherwise.
      */
     public static function isMathMLElement($name)
     {
@@ -517,9 +517,9 @@ class Elements
     /**
      * Test if an element is a valid SVG element.
      *
-     * @param string $name The name of the element
+     * @param string $name The name of the element.
      *
-     * @return bool true if a SVG element and false otherise
+     * @return bool true if a SVG element and false otherise.
      */
     public static function isSvgElement($name)
     {
@@ -529,13 +529,12 @@ class Elements
 
     /**
      * Is an element name valid in an html5 document.
-     *
      * This includes html5 elements along with other allowed embedded content
      * such as svg and mathml.
      *
-     * @param string $name The name of the element
+     * @param string $name The name of the element.
      *
-     * @return bool true if valid and false otherwise
+     * @return bool true if valid and false otherwise.
      */
     public static function isElement($name)
     {
@@ -545,9 +544,9 @@ class Elements
     /**
      * Get the element mask for the given element name.
      *
-     * @param string $name The name of the element
+     * @param string $name The name of the element.
      *
-     * @return int the element mask
+     * @return int the element mask.
      */
     public static function element($name)
     {
@@ -567,9 +566,9 @@ class Elements
     /**
      * Normalize a SVG element name to its proper case and form.
      *
-     * @param string $name The name of the element
+     * @param string $name The name of the element.
      *
-     * @return string the normalized form of the element name
+     * @return string the normalized form of the element name.
      */
     public static function normalizeSvgElement($name)
     {
@@ -584,9 +583,9 @@ class Elements
     /**
      * Normalize a SVG attribute name to its proper case and form.
      *
-     * @param string $name The name of the attribute
+     * @param string $name The name of the attribute.
      *
-     * @return string the normalized form of the attribute name
+     * @return string The normalized form of the attribute name.
      */
     public static function normalizeSvgAttribute($name)
     {
@@ -600,12 +599,11 @@ class Elements
 
     /**
      * Normalize a MathML attribute name to its proper case and form.
-     *
      * Note, all MathML element names are lowercase.
      *
-     * @param string $name The name of the attribute
+     * @param string $name The name of the attribute.
      *
-     * @return string the normalized form of the attribute name
+     * @return string The normalized form of the attribute name.
      */
     public static function normalizeMathMlAttribute($name)
     {

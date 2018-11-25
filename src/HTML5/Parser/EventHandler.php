@@ -30,11 +30,11 @@ interface EventHandler
     /**
      * A doctype declaration.
      *
-     * @param string $name   The name of the root element
+     * @param string $name   The name of the root element.
      * @param int    $idType One of DOCTYPE_NONE, DOCTYPE_PUBLIC, or DOCTYPE_SYSTEM
      * @param string $id     The identifier. For DOCTYPE_PUBLIC, this is the public ID. If DOCTYPE_SYSTEM,
      *                       then this is a system ID.
-     * @param bool   $quirks Indicates whether the builder should enter quirks mode
+     * @param bool   $quirks Indicates whether the builder should enter quirks mode.
      */
     public function doctype($name, $idType = 0, $id = null, $quirks = false);
 
@@ -59,9 +59,9 @@ interface EventHandler
      * The textmode is automatically reset to Tokenizer::TEXTMODE_NORMAL when the
      * closing tag is encounter. **This behavior may change.**
      *
-     * @param string $name        The tag name
-     * @param array  $attributes  An array with all of the tag's attributes
-     * @param bool   $selfClosing An indicator of whether or not this tag is self-closing (<foo/>)
+     * @param string $name        The tag name.
+     * @param array  $attributes  An array with all of the tag's attributes.
+     * @param bool   $selfClosing An indicator of whether or not this tag is self-closing (<foo/>).
      *
      * @return int one of the Tokenizer::TEXTMODE_* constants
      */
@@ -108,7 +108,7 @@ interface EventHandler
      * While user agents don't get PIs, server-side does.
      *
      * @param string $name The name of the processor (e.g. 'php').
-     * @param string $data The unparsed data
+     * @param string $data The unparsed data.
      */
     public function processingInstruction($name, $data = null);
 }

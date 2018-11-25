@@ -68,9 +68,9 @@ class StringInputStream implements InputStream
     /**
      * Create a new InputStream wrapper.
      *
-     * @param string $data     Data to parse
-     * @param string $encoding the encoding to use for the data
-     * @param string $debug    a fprintf format to use to echo the data on stdout
+     * @param string $data     Data to parse.
+     * @param string $encoding The encoding to use for the data.
+     * @param string $debug    A fprintf format to use to echo the data on stdout.
      */
     public function __construct($data, $encoding = 'UTF-8', $debug = '')
     {
@@ -140,10 +140,9 @@ class StringInputStream implements InputStream
 
     /**
      * Returns the current column of the current line that the tokenizer is at.
-     *
      * Newlines are column 0. The first char after a newline is column 1.
      *
-     * @return int the column number
+     * @return int The column number.
      */
     public function columnOffset()
     {
@@ -182,7 +181,7 @@ class StringInputStream implements InputStream
     /**
      * Get the current character.
      *
-     * @return string the current character
+     * @return string The current character.
      */
     public function current()
     {
@@ -209,7 +208,7 @@ class StringInputStream implements InputStream
     /**
      * Is the current pointer location valid.
      *
-     * @return bool is the current pointer location valid
+     * @return bool Whether the current pointer location is valid.
      */
     public function valid()
     {
@@ -222,7 +221,7 @@ class StringInputStream implements InputStream
      * This reads to the end of the file, and sets the read marker at the
      * end of the file.
      *
-     * @note This performs bounds checking
+     * Note this performs bounds checking.
      *
      * @return string Returns the remaining text. If called when the InputStream is
      *                already exhausted, it returns an empty string.
@@ -247,8 +246,8 @@ class StringInputStream implements InputStream
      * Matches as far as possible until we reach a certain set of bytes
      * and returns the matched substring.
      *
-     * @param string $bytes Bytes to match
-     * @param int    $max   Maximum number of bytes to scan
+     * @param string $bytes Bytes to match.
+     * @param int    $max   Maximum number of bytes to scan.
      *
      * @return mixed Index or false if no match is found. You should use strong
      *               equality when checking the result, since index could be 0.
@@ -280,7 +279,7 @@ class StringInputStream implements InputStream
      * @param string $bytes A mask of bytes to match. If ANY byte in this mask matches the
      *                      current char, the pointer advances and the char is part of the
      *                      substring.
-     * @param int    $max   The max number of chars to read
+     * @param int    $max   The max number of chars to read.
      *
      * @return string
      */
@@ -304,7 +303,7 @@ class StringInputStream implements InputStream
     /**
      * Unconsume characters.
      *
-     * @param int $howMany The number of characters to unconsume
+     * @param int $howMany The number of characters to unconsume.
      */
     public function unconsume($howMany = 1)
     {

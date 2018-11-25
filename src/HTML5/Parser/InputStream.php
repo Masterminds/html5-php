@@ -29,7 +29,7 @@ interface InputStream extends \Iterator
      *
      * @TODO Move this to the scanner.
      *
-     * @return int the column number
+     * @return int The column number.
      */
     public function columnOffset();
 
@@ -50,8 +50,8 @@ interface InputStream extends \Iterator
      *
      * @see strcspn
      *
-     * @param string $bytes Bytes to match
-     * @param int    $max   Maximum number of bytes to scan
+     * @param string $bytes Bytes to match.
+     * @param int    $max   Maximum number of bytes to scan.
      *
      * @return mixed Index or false if no match is found. You should use strong
      *               equality when checking the result, since index could be 0.
@@ -69,14 +69,14 @@ interface InputStream extends \Iterator
      * @param string $bytes A mask of bytes to match. If ANY byte in this mask matches the
      *                      current char, the pointer advances and the char is part of the
      *                      substring.
-     * @param int    $max   The max number of chars to read
+     * @param int    $max   The max number of chars to read.
      */
     public function charsWhile($bytes, $max = null);
 
     /**
      * Unconsume one character.
      *
-     * @param int $howMany The number of characters to move the pointer back
+     * @param int $howMany The number of characters to move the pointer back.
      */
     public function unconsume($howMany = 1);
 

@@ -19,8 +19,8 @@ interface RulesInterface
      *
      * Note, before the rules can be used a traverser must be registered.
      *
-     * @param mixed $output  The output stream to write output to
-     * @param array $options An array of options
+     * @param mixed $output  The output stream to write output to.
+     * @param array $options An array of options.
      */
     public function __construct($output, $options = array());
 
@@ -29,9 +29,9 @@ interface RulesInterface
      *
      * Note, only one traverser can be used by the rules.
      *
-     * @param Traverser $traverser The traverser used in the rules
+     * @param Traverser $traverser The traverser used in the rules.
      *
-     * @return RulesInterface $this for the current object
+     * @return RulesInterface $this for the current object.
      */
     public function setTraverser(Traverser $traverser);
 

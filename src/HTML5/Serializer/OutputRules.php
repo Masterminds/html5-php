@@ -251,7 +251,7 @@ class OutputRules implements RulesInterface
     /**
      * Write a text node.
      *
-     * @param \DOMText $ele The text node to write
+     * @param \DOMText $ele The text node to write.
      */
     public function text($ele)
     {
@@ -290,8 +290,7 @@ class OutputRules implements RulesInterface
     /**
      * Write the namespace attributes.
      *
-     *
-     * @param \DOMNode $ele The element being written
+     * @param \DOMNode $ele The element being written.
      */
     protected function namespaceAttrs($ele)
     {
@@ -312,7 +311,7 @@ class OutputRules implements RulesInterface
      * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
      * qualified name (8.3).
      *
-     * @param \DOMNode $ele The element being written
+     * @param \DOMNode $ele The element being written.
      */
     protected function openTag($ele)
     {
@@ -426,7 +425,7 @@ class OutputRules implements RulesInterface
      * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
      * qualified name (8.3).
      *
-     * @param \DOMNode $ele The element being written
+     * @param \DOMNode $ele The element being written.
      */
     protected function closeTag($ele)
     {
@@ -440,7 +439,7 @@ class OutputRules implements RulesInterface
      *
      * @param string $text The string to put into the output
      *
-     * @return Traverser $this so it can be used in chaining
+     * @return $this
      */
     protected function wr($text)
     {
@@ -452,7 +451,7 @@ class OutputRules implements RulesInterface
     /**
      * Write a new line character.
      *
-     * @return Traverser $this so it can be used in chaining
+     * @return $this
      */
     protected function nl()
     {
@@ -483,10 +482,10 @@ class OutputRules implements RulesInterface
      *
      * @todo Use the Entities class in php 5.3 to have html5 entities.
      *
-     * @param string $text      text to encode
-     * @param bool   $attribute True if we are encoding an attrubute, false otherwise
+     * @param string $text      Text to encode.
+     * @param bool   $attribute True if we are encoding an attrubute, false otherwise.
      *
-     * @return string the encoded text
+     * @return string The encoded text.
      */
     protected function enc($text, $attribute = false)
     {
@@ -521,8 +520,8 @@ class OutputRules implements RulesInterface
      *
      * @see http://www.w3.org/TR/2013/CR-html5-20130806/syntax.html#escapingString
      *
-     * @param string $text      text to escape
-     * @param bool   $attribute True if we are escaping an attrubute, false otherwise
+     * @param string $text      Text to escape.
+     * @param bool   $attribute True if we are escaping an attrubute, false otherwise.
      */
     protected function escape($text, $attribute = false)
     {

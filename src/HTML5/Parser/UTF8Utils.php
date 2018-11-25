@@ -131,9 +131,9 @@ class UTF8Utils
     /**
      * Checks for Unicode code points that are not valid in a document.
      *
-     * @param string $data a string to analyze
+     * @param string $data A string to analyze
      *
-     * @return array an array of (string) error messages produced by the scanning
+     * @return array An array of (string) error messages produced by the scanning
      */
     public static function checkForIllegalCodepoints($data)
     {

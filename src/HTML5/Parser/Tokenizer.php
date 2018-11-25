@@ -56,8 +56,8 @@ class Tokenizer
      * it a scanner (input) and an event handler (output), and then calling
      * the Tokenizer::parse() method.`
      *
-     * @param Scanner      $scanner      A scanner initialized with an input stream
-     * @param EventHandler $eventHandler An event handler, initialized and ready to receive events
+     * @param Scanner      $scanner      A scanner initialized with an input stream.
+     * @param EventHandler $eventHandler An event handler, initialized and ready to receive events.
      * @param string       $mode
      */
     public function __construct($scanner, $eventHandler, $mode = self::CONFORMANT_HTML)
@@ -100,7 +100,7 @@ class Tokenizer
      * Normally, setting is done by the event handler via a special return code on
      * startTag(), but it can also be set manually using this function.
      *
-     * @param int    $textmode One of Elements::TEXT_*
+     * @param int    $textmode One of Elements::TEXT_*.
      * @param string $untilTag The tag that should stop RAW or RCDATA mode. Normal mode does not
      *                         use this indicator.
      */
@@ -204,7 +204,7 @@ class Tokenizer
     /**
      * This buffers the current token as character data.
      *
-     * @param string $tok the current token
+     * @param string $tok The current token.
      *
      * @return bool
      */
@@ -229,7 +229,7 @@ class Tokenizer
     /**
      * Read text in RAW mode.
      *
-     * @param string $tok the current token
+     * @param string $tok The current token.
      *
      * @return bool
      */
@@ -250,7 +250,7 @@ class Tokenizer
     /**
      * Read text in RCDATA mode.
      *
-     * @param string $tok the current token
+     * @param string $tok The current token.
      *
      * @return bool
      */
@@ -334,8 +334,7 @@ class Tokenizer
     }
 
     /**
-     * Consume an end tag.
-     * 8.2.4.9.
+     * Consume an end tag. See section 8.2.4.9.
      */
     protected function endTag()
     {
@@ -376,8 +375,7 @@ class Tokenizer
     }
 
     /**
-     * Consume a tag name and body.
-     * 8.2.4.10.
+     * Consume a tag name and body. See section 8.2.4.10.
      */
     protected function tagName()
     {
@@ -519,8 +517,7 @@ class Tokenizer
     }
 
     /**
-     * Consume an attribute value.
-     * 8.2.4.37 and after.
+     * Consume an attribute value. See section 8.2.4.37 and after.
      *
      * @return string|null
      */
@@ -568,7 +565,7 @@ class Tokenizer
      *                      termination of an attribute's value. E.g. "\"'" will stop at either
      *                      ' or ".
      *
-     * @return string the attribute value
+     * @return string The attribute value.
      */
     protected function quotedAttributeValue($quote)
     {
@@ -626,8 +623,7 @@ class Tokenizer
      * &lt;!--&lt/+foo&gt;--&gt;
      *
      * @param string $leading Prepend any leading characters. This essentially
-     *                        negates the need to backtrack, but it's sort of
-     *                        a hack.
+     *                        negates the need to backtrack, but it's sort of a hack.
      *
      * @return bool
      */
@@ -652,7 +648,6 @@ class Tokenizer
 
     /**
      * Read a comment.
-     *
      * Expects the first tok to be inside of the comment.
      *
      * @return bool
@@ -848,7 +843,7 @@ class Tokenizer
      * @param string $stopchars Characters (in addition to a close-quote) that should stop the string.
      *                          E.g. sometimes '>' is higher precedence than '"' or "'".
      *
-     * @return mixed String if one is found (quotations omitted)
+     * @return mixed String if one is found (quotations omitted).
      */
     protected function quotedString($stopchars)
     {

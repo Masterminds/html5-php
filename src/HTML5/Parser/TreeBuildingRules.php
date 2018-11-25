@@ -45,7 +45,7 @@ class TreeBuildingRules
      *
      * This may modify the existing DOM.
      *
-     * @return \DOMElement the new Current DOM element
+     * @return \DOMElement The new Current DOM element.
      */
     public function evaluate($new, $current)
     {

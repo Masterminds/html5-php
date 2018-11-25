@@ -57,7 +57,7 @@ class HTML5
      * @param string|resource $file    The path to the file to parse. If this is a resource, it is
      *                                 assumed to be an open stream whose pointer is set to the first
      *                                 byte of input.
-     * @param array           $options Configuration options when parsing the HTML
+     * @param array           $options Configuration options when parsing the HTML.
      *
      * @return \DOMDocument A DOM document. These object type is defined by the libxml
      *                      library, and should have been included with your version of PHP.
@@ -78,8 +78,8 @@ class HTML5
      * Take a string of HTML 5 (or earlier) and parse it into a
      * DOMDocument.
      *
-     * @param string $string  A html5 document as a string
-     * @param array  $options Configuration options when parsing the HTML
+     * @param string $string  A html5 document as a string.
+     * @param array  $options Configuration options when parsing the HTML.
      *
      * @return \DOMDocument A DOM document. DOM is part of libxml, which is included with
      *                      almost all distribtions of PHP.
@@ -98,7 +98,7 @@ class HTML5
      * @param string $file    The path to the file to parse. If this is a resource, it is
      *                        assumed to be an open stream whose pointer is set to the first
      *                        byte of input.
-     * @param array  $options Configuration options when parsing the HTML
+     * @param array  $options Configuration options when parsing the HTML.
      *
      * @return \DOMDocument A DOM document. These object type is defined by the libxml
      *                      library, and should have been included with your version of PHP.
@@ -170,8 +170,8 @@ class HTML5
      * Lower-level loading function. This requires an input stream instead
      * of a string, file, or resource.
      *
-     * @param string $input   the input data to parse in the form of a string
-     * @param array  $options An array of options
+     * @param string $input   The input data to parse in the form of a string.
+     * @param array  $options An array of options.
      *
      * @return \DOMDocumentFragment
      */
@@ -191,8 +191,8 @@ class HTML5
     /**
      * Save a DOM into a given file as HTML5.
      *
-     * @param mixed           $dom     The DOM to be serialized
-     * @param string|resource $file    The filename to be written or resource to write to
+     * @param mixed           $dom     The DOM to be serialized.
+     * @param string|resource $file    The filename to be written or resource to write to.
      * @param array           $options Configuration options when serializing the DOM. These include:
      *                                 - encode_entities: Text written to the output is escaped by default and not all
      *                                 entities are encoded. If this is set to true all entities will be encoded.
@@ -221,13 +221,13 @@ class HTML5
     /**
      * Convert a DOM into an HTML5 string.
      *
-     * @param mixed $dom     The DOM to be serialized
+     * @param mixed $dom     The DOM to be serialized.
      * @param array $options Configuration options when serializing the DOM. These include:
      *                       - encode_entities: Text written to the output is escaped by default and not all
      *                       entities are encoded. If this is set to true all entities will be encoded.
      *                       Defaults to false.
      *
-     * @return string a HTML5 documented generated from the DOM
+     * @return string A HTML5 documented generated from the DOM.
      */
     public function saveHTML($dom, $options = array())
     {

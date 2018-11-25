@@ -36,10 +36,10 @@ class Scanner
     /**
      * Create a new Scanner.
      *
-     * @param string $data     Data to parse
-     * @param string $encoding the encoding to use for the data
+     * @param string $data     Data to parse.
+     * @param string $encoding The encoding to use for the data.
      *
-     * @throws Exception if the given data cannot be encoded to UTF-8
+     * @throws Exception If the given data cannot be encoded to UTF-8.
      */
     public function __construct($data, $encoding = 'UTF-8')
     {
@@ -90,7 +90,7 @@ class Scanner
     /**
      * Get the current position.
      *
-     * @return int the current intiger byte position
+     * @return int The current intiger byte position.
      */
     public function position()
     {
@@ -100,7 +100,7 @@ class Scanner
     /**
      * Take a peek at the next character in the data.
      *
-     * @return string the next character
+     * @return string The next character.
      */
     public function peek()
     {
@@ -113,10 +113,9 @@ class Scanner
 
     /**
      * Get the next character.
-     *
      * Note: This advances the pointer.
      *
-     * @return string the next character
+     * @return string The next character.
      */
     public function next()
     {
@@ -131,10 +130,9 @@ class Scanner
 
     /**
      * Get the current character.
-     *
      * Note, this does not advance the pointer.
      *
-     * @return string the current character
+     * @return string The current character.
      */
     public function current()
     {
@@ -159,7 +157,7 @@ class Scanner
      * Unconsume some of the data.
      * This moves the data pointer backwards.
      *
-     * @param int $howMany The number of characters to move the pointer back
+     * @param int $howMany The number of characters to move the pointer back.
      */
     public function unconsume($howMany = 1)
     {
@@ -170,11 +168,10 @@ class Scanner
 
     /**
      * Get the next group of that contains hex characters.
-     *
      * Note, along with getting the characters the pointer in the data will be
      * moved as well.
      *
-     * @return string the next group that is hex characters
+     * @return string The next group that is hex characters.
      */
     public function getHex()
     {
@@ -183,11 +180,10 @@ class Scanner
 
     /**
      * Get the next group of characters that are ASCII Alpha characters.
-     *
      * Note, along with getting the characters the pointer in the data will be
      * moved as well.
      *
-     * @return string the next group of ASCII alpha characters
+     * @return string The next group of ASCII alpha characters.
      */
     public function getAsciiAlpha()
     {
@@ -196,11 +192,10 @@ class Scanner
 
     /**
      * Get the next group of characters that are ASCII Alpha characters and numbers.
-     *
      * Note, along with getting the characters the pointer in the data will be
      * moved as well.
      *
-     * @return string the next group of ASCII alpha characters and numbers
+     * @return string The next group of ASCII alpha characters and numbers.
      */
     public function getAsciiAlphaNum()
     {
@@ -209,11 +204,10 @@ class Scanner
 
     /**
      * Get the next group of numbers.
-     *
      * Note, along with getting the characters the pointer in the data will be
      * moved as well.
      *
-     * @return string the next group of numbers
+     * @return string The next group of numbers.
      */
     public function getNumeric()
     {
@@ -222,10 +216,9 @@ class Scanner
 
     /**
      * Consume whitespace.
-     *
      * Whitespace in HTML5 is: formfeed, tab, newline, space.
      *
-     * @return int The length of the matched whitespaces
+     * @return int The length of the matched whitespaces.
      */
     public function whitespace()
     {
@@ -243,7 +236,7 @@ class Scanner
     /**
      * Returns the current line that is being consumed.
      *
-     * @return int the current line number
+     * @return int The current line number.
      */
     public function currentLine()
     {
@@ -285,7 +278,7 @@ class Scanner
      *
      * Newlines are column 0. The first char after a newline is column 1.
      *
-     * @return int the column number
+     * @return int The column number.
      */
     public function columnOffset()
     {
@@ -319,7 +312,7 @@ class Scanner
      *
      * This consumes characters until the EOF.
      *
-     * @return int the number of characters remaining
+     * @return int The number of characters remaining.
      */
     public function remainingChars()
     {
@@ -366,8 +359,8 @@ class Scanner
      * Matches as far as possible until we reach a certain set of bytes
      * and returns the matched substring.
      *
-     * @param string $bytes Bytes to match
-     * @param int    $max   Maximum number of bytes to scan
+     * @param string $bytes Bytes to match.
+     * @param int    $max   Maximum number of bytes to scan.
      *
      * @return mixed Index or false if no match is found. You should use strong
      *               equality when checking the result, since index could be 0.
@@ -399,7 +392,7 @@ class Scanner
      * @param string $bytes A mask of bytes to match. If ANY byte in this mask matches the
      *                      current char, the pointer advances and the char is part of the
      *                      substring.
-     * @param int    $max   The max number of chars to read
+     * @param int    $max   The max number of chars to read.
      *
      * @return string
      */

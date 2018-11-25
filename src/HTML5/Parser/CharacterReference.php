@@ -21,7 +21,7 @@ class CharacterReference
     /**
      * Given a name (e.g. 'amp'), lookup the UTF-8 character ('&').
      *
-     * @param string $name The name to look up
+     * @param string $name The name to look up.
      *
      * @return string The character sequence. In UTF-8 this may be more than one byte.
      */

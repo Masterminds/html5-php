@@ -1,4 +1,5 @@
 <?php
+
 namespace Masterminds\HTML5\Parser;
 
 /**
@@ -14,7 +15,6 @@ namespace Masterminds\HTML5\Parser;
  */
 class TreeBuildingRules
 {
-
     protected static $tags = array(
         'li' => 1,
         'dd' => 1,
@@ -29,19 +29,8 @@ class TreeBuildingRules
         'tbody' => 1,
         'table' => 1,
         'optgroup' => 1,
-        'option' => 1
+        'option' => 1,
     );
-
-    /**
-     * Build a new rules engine.
-     *
-     * @param \DOMDocument $doc
-     *            The DOM document to use for evaluation and modification.
-     */
-    public function __construct($doc)
-    {
-        $this->doc = $doc;
-    }
 
     /**
      * Returns true if the given tagname has special processing rules.
@@ -71,7 +60,7 @@ class TreeBuildingRules
                 return $this->handleRT($new, $current);
             case 'optgroup':
                 return $this->closeIfCurrentMatches($new, $current, array(
-                    'optgroup'
+                    'optgroup',
                 ));
             case 'option':
                 return $this->closeIfCurrentMatches($new, $current, array(
@@ -79,13 +68,13 @@ class TreeBuildingRules
                 ));
             case 'tr':
                 return $this->closeIfCurrentMatches($new, $current, array(
-                    'tr'
+                    'tr',
                 ));
             case 'td':
             case 'th':
                 return $this->closeIfCurrentMatches($new, $current, array(
                     'th',
-                    'td'
+                    'td',
                 ));
             case 'tbody':
             case 'thead':
@@ -95,7 +84,7 @@ class TreeBuildingRules
                 return $this->closeIfCurrentMatches($new, $current, array(
                     'thead',
                     'tfoot',
-                    'tbody'
+                    'tbody',
                 ));
         }
 
@@ -105,7 +94,7 @@ class TreeBuildingRules
     protected function handleLI($ele, $current)
     {
         return $this->closeIfCurrentMatches($ele, $current, array(
-            'li'
+            'li',
         ));
     }
 
@@ -113,7 +102,7 @@ class TreeBuildingRules
     {
         return $this->closeIfCurrentMatches($ele, $current, array(
             'dt',
-            'dd'
+            'dd',
         ));
     }
 
@@ -121,13 +110,13 @@ class TreeBuildingRules
     {
         return $this->closeIfCurrentMatches($ele, $current, array(
             'rt',
-            'rp'
+            'rp',
         ));
     }
 
     protected function closeIfCurrentMatches($ele, $current, $match)
     {
-        if (in_array($current->tagName, $match)) {
+        if (in_array($current->tagName, $match, true)) {
             $current->parentNode->appendChild($ele);
         } else {
             $current->appendChild($ele);

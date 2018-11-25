@@ -1,4 +1,5 @@
 <?php
+
 namespace Masterminds\HTML5;
 
 /**
@@ -7,7 +8,6 @@ namespace Masterminds\HTML5;
  */
 class Entities
 {
-
     public static $byName = array(
         'Aacute' => 'Á',
         'Aacut' => 'Á',
@@ -2231,6 +2231,6 @@ class Entities
         'Zscr' => '𝒵',
         'zscr' => '𝓏',
         'zwj' => '‍',
-        'zwnj' => '‌'
+        'zwnj' => '‌',
     );
 }

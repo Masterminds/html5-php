@@ -1,9 +1,7 @@
 <?php
+
 namespace Masterminds;
 
-use Masterminds\HTML5\Parser\FileInputStream;
-use Masterminds\HTML5\Parser\InputStream;
-use Masterminds\HTML5\Parser\StringInputStream;
 use Masterminds\HTML5\Parser\DOMTreeBuilder;
 use Masterminds\HTML5\Parser\Scanner;
 use Masterminds\HTML5\Parser\Tokenizer;
@@ -12,37 +10,38 @@ use Masterminds\HTML5\Serializer\Traverser;
 
 /**
  * This class offers convenience methods for parsing and serializing HTML5.
- * It is roughly designed to mirror the \DOMDocument class that is
- * provided with most versions of PHP.
+ * It is roughly designed to mirror the \DOMDocument native class.
  */
 class HTML5
 {
-
     /**
      * Global options for the parser and serializer.
      *
      * @var array
      */
-    protected $options = array(
-        // If the serializer should encode all entities.
-        'encode_entities' => false
+    private $defaultOptions = array(
+        // Whether the serializer should aggressively encode all characters as entities.
+        'encode_entities' => false,
+
+        // Prevents the parser from automatically assigning the HTML5 namespace to the DOM document.
+        'disable_html_ns' => false,
     );
 
     protected $errors = array();
 
-    public function __construct(array $options = array())
+    public function __construct(array $defaultOptions = array())
     {
-        $this->options = array_merge($this->options, $options);
+        $this->defaultOptions = array_merge($this->defaultOptions, $defaultOptions);
     }
 
     /**
-     * Get the default options.
+     * Get the current default options.
      *
-     * @return array The default options.
+     * @return array
      */
     public function getOptions()
     {
-        return $this->options;
+        return $this->defaultOptions;
     }
 
     /**
@@ -55,14 +54,13 @@ class HTML5
      *
      * The rules governing parsing are set out in the HTML 5 spec.
      *
-     * @param string|resource $file
-     *            The path to the file to parse. If this is a resource, it is
-     *            assumed to be an open stream whose pointer is set to the first
-     *            byte of input.
-     * @param array $options
-     *            Configuration options when parsing the HTML
+     * @param string|resource $file    The path to the file to parse. If this is a resource, it is
+     *                                 assumed to be an open stream whose pointer is set to the first
+     *                                 byte of input.
+     * @param array           $options Configuration options when parsing the HTML.
+     *
      * @return \DOMDocument A DOM document. These object type is defined by the libxml
-     *         library, and should have been included with your version of PHP.
+     *                      library, and should have been included with your version of PHP.
      */
     public function load($file, array $options = array())
     {
@@ -80,12 +78,11 @@ class HTML5
      * Take a string of HTML 5 (or earlier) and parse it into a
      * DOMDocument.
      *
-     * @param string $string
-     *            A html5 document as a string.
-     * @param array $options
-     *            Configuration options when parsing the HTML
+     * @param string $string  A html5 document as a string.
+     * @param array  $options Configuration options when parsing the HTML.
+     *
      * @return \DOMDocument A DOM document. DOM is part of libxml, which is included with
-     *         almost all distribtions of PHP.
+     *                      almost all distribtions of PHP.
      */
     public function loadHTML($string, array $options = array())
     {
@@ -98,15 +95,13 @@ class HTML5
      * This is here to provide backwards compatibility with the
      * PHP DOM implementation. It simply calls load().
      *
-     * @param string $file
-     *            The path to the file to parse. If this is a resource, it is
-     *            assumed to be an open stream whose pointer is set to the first
-     *            byte of input.
-     * @param array $options
-     *            Configuration options when parsing the HTML
+     * @param string $file    The path to the file to parse. If this is a resource, it is
+     *                        assumed to be an open stream whose pointer is set to the first
+     *                        byte of input.
+     * @param array  $options Configuration options when parsing the HTML.
      *
      * @return \DOMDocument A DOM document. These object type is defined by the libxml
-     *         library, and should have been included with your version of PHP.
+     *                      library, and should have been included with your version of PHP.
      */
     public function loadHTMLFile($file, array $options = array())
     {
@@ -116,11 +111,11 @@ class HTML5
     /**
      * Parse a HTML fragment from a string.
      *
-     * @param string $string The HTML5 fragment as a string.
-     * @param array $options Configuration options when parsing the HTML
+     * @param string $string  the HTML5 fragment as a string
+     * @param array  $options Configuration options when parsing the HTML
      *
      * @return \DOMDocumentFragment A DOM fragment. The DOM is part of libxml, which is included with
-     *         almost all distributions of PHP.
+     *                              almost all distributions of PHP.
      */
     public function loadHTMLFragment($string, array $options = array())
     {
@@ -128,7 +123,7 @@ class HTML5
     }
 
     /**
-     * Return all errors encountered into parsing phase
+     * Return all errors encountered into parsing phase.
      *
      * @return array
      */
@@ -138,7 +133,7 @@ class HTML5
     }
 
     /**
-     * Return true it some errors were encountered into parsing phase
+     * Return true it some errors were encountered into parsing phase.
      *
      * @return bool
      */
@@ -148,23 +143,20 @@ class HTML5
     }
 
     /**
-     * Parse an input stream.
-     *
-     * Lower-level loading function. This requires an input stream instead
-     * of a string, file, or resource.
+     * Parse an input string.
      *
      * @param string $input
-     * @param array $options
+     * @param array  $options
      *
      * @return \DOMDocument
      */
     public function parse($input, array $options = array())
     {
         $this->errors = array();
-        $options = array_merge($this->getOptions(), $options);
+        $options = array_merge($this->defaultOptions, $options);
         $events = new DOMTreeBuilder(false, $options);
         $scanner = new Scanner($input);
-        $parser = new Tokenizer($scanner, $events, !empty($options['xmlNamespaces']) ? Tokenizer::CONFORMANT_XML: Tokenizer::CONFORMANT_HTML);
+        $parser = new Tokenizer($scanner, $events, !empty($options['xmlNamespaces']) ? Tokenizer::CONFORMANT_XML : Tokenizer::CONFORMANT_HTML);
 
         $parser->parse();
         $this->errors = $events->getErrors();
@@ -178,17 +170,17 @@ class HTML5
      * Lower-level loading function. This requires an input stream instead
      * of a string, file, or resource.
      *
-     * @param string $input The input data to parse in the form of a string.
-     * @param array $options An array of options
+     * @param string $input   The input data to parse in the form of a string.
+     * @param array  $options An array of options.
      *
      * @return \DOMDocumentFragment
      */
     public function parseFragment($input, array $options = array())
     {
-        $options = array_merge($this->getOptions(), $options);
+        $options = array_merge($this->defaultOptions, $options);
         $events = new DOMTreeBuilder(true, $options);
         $scanner = new Scanner($input);
-        $parser = new Tokenizer($scanner, $events, !empty($options['xmlNamespaces']) ? Tokenizer::CONFORMANT_XML: Tokenizer::CONFORMANT_HTML);
+        $parser = new Tokenizer($scanner, $events, !empty($options['xmlNamespaces']) ? Tokenizer::CONFORMANT_XML : Tokenizer::CONFORMANT_HTML);
 
         $parser->parse();
         $this->errors = $events->getErrors();
@@ -199,15 +191,12 @@ class HTML5
     /**
      * Save a DOM into a given file as HTML5.
      *
-     * @param mixed $dom
-     *            The DOM to be serialized.
-     * @param string|resource $file
-     *            The filename to be written or resource to write to.
-     * @param array $options
-     *            Configuration options when serializing the DOM. These include:
-     *            - encode_entities: Text written to the output is escaped by default and not all
-     *            entities are encoded. If this is set to true all entities will be encoded.
-     *            Defaults to false.
+     * @param mixed           $dom     The DOM to be serialized.
+     * @param string|resource $file    The filename to be written or resource to write to.
+     * @param array           $options Configuration options when serializing the DOM. These include:
+     *                                 - encode_entities: Text written to the output is escaped by default and not all
+     *                                 entities are encoded. If this is set to true all entities will be encoded.
+     *                                 Defaults to false.
      */
     public function save($dom, $file, $options = array())
     {
@@ -216,9 +205,9 @@ class HTML5
             $stream = $file;
             $close = false;
         } else {
-            $stream = fopen($file, 'w');
+            $stream = fopen($file, 'wb');
         }
-        $options = array_merge($this->getOptions(), $options);
+        $options = array_merge($this->defaultOptions, $options);
         $rules = new OutputRules($stream, $options);
         $trav = new Traverser($dom, $stream, $rules, $options);
 
@@ -232,21 +221,19 @@ class HTML5
     /**
      * Convert a DOM into an HTML5 string.
      *
-     * @param mixed $dom
-     *            The DOM to be serialized.
-     * @param array $options
-     *            Configuration options when serializing the DOM. These include:
-     *            - encode_entities: Text written to the output is escaped by default and not all
-     *            entities are encoded. If this is set to true all entities will be encoded.
-     *            Defaults to false.
+     * @param mixed $dom     The DOM to be serialized.
+     * @param array $options Configuration options when serializing the DOM. These include:
+     *                       - encode_entities: Text written to the output is escaped by default and not all
+     *                       entities are encoded. If this is set to true all entities will be encoded.
+     *                       Defaults to false.
      *
      * @return string A HTML5 documented generated from the DOM.
      */
     public function saveHTML($dom, $options = array())
     {
-        $stream = fopen('php://temp', 'w');
-        $this->save($dom, $stream, array_merge($this->getOptions(), $options));
+        $stream = fopen('php://temp', 'wb');
+        $this->save($dom, $stream, array_merge($this->defaultOptions, $options));
 
-        return stream_get_contents($stream, - 1, 0);
+        return stream_get_contents($stream, -1, 0);
     }
 }

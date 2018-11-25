@@ -1,4 +1,5 @@
 <?php
+
 namespace Masterminds\HTML5\Tests\Parser;
 
 use Masterminds\HTML5\Elements;
@@ -16,7 +17,6 @@ use Masterminds\HTML5\Parser\EventHandler;
  */
 class EventStack implements EventHandler
 {
-
     protected $stack;
 
     public function __construct()
@@ -46,7 +46,7 @@ class EventStack implements EventHandler
     {
         $this->stack[] = array(
             'name' => $event,
-            'data' => $data
+            'data' => $data,
         );
     }
 
@@ -56,7 +56,7 @@ class EventStack implements EventHandler
             $name,
             $type,
             $id,
-            $quirks
+            $quirks,
         );
         $this->store('doctype', $args);
     }
@@ -65,7 +65,7 @@ class EventStack implements EventHandler
     {
         $args = func_get_args();
         $this->store('startTag', $args);
-        if ($name == 'pre' || $name == 'script') {
+        if ('pre' == $name || 'script' == $name) {
             return Elements::TEXT_RAW;
         }
     }
@@ -73,14 +73,14 @@ class EventStack implements EventHandler
     public function endTag($name)
     {
         $this->store('endTag', array(
-            $name
+            $name,
         ));
     }
 
     public function comment($cdata)
     {
         $this->store('comment', array(
-            $cdata
+            $cdata,
         ));
     }
 
@@ -93,7 +93,7 @@ class EventStack implements EventHandler
     {
         // fprintf(STDOUT, "Received TEXT event with: " . $cdata);
         $this->store('text', array(
-            $cdata
+            $cdata,
         ));
     }
 

@@ -11,16 +11,16 @@ $json = json_decode($payload);
 
 $table = array();
 foreach ($json as $name => $obj) {
-  $sname = substr($name, 1, -1);
-  $table[$sname] = $obj->characters;
+    $sname = substr($name, 1, -1);
+    $table[$sname] = $obj->characters;
 }
 
-print '<?php
+echo '<?php
 namespace Masterminds\\HTML5;
 /** Entity lookup tables. This class is automatically generated. */
 class Entities {
   public static $byName = ';
 var_export($table);
-print ';
+echo ';
 }' . PHP_EOL;
 //print serialize($table);

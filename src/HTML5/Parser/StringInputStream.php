@@ -2,6 +2,7 @@
 /**
  * Loads a string to be parsed.
  */
+
 namespace Masterminds\HTML5\Parser;
 
 /*
@@ -50,7 +51,7 @@ class StringInputStream implements InputStream
     private $data;
 
     /**
-     * The current integer byte position we are in $data
+     * The current integer byte position we are in $data.
      */
     private $char;
 
@@ -67,9 +68,9 @@ class StringInputStream implements InputStream
     /**
      * Create a new InputStream wrapper.
      *
-     * @param string $data Data to parse
+     * @param string $data     Data to parse.
      * @param string $encoding The encoding to use for the data.
-     * @param string $debug A fprintf format to use to echo the data on stdout.
+     * @param string $debug    A fprintf format to use to echo the data on stdout.
      */
     public function __construct($data, $encoding = 'UTF-8', $debug = '')
     {
@@ -110,7 +111,7 @@ class StringInputStream implements InputStream
         $crlfTable = array(
             "\0" => "\xEF\xBF\xBD",
             "\r\n" => "\n",
-            "\r" => "\n"
+            "\r" => "\n",
         );
 
         return strtr($data, $crlfTable);
@@ -121,7 +122,7 @@ class StringInputStream implements InputStream
      */
     public function currentLine()
     {
-        if (empty($this->EOF) || $this->char == 0) {
+        if (empty($this->EOF) || 0 === $this->char) {
             return 1;
         }
         // Add one to $this->char because we want the number for the next
@@ -130,9 +131,7 @@ class StringInputStream implements InputStream
     }
 
     /**
-     *
      * @deprecated
-     *
      */
     public function getCurrentLine()
     {
@@ -141,7 +140,6 @@ class StringInputStream implements InputStream
 
     /**
      * Returns the current column of the current line that the tokenizer is at.
-     *
      * Newlines are column 0. The first char after a newline is column 1.
      *
      * @return int The column number.
@@ -149,7 +147,7 @@ class StringInputStream implements InputStream
     public function columnOffset()
     {
         // Short circuit for the first char.
-        if ($this->char == 0) {
+        if (0 === $this->char) {
             return 0;
         }
         // strrpos is weird, and the offset needs to be negative for what we
@@ -162,7 +160,7 @@ class StringInputStream implements InputStream
 
         // However, for here we want the length up until the next byte to be
         // processed, so add one to the current byte ($this->char).
-        if ($lastLine !== false) {
+        if (false !== $lastLine) {
             $findLengthOf = substr($this->data, $lastLine + 1, $this->char - 1 - $lastLine);
         } else {
             // After a newline.
@@ -173,9 +171,7 @@ class StringInputStream implements InputStream
     }
 
     /**
-     *
      * @deprecated
-     *
      */
     public function getColumnOffset()
     {
@@ -198,7 +194,7 @@ class StringInputStream implements InputStream
      */
     public function next()
     {
-        $this->char ++;
+        ++$this->char;
     }
 
     /**
@@ -212,15 +208,11 @@ class StringInputStream implements InputStream
     /**
      * Is the current pointer location valid.
      *
-     * @return bool Is the current pointer location valid.
+     * @return bool Whether the current pointer location is valid.
      */
     public function valid()
     {
-        if ($this->char < $this->EOF) {
-            return true;
-        }
-
-        return false;
+        return $this->char < $this->EOF;
     }
 
     /**
@@ -229,10 +221,10 @@ class StringInputStream implements InputStream
      * This reads to the end of the file, and sets the read marker at the
      * end of the file.
      *
-     * @note This performs bounds checking
+     * Note this performs bounds checking.
      *
      * @return string Returns the remaining text. If called when the InputStream is
-     *         already exhausted, it returns an empty string.
+     *                already exhausted, it returns an empty string.
      */
     public function remainingChars()
     {
@@ -254,12 +246,11 @@ class StringInputStream implements InputStream
      * Matches as far as possible until we reach a certain set of bytes
      * and returns the matched substring.
      *
-     * @param string $bytes
-     *            Bytes to match.
-     * @param int $max
-     *            Maximum number of bytes to scan.
+     * @param string $bytes Bytes to match.
+     * @param int    $max   Maximum number of bytes to scan.
+     *
      * @return mixed Index or false if no match is found. You should use strong
-     *         equality when checking the result, since index could be 0.
+     *               equality when checking the result, since index could be 0.
      */
     public function charsUntil($bytes, $max = null)
     {
@@ -267,7 +258,7 @@ class StringInputStream implements InputStream
             return false;
         }
 
-        if ($max === 0 || $max) {
+        if (0 === $max || $max) {
             $len = strcspn($this->data, $bytes, $this->char, $max);
         } else {
             $len = strcspn($this->data, $bytes, $this->char);
@@ -285,12 +276,10 @@ class StringInputStream implements InputStream
      * Matches as far as possible with a certain set of bytes
      * and returns the matched substring.
      *
-     * @param string $bytes
-     *            A mask of bytes to match. If ANY byte in this mask matches the
-     *            current char, the pointer advances and the char is part of the
-     *            substring.
-     * @param int $max
-     *            The max number of chars to read.
+     * @param string $bytes A mask of bytes to match. If ANY byte in this mask matches the
+     *                      current char, the pointer advances and the char is part of the
+     *                      substring.
+     * @param int    $max   The max number of chars to read.
      *
      * @return string
      */
@@ -300,7 +289,7 @@ class StringInputStream implements InputStream
             return false;
         }
 
-        if ($max === 0 || $max) {
+        if (0 === $max || $max) {
             $len = strspn($this->data, $bytes, $this->char, $max);
         } else {
             $len = strspn($this->data, $bytes, $this->char);
@@ -314,13 +303,12 @@ class StringInputStream implements InputStream
     /**
      * Unconsume characters.
      *
-     * @param int $howMany
-     *            The number of characters to unconsume.
+     * @param int $howMany The number of characters to unconsume.
      */
     public function unconsume($howMany = 1)
     {
         if (($this->char - $howMany) >= 0) {
-            $this->char = $this->char - $howMany;
+            $this->char -= $howMany;
         }
     }
 

@@ -3,6 +3,7 @@
  * @file
  * Test the Scanner. This requires the InputStream tests are all good.
  */
+
 namespace Masterminds\HTML5\Tests\Parser;
 
 use Masterminds\HTML5\Parser\StringInputStream;
@@ -15,7 +16,7 @@ class ScannerTest extends \Masterminds\HTML5\Tests\TestCase
      */
     public function testConstructDeprecated()
     {
-        $is = new StringInputStream("abc");
+        $is = new StringInputStream('abc');
         $s = new Scanner($is);
 
         $this->assertInstanceOf('\Masterminds\HTML5\Parser\Scanner', $s);
@@ -28,7 +29,7 @@ class ScannerTest extends \Masterminds\HTML5\Tests\TestCase
 
     public function testNextDeprecated()
     {
-        $s = new Scanner(new StringInputStream("abc"));
+        $s = new Scanner(new StringInputStream('abc'));
 
         $this->assertEquals('b', $s->next());
         $this->assertEquals('c', $s->next());
@@ -87,7 +88,7 @@ class ScannerTest extends \Masterminds\HTML5\Tests\TestCase
 
         // Move forward a bunch of positions.
         $amount = 7;
-        for ($i = 0; $i < $amount; $i ++) {
+        for ($i = 0; $i < $amount; ++$i) {
             $s->next();
         }
 
@@ -99,7 +100,7 @@ class ScannerTest extends \Masterminds\HTML5\Tests\TestCase
 
     public function testGetHex()
     {
-        $s = new Scanner("ab13ck45DE*");
+        $s = new Scanner('ab13ck45DE*');
 
         $this->assertEquals('ab13c', $s->getHex());
 

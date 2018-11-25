@@ -1,4 +1,5 @@
 <?php
+
 namespace Masterminds\HTML5\Tests\Parser;
 
 use Masterminds\HTML5\Parser\UTF8Utils;
@@ -10,19 +11,20 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
     // ================================================================
     // Additional assertions.
     // ================================================================
+
     /**
      * Tests that an event matches both the event type and the expected value.
      *
      * @param string $type
-     *            Expected event type.
+     *                        Expected event type
      * @param string $expects
-     *            The value expected in $event['data'][0].
+     *                        The value expected in $event['data'][0]
      */
     public function assertEventEquals($type, $expects, $event)
     {
         $this->assertEquals($type, $event['name'], "Event $type for " . print_r($event, true));
         if (is_array($expects)) {
-            $this->assertEquals($expects, $event['data'], "Event $type should equal " . print_r($expects, true) . ": " . print_r($event, true));
+            $this->assertEquals($expects, $event['data'], "Event $type should equal " . print_r($expects, true) . ': ' . print_r($event, true));
         } else {
             $this->assertEquals($expects, $event['data'][0], "Event $type should equal $expects: " . print_r($event, true));
         }
@@ -33,7 +35,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
      */
     public function assertEventError($event)
     {
-        $this->assertEquals('error', $event['name'], "Expected error for event: " . print_r($event, true));
+        $this->assertEquals('error', $event['name'], 'Expected error for event: ' . print_r($event, true));
     }
 
     /**
@@ -65,7 +67,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
     // ================================================================
     public function testParse()
     {
-        list ($tok, $events) = $this->createTokenizer('');
+        list($tok, $events) = $this->createTokenizer('');
 
         $tok->parse();
         $e1 = $events->get(0);
@@ -77,7 +79,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
     public function testWhitespace()
     {
         $spaces = '    ';
-        list ($tok, $events) = $this->createTokenizer($spaces);
+        list($tok, $events) = $this->createTokenizer($spaces);
 
         $tok->parse();
 
@@ -95,7 +97,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '&amp;' => '&',
             '&#x0003c;' => '<',
             '&#38;' => '&',
-            '&' => '&'
+            '&' => '&',
         );
         $this->isAllGood('text', 2, $good);
 
@@ -133,7 +135,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<![CDATA[',
             '<![CDATA[hellooooo hello',
             '<? Hello World ?>',
-            '<? Hello World'
+            '<? Hello World',
         );
         foreach ($bogus as $str) {
             $events = $this->parse($str);
@@ -151,7 +153,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
       >' => 'test',
             '</thisIsTheTagThatDoesntEndItJustGoesOnAndOnMyFriend>' => 'thisisthetagthatdoesntenditjustgoesonandonmyfriend',
             // See 8.2.4.10, which requires this and does not say error.
-            '</a<b>' => 'a<b'
+            '</a<b>' => 'a<b',
         );
         $this->isAllGood('endTag', 2, $succeed);
 
@@ -161,7 +163,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '</a <b>' => 'a',
             '</a <b <c>' => 'a',
             '</a is the loneliest letter>' => 'a',
-            '</a' => 'a'
+            '</a' => 'a',
         );
         foreach ($fail as $test => $result) {
             $events = $this->parse($test);
@@ -176,7 +178,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         $comments = array(
             '</>' => '</>',
             '</ >' => '</ >',
-            '</ a>' => '</ a>'
+            '</ a>' => '</ a>',
         );
         foreach ($comments as $test => $result) {
             $events = $this->parse($test);
@@ -198,7 +200,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<!-- --$i -->' => ' --$i ',
             '<!----$i-->' => '--$i',
             "<!--\nHello World.\na-->" => "\nHello World.\na",
-            '<!-- <!-- -->' => ' <!-- '
+            '<!-- <!-- -->' => ' <!-- ',
         );
         foreach ($good as $test => $expected) {
             $events = $this->parse($test);
@@ -209,7 +211,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<!-->' => '',
             '<!--Hello' => 'Hello',
             "<!--\0Hello" => UTF8Utils::FFFD . 'Hello',
-            '<!--' => ''
+            '<!--' => '',
         );
         foreach ($fail as $test => $expected) {
             $events = $this->parse($test);
@@ -225,7 +227,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<![CDATA[ This is a test. ]]>' => ' This is a test. ',
             '<![CDATA[CDATA]]>' => 'CDATA',
             '<![CDATA[ ]] > ]]>' => ' ]] > ',
-            '<![CDATA[ ]]>' => ' '
+            '<![CDATA[ ]]>' => ' ',
         );
         $this->isAllGood('cdata', 2, $good);
     }
@@ -237,80 +239,80 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                 'html',
                 0,
                 null,
-                false
+                false,
             ),
             '<!doctype html>' => array(
                 'html',
                 0,
                 null,
-                false
+                false,
             ),
             '<!DocType html>' => array(
                 'html',
                 0,
                 null,
-                false
+                false,
             ),
             "<!DOCTYPE\nhtml>" => array(
                 'html',
                 0,
                 null,
-                false
+                false,
             ),
             "<!DOCTYPE\fhtml>" => array(
                 'html',
                 0,
                 null,
-                false
+                false,
             ),
             '<!DOCTYPE html PUBLIC "foo bar">' => array(
                 'html',
                 EventStack::DOCTYPE_PUBLIC,
                 'foo bar',
-                false
+                false,
             ),
             "<!DOCTYPE html PUBLIC 'foo bar'>" => array(
                 'html',
                 EventStack::DOCTYPE_PUBLIC,
                 'foo bar',
-                false
+                false,
             ),
             '<!DOCTYPE      html      PUBLIC     "foo bar"    >' => array(
                 'html',
                 EventStack::DOCTYPE_PUBLIC,
                 'foo bar',
-                false
+                false,
             ),
             "<!DOCTYPE html \nPUBLIC\n'foo bar'>" => array(
                 'html',
                 EventStack::DOCTYPE_PUBLIC,
                 'foo bar',
-                false
+                false,
             ),
             '<!DOCTYPE html SYSTEM "foo bar">' => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo bar',
-                false
+                false,
             ),
             "<!DOCTYPE html SYSTEM 'foo bar'>" => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo bar',
-                false
+                false,
             ),
             '<!DOCTYPE      html      SYSTEM "foo/bar"    >' => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo/bar',
-                false
+                false,
             ),
             "<!DOCTYPE html \nSYSTEM\n'foo bar'>" => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo bar',
-                false
-            )
+                false,
+            ),
         );
         $this->isAllGood('doctype', 2, $good);
 
@@ -319,43 +321,43 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                 null,
                 EventStack::DOCTYPE_NONE,
                 null,
-                true
+                true,
             ),
             '<!DOCTYPE    >' => array(
                 null,
                 EventStack::DOCTYPE_NONE,
                 null,
-                true
+                true,
             ),
             '<!DOCTYPE  foo' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
                 null,
-                true
+                true,
             ),
             '<!DOCTYPE foo PUB' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
                 null,
-                true
+                true,
             ),
             '<!DOCTYPE foo PUB>' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
                 null,
-                true
+                true,
             ),
             '<!DOCTYPE  foo PUB "Looks good">' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
                 null,
-                true
+                true,
             ),
             '<!DOCTYPE  foo SYSTME "Looks good"' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
                 null,
-                true
+                true,
             ),
 
             // Can't tell whether these are ids or ID types, since the context is chopped.
@@ -363,39 +365,39 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                 'foo',
                 EventStack::DOCTYPE_NONE,
                 null,
-                true
+                true,
             ),
             '<!DOCTYPE  foo PUBLIC>' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
                 null,
-                true
+                true,
             ),
             '<!DOCTYPE foo SYSTEM' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
                 null,
-                true
+                true,
             ),
             '<!DOCTYPE  foo SYSTEM>' => array(
                 'foo',
                 EventStack::DOCTYPE_NONE,
                 null,
-                true
+                true,
             ),
 
             '<!DOCTYPE html SYSTEM "foo bar"' => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo bar',
-                true
+                true,
             ),
             '<!DOCTYPE html SYSTEM "foo bar" more stuff>' => array(
                 'html',
                 EventStack::DOCTYPE_SYSTEM,
                 'foo bar',
-                true
-            )
+                true,
+            ),
         );
         foreach ($bad as $test => $expects) {
             $events = $this->parse($test);
@@ -412,12 +414,12 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<?hph ?>' => 'hph',
             '<?hph echo "Hello World"; ?>' => array(
                 'hph',
-                'echo "Hello World"; '
+                'echo "Hello World"; ',
             ),
             "<?hph \necho 'Hello World';\n?>" => array(
                 'hph',
-                "echo 'Hello World';\n"
-            )
+                "echo 'Hello World';\n",
+            ),
         );
         $this->isAllGood('pi', 2, $good);
     }
@@ -433,7 +435,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<fOO>' => 'foo',
             '<foo >' => 'foo',
             "<foo\n\n\n\n>" => 'foo',
-            '<foo:bar>' => 'foo:bar'
+            '<foo:bar>' => 'foo:bar',
         );
         $this->isAllGood('startTag', 2, $open);
 
@@ -442,7 +444,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<FOO/>' => 'foo',
             '<foo />' => 'foo',
             "<foo\n\n\n\n/>" => 'foo',
-            '<foo:bar/>' => 'foo:bar'
+            '<foo:bar/>' => 'foo:bar',
         );
         foreach ($selfClose as $test => $expects) {
             $events = $this->parse($test);
@@ -456,7 +458,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<foo' => 'foo',
             '<foo ' => 'foo',
             '<foo/' => 'foo',
-            '<foo /' => 'foo'
+            '<foo /' => 'foo',
         );
 
         foreach ($bad as $test => $expects) {
@@ -474,7 +476,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<color="white">' => 'color',
             "<class='neaktivni_stranka'>" => 'class',
             '<bgcolor="white">' => 'bgcolor',
-            '<class="nom">' => 'class'
+            '<class="nom">' => 'class',
         );
 
         foreach ($cases as $html => $expected) {
@@ -490,18 +492,18 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
     public function testTagNotClosedAfterTagName()
     {
         $cases = array(
-            "<noscript<img>" => array(
+            '<noscript<img>' => array(
                 'noscript',
-                'img'
+                'img',
             ),
             '<center<a>' => array(
                 'center',
-                'a'
+                'a',
             ),
             '<br<br>' => array(
                 'br',
-                'br'
-            )
+                'br',
+            ),
         );
 
         foreach ($cases as $html => $expected) {
@@ -575,111 +577,111 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<foo bar="baz">' => array(
                 'foo',
                 array(
-                    'bar' => 'baz'
+                    'bar' => 'baz',
                 ),
-                false
+                false,
             ),
             '<foo bar=" baz ">' => array(
                 'foo',
                 array(
-                    'bar' => ' baz '
+                    'bar' => ' baz ',
                 ),
-                false
+                false,
             ),
             "<foo bar=\"\nbaz\n\">" => array(
                 'foo',
                 array(
-                    'bar' => "\nbaz\n"
+                    'bar' => "\nbaz\n",
                 ),
-                false
+                false,
             ),
             "<foo bar='baz'>" => array(
                 'foo',
                 array(
-                    'bar' => 'baz'
+                    'bar' => 'baz',
                 ),
-                false
+                false,
             ),
             '<foo bar="A full sentence.">' => array(
                 'foo',
                 array(
-                    'bar' => 'A full sentence.'
+                    'bar' => 'A full sentence.',
                 ),
-                false
+                false,
             ),
             "<foo a='1' b=\"2\">" => array(
                 'foo',
                 array(
                     'a' => '1',
-                    'b' => '2'
+                    'b' => '2',
                 ),
-                false
+                false,
             ),
             "<foo ns:bar='baz'>" => array(
                 'foo',
                 array(
-                    'ns:bar' => 'baz'
+                    'ns:bar' => 'baz',
                 ),
-                false
+                false,
             ),
             "<foo a='blue&red'>" => array(
                 'foo',
                 array(
-                    'a' => 'blue&red'
+                    'a' => 'blue&red',
                 ),
-                false
+                false,
             ),
             "<foo a='blue&amp;red'>" => array(
                 'foo',
                 array(
-                    'a' => 'blue&red'
+                    'a' => 'blue&red',
                 ),
-                false
+                false,
             ),
             "<foo a='blue&&amp;&red'>" => array(
                 'foo',
                 array(
-                    'a' => 'blue&&&red'
+                    'a' => 'blue&&&red',
                 ),
-                false
+                false,
             ),
             "<foo a='blue&&amp;red'>" => array(
                 'foo',
                 array(
-                    'a' => 'blue&&red'
+                    'a' => 'blue&&red',
                 ),
-                false
+                false,
             ),
             "<foo\nbar='baz'\n>" => array(
                 'foo',
                 array(
-                    'bar' => 'baz'
+                    'bar' => 'baz',
                 ),
-                false
+                false,
             ),
             '<doe a deer>' => array(
                 'doe',
                 array(
                     'a' => null,
-                    'deer' => null
+                    'deer' => null,
                 ),
-                false
+                false,
             ),
             '<foo bar=baz>' => array(
                 'foo',
                 array(
-                    'bar' => 'baz'
+                    'bar' => 'baz',
                 ),
-                false
+                false,
             ),
 
             // Updated for 8.1.2.3
             '<foo    bar   =   "baz"      >' => array(
                 'foo',
                 array(
-                    'bar' => 'baz'
+                    'bar' => 'baz',
                 ),
-                false
+                false,
             ),
 
             // The spec allows an unquoted value '/'. This will not be a closing
@@ -687,17 +689,17 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<foo bar=/>' => array(
                 'foo',
                 array(
-                    'bar' => '/'
+                    'bar' => '/',
                 ),
-                false
+                false,
             ),
             '<foo bar=baz/>' => array(
                 'foo',
                 array(
-                    'bar' => 'baz/'
+                    'bar' => 'baz/',
                 ),
-                false
-            )
+                false,
+            ),
         );
         $this->isAllGood('startTag', 2, $good);
 
@@ -706,23 +708,23 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<foo bar="baz"/>' => array(
                 'foo',
                 array(
-                    'bar' => 'baz'
+                    'bar' => 'baz',
                 ),
-                true
+                true,
             ),
             '<foo BAR="baz"/>' => array(
                 'foo',
                 array(
-                    'bar' => 'baz'
+                    'bar' => 'baz',
                 ),
-                true
+                true,
             ),
             '<foo BAR="BAZ"/>' => array(
                 'foo',
                 array(
-                    'bar' => 'BAZ'
+                    'bar' => 'BAZ',
                 ),
-                true
+                true,
             ),
             "<foo a='1' b=\"2\" c=3 d/>" => array(
                 'foo',
@@ -730,10 +732,10 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                     'a' => '1',
                     'b' => '2',
                     'c' => '3',
-                    'd' => null
+                    'd' => null,
                 ),
-                true
-            )
+                true,
+            ),
         );
         $this->isAllGood('startTag', 2, $withEnd);
 
@@ -743,30 +745,30 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             "<foo a='blue&+dark'>" => array(
                 'foo',
                 array(
-                    'a' => 'blue&+dark'
+                    'a' => 'blue&+dark',
                 ),
-                false
+                false,
             ),
             '<foo bar=>' => array(
                 'foo',
                 array(
-                    'bar' => null
+                    'bar' => null,
                 ),
-                false
+                false,
             ),
             '<foo bar="oh' => array(
                 'foo',
                 array(
-                    'bar' => 'oh'
+                    'bar' => 'oh',
                 ),
-                false
+                false,
             ),
             '<foo bar=oh">' => array(
                 'foo',
                 array(
-                    'bar' => 'oh"'
+                    'bar' => 'oh"',
                 ),
-                false
+                false,
             ),
 
             // these attributes are ignored because of current implementation
@@ -775,23 +777,23 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<foo b"="baz">' => array(
                 'foo',
                 array(),
-                false
+                false,
             ),
             '<foo 2abc="baz">' => array(
                 'foo',
                 array(),
-                false
+                false,
             ),
             '<foo ?="baz">' => array(
                 'foo',
                 array(),
-                false
+                false,
             ),
             '<foo foo?bar="baz">' => array(
                 'foo',
                 array(),
-                false
-            )
+                false,
+            ),
         )
         ;
         foreach ($bad as $test => $expects) {
@@ -807,23 +809,23 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                 'foo',
                 array(
                     '=' => null,
-                    '"bar"' => null
+                    '"bar"' => null,
                 ),
-                false
+                false,
             ),
             '<foo////>' => array(
                 'foo',
                 array(),
-                true
+                true,
             ),
             // character "&" in unquoted attribute shouldn't cause an infinite loop
             '<foo bar=index.php?str=1&amp;id=29>' => array(
                 'foo',
                 array(
-                    'bar' => 'index.php?str=1&id=29'
+                    'bar' => 'index.php?str=1&id=29',
                 ),
-                false
-            )
+                false,
+            ),
         );
         foreach ($reallyBad as $test => $expects) {
             $events = $this->parse($test);
@@ -840,17 +842,17 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEventEquals('startTag', array(
             'foo',
             array(
-                'baz' => '1'
+                'baz' => '1',
             ),
-            false
+            false,
         ), $events->get(1));
         $this->assertEventEquals('startTag', array(
             'bar',
             array(),
-            false
+            false,
         ), $events->get(2));
         $this->assertEventEquals('endTag', array(
-            'foo'
+            'foo',
         ), $events->get(3));
     }
 
@@ -864,7 +866,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             "<script>\nhello</script\n</script>" => "\nhello</script\n",
             '<script>&amp;</script>' => '&amp;',
             '<script><!--not a comment--></script>' => '<!--not a comment-->',
-            '<script><![CDATA[not a comment]]></script>' => '<![CDATA[not a comment]]>'
+            '<script><![CDATA[not a comment]]></script>' => '<![CDATA[not a comment]]>',
         );
         foreach ($good as $test => $expects) {
             $events = $this->parse($test);
@@ -875,7 +877,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
 
         $bad = array(
             '<script>&amp;</script' => '&amp;</script',
-            '<script>Hello world' => 'Hello world'
+            '<script>Hello world' => 'Hello world',
         );
         foreach ($bad as $test => $expects) {
             $events = $this->parse($test);
@@ -900,7 +902,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
 
     public function testRcdata()
     {
-        list ($tok, $events) = $this->createTokenizer('<title>&#x27;<!-- not a comment --></TITLE>');
+        list($tok, $events) = $this->createTokenizer('<title>&#x27;<!-- not a comment --></TITLE>');
         $tok->setTextMode(\Masterminds\HTML5\Elements::TEXT_RCDATA, 'title');
         $tok->parse();
         $this->assertEventEquals('text', "'<!-- not a comment -->", $events->get(1));
@@ -909,19 +911,19 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
     public function testText()
     {
         $events = $this->parse('a<br>b');
-        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, true));
+        $this->assertEquals(4, $events->depth(), 'Events: ' . print_r($events, true));
         $this->assertEventEquals('text', 'a', $events->get(0));
         $this->assertEventEquals('startTag', 'br', $events->get(1));
         $this->assertEventEquals('text', 'b', $events->get(2));
 
         $events = $this->parse('<a>Test</a>');
-        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, true));
+        $this->assertEquals(4, $events->depth(), 'Events: ' . print_r($events, true));
         $this->assertEventEquals('startTag', 'a', $events->get(0));
         $this->assertEventEquals('text', 'Test', $events->get(1));
         $this->assertEventEquals('endTag', 'a', $events->get(2));
 
         $events = $this->parse('<p>0</p><p>1</p>');
-        $this->assertEquals(7, $events->depth(), "Events: " . print_r($events, true));
+        $this->assertEquals(7, $events->depth(), 'Events: ' . print_r($events, true));
 
         $this->assertEventEquals('startTag', 'p', $events->get(0));
         $this->assertEventEquals('text', '0', $events->get(1));
@@ -931,25 +933,24 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEventEquals('text', '1', $events->get(4));
         $this->assertEventEquals('endTag', 'p', $events->get(5));
 
-
         $events = $this->parse('a<![CDATA[test]]>b');
-        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, true));
+        $this->assertEquals(4, $events->depth(), 'Events: ' . print_r($events, true));
         $this->assertEventEquals('text', 'a', $events->get(0));
         $this->assertEventEquals('cdata', 'test', $events->get(1));
         $this->assertEventEquals('text', 'b', $events->get(2));
 
         $events = $this->parse('a<!--test-->b');
-        $this->assertEquals(4, $events->depth(), "Events: " . print_r($events, true));
+        $this->assertEquals(4, $events->depth(), 'Events: ' . print_r($events, true));
         $this->assertEventEquals('text', 'a', $events->get(0));
         $this->assertEventEquals('comment', 'test', $events->get(1));
         $this->assertEventEquals('text', 'b', $events->get(2));
 
         $events = $this->parse('a&amp;b');
-        $this->assertEquals(2, $events->depth(), "Events: " . print_r($events, true));
+        $this->assertEquals(2, $events->depth(), 'Events: ' . print_r($events, true));
         $this->assertEventEquals('text', 'a&b', $events->get(0));
 
         $events = $this->parse('a&sup2;b');
-        $this->assertEquals(2, $events->depth(), "Events: " . print_r($events, true));
+        $this->assertEquals(2, $events->depth(), 'Events: ' . print_r($events, true));
         $this->assertEventEquals('text', 'a²b', $events->get(0));
     }
 
@@ -965,13 +966,13 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
 
         return array(
             new Tokenizer($scanner, $eventHandler),
-            $eventHandler
+            $eventHandler,
         );
     }
 
     public function parse($string, $debug = false)
     {
-        list ($tok, $events) = $this->createTokenizer($string, $debug);
+        list($tok, $events) = $this->createTokenizer($string, $debug);
         $tok->parse();
 
         return $events;

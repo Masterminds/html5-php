@@ -163,15 +163,21 @@ class Tokenizer
                     break;
 
                 default:
-                    if ('<' !== $tok && '&' !== $tok) {
-                        // NULL character
-                        if ("\00" === $tok) {
-                            $this->parseError('Received null character.');
-                        }
+                    if ('<' === $tok || '&' === $tok) {
+                        break;
+                    }
+
+                    // NULL character
+                    if ("\00" === $tok) {
+                        $this->parseError('Received null character.');
 
                         $this->text .= $tok;
                         $this->scanner->consume();
+
+                        break;
                     }
+
+                    $this->text .= $this->scanner->charsUntil("<&\0");
             }
         }
 

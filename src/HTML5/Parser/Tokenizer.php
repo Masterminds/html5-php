@@ -131,22 +131,28 @@ class Tokenizer
 
             $tok = $this->scanner->next();
 
-            $this->markupDeclaration($tok)
-                || $this->endTag()
-                || $this->processingInstruction()
-                || $this->tagName()
-                // This always returns false.
-                || $this->parseError('Illegal tag opening')
-                || $this->characterData();
+            if ('!' === $tok) {
+                $this->markupDeclaration();
+            } elseif ('/' === $tok) {
+                $this->endTag();
+            } elseif ('?' === $tok) {
+                $this->processingInstruction();
+            } elseif (ctype_alpha($tok)) {
+                $this->tagName();
+            } else {
+                $this->parseError('Illegal tag opening');
+                // TODO is this necessary ?
+                $this->characterData();
+            }
 
             $tok = $this->scanner->current();
         }
 
-        // Handle end of document
-        $this->eof($tok);
-
-        // Parse character
-        if (false !== $tok) {
+        if (false === $tok) {
+            // Handle end of document
+            $this->eof();
+        } else {
+            // Parse character
             switch ($this->textMode) {
                 case Elements::TEXT_RAW:
                     $this->rawText($tok);
@@ -288,29 +294,19 @@ class Tokenizer
     /**
      * If the document is read, emit an EOF event.
      */
-    protected function eof($tok)
+    protected function eof()
     {
-        if (false === $tok) {
-            // fprintf(STDOUT, "EOF");
-            $this->flushBuffer();
-            $this->events->eof();
-            $this->carryOn = false;
-
-            return true;
-        }
-
-        return false;
+        // fprintf(STDOUT, "EOF");
+        $this->flushBuffer();
+        $this->events->eof();
+        $this->carryOn = false;
     }
 
     /**
      * Look for markup.
      */
-    protected function markupDeclaration($tok)
+    protected function markupDeclaration()
     {
-        if ('!' != $tok) {
-            return false;
-        }
-
         $tok = $this->scanner->next();
 
         // Comment:
@@ -377,11 +373,6 @@ class Tokenizer
      */
     protected function tagName()
     {
-        $tok = $this->scanner->current();
-        if (!ctype_alpha($tok)) {
-            return false;
-        }
-
         // We know this is at least one char.
         $name = $this->scanner->charsWhile(':_-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
         $name = self::CONFORMANT_XML === $this->mode ? $name : strtolower($name);
@@ -743,12 +734,11 @@ class Tokenizer
      */
     protected function doctype()
     {
-        if (strcasecmp($this->scanner->current(), 'D')) {
-            return false;
-        }
         // Check that string is DOCTYPE.
-        $chars = $this->scanner->charsWhile('DOCTYPEdoctype');
-        if (strcasecmp($chars, 'DOCTYPE')) {
+        if ($this->scanner->sequenceMatches('DOCTYPE', false)) {
+            $this->scanner->consume(7);
+        } else {
+            $chars = $this->scanner->charsWhile('DOCTYPEdoctype');
             $this->parseError('Expected DOCTYPE, got %s', $chars);
 
             return $this->bogusComment('<!' . $chars);
@@ -760,8 +750,9 @@ class Tokenizer
         // EOF: die.
         if (false === $tok) {
             $this->events->doctype('html5', EventHandler::DOCTYPE_NONE, '', true);
+            $this->eof();
 
-            return $this->eof($tok);
+            return true;
         }
 
         // NULL char: convert.
@@ -812,7 +803,7 @@ class Tokenizer
             if (false === $id) {
                 $this->events->doctype($doctypeName, $type, $pub, false);
 
-                return false;
+                return true;
             }
 
             // Premature EOF.
@@ -887,9 +878,6 @@ class Tokenizer
      */
     protected function cdataSection()
     {
-        if ('[' != $this->scanner->current()) {
-            return false;
-        }
         $cdata = '';
         $this->scanner->consume();
 

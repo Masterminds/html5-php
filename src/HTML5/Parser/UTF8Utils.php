@@ -3,8 +3,7 @@
 namespace Masterminds\HTML5\Parser;
 
 /*
- *
-* Portions based on code from html5lib files with the following copyright:
+Portions based on code from html5lib files with the following copyright:
 
 Copyright 2009 Geoffrey Sneddon <http://gsnedders.com/>
 
@@ -26,28 +25,20 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 */
 
 use Masterminds\HTML5\Exception;
 
-/**
- * UTF-8 Utilities.
- */
 class UTF8Utils
 {
     /**
-     * The Unicode replacement character..
+     * The Unicode replacement character.
      */
     const FFFD = "\xEF\xBF\xBD";
 
     /**
      * Count the number of characters in a string.
-     *
-     * UTF-8 aware. This will try (in order) iconv,
-     * MB, libxml, and finally a custom counter.
-     *
-     * @todo Move this to a general utility class.
+     * UTF-8 aware. This will try (in order) iconv, MB, libxml, and finally a custom counter.
      *
      * @param string $string
      *
@@ -58,14 +49,20 @@ class UTF8Utils
         // Get the length for the string we need.
         if (function_exists('mb_strlen')) {
             return mb_strlen($string, 'utf-8');
-        } elseif (function_exists('iconv_strlen')) {
+        }
+
+        if (function_exists('iconv_strlen')) {
             return iconv_strlen($string, 'utf-8');
-        } elseif (function_exists('utf8_decode')) {
+        }
+
+        if (function_exists('utf8_decode')) {
             // MPB: Will this work? Won't certain decodes lead to two chars
             // extrapolated out of 2-byte chars?
             return strlen(utf8_decode($string));
         }
+
         $count = count_chars($string);
+
         // 0x80 = 0x7F - 0 + 1 (one added to get inclusive range)
         // 0x33 = 0xF4 - 0x2C + 1 (one added to get inclusive range)
         return array_sum(array_slice($count, 0, 0x80)) + array_sum(array_slice($count, 0xC2, 0x33));
@@ -85,7 +82,12 @@ class UTF8Utils
     public static function convertToUTF8($data, $encoding = 'UTF-8')
     {
         /*
-         * From the HTML5 spec: Given an encoding, the bytes in the input stream must be converted to Unicode characters for the tokeniser, as described by the rules for that encoding, except that the leading U+FEFF BYTE ORDER MARK character, if any, must not be stripped by the encoding layer (it is stripped by the rule below). Bytes or sequences of bytes in the original byte stream that could not be converted to Unicode characters must be converted to U+FFFD REPLACEMENT CHARACTER code points.
+         * From the HTML5 spec: Given an encoding, the bytes in the input stream must be converted
+         * to Unicode characters for the tokeniser, as described by the rules for that encoding,
+         * except that the leading U+FEFF BYTE ORDER MARK character, if any, must not be stripped
+         * by the encoding layer (it is stripped by the rule below). Bytes or sequences of bytes
+         * in the original byte stream that could not be converted to Unicode characters must be
+         * converted to U+FFFD REPLACEMENT CHARACTER code points.
          */
 
         // mb_convert_encoding is chosen over iconv because of a bug. The best
@@ -106,7 +108,8 @@ class UTF8Utils
             mb_substitute_character('none');
             $data = mb_convert_encoding($data, 'UTF-8', $encoding);
             mb_substitute_character($save);
-        }        // @todo Get iconv running in at least some environments if that is possible.
+        }
+        // @todo Get iconv running in at least some environments if that is possible.
         elseif (function_exists('iconv') && 'auto' !== $encoding) {
             // fprintf(STDOUT, "iconv found\n");
             // iconv has the following behaviors:
@@ -141,14 +144,20 @@ class UTF8Utils
         $errors = array();
 
         /*
-         * All U+0000 null characters in the input must be replaced by U+FFFD REPLACEMENT CHARACTERs. Any occurrences of such characters is a parse error.
+         * All U+0000 null characters in the input must be replaced by U+FFFD REPLACEMENT CHARACTERs.
+         * Any occurrences of such characters is a parse error.
          */
         for ($i = 0, $count = substr_count($data, "\0"); $i < $count; ++$i) {
             $errors[] = 'null-character';
         }
 
         /*
-         * Any occurrences of any characters in the ranges U+0001 to U+0008, U+000B, U+000E to U+001F, U+007F to U+009F, U+D800 to U+DFFF , U+FDD0 to U+FDEF, and characters U+FFFE, U+FFFF, U+1FFFE, U+1FFFF, U+2FFFE, U+2FFFF, U+3FFFE, U+3FFFF, U+4FFFE, U+4FFFF, U+5FFFE, U+5FFFF, U+6FFFE, U+6FFFF, U+7FFFE, U+7FFFF, U+8FFFE, U+8FFFF, U+9FFFE, U+9FFFF, U+AFFFE, U+AFFFF, U+BFFFE, U+BFFFF, U+CFFFE, U+CFFFF, U+DFFFE, U+DFFFF, U+EFFFE, U+EFFFF, U+FFFFE, U+FFFFF, U+10FFFE, and U+10FFFF are parse errors. (These are all control characters or permanently undefined Unicode characters.)
+         * Any occurrences of any characters in the ranges U+0001 to U+0008, U+000B, U+000E to U+001F, U+007F
+         * to U+009F, U+D800 to U+DFFF , U+FDD0 to U+FDEF, and characters U+FFFE, U+FFFF, U+1FFFE, U+1FFFF,
+         * U+2FFFE, U+2FFFF, U+3FFFE, U+3FFFF, U+4FFFE, U+4FFFF, U+5FFFE, U+5FFFF, U+6FFFE, U+6FFFF, U+7FFFE,
+         * U+7FFFF, U+8FFFE, U+8FFFF, U+9FFFE, U+9FFFF, U+AFFFE, U+AFFFF, U+BFFFE, U+BFFFF, U+CFFFE, U+CFFFF,
+         * U+DFFFE, U+DFFFF, U+EFFFE, U+EFFFF, U+FFFFE, U+FFFFF, U+10FFFE, and U+10FFFF are parse errors.
+         * (These are all control characters or permanently undefined Unicode characters.)
          */
         // Check PCRE is loaded.
         $count = preg_match_all(

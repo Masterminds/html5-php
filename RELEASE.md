@@ -1,5 +1,13 @@
 # Release Notes
 
+2.5.0 (2018-12-27)
+
+- #162, #161, #155, #154, #153, #151: big performance improvements
+- #156: fixed typos
+- #160: adopt and enforce code style
+- #159: remove deprecated php unit base test case
+- #150: backport changes from old master branch 
+
 2.4.0 (2018-11-17)
 
 - #148: Improve performance by moving sequence matching 

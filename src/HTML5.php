@@ -155,7 +155,7 @@ class HTML5
         $this->errors = array();
         $options = array_merge($this->defaultOptions, $options);
         $events = new DOMTreeBuilder(false, $options);
-        $scanner = new Scanner($input);
+        $scanner = new Scanner($input, !empty($options['encoding']) ? $options['encoding'] : 'UTF-8');
         $parser = new Tokenizer($scanner, $events, !empty($options['xmlNamespaces']) ? Tokenizer::CONFORMANT_XML : Tokenizer::CONFORMANT_HTML);
 
         $parser->parse();
@@ -179,7 +179,7 @@ class HTML5
     {
         $options = array_merge($this->defaultOptions, $options);
         $events = new DOMTreeBuilder(true, $options);
-        $scanner = new Scanner($input);
+        $scanner = new Scanner($input, !empty($options['encoding']) ? $options['encoding'] : 'UTF-8');
         $parser = new Tokenizer($scanner, $events, !empty($options['xmlNamespaces']) ? Tokenizer::CONFORMANT_XML : Tokenizer::CONFORMANT_HTML);
 
         $parser->parse();

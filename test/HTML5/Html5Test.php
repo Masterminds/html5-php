@@ -2,8 +2,15 @@
 
 namespace Masterminds\HTML5\Tests;
 
+use Masterminds\HTML5;
+
 class Html5Test extends TestCase
 {
+    /**
+     * @var HTML5
+     */
+    private $html5;
+
     public function setUp()
     {
         $this->html5 = $this->getInstance();
@@ -50,8 +57,8 @@ class Html5Test extends TestCase
     {
         // doc
         $dom = $this->html5->loadHTML($this->wrap('<t:tag/>'), array(
-                        'implicitNamespaces' => array('t' => 'http://example.com'),
-                        'xmlNamespaces' => true,
+            'implicitNamespaces' => array('t' => 'http://example.com'),
+            'xmlNamespaces' => true,
         ));
         $this->assertInstanceOf('\DOMDocument', $dom);
         $this->assertEmpty($this->html5->getErrors());
@@ -63,8 +70,8 @@ class Html5Test extends TestCase
 
         // doc fragment
         $frag = $this->html5->loadHTMLFragment('<t:tag/>', array(
-                        'implicitNamespaces' => array('t' => 'http://example.com'),
-                        'xmlNamespaces' => true,
+            'implicitNamespaces' => array('t' => 'http://example.com'),
+            'xmlNamespaces' => true,
         ));
         $this->assertInstanceOf('\DOMDocumentFragment', $frag);
         $this->assertEmpty($this->html5->getErrors());
@@ -74,6 +81,33 @@ class Html5Test extends TestCase
         $xpath = new \DOMXPath($frag->ownerDocument);
         $xpath->registerNamespace('t', 'http://example.com');
         $this->assertEquals(1, $xpath->query('//t:tag', $frag)->length);
+    }
+
+    public function testEncodingUtf8()
+    {
+        $dom = $this->html5->load(__DIR__ . '/Fixtures/encoding/utf-8.html');
+        $this->assertInstanceOf('\DOMDocument', $dom);
+        $this->assertEmpty($this->html5->getErrors());
+        $this->assertFalse($this->html5->hasErrors());
+
+        $this->assertContains('Žťčýů', $dom->saveHTML());
+    }
+
+    public function testEncodingWindows1252()
+    {
+        $dom = $this->html5->load(__DIR__ . '/Fixtures/encoding/windows-1252.html', array(
+            'encoding' => 'Windows-1252',
+        ));
+
+        $this->assertInstanceOf('\DOMDocument', $dom);
+        $this->assertEmpty($this->html5->getErrors());
+        $this->assertFalse($this->html5->hasErrors());
+
+        $dumpedAsUtf8 = mb_convert_encoding($dom->saveHTML(), 'UTF-8', 'Windows-1252');
+        $this->assertNotFalse(mb_strpos($dumpedAsUtf8, 'Ž'));
+        $this->assertNotFalse(mb_strpos($dumpedAsUtf8, 'è'));
+        $this->assertNotFalse(mb_strpos($dumpedAsUtf8, 'ý'));
+        $this->assertNotFalse(mb_strpos($dumpedAsUtf8, 'ù'));
     }
 
     public function testErrors()

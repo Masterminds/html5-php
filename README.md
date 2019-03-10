@@ -12,7 +12,7 @@ HTML5 provides the following features.
 - Event-based (SAX-like) parser
 - A DOM tree builder
 - Interoperability with [QueryPath](https://github.com/technosophos/querypath)
-- Runs on **PHP** 5.3.0 or newer and **HHVM** 3.2 or newer
+- Runs on **PHP** 5.3.0 or newer
 
 [![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php)
 [![Latest Stable Version](https://poser.pugx.org/masterminds/html5/v/stable.png)](https://packagist.org/packages/masterminds/html5)

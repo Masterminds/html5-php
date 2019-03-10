@@ -16,6 +16,7 @@ matrix:
     - php: 7.1
       env: CS_FIXER=1
     - php: 7.2
+    - php: 7.3
       env: BENCHMARK=1
   fast_finish: true
 

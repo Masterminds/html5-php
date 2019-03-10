@@ -1,5 +1,9 @@
 # Release Notes
 
+2.6.0 (2019-03-10)
+
+- #163: Allow to pass a charset to the Scanner
+
 2.5.0 (2018-12-27)
 
 - #162, #161, #155, #154, #153, #151: big performance improvements

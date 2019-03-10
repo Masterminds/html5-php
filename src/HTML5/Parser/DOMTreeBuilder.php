@@ -391,11 +391,6 @@ class DOMTreeBuilder implements EventHandler
             // to avoid spl_object_hash collisions whe have to avoid garbage collection of $ele storing it into $pushes
             // see https://bugs.php.net/bug.php?id=67459
             $this->pushes[spl_object_hash($ele)] = array($pushes, $ele);
-
-            // SEE https://github.com/facebook/hhvm/issues/2962
-            if (defined('HHVM_VERSION')) {
-                $ele->setAttribute('html5-php-fake-id-attribute', spl_object_hash($ele));
-            }
         }
 
         foreach ($attributes as $aName => $aVal) {
@@ -509,12 +504,7 @@ class DOMTreeBuilder implements EventHandler
             $lname = Elements::normalizeSvgElement($lname);
         }
 
-        // See https://github.com/facebook/hhvm/issues/2962
-        if (defined('HHVM_VERSION') && ($cid = $this->current->getAttribute('html5-php-fake-id-attribute'))) {
-            $this->current->removeAttribute('html5-php-fake-id-attribute');
-        } else {
-            $cid = spl_object_hash($this->current);
-        }
+        $cid = spl_object_hash($this->current);
 
         // XXX: HTML has no parent. What do we do, though,
         // if this element appears in the wrong place?

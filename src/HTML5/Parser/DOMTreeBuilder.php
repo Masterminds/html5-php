@@ -176,6 +176,7 @@ class DOMTreeBuilder implements EventHandler
             $dt = $impl->createDocumentType('html');
             // $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
             $this->doc = $impl->createDocument(null, null, $dt);
+            $this->doc->encoding = !empty($options['encoding']) ? $options['encoding'] : 'UTF-8';
         }
 
         $this->errors = array();

@@ -1,5 +1,10 @@
 # Release Notes
 
+2.7.0 (2019-07-25)
+
+- #164: Drop HHVM support
+- #168: Set default encoding in the DOMDocument object
+
 2.6.0 (2019-03-10)
 
 - #163: Allow to pass a charset to the Scanner

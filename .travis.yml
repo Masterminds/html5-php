@@ -18,6 +18,7 @@ matrix:
     - php: 7.2
     - php: 7.3
       env: BENCHMARK=1
+    - php: 7.4snapshot
   fast_finish: true
 
 cache:

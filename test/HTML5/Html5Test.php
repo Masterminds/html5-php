@@ -11,7 +11,7 @@ class Html5Test extends TestCase
      */
     private $html5;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->html5 = $this->getInstance();
     }
@@ -226,7 +226,7 @@ class Html5Test extends TestCase
     {
         $html5 = $this->getInstance();
         $options = $html5->getOptions();
-        $this->assertEquals(false, $options['encode_entities']);
+        $this->assertFalse($options['encode_entities']);
 
         $html5 = $this->getInstance(array(
             'foo' => 'bar',
@@ -234,7 +234,7 @@ class Html5Test extends TestCase
         ));
         $options = $html5->getOptions();
         $this->assertEquals('bar', $options['foo']);
-        $this->assertEquals(true, $options['encode_entities']);
+        $this->assertTrue($options['encode_entities']);
 
         // Need to reset to original so future tests pass as expected.
         // $this->getInstance()->setOption('encode_entities', false);

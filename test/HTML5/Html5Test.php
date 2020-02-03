@@ -480,4 +480,10 @@ class Html5Test extends TestCase
         $res = $this->cycleFragment('a<![CDATA[ This <is> a test. ]]>b');
         $this->assertRegExp('|<!\[CDATA\[ This <is> a test\. \]\]>|', $res);
     }
+
+    public function testLoadMalformedFragment()
+    {
+        $html = "<p>Apr\u00e8s s&#039;il y a un gros bug et que tout le monde en profite, mon avis l\u00e0 dessus peut changer. Mais normalement non, pas de reset pour les joueurs arriv\u00e9s avec la beta publique.<\/p>\n\n<p>Par contre certains \u00e9quilibrages changeront, c&#";
+        $this->assertInstanceOf('DOMDocumentFragment', $this->html5->loadHTMLFragment($html));
+    }
 }

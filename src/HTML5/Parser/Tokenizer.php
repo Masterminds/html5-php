@@ -1111,6 +1111,13 @@ class Tokenizer
         if ('#' === $tok) {
             $tok = $this->scanner->next();
 
+            if (false === $tok) {
+                $this->parseError('Expected &#DEC; &#HEX;, got EOF');
+                $this->scanner->unconsume(1);
+
+                return '&';
+            }
+
             // Hexidecimal encoding.
             // X[0-9a-fA-F]+;
             // x[0-9a-fA-F]+;

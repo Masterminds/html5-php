@@ -30,7 +30,7 @@ before_script:
 
 script:
   - stty cols 120
-  - if [ "$CS_FIXER" == 1 ]; then wget https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.13.1/php-cs-fixer.phar && php php-cs-fixer.phar fix --dry-run --diff; fi
+  - if [ "$CS_FIXER" == 1 ]; then wget https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.16.0/php-cs-fixer.phar && php php-cs-fixer.phar fix --dry-run --diff; fi
   - mkdir -p build/logs
   - ./vendor/bin/phpunit --coverage-clover=coverage.xml
 

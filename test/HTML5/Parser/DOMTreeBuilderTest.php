@@ -133,6 +133,14 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         </html>', $doc->saveXML());
     }
 
+    public function testEntityAtEndOfFile()
+    {
+        $fragment = $this->parseFragment('&#');
+        $this->assertInstanceOf('DOMDocumentFragment', $fragment);
+        $this->assertSame('&#', $fragment->textContent);
+        $this->assertEquals('Line 1, Col 2: Expected &#DEC; &#HEX;, got EOF', $this->errors[0]);
+    }
+
     public function testStrangeCapitalization()
     {
         $html = '<!doctype html>

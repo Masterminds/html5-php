@@ -3,6 +3,7 @@
 namespace Masterminds;
 
 use Masterminds\HTML5\Parser\DOMTreeBuilder;
+use Masterminds\HTML5\Parser\Normalizer;
 use Masterminds\HTML5\Parser\Scanner;
 use Masterminds\HTML5\Parser\Tokenizer;
 use Masterminds\HTML5\Serializer\OutputRules;
@@ -25,6 +26,9 @@ class HTML5
 
         // Prevents the parser from automatically assigning the HTML5 namespace to the DOM document.
         'disable_html_ns' => false,
+
+        // Whether to add missing root elements.
+        'normalize'       => false,
     );
 
     protected $errors = array();
@@ -152,6 +156,10 @@ class HTML5
      */
     public function parse($input, array $options = array())
     {
+        if (isset($options['normalize']) && $options['normalize']) {
+            $input = $this->normalize($input);
+        }
+
         $this->errors = array();
         $options = array_merge($this->defaultOptions, $options);
         $events = new DOMTreeBuilder(false, $options);
@@ -235,5 +243,19 @@ class HTML5
         $this->save($dom, $stream, array_merge($this->defaultOptions, $options));
 
         return stream_get_contents($stream, -1, 0);
+    }
+
+    /**
+     * Add missing root elements to the input HTML.
+     *
+     * @param  string $input
+     * @return string
+     */
+    protected function normalize($input)
+    {
+        $normalizer = new Normalizer;
+        $normalizer->loadHtml($input);
+
+        return $normalizer->saveHtml();
     }
 }

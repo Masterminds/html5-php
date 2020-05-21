@@ -492,4 +492,50 @@ class Html5Test extends TestCase
             $res
         );
     }
+
+    /**
+     * Test for issue #166.
+     *
+     * @param $input
+     * @param $expected
+     *
+     * @dataProvider tagOmissionProvider
+     */
+    public function testTagOmission($input, $expected)
+    {
+        $doc = $this->html5->loadHTML($input);
+
+        $out = $this->html5->saveHTML($doc);
+
+        $this->assertRegExp("|" . preg_quote($expected, "|") . "|", $out);
+    }
+
+    /**
+     * Tag omission test cases.
+     *
+     * @return \string[][]
+     */
+    public function tagOmissionProvider()
+    {
+        return $provider = array(
+            array(
+                '<html>Hello, This is a test.<br />Does it work this time?</html>',
+                '<html><head></head><body>Hello, This is a test.<br>Does it work this time?</body></html>',
+            ),
+            // test whitespace (\n)
+            array(
+                '<!DOCTYPE html>
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+<body>
+<br>
+</body>
+</html>',
+                '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+<body>
+<br>
+</body>'
+            ),
+        );
+    }
 }

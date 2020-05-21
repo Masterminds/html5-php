@@ -322,6 +322,12 @@ class DOMTreeBuilder implements EventHandler
                 break;
         }
 
+        // Case when no <body> exists, note section on 'Anything else' below.
+        // https://html.spec.whatwg.org/multipage/parsing.html#the-after-head-insertion-mode
+        if ($this->insertMode === static::IM_AFTER_HEAD && 'head' !== $name && 'body' !== $name) {
+            $this->startTag('body');
+        }
+
         // Special case handling for SVG.
         if ($this->insertMode === static::IM_IN_SVG) {
             $lname = Elements::normalizeSvgElement($lname);
@@ -556,21 +562,20 @@ class DOMTreeBuilder implements EventHandler
 
     public function text($data)
     {
-        // XXX: Hmmm.... should we really be this strict?
+        // https://html.spec.whatwg.org/multipage/parsing.html#the-before-head-insertion-mode
         if ($this->insertMode < static::IM_IN_HEAD) {
             // Per '8.2.5.4.3 The "before head" insertion mode' the characters
-            // " \t\n\r\f" should be ignored but no mention of a parse error. This is
-            // practical as most documents contain these characters. Other text is not
-            // expected here so recording a parse error is necessary.
+            // " \t\n\r\f" should be ignored .
             $dataTmp = trim($data, " \t\n\r\f");
-            if (!empty($dataTmp)) {
-                // fprintf(STDOUT, "Unexpected insert mode: %d", $this->insertMode);
-                $this->parseError('Unexpected text. Ignoring: ' . $dataTmp);
+            if (! empty($dataTmp)) {
+                $this->startTag('head');
+                $this->endTag('head');
+                $this->startTag('body');
+            } else {
+                return;
             }
-
-            return;
         }
-        // fprintf(STDOUT, "Appending text %s.", $data);
+
         $node = $this->doc->createTextNode($data);
         $this->current->appendChild($node);
     }

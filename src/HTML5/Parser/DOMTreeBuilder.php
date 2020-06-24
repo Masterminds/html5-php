@@ -474,8 +474,14 @@ class DOMTreeBuilder implements EventHandler
     {
         $lname = $this->normalizeTagName($name);
 
-        // Ignore closing tags for unary elements.
-        if (Elements::isA($name, Elements::VOID_TAG)) {
+        // Special case within 12.2.6.4.7: An end tag whose tag name is "br" should be treated as an opening tag
+        if ($name === 'br') {
+            $this->parseError('Closing tag encountered for void element br.');
+
+            $this->startTag('br');
+        }
+        // Ignore closing tags for other unary elements.
+        elseif (Elements::isA($name, Elements::VOID_TAG)) {
             return;
         }
 

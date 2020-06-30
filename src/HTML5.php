@@ -234,6 +234,10 @@ class HTML5
         $stream = fopen('php://temp', 'wb');
         $this->save($dom, $stream, array_merge($this->defaultOptions, $options));
 
-        return stream_get_contents($stream, -1, 0);
+        $html = stream_get_contents($stream, -1, 0);
+
+        fclose($stream);
+
+        return $html;
     }
 }

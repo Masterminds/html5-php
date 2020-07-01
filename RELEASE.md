@@ -1,5 +1,15 @@
 # Release Notes
 
+2.7.2 (2020-07-01)
+
+- #187: Fixed memory leak in HTML5::saveHTML() 
+- #186: Add special case for end tag </br>
+
+2.7.1 (2020-06-14)
+
+- #171: add PHP 7.4 job 
+- #178: Prevent infinite loop on un-terminated entity declaration at EOF 
+
 2.7.0 (2019-07-25)
 
 - #164: Drop HHVM support

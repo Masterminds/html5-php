@@ -33,7 +33,7 @@ interface RulesInterface
      *
      * @return RulesInterface $this for the current object.
      */
-    public function setTraverser(Traverser $traverser);
+    public function setTraverser(Traverser $traverser = null);
 
     /**
      * Write a document element (\DOMDocument).

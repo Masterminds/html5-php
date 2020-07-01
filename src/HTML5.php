@@ -216,6 +216,8 @@ class HTML5
         if ($close) {
             fclose($stream);
         }
+
+        $rules->setTraverser(null);
     }
 
     /**

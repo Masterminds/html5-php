@@ -175,7 +175,7 @@ class OutputRules implements RulesInterface
         $this->nonBooleanAttributes[] = $rule;
     }
 
-    public function setTraverser(Traverser $traverser)
+    public function setTraverser(Traverser $traverser = null)
     {
         $this->traverser = $traverser;
 

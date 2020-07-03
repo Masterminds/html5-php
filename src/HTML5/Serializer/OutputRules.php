@@ -182,6 +182,13 @@ class OutputRules implements RulesInterface
         return $this;
     }
 
+    public function unsetTraverser()
+    {
+        $this->traverser = null;
+
+        return $this;
+    }
+
     public function document($dom)
     {
         $this->doctype();

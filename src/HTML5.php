@@ -212,7 +212,10 @@ class HTML5
         $trav = new Traverser($dom, $stream, $rules, $options);
 
         $trav->walk();
-
+        /*
+         * release the traverser to avoid cyclic references and allow PHP to free memory without waiting for gc_collect_cycles
+         */
+        $rules->unsetTraverser();
         if ($close) {
             fclose($stream);
         }

@@ -1,5 +1,9 @@
 # Release Notes
 
+2.7.3 (2020-07-05)
+
+- #190: mitigate cyclic reference between output rules and the traverser objects 
+
 2.7.2 (2020-07-01)
 
 - #187: Fixed memory leak in HTML5::saveHTML() 

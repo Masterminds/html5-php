@@ -475,7 +475,7 @@ class DOMTreeBuilder implements EventHandler
         $lname = $this->normalizeTagName($name);
 
         // Special case within 12.2.6.4.7: An end tag whose tag name is "br" should be treated as an opening tag
-        if ($name === 'br') {
+        if ('br' === $name) {
             $this->parseError('Closing tag encountered for void element br.');
 
             $this->startTag('br');

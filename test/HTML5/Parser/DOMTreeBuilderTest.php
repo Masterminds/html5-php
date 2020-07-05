@@ -718,7 +718,7 @@ EOM;
 
     public function testClosingBr()
     {
-                $html = <<<EOM
+        $html = <<<EOM
 <!DOCTYPE html>
 <html>
     <head>

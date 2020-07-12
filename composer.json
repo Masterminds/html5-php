@@ -1,5 +1,144 @@
 {
-    "name": "masterminds/html5",
+    "#!/usr/bin/python
+
+import socket, re, json, errno, sys
+from Crypto.Hash import SHA
+from Crypto.PublicKey import RSA
+from base64 import b64encode
+from SocketServer import BaseServer
+from BaseHTTPServer import HTTPServer
+from SimpleHTTPServer import SimpleHTTPRequestHandler
+from OpenSSL import SSL, crypto
+
+# 1. Patch binary
+# 2. Run this script as root (needs to bind to port 443)
+# 3. Edit target machine hosts file to point agilebits.com to this machine
+# 4. Register with any serial
+
+# serial format: OPW4-XXXX-XXXXXX-XXXXXXX-XXXXXX-XXXXXX
+# new RSA public modulus: adac0d0250c232639ecb3ffd2ebc63b8dac4e987556d49d16026950cf6a452aa22dfb3f578ad1a3a6bb0930a627040a5703a70ef0a356844434fc1ebe28743ab718bc1b06fd045e9ede6de87da021ecb5b17cd1eed4b10ae6659f8b3d9474f732a8c31a161f6e40bb3ca4bbb70ca3a3b9295dfafabc1ef0a31f7e8d6c555d653
+
+
+class Signer:
+	def __init__(self, n, e, d):
+		self.key = RSA.construct([n, e, d])
+
+	def _pad(self, s):
+		n = 127 - len(s)
+		return '\x01' + '\xff' * (n - 2) + '\x00' + s
+
+	def sign(self, license):
+		s = license['escaleram58@gmail.com'] + license['key'] + license['product'] + license['product_id'] + license['seats'] + license['type']
+		hash = SHA.new(s).hexdigest()
+		sig = self.key.sign(self._pad(hash), None)[0]
+		sig_hex_string = hex(sig)[2:-1]
+
+		if len(sig_hex_string) % 2 == 1:
+			sig_hex_string = '0' + sig_hex_string
+
+		return b64encode(bytearray.fromhex(sig_hex_string))
+
+
+def create_self_signed(cn):
+	key = crypto.PKey()
+	key.generate_key(crypto.TYPE_RSA, 1024)
+
+	cert = crypto.X509()
+	cert.get_subject().CN = cn
+	cert.set_serial_number(1000)
+	cert.gmtime_adj_notBefore(0)
+	cert.gmtime_adj_notAfter(365 * 24 * 60 * 60)
+	cert.set_issuer(cert.get_subject())
+	cert.set_pubkey(key)
+	cert.sign(key, 'sha256')
+
+	return key, cert
+
+
+class SecureHTTPServer(HTTPServer):
+	def __init__(self, server_address, HandlerClass, key, cert):
+		BaseServer.__init__(self, server_address, HandlerClass)
+		ctx = SSL.Context(SSL.SSLv23_METHOD)
+		ctx.use_privatekey(key)
+		ctx.use_certificate(cert)
+		self.socket = SSL.Connection(ctx, socket.socket(self.address_family, self.socket_type))
+		self.server_bind()
+		self.server_activate()
+
+	def shutdown_request(self, request):
+		request.shutdown()
+
+
+def MakeRequestHandler(keygen):
+	class RequestHandler(SimpleHTTPRequestHandler):
+		def __init__(self, *args, **kwargs):
+			self._keygen = keygen
+			SimpleHTTPRequestHandler.__init__(self, *args, **kwargs)
+
+		def setup(self):
+			self.connection = self.request
+			self.rfile = socket._fileobject(self.request, 'rb', self.rbufsize)
+			self.wfile = socket._fileobject(self.request, 'wb', self.wbufsize)
+
+		def do_GET(self):
+			matches = re.search(r'key=([\w-]+)', self.path)
+			if matches:
+				license = {
+					'email': 'escaleram58@gmail.com',
+					'name': 'Firstname Lastname',
+					'seats': '1',
+					'product': '1Password 4 for Windows',
+					'product_id': '111',
+					'type': 'Single'
+				}
+				license['key'] = matches.group(1)
+
+				signature = self._keygen.sign(license)
+
+				result = {
+					'status': 'SUCCESS',
+					'body': license,
+					'signature': signature
+				}
+				payload = json.dumps(result)
+				log = '[%s] Signed license %s\n' % (self.address_string(), license['key'])
+			else:
+				payload = '{}'
+				log = '[%s] Unrecognised request %s\n' % (self.address_string(), self.path)
+			
+			sys.stderr.write(log)
+			sys.stderr.flush()
+
+			self.send_response(200)
+			self.send_header('Content-type', 'application/json')
+			self.send_header('Content-length', len(payload))
+			self.end_headers()
+			self.wfile.write(payload)
+
+		def log_request(self, code='-', size='-'):
+			pass
+
+	return RequestHandler
+
+
+signer = Signer(
+	0xadac0d0250c232639ecb3ffd2ebc63b8dac4e987556d49d16026950cf6a452aa22dfb3f578ad1a3a6bb0930a627040a5703a70ef0a356844434fc1ebe28743ab718bc1b06fd045e9ede6de87da021ecb5b17cd1eed4b10ae6659f8b3d9474f732a8c31a161f6e40bb3ca4bbb70ca3a3b9295dfafabc1ef0a31f7e8d6c555d653L,
+	0x10001L,
+	0x56f9a42635b59bb0a254ddbdf90ae5d22cd592b27108e38014ec1d973969fff02eb8e3921a966e5d35935f8042de3eb1dbab98e54db2837e344b9c2d7aec0ce9d9833e4e4e330e7d6cf2e29d5509a67c1ab11190f8c9253fe6c118ddce3cbab1d2c9309cdfe7882b3657109c65b23fdb435cd4a0da4439ce0d6045331c5b80f9L
+)
+
+key, cert = create_self_signed('agilebits.com')
+
+try:
+	server = SecureHTTPServer(('', 443), MakeRequestHandler(signer), key, cert)
+except socket.error as e:
+	if e.errno == errno.EACCES:
+		print 'Permission denied while trying to listen on port 443.  Are you root?'
+		exit(1)
+	else:
+		raise e
+
+server.serve_forever()": "masterminds/html5",
     "description": "An HTML5 parser and serializer.",
     "type": "library",
     "homepage": "http://masterminds.github.io/html5-php",

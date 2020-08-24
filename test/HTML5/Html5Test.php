@@ -484,7 +484,7 @@ class Html5Test extends TestCase
     public function testAnchorTargetQueryParam()
     {
         $res = $this->cycle("<a href=\"https://domain.com/page.php?foo=bar&target=baz\">https://domain.com/page.php?foo=bar&target=baz</a>");
-        $this->assertStringContainsString(
+        $this->assertContains(
             "<a href=\"https://domain.com/page.php?foo=bar&amp;target=baz\">https://domain.com/page.php?foo=bar&amp;target=baz</a>",
             $res
         );

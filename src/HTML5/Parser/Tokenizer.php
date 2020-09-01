@@ -1181,16 +1181,11 @@ class Tokenizer
             return $entity;
         }
 
-        // If in an attribute, then failing to match ; means unconsume the
-        // entire string. Otherwise, failure to match is an error.
-        if ($inAttribute) {
-            $this->scanner->unconsume($this->scanner->position() - $start);
-
-            return '&';
-        }
+        // Failing to match ; means unconsume the entire string.
+        $this->scanner->unconsume($this->scanner->position() - $start);
 
         $this->parseError('Expected &ENTITY;, got &ENTITY%s (no trailing ;) ', $tok);
 
-        return '&' . $entity;
+        return '&';
     }
 }

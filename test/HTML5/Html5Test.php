@@ -480,4 +480,13 @@ class Html5Test extends TestCase
         $res = $this->cycleFragment('a<![CDATA[ This <is> a test. ]]>b');
         $this->assertRegExp('|<!\[CDATA\[ This <is> a test\. \]\]>|', $res);
     }
+
+    public function testAnchorTargetQueryParam()
+    {
+        $res = $this->cycle('<a href="https://domain.com/page.php?foo=bar&target=baz">https://domain.com/page.php?foo=bar&target=baz</a>');
+        $this->assertContains(
+            '<a href="https://domain.com/page.php?foo=bar&amp;target=baz">https://domain.com/page.php?foo=bar&amp;target=baz</a>',
+            $res
+        );
+    }
 }

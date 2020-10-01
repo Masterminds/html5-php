@@ -46,7 +46,7 @@ HTML5-PHP has a high-level API and a low-level API.
 
 Here is how you use the high-level `HTML5` library API:
 
-```php
+```php code:-
 <?php
 // Assuming you installed from Composer:
 require "vendor/autoload.php";

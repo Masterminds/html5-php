@@ -1,5 +1,11 @@
 # Release Notes
 
+2.7.4  (2020-10-01)
+
+- #191: Fix travisci build 
+- #195: Add .gitattributes file with export-ignore rules 
+- #194: Fix query parameter parsed as character entity
+
 2.7.3 (2020-07-05)
 
 - #190: mitigate cyclic reference between output rules and the traverser objects 

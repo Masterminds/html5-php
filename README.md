@@ -29,7 +29,7 @@ By adding the `masterminds/html5` dependency to your `composer.json` file:
 ```json
 {
   "require" : {
-    "masterminds/html5": "^2.0"
+    "masterminds/html5": "^2.7"
   },
 }
 ```

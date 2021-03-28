@@ -18,7 +18,9 @@ matrix:
     - php: 7.2
     - php: 7.3
       env: BENCHMARK=1
-    - php: 7.4snapshot
+    - php: 7.4
+    - php: 8.0
+      dist: bionic
   fast_finish: true
 
 cache:
@@ -28,6 +30,7 @@ cache:
 before_script:
   - if [[ SCRUTINIZER != '1' ]]; then phpenv config-rm xdebug.ini || true; fi
   - composer self-update
+  - if [[ ${TRAVIS_PHP_VERSION:0:1} == "8" ]]; then composer config platform.php 7.4; fi
   - composer update $COMPOSER_FLAGS --prefer-dist
 
 script:

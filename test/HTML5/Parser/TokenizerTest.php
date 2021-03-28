@@ -568,9 +568,6 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         }
     }
 
-    /**
-     * @depends testCharacterReference
-     */
     public function testTagAttributes()
     {
         // Opening tags.

@@ -18,7 +18,8 @@ matrix:
     - php: 7.2
     - php: 7.3
       env: BENCHMARK=1
-    - php: 7.4snapshot
+    - php: 7.4
+    - php: 8.0
   fast_finish: true
 
 cache:

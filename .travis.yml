@@ -30,6 +30,7 @@ cache:
 before_script:
   - if [[ SCRUTINIZER != '1' ]]; then phpenv config-rm xdebug.ini || true; fi
   - composer self-update
+  - if [[ ${TRAVIS_PHP_VERSION:0:1} == "8" ]]; then composer config platform.php 7.4; fi
   - composer update $COMPOSER_FLAGS --prefer-dist
 
 script:

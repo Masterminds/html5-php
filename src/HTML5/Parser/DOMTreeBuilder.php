@@ -175,7 +175,7 @@ class DOMTreeBuilder implements EventHandler
             // documents, and attempting to up-convert any older DTDs to HTML5.
             $dt = $impl->createDocumentType('html');
             // $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
-            $this->doc = $impl->createDocument(null, null, $dt);
+            $this->doc = $impl->createDocument(null, '', $dt);
             $this->doc->encoding = !empty($options['encoding']) ? $options['encoding'] : 'UTF-8';
         }
 
@@ -405,6 +405,8 @@ class DOMTreeBuilder implements EventHandler
             } elseif ($this->insertMode === static::IM_IN_MATHML) {
                 $aName = Elements::normalizeMathMlAttribute($aName);
             }
+
+            $aVal = (string) $aVal;
 
             try {
                 $prefix = ($pos = strpos($aName, ':')) ? substr($aName, 0, $pos) : false;

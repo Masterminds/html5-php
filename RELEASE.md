@@ -1,5 +1,10 @@
 # Release Notes
 
+2.7.5  (2021-07-01)
+
+- #204: Travis: Enable tests on PHP 8.0 
+- #207: Fix PHP 8.1 deprecations 
+
 2.7.4  (2020-10-01)
 
 - #191: Fix travisci build 

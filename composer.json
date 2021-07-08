@@ -22,7 +22,6 @@
     "require" : {
         "ext-ctype": "*",
         "ext-dom": "*",
-        "ext-libxml" : "*",
         "php" : ">=5.3.0"
     },
     "require-dev": {

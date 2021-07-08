@@ -9,6 +9,7 @@ return PhpCsFixer\Config::create()
         '@Symfony' => true,
         'concat_space' => array('spacing' => 'one'),
         'phpdoc_annotation_without_dot' => false,
+        'array_syntax' => ['syntax' => 'long'],
     ))
     ->setFinder($finder)
 ;

@@ -18,7 +18,7 @@ class TraverserTest extends \Masterminds\HTML5\Tests\TestCase
       </body>
     </html>';
 
-    public function setUp()
+    protected function setUp()
     {
         $this->html5 = $this->getInstance();
     }
@@ -45,7 +45,7 @@ class TraverserTest extends \Masterminds\HTML5\Tests\TestCase
         $stream = fopen('php://temp', 'w');
 
         $dom = $this->html5->loadHTML($this->markup);
-        $t = new Traverser($dom, $stream, $html5->getOptions());
+        $t = new Traverser($dom, $stream, $this->html5->getOptions());
 
         // We return both the traverser and stream so we can pull from it.
         return array(

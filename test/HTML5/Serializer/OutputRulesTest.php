@@ -24,7 +24,7 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
      */
     protected $html5;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->html5 = $this->getInstance();
     }
@@ -645,8 +645,8 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
 
         $contents = $this->html5->saveHTML($dom);
 
-        $this->assertTrue(false !== strpos($contents, '<script id="template" type="x-tmpl-mustache">
+        $this->assertContains('<script id="template" type="x-tmpl-mustache">
            <h1>Hello!</h1>
-       <p>Bar</p></script>'));
+       <p>Bar</p></script>', $contents);
     }
 }

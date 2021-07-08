@@ -137,7 +137,7 @@ class Tokenizer
                 $this->endTag();
             } elseif ('?' === $tok) {
                 $this->processingInstruction();
-            } elseif (ctype_alpha($tok)) {
+            } elseif ($this->is_alpha($tok)) {
                 $this->tagName();
             } else {
                 $this->parseError('Illegal tag opening');
@@ -347,7 +347,7 @@ class Tokenizer
         // > -> parse error
         // EOF -> parse error
         // -> parse error
-        if (!ctype_alpha($tok)) {
+        if (!$this->is_alpha($tok)) {
             $this->parseError("Expected tag name, got '%s'", $tok);
             if ("\0" == $tok || false === $tok) {
                 return false;
@@ -1187,5 +1187,19 @@ class Tokenizer
         $this->parseError('Expected &ENTITY;, got &ENTITY%s (no trailing ;) ', $tok);
 
         return '&';
+    }
+
+    /**
+     * Checks whether a (single-byte) character is an ASCII letter or not.
+     *
+     * @param string $input A single-byte string
+     *
+     * @return bool True if it is a letter, False otherwise
+     */
+    protected function is_alpha($input)
+    {
+        $code = ord($input);
+
+        return ($code >= 97 && $code <= 122) || ($code >= 65 && $code <= 90);
     }
 }

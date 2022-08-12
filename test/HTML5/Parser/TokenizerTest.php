@@ -213,6 +213,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
             '<!--Hello' => 'Hello',
             "<!--\0Hello" => UTF8Utils::FFFD . 'Hello',
             '<!--' => '',
+            '<!--<!--' => '<!--',
         );
         foreach ($fail as $test => $expected) {
             $events = $this->parse($test);

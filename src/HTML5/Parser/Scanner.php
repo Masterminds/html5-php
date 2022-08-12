@@ -104,7 +104,7 @@ class Scanner
      */
     public function peek()
     {
-        if (($this->char + 1) <= $this->EOF) {
+        if (($this->char + 1) < $this->EOF) {
             return $this->data[$this->char + 1];
         }
 

@@ -1,5 +1,9 @@
 # Release Notes
 
+2.7.6  (2021-08-18)
+
+- #218: Address comment handling issues 
+
 2.7.5  (2021-07-01)
 
 - #204: Travis: Enable tests on PHP 8.0 

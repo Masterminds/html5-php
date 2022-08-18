@@ -197,11 +197,17 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
     {
         $good = array(
             '<!--easy-->' => 'easy',
+            '<!--easy--!>' => 'easy',
             '<!-- 1 > 0 -->' => ' 1 > 0 ',
+            '<!-- 1 > 0 --!>' => ' 1 > 0 ',
             '<!-- --$i -->' => ' --$i ',
+            '<!-- --$i --!>' => ' --$i ',
             '<!----$i-->' => '--$i',
+            '<!----$i--!>' => '--$i',
             "<!--\nHello World.\na-->" => "\nHello World.\na",
+            "<!--\nHello World.\na--!>" => "\nHello World.\na",
             '<!-- <!-- -->' => ' <!-- ',
+            '<!-- <!-- --!>' => ' <!-- ',
         );
         foreach ($good as $test => $expected) {
             $events = $this->parse($test);

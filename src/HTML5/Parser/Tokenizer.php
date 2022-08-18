@@ -712,18 +712,24 @@ class Tokenizer
             return true;
         }
 
-        // If it doesn't start with -, not the end.
-        if ('-' != $tok) {
+        // If next two tokens are not '--', not the end.
+        if ('-' != $tok || '-' != $this->scanner->peek()) {
             return false;
         }
 
-        // Advance one, and test for '->'
-        if ('-' == $this->scanner->next() && '>' == $this->scanner->peek()) {
+        $this->scanner->consume(2); // Consume '-' and one of '!' or '>'
+
+        // Test for '>'
+        if ('>' == $this->scanner->current()) {
+            return true;
+        }
+        // Test for '!>'
+        if ('!' == $this->scanner->current() && '>' == $this->scanner->peek()) {
             $this->scanner->consume(); // Consume the last '>'
             return true;
         }
-        // Unread '-';
-        $this->scanner->unconsume(1);
+        // Unread '-' and one of '!' or '>';
+        $this->scanner->unconsume(2);
 
         return false;
     }

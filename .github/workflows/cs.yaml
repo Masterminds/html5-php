@@ -1,0 +1,32 @@
+name: CS
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  php-cs-fixer:
+    name: "php-cs-fixer"
+    runs-on: "ubuntu-20.04"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - "7.1"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+        
+      - name: cs fix
+        run: |
+          wget -q https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.13.1/php-cs-fixer.phar 
+          php php-cs-fixer.phar fix --dry-run --diff

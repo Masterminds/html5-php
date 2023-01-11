@@ -1,0 +1,36 @@
+name: Benchmarks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  phpbench:
+    name: "PHPBench"
+    runs-on: "ubuntu-20.04"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - "5.4"
+          - "7.4"
+          - "8.2"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v2"
+        
+      - name: Run performance tests
+        run: |
+          php test/benchmark/run.php 10

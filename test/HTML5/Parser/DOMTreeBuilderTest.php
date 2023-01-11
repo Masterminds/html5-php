@@ -457,14 +457,17 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $data = $wrapper->childNodes->item(0);
         $this->assertEquals(XML_TEXT_NODE, $data->nodeType);
         $this->assertEquals('test', $data->data);
+    }
 
+    public function testTextBeforeHeadNotAllowed()
+    {
         // The DomTreeBuilder has special handling for text when in before head mode.
-        $html = '<!DOCTYPE html><html>
-    Foo<head></head><body></body></html>';
+        $html = '<!DOCTYPE html><html>Foo<head></head><body></body></html>';
         $doc = $this->parse($html);
-        $this->assertEquals('Line 0, Col 0: Unexpected text. Ignoring: Foo', $this->errors[0]);
+        $this->assertEquals('Line 0, Col 0: Unexpected head tag outside of head context.', $this->errors[0]);
         $headElement = $doc->documentElement->firstChild;
         $this->assertEquals('head', $headElement->tagName);
+        $this->assertXmlStringEqualsXmlString($doc, '<html xmlns="http://www.w3.org/1999/xhtml"><head/><body>Foo<head/><body/></body></html>');
     }
 
     public function testParseErrors()

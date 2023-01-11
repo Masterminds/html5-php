@@ -567,7 +567,7 @@ class DOMTreeBuilder implements EventHandler
             // Per '8.2.5.4.3 The "before head" insertion mode' the characters
             // " \t\n\r\f" should be ignored .
             $dataTmp = trim($data, " \t\n\r\f");
-            if (! empty($dataTmp)) {
+            if (!empty($dataTmp)) {
                 $this->startTag('head');
                 $this->endTag('head');
                 $this->startTag('body');

@@ -507,7 +507,7 @@ class Html5Test extends TestCase
 
         $out = $this->html5->saveHTML($doc);
 
-        $this->assertRegExp("|" . preg_quote($expected, "|") . "|", $out);
+        $this->assertRegExp('|' . preg_quote($expected, '|') . '|', $out);
     }
 
     /**
@@ -534,7 +534,7 @@ class Html5Test extends TestCase
                 '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
 <body>
 <br>
-</body>'
+</body>',
             ),
         );
     }

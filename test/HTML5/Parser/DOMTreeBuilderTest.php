@@ -62,7 +62,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
     {
         $html = "<!doctype html>
         <html>
-            <body> 
+            <body>
                 <img src='a&b' />
                 <img src='a&=' />
                 <img src='a&=c' />
@@ -74,7 +74,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEmpty($this->errors);
         $this->assertXmlStringEqualsXmlString('
         <!DOCTYPE html>
-        <html xmlns="http://www.w3.org/1999/xhtml"><body> 
+        <html xmlns="http://www.w3.org/1999/xhtml"><body>
                 <img src="a&amp;b"/>
                 <img src="a&amp;="/>
                 <img src="a&amp;=c"/>
@@ -97,7 +97,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertCount(2, $this->errors);
         $this->assertXmlStringEqualsXmlString('
         <!DOCTYPE html>
-        <html xmlns="http://www.w3.org/1999/xhtml"><body> 
+        <html xmlns="http://www.w3.org/1999/xhtml"><body>
                 <img src="a&amp;"/>
                 <img src="a&amp;+"/>
             </body>
@@ -108,7 +108,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
     {
         $html = '<!doctype html>
         <html>
-            <body> 
+            <body>
                 a&b
                 a&=
                 a&=c
@@ -122,7 +122,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertCount(5, $this->errors);
         $this->assertXmlStringEqualsXmlString('
         <!DOCTYPE html>
-        <html xmlns="http://www.w3.org/1999/xhtml"><body> 
+        <html xmlns="http://www.w3.org/1999/xhtml"><body>
                 a&amp;b
                 a&amp;=
                 a&amp;=c
@@ -475,7 +475,7 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         // We're JUST testing that we can access errors. Actual testing of
         // error messages happen in the Tokenizer's tests.
         $this->assertGreaterThan(0, count($this->errors));
-        $this->assertTrue(is_string($this->errors[0]));
+        $this->assertInternalType('string', $this->errors[0]);
     }
 
     public function testProcessingInstruction()

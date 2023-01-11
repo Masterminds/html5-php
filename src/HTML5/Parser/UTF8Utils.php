@@ -38,7 +38,7 @@ class UTF8Utils
 
     /**
      * Count the number of characters in a string.
-     * UTF-8 aware. This will try (in order) iconv, MB, libxml, and finally a custom counter.
+     * UTF-8 aware. This will try (in order) iconv, MB, and finally a custom counter.
      *
      * @param string $string
      *
@@ -53,12 +53,6 @@ class UTF8Utils
 
         if (function_exists('iconv_strlen')) {
             return iconv_strlen($string, 'utf-8');
-        }
-
-        if (function_exists('utf8_decode')) {
-            // MPB: Will this work? Won't certain decodes lead to two chars
-            // extrapolated out of 2-byte chars?
-            return strlen(utf8_decode($string));
         }
 
         $count = count_chars($string);

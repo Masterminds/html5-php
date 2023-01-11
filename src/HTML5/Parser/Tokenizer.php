@@ -131,7 +131,10 @@ class Tokenizer
 
             $tok = $this->scanner->next();
 
-            if ('!' === $tok) {
+            if (false === $tok) {
+                // end of string
+                $this->parseError('Illegal tag opening');
+            } elseif ('!' === $tok) {
                 $this->markupDeclaration();
             } elseif ('/' === $tok) {
                 $this->endTag();

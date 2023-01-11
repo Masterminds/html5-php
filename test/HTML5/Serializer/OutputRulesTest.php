@@ -24,7 +24,10 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
      */
     protected $html5;
 
-    public function setUp()
+    /**
+     * @before
+     */
+    public function before()
     {
         $this->html5 = $this->getInstance();
     }

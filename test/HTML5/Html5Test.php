@@ -11,7 +11,10 @@ class Html5Test extends TestCase
      */
     private $html5;
 
-    public function setUp()
+    /**
+     * @before
+     */
+    public function before()
     {
         $this->html5 = $this->getInstance();
     }

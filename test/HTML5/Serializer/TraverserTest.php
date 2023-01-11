@@ -18,7 +18,10 @@ class TraverserTest extends \Masterminds\HTML5\Tests\TestCase
       </body>
     </html>';
 
-    public function setUp()
+    /**
+     * @before
+     */
+    public function before()
     {
         $this->html5 = $this->getInstance();
     }

@@ -302,12 +302,28 @@ class DOMTreeBuilder implements EventHandler
             case 'head':
                 if ($this->insertMode > static::IM_BEFORE_HEAD) {
                     $this->parseError('Unexpected head tag outside of head context.');
+                    // https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody
+                    // A start tag whose tag name is one of: "caption", "col", "colgroup", "frame", "head", "tbody",
+                    // "td", "tfoot", "th", "thead", "tr"
+                    // Parse error. Ignore the token.
+                    return 0;
                 } else {
                     $this->insertMode = static::IM_IN_HEAD;
                 }
                 break;
             case 'body':
-                $this->insertMode = static::IM_IN_BODY;
+                if ($this->insertMode >= static::IM_IN_BODY) {
+                    $this->parseError('Unexpected body tag outside of body context.');
+                    // https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody
+                    // A start tag whose tag name is "body"
+                    // Parse error.
+                    // If the second element on the stack of open elements is not a body element, if the stack of open elements has only one node on it, or if there is a template element on the stack of open elements, then ignore the token. (fragment case)
+                    // Otherwise, set the frameset-ok flag to "not ok"; then, for each attribute on the token, check to see if the attribute is already present on the body element (the second element) on the stack of open elements, and if it is not, add the attribute and its corresponding value to that element.
+                    return 0;
+                } else {
+                    $this->insertMode = static::IM_IN_BODY;
+                }
+
                 break;
             case 'svg':
                 $this->insertMode = static::IM_IN_SVG;
@@ -541,10 +557,18 @@ class DOMTreeBuilder implements EventHandler
 
         switch ($lname) {
             case 'head':
-                $this->insertMode = static::IM_AFTER_HEAD;
+                if ($this->insertMode <= static::IM_AFTER_HEAD) {
+                    $this->insertMode = static::IM_AFTER_HEAD;
+                } else {
+                    $this->parseError('Closing head tag encountered but not in head context.');
+                }
                 break;
             case 'body':
-                $this->insertMode = static::IM_AFTER_BODY;
+                if ($this->insertMode <= static::IM_AFTER_BODY || $this->insertMode >= static::IM_IN_SVG) {
+                    $this->insertMode = static::IM_AFTER_BODY;
+                } else {
+                    $this->parseError('Closing body tag encountered but not in body context.');
+                }
                 break;
             case 'svg':
             case 'mathml':

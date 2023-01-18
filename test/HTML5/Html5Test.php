@@ -98,9 +98,9 @@ class Html5Test extends TestCase
 
     public function testEncodingWindows1252()
     {
-        $dom = $this->html5->load(__DIR__ . '/Fixtures/encoding/windows-1252.html', [
+        $dom = $this->html5->load(__DIR__ . '/Fixtures/encoding/windows-1252.html', array(
             'encoding' => 'Windows-1252',
-        ]);
+        ));
 
         $this->assertInstanceOf('\DOMDocument', $dom);
         $this->assertEmpty($this->html5->getErrors());

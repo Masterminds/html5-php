@@ -2,9 +2,9 @@
 
 namespace Masterminds\HTML5\Tests\Serializer;
 
+use Masterminds\HTML5;
 use Masterminds\HTML5\Serializer\OutputRules;
 use Masterminds\HTML5\Serializer\Traverser;
-use Masterminds\HTML5;
 
 class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
 {

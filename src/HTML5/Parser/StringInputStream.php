@@ -183,7 +183,7 @@ class StringInputStream implements InputStream
      *
      * @return string The current character.
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->data[$this->char];
     }
@@ -192,7 +192,7 @@ class StringInputStream implements InputStream
      * Advance the pointer.
      * This is part of the Iterator interface.
      */
-    public function next()
+    public function next(): void
     {
         ++$this->char;
     }
@@ -200,7 +200,7 @@ class StringInputStream implements InputStream
     /**
      * Rewind to the start of the string.
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->char = 0;
     }
@@ -210,7 +210,7 @@ class StringInputStream implements InputStream
      *
      * @return bool Whether the current pointer location is valid.
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->char < $this->EOF;
     }
@@ -324,7 +324,7 @@ class StringInputStream implements InputStream
         return false;
     }
 
-    public function key()
+    public function key(): int
     {
         return $this->char;
     }

@@ -421,7 +421,6 @@ class ElementsTest extends TestCase
             'table',
             'tfoot',
             'ul',
-            'video',
         );
 
         foreach ($blockTags as $tag) {
@@ -432,6 +431,7 @@ class ElementsTest extends TestCase
             'span',
             'img',
             'label',
+            'video',
         );
         foreach ($nonBlockTags as $tag) {
             $this->assertFalse(Elements::isA($tag, Elements::BLOCK_TAG), 'Block tag test failed on: ' . $tag);

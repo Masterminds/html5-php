@@ -185,7 +185,7 @@ class Elements
         'u' => 1,
         'ul' => 81, // NORMAL | AUTOCLOSE_P | BLOCK_TAG
         'var' => 1,
-        'video' => 65, // NORMAL | BLOCK_TAG
+        'video' => 1,
         'wbr' => 9, // NORMAL | VOID_TAG
 
         // Legacy?

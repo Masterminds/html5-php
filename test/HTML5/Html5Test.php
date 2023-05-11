@@ -93,7 +93,12 @@ class Html5Test extends TestCase
         $this->assertEmpty($this->html5->getErrors());
         $this->assertFalse($this->html5->hasErrors());
 
-        $this->assertContains('Žťčýů', $dom->saveHTML());
+        // phpunit 9
+        if (method_exists($this, 'assertStringContainsString')) {
+            $this->assertStringContainsString('Žťčýů', $dom->saveHTML());
+        } else {
+            $this->assertContains('Žťčýů', $dom->saveHTML());
+        }
     }
 
     public function testEncodingWindows1252()
@@ -373,7 +378,13 @@ class Html5Test extends TestCase
     public function testAttributes()
     {
         $res = $this->cycle('<use xlink:href="#svg-track" xmlns:xlink="http://www.w3.org/1999/xlink"></use>');
-        $this->assertContains('<use xlink:href="#svg-track" xmlns:xlink="http://www.w3.org/1999/xlink"></use>', $res);
+
+        // phpunit 9
+        if (method_exists($this, 'assertStringContainsString')) {
+            $this->assertStringContainsString('<use xlink:href="#svg-track" xmlns:xlink="http://www.w3.org/1999/xlink"></use>', $res);
+        } else {
+            $this->assertContains('<use xlink:href="#svg-track" xmlns:xlink="http://www.w3.org/1999/xlink"></use>', $res);
+        }
 
         $res = $this->cycle('<div attr="val">FOO</div>');
         $this->assertRegExp('|<div attr="val">FOO</div>|', $res);
@@ -487,9 +498,12 @@ class Html5Test extends TestCase
     public function testAnchorTargetQueryParam()
     {
         $res = $this->cycle('<a href="https://domain.com/page.php?foo=bar&target=baz">https://domain.com/page.php?foo=bar&target=baz</a>');
-        $this->assertContains(
-            '<a href="https://domain.com/page.php?foo=bar&amp;target=baz">https://domain.com/page.php?foo=bar&amp;target=baz</a>',
-            $res
-        );
+
+        // phpunit 9
+        if (method_exists($this, 'assertStringContainsString')) {
+            $this->assertStringContainsString('<a href="https://domain.com/page.php?foo=bar&amp;target=baz">https://domain.com/page.php?foo=bar&amp;target=baz</a>', $res);
+        } else {
+            $this->assertContains('<a href="https://domain.com/page.php?foo=bar&amp;target=baz">https://domain.com/page.php?foo=bar&amp;target=baz</a>', $res);
+        }
     }
 }

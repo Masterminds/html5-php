@@ -72,6 +72,24 @@ class Elements
     const BLOCK_ONLY_INLINE = 128;
 
     /**
+     * Elements with optional end tags that cause auto-closing of previous and parent tags,
+     * as example most of the table related tags, see https://www.w3.org/TR/html401/struct/tables.html
+     * Structure is as follows:
+     * TAG-NAME => [PARENT-TAG-NAME-TO-CLOSE1, PARENT-TAG-NAME-TO-CLOSE2, ...].
+     *
+     * Order is important, after auto-closing one parent with might have to close also their parent.
+     *
+     * @var array<string, string[]>
+     */
+    public static $optionalEndElementsParentsToClose = array(
+        'tr' => array('td', 'tr'),
+        'td' => array('td', 'th'),
+        'th' => array('td', 'th'),
+        'tfoot' => array('td', 'th', 'tr', 'tbody', 'thead'),
+        'tbody' => array('td', 'th', 'tr', 'thead'),
+    );
+
+    /**
      * The HTML5 elements as defined in http://dev.w3.org/html5/markup/elements.html.
      *
      * @var array

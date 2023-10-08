@@ -56,6 +56,60 @@ class Html5Test extends TestCase
         $this->assertEmpty($this->html5->getErrors());
     }
 
+    public function testSelfClosingTableHierarchyElements()
+    {
+        $html = '
+                <table>
+                    <thead>
+                        <tr>
+                            <th>0
+                    <tbody>
+                        <tr>
+                            <td>A
+                        <tr>
+                            <td>B1
+                            <td>B2
+                        <tr>
+                            <td>C
+                    <tfoot>
+                        <tr>
+                            <th>1
+                            <td>2
+                    </table>';
+
+        $expected = '<table>
+                        <thead>
+                            <tr>
+                                <th>0</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>B1</td>
+                                <td>B2</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>1</th>
+                                <td>2</td>
+                            </tr>
+                        </tfoot>
+                    </table>';
+
+        $doc = $this->html5->loadHTMLFragment($html);
+        $this->assertSame(
+            preg_replace('/\s+/', '', $expected),
+            preg_replace('/\s+/', '', $this->html5->saveHTML($doc))
+        );
+    }
+
     public function testLoadOptions()
     {
         // doc

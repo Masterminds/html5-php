@@ -359,6 +359,16 @@ class DOMTreeBuilder implements EventHandler
             $this->onlyInline = null;
         }
 
+        // some elements as table related tags might have optional end tags that force us to auto close multiple tags
+        // https://www.w3.org/TR/html401/struct/tables.html
+        if ($this->current instanceof \DOMElement && isset(Elements::$optionalEndElementsParentsToClose[$lname])) {
+            foreach (Elements::$optionalEndElementsParentsToClose[$lname] as $parentElName) {
+                if ($this->current instanceof \DOMElement && $this->current->tagName === $parentElName) {
+                    $this->autoclose($parentElName);
+                }
+            }
+        }
+
         try {
             $prefix = ($pos = strpos($lname, ':')) ? substr($lname, 0, $pos) : '';
 

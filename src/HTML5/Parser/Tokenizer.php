@@ -729,6 +729,7 @@ class Tokenizer
         // Test for '!>'
         if ('!' == $this->scanner->current() && '>' == $this->scanner->peek()) {
             $this->scanner->consume(); // Consume the last '>'
+
             return true;
         }
         // Unread '-' and one of '!' or '>';

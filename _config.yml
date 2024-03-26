@@ -1,10 +1,10 @@
 markdown: rdiscount
-baseurl: http://masterminds.github.io/html5-php
+baseurl: https://masterminds.github.io/html5-php
 
 navigation:
 - text: Docs
   url: https://github.com/Masterminds/html5-php/wiki
 - text: API
-  url: http://masterminds.github.io/html5-php/api/2.2.0/
+  url: https://masterminds.github.io/html5-php/api/2.2.0/
 - text: Github
   url: https://github.com/Masterminds/html5-php

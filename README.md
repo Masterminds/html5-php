@@ -30,7 +30,7 @@ HTML5 provides the following features.
 - Interoperability with [QueryPath](https://github.com/technosophos/querypath)
 - Runs on **PHP** 5.3.0 or newer
 
-[![Build Status](https://travis-ci.org/Masterminds/html5-php.png?branch=master)](https://travis-ci.org/Masterminds/html5-php)
+[![CI](https://github.com/Masterminds/html5-php/actions/workflows/ci.yaml/badge.svg)](https://github.com/Masterminds/html5-php/actions/workflows/ci.yaml)
 [![Latest Stable Version](https://poser.pugx.org/masterminds/html5/v/stable.png)](https://packagist.org/packages/masterminds/html5)
 [![Code Coverage](https://scrutinizer-ci.com/g/Masterminds/html5-php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Masterminds/html5-php/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Masterminds/html5-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Masterminds/html5-php/?branch=master)

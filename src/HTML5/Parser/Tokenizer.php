@@ -1127,7 +1127,7 @@ class Tokenizer
                 return '&';
             }
 
-            // Hexidecimal encoding.
+            // Hexadecimal encoding.
             // X[0-9a-fA-F]+;
             // x[0-9a-fA-F]+;
             if ('x' === $tok || 'X' === $tok) {

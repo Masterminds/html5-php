@@ -6,9 +6,9 @@
 
 namespace Masterminds\HTML5\Tests\Parser;
 
+use Masterminds\HTML5\Parser\DOMTreeBuilder;
 use Masterminds\HTML5\Parser\Scanner;
 use Masterminds\HTML5\Parser\Tokenizer;
-use Masterminds\HTML5\Parser\DOMTreeBuilder;
 
 /**
  * These tests are functional, not necessarily unit tests.
@@ -457,14 +457,34 @@ class DOMTreeBuilderTest extends \Masterminds\HTML5\Tests\TestCase
         $data = $wrapper->childNodes->item(0);
         $this->assertEquals(XML_TEXT_NODE, $data->nodeType);
         $this->assertEquals('test', $data->data);
+    }
 
+    public function testTextBeforeHeadNotAllowed()
+    {
         // The DomTreeBuilder has special handling for text when in before head mode.
-        $html = '<!DOCTYPE html><html>
-    Foo<head></head><body></body></html>';
+        $html = '<!DOCTYPE html><html>Foo<head></head><body>test</body></html>';
         $doc = $this->parse($html);
-        $this->assertEquals('Line 0, Col 0: Unexpected text. Ignoring: Foo', $this->errors[0]);
-        $headElement = $doc->documentElement->firstChild;
-        $this->assertEquals('head', $headElement->tagName);
+
+        $this->assertContains('Line 0, Col 0: Unexpected body tag outside of body context.', $this->errors);
+        $this->assertXmlStringEqualsXmlString($doc, '<html xmlns="http://www.w3.org/1999/xhtml"><head/><body>Footest</body></html>');
+    }
+
+    public function testHeadInBodyTriggersParseError()
+    {
+        $html = '<!DOCTYPE html><html><head></head><body><head></head>test</body></html>';
+        $doc = $this->parse($html);
+
+        $this->assertContains('Line 0, Col 0: Unexpected head tag outside of head context.', $this->errors);
+        $this->assertXmlStringEqualsXmlString($doc, '<html xmlns="http://www.w3.org/1999/xhtml"><head/><body>test</body></html>');
+    }
+
+    public function testBodyInBodyTriggersParseError()
+    {
+        $html = '<!DOCTYPE html><html><head></head><body>test<body>ba<br/>z</body></body></html>';
+        $doc = $this->parse($html);
+
+        $this->assertContains('Line 0, Col 0: Unexpected body tag outside of body context.', $this->errors);
+        $this->assertXmlStringEqualsXmlString($doc, '<html xmlns="http://www.w3.org/1999/xhtml"><head/><body>testba<br/>z</body></html>');
     }
 
     public function testParseErrors()

@@ -560,4 +560,47 @@ class Html5Test extends TestCase
             $this->assertContains('<a href="https://domain.com/page.php?foo=bar&amp;target=baz">https://domain.com/page.php?foo=bar&amp;target=baz</a>', $res);
         }
     }
+
+    /**
+     * Test for issue #166.
+     *
+     * @dataProvider tagOmissionProvider
+     */
+    public function testTagOmission($input, $expected)
+    {
+        $doc = $this->html5->loadHTML($input);
+        $this->assertCount(0, $this->html5->getErrors());
+
+        $out = $this->html5->saveHTML($doc);
+        $this->assertRegExp('|' . preg_quote($expected, '|') . '|', $out);
+    }
+
+    /**
+     * Tag omission test cases.
+     *
+     * @return \string[][]
+     */
+    public function tagOmissionProvider()
+    {
+        return array(
+            array(
+                '<!DOCTYPE html><html>Hello, This is a test.<br />Does it work this time?</html>',
+                '<html><head></head><body>Hello, This is a test.<br>Does it work this time?</body></html>',
+            ),
+            // test whitespace (\n)
+            array(
+                '<!DOCTYPE html>
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+<body>
+<br>
+</body>
+</html>',
+                '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+<body>
+<br>
+</body>',
+            ),
+        );
+    }
 }

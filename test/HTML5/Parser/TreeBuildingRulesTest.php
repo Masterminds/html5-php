@@ -6,10 +6,10 @@
 
 namespace Masterminds\HTML5\Tests\Parser;
 
-use Masterminds\HTML5\Parser\TreeBuildingRules;
-use Masterminds\HTML5\Parser\Tokenizer;
-use Masterminds\HTML5\Parser\Scanner;
 use Masterminds\HTML5\Parser\DOMTreeBuilder;
+use Masterminds\HTML5\Parser\Scanner;
+use Masterminds\HTML5\Parser\Tokenizer;
+use Masterminds\HTML5\Parser\TreeBuildingRules;
 
 /**
  * These tests are functional, not necessarily unit tests.

@@ -7,6 +7,7 @@ $finder = PhpCsFixer\Finder::create()
 return PhpCsFixer\Config::create()
     ->setRules(array(
         '@Symfony' => true,
+        'array_syntax' => false,
         'concat_space' => array('spacing' => 'one'),
         'phpdoc_annotation_without_dot' => false,
     ))

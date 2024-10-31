@@ -6,8 +6,8 @@
 
 namespace Masterminds\HTML5\Tests\Parser;
 
-use Masterminds\HTML5\Parser\StringInputStream;
 use Masterminds\HTML5\Parser\Scanner;
+use Masterminds\HTML5\Parser\StringInputStream;
 
 class ScannerTest extends \Masterminds\HTML5\Tests\TestCase
 {

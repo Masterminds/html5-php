@@ -45,7 +45,10 @@ class OutputRulesNewDomTest extends \Masterminds\HTML5\Tests\TestCase
 
     public function loadHTML($html)
     {
-        return HTMLDocument::createFromString($html);
+        return HTMLDocument::createFromString(
+            $html,
+            LIBXML_HTML_NOIMPLIED
+        );
     }
 
     /**
@@ -97,7 +100,7 @@ class OutputRulesNewDomTest extends \Masterminds\HTML5\Tests\TestCase
         $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
 
         $r->document($dom);
-        $expected = '<!DOCTYPE html>' . PHP_EOL . '<html lang="en"><head></head><body>foo</body></html>' . PHP_EOL;
+        $expected = '<!DOCTYPE html>' . PHP_EOL . '<html lang="en"><body>foo</body></html>' . PHP_EOL;
         $this->assertEquals($expected, stream_get_contents($stream, -1, 0));
     }
 
@@ -110,7 +113,7 @@ class OutputRulesNewDomTest extends \Masterminds\HTML5\Tests\TestCase
         $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
 
         $r->document($dom);
-        $expected = '<!DOCTYPE html>' . PHP_EOL . '<html><head></head><body></body></html>' . PHP_EOL;
+        $expected = '<!DOCTYPE html>' . PHP_EOL;
         $this->assertEquals($expected, stream_get_contents($stream, -1, 0));
     }
 

@@ -705,6 +705,14 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
                 ),
                 false,
             ),
+            // duplicate attributes must be ignored
+            '<foo bar="first" bar="second">' => array(
+                'foo',
+                array(
+                    'bar' => 'first',
+                ),
+                false,
+            ),
         );
         $this->isAllGood('startTag', 2, $good);
 

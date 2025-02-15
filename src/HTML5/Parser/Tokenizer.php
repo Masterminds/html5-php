@@ -126,26 +126,25 @@ class Tokenizer
 
         // Parse tag
         if ('<' === $tok) {
-            // Any buffered text data can go out now.
-            $this->flushBuffer();
-
             $tok = $this->scanner->next();
 
-            if (false === $tok) {
-                // end of string
-                $this->parseError('Illegal tag opening');
-            } elseif ('!' === $tok) {
+            if ('!' === $tok) {
+                $this->flushBuffer();
                 $this->markupDeclaration();
             } elseif ('/' === $tok) {
+                $this->flushBuffer();
                 $this->endTag();
             } elseif ('?' === $tok) {
+                $this->flushBuffer();
                 $this->processingInstruction();
             } elseif ($this->is_alpha($tok)) {
+                $this->flushBuffer();
                 $this->tagName();
             } else {
                 $this->parseError('Illegal tag opening');
-                // TODO is this necessary ?
-                $this->characterData();
+                $this->text('<');
+                $this->scanner->unconsume();
+                return;
             }
 
             $tok = $this->scanner->current();

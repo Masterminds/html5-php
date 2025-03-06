@@ -652,4 +652,21 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
            <h1>Hello!</h1>
        <p>Bar</p></script>'));
     }
+
+    public function testSvgAndMathElementsWithoutChildNodesAreHandledAsVoidTags()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!doctype html>
+<html lang="en" id="base">
+    <body>
+       <svg></svg>
+       <math></math>
+    </body>
+</html>');
+
+        $contents = $this->html5->saveHTML($dom);
+
+        self::assertRegExp('|^\h*<svg />$|m', $contents);
+        self::assertRegExp('|^\h*<math />$|m', $contents);
+    }
 }

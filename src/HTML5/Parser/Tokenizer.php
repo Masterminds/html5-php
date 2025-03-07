@@ -507,7 +507,7 @@ class Tokenizer
         $this->scanner->whitespace();
 
         $val = $this->attributeValue();
-        if ($isValidAttribute  && !array_key_exists($name, $attributes)) {
+        if ($isValidAttribute && !array_key_exists($name, $attributes)) {
             $attributes[$name] = $val;
         }
 

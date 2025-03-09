@@ -526,7 +526,7 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEventError($events->get(0));
         $this->assertEventEquals('startTag', 'span', $events->get(1));
         $this->assertEventError($events->get(2));
-        $this->assertEventEquals('text', '>02', $events->get(3));
+        $this->assertEventEquals('text', '<>02', $events->get(3));
         $this->assertEventEquals('endTag', 'span', $events->get(4));
         $this->assertEventEquals('eof', null, $events->get(5));
 
@@ -965,6 +965,16 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         $events = $this->parse('a&sup2;b');
         $this->assertEquals(2, $events->depth(), 'Events: ' . print_r($events, true));
         $this->assertEventEquals('text', 'a²b', $events->get(0));
+
+        $events = $this->parse('a < b');
+        $this->assertEquals(3, $events->depth(), 'Events: ' . print_r($events, true));
+        $this->assertEventError($events->get(0));
+        $this->assertEventEquals('text', 'a < b', $events->get(1));
+
+        $events = $this->parse('a <');
+        $this->assertEquals(3, $events->depth(), 'Events: ' . print_r($events, true));
+        $this->assertEventError($events->get(0));
+        $this->assertEventEquals('text', 'a <', $events->get(1));
     }
 
     // ================================================================

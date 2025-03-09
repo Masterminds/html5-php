@@ -5,6 +5,7 @@ namespace Masterminds\HTML5\Tests\Serializer;
 use Masterminds\HTML5\Serializer\OutputRules;
 use Masterminds\HTML5\Serializer\Traverser;
 
+#[\AllowDynamicProperties]
 class TraverserTest extends \Masterminds\HTML5\Tests\TestCase
 {
     protected $markup = '<!doctype html>

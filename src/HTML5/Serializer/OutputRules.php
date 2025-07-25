@@ -9,6 +9,12 @@
 
 namespace Masterminds\HTML5\Serializer;
 
+use Dom\Attr;
+use Dom\CharacterData;
+use Dom\Document;
+use Dom\Element;
+use Dom\Node;
+use Dom\XPath;
 use Masterminds\HTML5\Elements;
 
 /**
@@ -235,9 +241,9 @@ class OutputRules implements RulesInterface
 
         if (Elements::isA($name, Elements::TEXT_RAW)) {
             foreach ($ele->childNodes as $child) {
-                if ($child instanceof \DOMCharacterData) {
+                if ($child instanceof \DOMCharacterData || $child instanceof CharacterData) {
                     $this->wr($child->data);
-                } elseif ($child instanceof \DOMElement) {
+                } elseif ($child instanceof \DOMElement || $child instanceof Element) {
                     $this->element($child);
                 }
             }
@@ -305,13 +311,21 @@ class OutputRules implements RulesInterface
      */
     protected function namespaceAttrs($ele)
     {
-        if (!$this->xpath || $this->xpath->document !== $ele->ownerDocument) {
-            $this->xpath = new \DOMXPath($ele->ownerDocument);
-        }
+        $isLegacyDocument = static::isLegacyDocument($ele);
 
-        foreach ($this->xpath->query('namespace::*[not(.=../../namespace::*)]', $ele) as $nsNode) {
-            if (!in_array($nsNode->nodeValue, $this->implicitNamespaces)) {
-                $this->wr(' ')->wr($nsNode->nodeName)->wr('="')->wr($nsNode->nodeValue)->wr('"');
+        // Finding namespace in new \Dom\Document will cause error message:
+        // DOMException: The namespace axis is not well-defined in the living DOM specification.
+        // Use Dom\Element::getInScopeNamespaces() or Dom\Element::getDescendantNamespaces() instead.
+        if ($isLegacyDocument) {
+            // TODO: Fix the namespace attrs writing.
+            if (!$this->xpath || $this->xpath->document !== $ele->ownerDocument) {
+                $this->xpath = new \DOMXPath($ele->ownerDocument);
+            }
+
+            foreach ($this->xpath->query('namespace::*[not(.=../../namespace::*)]', $ele) as $nsNode) {
+                if (!in_array($nsNode->nodeValue, $this->implicitNamespaces)) {
+                    $this->wr(' ')->wr($nsNode->nodeName)->wr('="')->wr($nsNode->nodeValue)->wr('"');
+                }
             }
         }
     }
@@ -381,8 +395,14 @@ class OutputRules implements RulesInterface
         }
     }
 
-    protected function nonBooleanAttribute(\DOMAttr $attr)
+    protected function nonBooleanAttribute($attr)
     {
+        if (!$attr instanceof \DOMAttr && !$attr instanceof Attr) {
+            throw new \InvalidArgumentException(
+                __METHOD__ . '() argument 1 should be \DOMAttr or \Dom\Attr'
+            );
+        }
+
         $ele = $attr->ownerElement;
         foreach ($this->nonBooleanAttributes as $rule) {
             if (isset($rule['nodeNamespace']) && $rule['nodeNamespace'] !== $ele->namespaceURI) {
@@ -421,10 +441,25 @@ class OutputRules implements RulesInterface
         return false;
     }
 
-    private function getXPath(\DOMNode $node)
+    /**
+     * @param Node|\DOMNode $node
+     *
+     * @return  XPath|\DOMXPath
+     */
+    private function getXPath($node)
     {
+        $isLegacyDocument = static::isLegacyDocument($node);
+
+        if ($isLegacyDocument) {
+            if (!$this->xpath) {
+                $this->xpath = new \DOMXPath($node->ownerDocument);
+            }
+
+            return $this->xpath;
+        }
+
         if (!$this->xpath) {
-            $this->xpath = new \DOMXPath($node->ownerDocument);
+            $this->xpath = new XPath($node->ownerDocument);
         }
 
         return $this->xpath;
@@ -436,7 +471,7 @@ class OutputRules implements RulesInterface
      * Tags for HTML, MathML, and SVG are in the local name. Otherwise, use the
      * qualified name (8.3).
      *
-     * @param \DOMNode $ele The element being written.
+     * @param Node|\DOMNode $ele The element being written.
      */
     protected function closeTag($ele)
     {
@@ -555,5 +590,23 @@ class OutputRules implements RulesInterface
         }
 
         return strtr($text, $replace);
+    }
+
+    /**
+     * @param Node|\DOMNode $node
+     *
+     * @return  bool
+     */
+    protected static function isLegacyDocument($node)
+    {
+        if ($node instanceof Document) {
+            return false;
+        }
+
+        if ($node instanceof \DOMDocument) {
+            return true;
+        }
+
+        return $node->ownerDocument instanceof \DOMDocument;
     }
 }

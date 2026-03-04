@@ -382,6 +382,16 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals('foo', stream_get_contents($s, -1, 0));
     }
 
+    public function testWrWithNullNodeValue()
+    {
+        // Namespace nodes with an empty URI (xmlns:w="") can expose a null nodeValue; verify no error on serialization.
+        $this->html5 = $this->getInstance(array('xmlNamespaces' => true));
+        $input = '<!doctype html><html><body><span xmlns:w="" data-x="1"></span></body></html>';
+        $dom = $this->html5->loadHTML($input);
+        $result = $this->html5->saveHTML($dom);
+        $this->assertTrue(false !== strpos($result, 'xmlns:w=""'));
+    }
+
     public function getEncData()
     {
         return array(

@@ -4,6 +4,14 @@ namespace Masterminds\HTML5\Tests;
 
 use Masterminds\HTML5;
 
+class Html5TestTemplateElement extends \DOMElement
+{
+}
+
+class Html5TestTemplateFragment extends \DOMDocumentFragment
+{
+}
+
 class Html5Test extends TestCase
 {
     /**
@@ -36,6 +44,32 @@ class Html5Test extends TestCase
         $out = $this->html5->saveHTML($dom);
 
         return $out;
+    }
+
+    protected function assertStringContainsCompat($needle, $haystack)
+    {
+        if (method_exists($this, 'assertStringContainsString')) {
+            $this->assertStringContainsString($needle, $haystack);
+        } else {
+            $this->assertContains($needle, $haystack);
+        }
+    }
+
+    protected function assertStringNotContainsCompat($needle, $haystack)
+    {
+        if (method_exists($this, 'assertStringNotContainsString')) {
+            $this->assertStringNotContainsString($needle, $haystack);
+        } else {
+            $this->assertFalse(false !== strpos($haystack, $needle));
+        }
+    }
+
+    protected function assertStringContainsNormalized($needle, $haystack)
+    {
+        $this->assertStringContainsCompat(
+            preg_replace('/\s+/', '', $needle),
+            preg_replace('/\s+/', '', $haystack)
+        );
     }
 
     public function testImageTagsInSvg()
@@ -227,6 +261,335 @@ class Html5Test extends TestCase
         $dom = $this->html5->loadHTMLFragment($fragment);
         $this->assertInstanceOf('\DOMDocumentFragment', $dom);
         $this->assertEmpty($this->html5->getErrors());
+    }
+
+    public function testTemplateContentsDoNotParticipateInDomTree()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template><div>foo</div></template>
+                </body>
+            </html>'
+        );
+
+        $this->assertEmpty($this->html5->getErrors());
+
+        $xpath = new \DOMXPath($dom);
+        $xpath->registerNamespace('html', 'http://www.w3.org/1999/xhtml');
+
+        $this->assertNull($dom->getElementsByTagName('template')->item(0)->firstChild);
+        $this->assertFalse($dom->getElementsByTagName('template')->item(0)->hasAttribute('__html5_php_template_contents'));
+        $this->assertEquals(0, $xpath->query('//html:div')->length);
+        $saved = $this->html5->saveHTML($dom);
+        $this->assertStringContainsCompat('<template><div>foo</div></template>', $dom->saveHTML());
+        $this->assertStringContainsCompat('<template><div>foo</div></template>', $saved);
+    }
+
+    public function testTemplateContentsWorkInHtmlFragments()
+    {
+        $fragment = $this->html5->loadHTMLFragment('<template><div>foo</div></template>');
+
+        $this->assertEmpty($this->html5->getErrors());
+        $this->assertEquals('template', $fragment->firstChild->nodeName);
+        $this->assertNull($fragment->firstChild->firstChild);
+        $this->assertEquals('<template><div>foo</div></template>', $this->html5->saveHTML($fragment));
+    }
+
+    public function testNestedTemplateContentsRoundTrip()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template><template><div>foo</div></template></template>
+                </body>
+            </html>'
+        );
+
+        $this->assertEmpty($this->html5->getErrors());
+
+        $this->assertStringContainsCompat(
+            '<template><template><div>foo</div></template></template>',
+            $this->html5->saveHTML($dom)
+        );
+    }
+
+    public function testTemplateContentsStayWithTheSameElementWhenSiblingOrderChanges()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template id="source"><div>foo</div></template>
+                </body>
+            </html>'
+        );
+
+        $template = $dom->getElementsByTagName('template')->item(0);
+        $before = $dom->createElement('template');
+        $before->setAttribute('id', 'before');
+        $template->parentNode->insertBefore($before, $template);
+
+        $this->assertStringContainsNormalized(
+            '<template id="before"></template><template id="source"><div>foo</div></template>',
+            $this->html5->saveHTML($dom)
+        );
+    }
+
+    public function testTemplateCloneNodeDeepKeepsDetachedContents()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template id="source"><div>foo</div></template>
+                </body>
+            </html>'
+        );
+
+        $template = $dom->getElementsByTagName('template')->item(0);
+        $clone = $template->cloneNode(true);
+        $clone->setAttribute('id', 'clone');
+        $template->parentNode->appendChild($clone);
+
+        $this->assertStringContainsNormalized(
+            '<template id="source"><div>foo</div></template><template id="clone"><div>foo</div></template>',
+            $this->html5->saveHTML($dom)
+        );
+    }
+
+    public function testTemplateImportNodeDeepKeepsDetachedContents()
+    {
+        $source = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template id="source"><div>foo</div></template>
+                </body>
+            </html>'
+        );
+        $target = $this->html5->loadHTML('<!DOCTYPE html><html><body></body></html>');
+
+        $imported = $target->importNode($source->getElementsByTagName('template')->item(0), true);
+        $imported->setAttribute('id', 'imported');
+        $target->getElementsByTagName('body')->item(0)->appendChild($imported);
+
+        $this->assertStringContainsNormalized(
+            '<template id="imported"><div>foo</div></template>',
+            $this->html5->saveHTML($target)
+        );
+    }
+
+    public function testTemplateDocumentCloneNodeDeepKeepsDetachedContents()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template><div>foo</div></template>
+                </body>
+            </html>'
+        );
+
+        $clone = $dom->cloneNode(true);
+
+        $this->assertInstanceOf('Masterminds\\HTML5\\HTML5DOMDocument', $clone);
+        $this->assertStringContainsCompat('<template><div>foo</div></template>', $this->html5->saveHTML($clone));
+    }
+
+    public function testTemplateFragmentCloneNodeDeepKeepsDetachedContents()
+    {
+        $fragment = $this->html5->loadHTMLFragment('<template><div>foo</div></template>');
+        $clone = $fragment->cloneNode(true);
+
+        $this->assertInstanceOf('Masterminds\\HTML5\\HTML5DOMDocumentFragment', $clone);
+        $this->assertEquals('<template><div>foo</div></template>', $this->html5->saveHTML($clone));
+    }
+
+    public function testTemplateSerializationKeepsDetachedContentsAfterMutation()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template><div>foo</div></template>
+                </body>
+            </html>'
+        );
+
+        $template = $dom->getElementsByTagName('template')->item(0);
+        $template->appendChild($dom->createElement('span', 'bar'));
+
+        $this->assertStringContainsNormalized(
+            '<template><div>foo</div><span>bar</span></template>',
+            $this->html5->saveHTML($dom)
+        );
+    }
+
+    public function testTemplateMutationProxiesKeepDetachedContents()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template><span>two</span><em>three</em></template>
+                </body>
+            </html>'
+        );
+
+        $template = $dom->getElementsByTagName('template')->item(0);
+        $contents = \Masterminds\HTML5\TemplateContents::find($template);
+
+        $template->insertBefore($dom->createElement('strong', 'one'), $contents->firstChild);
+        $template->replaceChild($dom->createElement('b', 'TWO'), $contents->childNodes->item(1));
+        $template->removeChild($contents->lastChild);
+
+        $this->assertStringContainsNormalized(
+            '<template><strong>one</strong><b>TWO</b></template>',
+            $this->html5->saveHTML($dom)
+        );
+    }
+
+    public function testTemplateSaveHtmlSubtreeKeepsDetachedContents()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template><div>foo</div></template>
+                </body>
+            </html>'
+        );
+
+        $template = $dom->getElementsByTagName('template')->item(0);
+        $this->assertEquals('<template><div>foo</div></template>', $dom->saveHTML($template));
+    }
+
+    public function testTemplateContentsDoNotLeakNamespaces()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html xmlns="http://www.w3.org/1999/xhtml">
+                <body>
+                    <template xmlns="urn:template"><div>foo</div></template>
+                    <div>bar</div>
+                </body>
+            </html>',
+            array('xmlNamespaces' => true)
+        );
+
+        $this->assertEmpty($this->html5->getErrors());
+
+        $xpath = new \DOMXPath($dom);
+        $xpath->registerNamespace('html', 'http://www.w3.org/1999/xhtml');
+
+        $this->assertEquals(1, $xpath->query('//html:body/html:div')->length);
+        $this->assertEquals('http://www.w3.org/1999/xhtml', $xpath->query('//html:body/html:div')->item(0)->namespaceURI);
+    }
+
+    public function testTemplateContentsKeepTargetDocumentBehavior()
+    {
+        $targetDocument = new \DOMDocument();
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template><div>foo</div></template>
+                </body>
+            </html>',
+            array('target_document' => $targetDocument)
+        );
+
+        $this->assertSame($targetDocument, $dom);
+
+        $xpath = new \DOMXPath($dom);
+        $xpath->registerNamespace('html', 'http://www.w3.org/1999/xhtml');
+
+        $this->assertNull($dom->getElementsByTagName('template')->item(0)->firstChild);
+        $this->assertEquals(0, $xpath->query('//html:div')->length);
+        $html = $dom->saveHTML();
+        $this->assertStringNotContainsCompat('__html5_php_template_contents', $html);
+        $this->assertStringContainsCompat('<template><div>foo</div></template>', $this->html5->saveHTML($dom));
+    }
+
+    public function testTemplateContentsKeepTargetDocumentCustomNodeClasses()
+    {
+        $targetDocument = new \DOMDocument();
+        $targetDocument->registerNodeClass('DOMElement', 'Masterminds\\HTML5\\Tests\\Html5TestTemplateElement');
+        $targetDocument->registerNodeClass('DOMDocumentFragment', 'Masterminds\\HTML5\\Tests\\Html5TestTemplateFragment');
+
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template><div>foo</div></template>
+                </body>
+            </html>',
+            array('target_document' => $targetDocument)
+        );
+
+        $template = $dom->getElementsByTagName('template')->item(0);
+
+        $this->assertInstanceOf('Masterminds\\HTML5\\Tests\\Html5TestTemplateElement', $template);
+        $this->assertInstanceOf('Masterminds\\HTML5\\Tests\\Html5TestTemplateFragment', $dom->createDocumentFragment());
+        $this->assertNull($template->firstChild);
+        $this->assertStringContainsCompat('<template><div>foo</div></template>', $this->html5->saveHTML($dom));
+    }
+
+    public function testTemplateCloneNodeDeepKeepsDetachedContentsOnTargetDocument()
+    {
+        $targetDocument = new \DOMDocument();
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template id="source"><div>foo</div></template>
+                </body>
+            </html>',
+            array('target_document' => $targetDocument)
+        );
+
+        $template = $dom->getElementsByTagName('template')->item(0);
+        $clone = $template->cloneNode(true);
+        $clone->setAttribute('id', 'clone');
+        $template->parentNode->appendChild($clone);
+
+        $this->assertStringContainsNormalized(
+            '<template id="source"><div>foo</div></template><template id="clone"><div>foo</div></template>',
+            $this->html5->saveHTML($dom)
+        );
+    }
+
+    public function testTemplateContentsInternalIdDoesNotLeakWhenImported()
+    {
+        $dom = $this->html5->loadHTML(
+            '<!DOCTYPE html>
+            <html>
+                <body>
+                    <template><div>foo</div></template>
+                </body>
+            </html>'
+        );
+
+        $targetDocument = new \DOMDocument();
+        $targetDocument->appendChild($targetDocument->importNode($dom->getElementsByTagName('template')->item(0), false));
+        unset($dom);
+
+        $html = $this->html5->saveHTML($targetDocument);
+        $this->assertStringContainsCompat('<template></template>', $html);
+        $this->assertStringNotContainsCompat('__html5_php_template_contents', $html);
+    }
+
+    public function testTemplateContentsAreNotPreservedByNativeImportIntoPlainDomDocument()
+    {
+        $fragment = $this->html5->loadHTMLFragment('<template><div>foo</div></template>');
+
+        $targetDocument = new \DOMDocument();
+        $targetDocument->appendChild($targetDocument->importNode($fragment->firstChild, true));
+
+        $this->assertStringContainsCompat('<template></template>', $this->html5->saveHTML($targetDocument));
     }
 
     public function testSaveHTML()

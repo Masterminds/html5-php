@@ -1208,7 +1208,7 @@ class Tokenizer
      */
     protected function is_alpha($input)
     {
-        if (empty($input)) {
+        if (!is_string($input) || 1 !== strlen($input)) {
             return false;
         }
 

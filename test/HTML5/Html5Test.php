@@ -560,4 +560,12 @@ class Html5Test extends TestCase
             $this->assertContains('<a href="https://domain.com/page.php?foo=bar&amp;target=baz">https://domain.com/page.php?foo=bar&amp;target=baz</a>', $res);
         }
     }
+
+    public function testEndsWithSlash()
+    {
+        $html = '<p>Visit <a href="http://example.com/">example.com</';
+        $expected = '<p>Visit <a href="http://example.com/">example.com</a></p>';
+        $doc =  $this->html5->loadHTMLFragment($html);
+        $this->assertSame($expected, $this->html5->saveHTML($doc));
+    }
 }

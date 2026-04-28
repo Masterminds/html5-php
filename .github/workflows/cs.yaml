@@ -9,7 +9,7 @@ on:
 jobs:
   php-cs-fixer:
     name: "php-cs-fixer"
-    runs-on: "ubuntu-24.04"
+    runs-on: "ubuntu-latest"
 
     strategy:
       fail-fast: false
@@ -25,7 +25,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-        
+
       - name: cs fix
         run: |
           wget -q https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.19.3/php-cs-fixer.phar 

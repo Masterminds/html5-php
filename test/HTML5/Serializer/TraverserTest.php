@@ -7,6 +7,11 @@ use Masterminds\HTML5\Serializer\Traverser;
 
 class TraverserTest extends \Masterminds\HTML5\Tests\TestCase
 {
+    /**
+     * @var \Masterminds\HTML5
+     */
+    protected $html5;
+
     protected $markup = '<!doctype html>
     <html lang="en">
       <head>

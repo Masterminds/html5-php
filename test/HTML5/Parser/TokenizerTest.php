@@ -970,12 +970,10 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
     // ================================================================
     // Utility functions.
     // ================================================================
-    protected function createTokenizer($string, $debug = false)
+    protected function createTokenizer($string)
     {
         $eventHandler = new EventStack();
         $scanner = new Scanner($string);
-
-        $scanner->debug = $debug;
 
         return array(
             new Tokenizer($scanner, $eventHandler),
@@ -983,9 +981,9 @@ class TokenizerTest extends \Masterminds\HTML5\Tests\TestCase
         );
     }
 
-    public function parse($string, $debug = false)
+    public function parse($string)
     {
-        list($tok, $events) = $this->createTokenizer($string, $debug);
+        list($tok, $events) = $this->createTokenizer($string);
         $tok->parse();
 
         return $events;

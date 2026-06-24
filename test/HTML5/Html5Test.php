@@ -505,6 +505,9 @@ class Html5Test extends TestCase
 
         $res = $this->cycleFragment('<style>div>div>div</style>');
         $this->assertRegExp('|div>div>div|', $res);
+
+        $res = $this->cycleFragment('<p>There is a less-than character after this word < is it rendered?</p>');
+        $this->assertRegExp('|<p>There is a less-than character after this word &lt; is it rendered\\?</p>|', $res);
     }
 
     public function testEntities()

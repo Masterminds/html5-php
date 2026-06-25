@@ -122,7 +122,20 @@ The following options are supported:
   assigning the HTML5 namespace to the DOM document. This is for
   non-namespace aware DOM tools.
 * `target_document` (\DOMDocument): A DOM document that will be used as the
-  destination for the parsed nodes.
+  destination for the parsed nodes. When parsing `<template>` contents into a
+  caller-supplied document, use `HTML5::save()` or `HTML5::saveHTML()` for
+  serialization, since native `DOMDocument::saveHTML()` cannot preserve the
+  detached template subtree on a plain `DOMDocument`. The detached subtree is
+  preserved for documents parsed by HTML5-PHP, including `cloneNode(true)` on
+  caller-supplied target documents and `importNode(true)` on HTML5-PHP-created
+  documents. When a parsed document contains `<template>` elements, HTML5-PHP
+  registers template-aware DOM node wrappers on that document if it is still
+  using the native `DOMElement` and `DOMDocumentFragment` classes, so detached
+  contents can follow `cloneNode(true)`. If a caller-supplied target document
+  already uses custom node classes, HTML5-PHP leaves them in place and detached
+  template contents are still preserved by `HTML5::save()` / `HTML5::saveHTML()`.
+  Native `importNode()` into a plain external `DOMDocument` cannot carry
+  detached template contents.
 * `implicit_namespaces` (array): An assoc array of namespaces that should be
   used by the parser. Name is tag prefix, value is NS URI.
 

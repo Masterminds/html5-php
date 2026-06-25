@@ -10,6 +10,7 @@
 namespace Masterminds\HTML5\Serializer;
 
 use Masterminds\HTML5\Elements;
+use Masterminds\HTML5\TemplateContents;
 
 /**
  * Generate the output html5 based on element rules.
@@ -212,12 +213,17 @@ class OutputRules implements RulesInterface
     public function element($ele)
     {
         $name = $ele->tagName;
+        $templateContents = null;
 
         // Per spec:
         // If the element has a declared namespace in the HTML, MathML or
         // SVG namespaces, we use the lname instead of the tagName.
         if ($this->traverser->isLocalElement($ele)) {
             $name = $ele->localName;
+        }
+
+        if ('template' === $name) {
+            $templateContents = TemplateContents::find($ele);
         }
 
         // If we are in SVG or MathML there is special handling.
@@ -245,6 +251,8 @@ class OutputRules implements RulesInterface
             // Handle children.
             if ($ele->hasChildNodes()) {
                 $this->traverser->children($ele->childNodes);
+            } elseif ($templateContents instanceof \DOMDocumentFragment && $templateContents->hasChildNodes()) {
+                $this->traverser->children($templateContents->childNodes);
             }
 
             // Close out the SVG or MathML special handling.

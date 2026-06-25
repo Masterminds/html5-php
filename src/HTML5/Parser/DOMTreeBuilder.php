@@ -3,7 +3,9 @@
 namespace Masterminds\HTML5\Parser;
 
 use Masterminds\HTML5\Elements;
+use Masterminds\HTML5\HTML5DOMDocument;
 use Masterminds\HTML5\InstructionProcessor;
+use Masterminds\HTML5\TemplateContents;
 
 /**
  * Create an HTML5 DOM tree from events.
@@ -147,6 +149,10 @@ class DOMTreeBuilder implements EventHandler
 
     protected $insertMode = 0;
 
+    protected $templateStack = array();
+
+    protected $templateNodeClassesResolved = false;
+
     /**
      * Track if we are in an element that allows only inline child nodes.
      *
@@ -174,11 +180,15 @@ class DOMTreeBuilder implements EventHandler
             // Create the doctype. For now, we are always creating HTML5
             // documents, and attempting to up-convert any older DTDs to HTML5.
             $dt = $impl->createDocumentType('html');
-            // $this->doc = \DOMImplementation::createDocument(NULL, 'html', $dt);
-            $this->doc = $impl->createDocument(null, '', $dt);
+            $this->doc = new HTML5DOMDocument('1.0', !empty($options['encoding']) ? $options['encoding'] : 'UTF-8');
+            $this->doc->appendChild($dt);
             $this->doc->encoding = !empty($options['encoding']) ? $options['encoding'] : 'UTF-8';
         }
 
+        if (!isset($options[self::OPT_TARGET_DOC]) || $isFragment) {
+            TemplateContents::registerNodeClasses($this->doc);
+            $this->templateNodeClassesResolved = true;
+        }
         $this->errors = array();
 
         $this->current = $this->doc; // ->documentElement;
@@ -199,6 +209,9 @@ class DOMTreeBuilder implements EventHandler
         if ($isFragment) {
             $this->insertMode = static::IM_IN_BODY;
             $this->frag = $this->doc->createDocumentFragment();
+            if (method_exists($this->frag, 'html5PhpKeepTemplateOwnerDocument')) {
+                $this->frag->html5PhpKeepTemplateOwnerDocument($this->doc);
+            }
             $this->current = $this->frag;
         }
     }
@@ -325,6 +338,11 @@ class DOMTreeBuilder implements EventHandler
             $lname = Elements::normalizeSvgElement($lname);
         }
 
+        if ('template' === $lname && !$this->templateNodeClassesResolved) {
+            TemplateContents::registerNodeClasses($this->doc);
+            $this->templateNodeClassesResolved = true;
+        }
+
         $pushes = 0;
         // when we found a tag thats appears inside $nsRoots, we have to switch the defalut namespace
         if (isset($this->nsRoots[$lname]) && $this->nsStack[0][''] !== $this->nsRoots[$lname]) {
@@ -437,6 +455,11 @@ class DOMTreeBuilder implements EventHandler
             }
         }
 
+        $templateContents = null;
+        if ('template' === $lname) {
+            $templateContents = $this->doc->createDocumentFragment();
+        }
+
         if ($this->frag !== $this->current && $this->rules->hasRules($name)) {
             // Some elements have special processing rules. Handle those separately.
             $this->current = $this->rules->evaluate($ele, $this->current);
@@ -445,7 +468,13 @@ class DOMTreeBuilder implements EventHandler
             $this->current->appendChild($ele);
 
             if (!Elements::isA($name, Elements::VOID_TAG)) {
-                $this->current = $ele;
+                if ($templateContents) {
+                    TemplateContents::store($ele, $templateContents);
+                    $this->templateStack[] = array($ele, $this->current, $templateContents);
+                    $this->current = $templateContents;
+                } else {
+                    $this->current = $ele;
+                }
             }
 
             // Self-closing tags should only be respected on foreign elements
@@ -516,6 +545,18 @@ class DOMTreeBuilder implements EventHandler
             return;
         }
 
+        if ('template' === $lname && !empty($this->templateStack)) {
+            $templateState = array_pop($this->templateStack);
+            while ($this->current !== $templateState[2]) {
+                $this->popNamespaces($this->current);
+                $this->current = $this->current->parentNode;
+            }
+            $this->popNamespaces($templateState[0]);
+            $this->current = $templateState[1];
+
+            return;
+        }
+
         // Special case handling for SVG.
         if ($this->insertMode === static::IM_IN_SVG) {
             $lname = Elements::normalizeSvgElement($lname);
@@ -530,12 +571,7 @@ class DOMTreeBuilder implements EventHandler
         }
 
         // remove the namespaced definded by current node
-        if (isset($this->pushes[$cid])) {
-            for ($i = 0; $i < $this->pushes[$cid][0]; ++$i) {
-                array_shift($this->nsStack);
-            }
-            unset($this->pushes[$cid]);
-        }
+        $this->popNamespaces($this->current);
 
         if (!$this->autoclose($lname)) {
             $this->parseError('Could not find closing tag for ' . $lname);
@@ -674,6 +710,24 @@ class DOMTreeBuilder implements EventHandler
         } while ($working = $working->parentNode);
 
         return false;
+    }
+
+    /**
+     * Remove the namespaces declared by a node from the active namespace stack.
+     *
+     * @param \DOMNode $node
+     */
+    protected function popNamespaces(\DOMNode $node)
+    {
+        $cid = spl_object_hash($node);
+        if (!isset($this->pushes[$cid])) {
+            return;
+        }
+
+        for ($i = 0; $i < $this->pushes[$cid][0]; ++$i) {
+            array_shift($this->nsStack);
+        }
+        unset($this->pushes[$cid]);
     }
 
     /**

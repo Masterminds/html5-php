@@ -2,6 +2,10 @@
 
 namespace Masterminds\HTML5\Serializer;
 
+use Dom\Document;
+use Dom\DocumentFragment;
+use Dom\NodeList;
+
 /**
  * Traverser for walking a DOM tree.
  *
@@ -60,16 +64,16 @@ class Traverser
      */
     public function walk()
     {
-        if ($this->dom instanceof \DOMDocument) {
+        if ($this->dom instanceof \DOMDocument || $this->dom instanceof Document) {
             $this->rules->document($this->dom);
-        } elseif ($this->dom instanceof \DOMDocumentFragment) {
+        } elseif ($this->dom instanceof \DOMDocumentFragment || $this->dom instanceof DocumentFragment) {
             // Document fragments are a special case. Only the children need to
             // be serialized.
             if ($this->dom->hasChildNodes()) {
                 $this->children($this->dom->childNodes);
             }
         }        // If NodeList, loop
-        elseif ($this->dom instanceof \DOMNodeList) {
+        elseif ($this->dom instanceof \DOMNodeList || $this->dom instanceof NodeList) {
             // If this is a NodeList of DOMDocuments this will not work.
             $this->children($this->dom);
         }         // Else assume this is a DOMNode-like datastructure.

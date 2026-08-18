@@ -21,7 +21,7 @@
     ],
     "require" : {
         "ext-dom": "*",
-        "php" : ">=7.0"
+        "php" : ">=7.2"
     },
     "require-dev": {
         "phpunit/phpunit" : "^6 || ^7 || ^8 || ^9 || ^10"

@@ -27,6 +27,8 @@ jobs:
           php-version: ${{ matrix.php-version }}
 
       - name: cs fix
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: "1"
         run: |
           wget -q https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.19.3/php-cs-fixer.phar 
           php php-cs-fixer.phar fix --dry-run --diff

@@ -479,7 +479,7 @@ class OutputRules implements RulesInterface
      *      encoding here will just escape &'<>".
      *
      * @param string $text      Text to encode.
-     * @param bool   $attribute True if we are encoding an attrubute, false otherwise.
+     * @param bool   $attribute True if we are encoding an attribute, false otherwise.
      *
      * @return string The encoded text.
      */

@@ -19,20 +19,23 @@ class OutputRulesNewDomTest extends AbstractOutputRulesTest
 
     protected function loadHTML($html)
     {
+        $options = 0;
+        if (defined('Dom\\HTML_NO_DEFAULT_NS')) {
+            $options |= constant('Dom\\HTML_NO_DEFAULT_NS');
+        }
+
         return HTMLDocument::createFromString(
             $html,
-            LIBXML_HTML_NOIMPLIED
+            $options
         );
     }
 
-    protected function createCommentNode($dom, $value)
+    protected function createElementWithText($dom, $name, $value)
     {
-        return $dom->createComment($value);
-    }
+        $element = $dom->createElement($name);
+        $element->textContent = $value;
 
-    protected function createTextNode($dom, $value)
-    {
-        return $dom->createTextNode($value);
+        return $element;
     }
 
     public function testSerializeWithNamespaces()

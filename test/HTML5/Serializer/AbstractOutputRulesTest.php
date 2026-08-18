@@ -36,12 +36,17 @@ abstract class AbstractOutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
 
     protected function createCommentNode($dom, $value)
     {
-        return new \DOMComment($value);
+        return $dom->createComment($value);
     }
 
     protected function createTextNode($dom, $value)
     {
-        return new \DOMText($value);
+        return $dom->createTextNode($value);
+    }
+
+    protected function createElementWithText($dom, $name, $value)
+    {
+        return $dom->createElement($name, $value);
     }
 
     /**
@@ -575,7 +580,7 @@ abstract class AbstractOutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
     </body>
 </html>');
 
-        $badNode = $dom->createElement('p', 'Bar');
+        $badNode = $this->createElementWithText($dom, 'p', 'Bar');
 
         // modify the content of the TEXT_RAW element: <script id="template"> appending dom nodes
         $styleElement = $dom->getElementById('template');

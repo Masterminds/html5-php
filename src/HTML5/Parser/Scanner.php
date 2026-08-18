@@ -7,6 +7,7 @@ use Masterminds\HTML5\Exception;
 /**
  * The scanner scans over a given data input to react appropriately to characters.
  */
+#[\AllowDynamicProperties]
 class Scanner
 {
     const CHARS_HEX = 'abcdefABCDEF01234567890';

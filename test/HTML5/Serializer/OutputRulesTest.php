@@ -44,7 +44,9 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
     {
         $class = new \ReflectionClass('\Masterminds\HTML5\Serializer\OutputRules');
         $method = $class->getMethod($name);
-        $method->setAccessible(true);
+        if (\PHP_VERSION_ID < 80500) {
+            $method->setAccessible(true);
+        }
 
         return $method;
     }

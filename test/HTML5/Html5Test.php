@@ -236,7 +236,7 @@ class Html5Test extends TestCase
         $this->assertEmpty($this->html5->getErrors());
 
         $saved = $this->html5->saveHTML($dom);
-        $this->assertRegExp('|<p>This is a test.</p>|', $saved);
+        $this->assertMatchesRegularExpression('|<p>This is a test.</p>|', $saved);
     }
 
     public function testSaveHTMLFragment()
@@ -258,13 +258,13 @@ class Html5Test extends TestCase
         $file = fopen('php://temp', 'w');
         $this->html5->save($dom, $file);
         $content = stream_get_contents($file, -1, 0);
-        $this->assertRegExp('|<p>This is a test.</p>|', $content);
+        $this->assertMatchesRegularExpression('|<p>This is a test.</p>|', $content);
 
         // Test file
         $tmpfname = tempnam(sys_get_temp_dir(), 'html5-php');
         $this->html5->save($dom, $tmpfname);
         $content = file_get_contents($tmpfname);
-        $this->assertRegExp('|<p>This is a test.</p>|', $content);
+        $this->assertMatchesRegularExpression('|<p>This is a test.</p>|', $content);
         unlink($tmpfname);
     }
 
@@ -340,8 +340,8 @@ class Html5Test extends TestCase
         $this->assertNotEquals('textpath', $textPath->tagName);
 
         $html = $this->html5->saveHTML($dom);
-        $this->assertRegExp('|<svg width="150" height="100" viewBox="0 0 3 2">|', $html);
-        $this->assertRegExp('|<rect width="1" height="2" x="0" fill="#008d46" />|', $html);
+        $this->assertMatchesRegularExpression('|<svg width="150" height="100" viewBox="0 0 3 2">|', $html);
+        $this->assertMatchesRegularExpression('|<rect width="1" height="2" x="0" fill="#008d46" />|', $html);
     }
 
     public function testMathMl()
@@ -376,8 +376,8 @@ class Html5Test extends TestCase
         $this->assertFalse($csymbol->hasAttribute('definitionurl'));
 
         $html = $this->html5->saveHTML($dom);
-        $this->assertRegExp('|<csymbol definitionURL="http://www.example.com/mathops/multiops.html#plusminus">|', $html);
-        $this->assertRegExp('|<mi>y</mi>|', $html);
+        $this->assertMatchesRegularExpression('|<csymbol definitionURL="http://www.example.com/mathops/multiops.html#plusminus">|', $html);
+        $this->assertMatchesRegularExpression('|<mi>y</mi>|', $html);
     }
 
     public function testUnknownElements()
@@ -396,37 +396,37 @@ class Html5Test extends TestCase
 
         $this->assertEmpty($this->html5->getErrors());
         $markup = $this->html5->saveHTML($dom);
-        $this->assertRegExp('|<f:name>Big rectangle thing</f:name>|', $markup);
-        $this->assertRegExp('|<sarcasm>um, yeah</sarcasm>|', $markup);
+        $this->assertMatchesRegularExpression('|<f:name>Big rectangle thing</f:name>|', $markup);
+        $this->assertMatchesRegularExpression('|<sarcasm>um, yeah</sarcasm>|', $markup);
     }
 
     public function testElements()
     {
         // Should have content.
         $res = $this->cycle('<div>FOO</div>');
-        $this->assertRegExp('|<div>FOO</div>|', $res);
+        $this->assertMatchesRegularExpression('|<div>FOO</div>|', $res);
 
         // Should be empty
         $res = $this->cycle('<span></span>');
-        $this->assertRegExp('|<span></span>|', $res);
+        $this->assertMatchesRegularExpression('|<span></span>|', $res);
 
         // Should have content.
         $res = $this->cycleFragment('<div>FOO</div>');
-        $this->assertRegExp('|<div>FOO</div>|', $res);
+        $this->assertMatchesRegularExpression('|<div>FOO</div>|', $res);
 
         // Should be empty
         $res = $this->cycleFragment('<span></span>');
-        $this->assertRegExp('|<span></span>|', $res);
+        $this->assertMatchesRegularExpression('|<span></span>|', $res);
 
         // Elements with dashes and underscores
         $res = $this->cycleFragment('<sp-an></sp-an>');
-        $this->assertRegExp('|<sp-an></sp-an>|', $res);
+        $this->assertMatchesRegularExpression('|<sp-an></sp-an>|', $res);
         $res = $this->cycleFragment('<sp_an></sp_an>');
-        $this->assertRegExp('|<sp_an></sp_an>|', $res);
+        $this->assertMatchesRegularExpression('|<sp_an></sp_an>|', $res);
 
         // Should have no closing tag.
         $res = $this->cycle('<hr>');
-        $this->assertRegExp('|<hr></body>|', $res);
+        $this->assertMatchesRegularExpression('|<hr></body>|', $res);
     }
 
     public function testAttributes()
@@ -441,33 +441,33 @@ class Html5Test extends TestCase
         }
 
         $res = $this->cycle('<div attr="val">FOO</div>');
-        $this->assertRegExp('|<div attr="val">FOO</div>|', $res);
+        $this->assertMatchesRegularExpression('|<div attr="val">FOO</div>|', $res);
 
         // XXX: Note that spec does NOT require attrs in the same order.
         $res = $this->cycle('<div attr="val" class="even">FOO</div>');
-        $this->assertRegExp('|<div attr="val" class="even">FOO</div>|', $res);
+        $this->assertMatchesRegularExpression('|<div attr="val" class="even">FOO</div>|', $res);
 
         $res = $this->cycle('<div xmlns:foo="http://example.com">FOO</div>');
-        $this->assertRegExp('|<div xmlns:foo="http://example.com">FOO</div>|', $res);
+        $this->assertMatchesRegularExpression('|<div xmlns:foo="http://example.com">FOO</div>|', $res);
 
         $res = $this->cycleFragment('<div attr="val">FOO</div>');
-        $this->assertRegExp('|<div attr="val">FOO</div>|', $res);
+        $this->assertMatchesRegularExpression('|<div attr="val">FOO</div>|', $res);
 
         // XXX: Note that spec does NOT require attrs in the same order.
         $res = $this->cycleFragment('<div attr="val" class="even">FOO</div>');
-        $this->assertRegExp('|<div attr="val" class="even">FOO</div>|', $res);
+        $this->assertMatchesRegularExpression('|<div attr="val" class="even">FOO</div>|', $res);
 
         $res = $this->cycleFragment('<div xmlns:foo="http://example.com">FOO</div>');
-        $this->assertRegExp('|<div xmlns:foo="http://example.com">FOO</div>|', $res);
+        $this->assertMatchesRegularExpression('|<div xmlns:foo="http://example.com">FOO</div>|', $res);
     }
 
     public function testPCData()
     {
         $res = $this->cycle('<a>This is a test.</a>');
-        $this->assertRegExp('|This is a test.|', $res);
+        $this->assertMatchesRegularExpression('|This is a test.|', $res);
 
         $res = $this->cycleFragment('<a>This is a test.</a>');
-        $this->assertRegExp('|This is a test.|', $res);
+        $this->assertMatchesRegularExpression('|This is a test.|', $res);
 
         $res = $this->cycle('This
       is
@@ -475,7 +475,7 @@ class Html5Test extends TestCase
       test.');
 
         // Check that newlines are there, but don't count spaces.
-        $this->assertRegExp('|This\n\s*is\n\s*a\n\s*test.|', $res);
+        $this->assertMatchesRegularExpression('|This\n\s*is\n\s*a\n\s*test.|', $res);
 
         $res = $this->cycleFragment('This
       is
@@ -483,40 +483,40 @@ class Html5Test extends TestCase
       test.');
 
         // Check that newlines are there, but don't count spaces.
-        $this->assertRegExp('|This\n\s*is\n\s*a\n\s*test.|', $res);
+        $this->assertMatchesRegularExpression('|This\n\s*is\n\s*a\n\s*test.|', $res);
 
         $res = $this->cycle('<a>This <em>is</em> a test.</a>');
-        $this->assertRegExp('|This <em>is</em> a test.|', $res);
+        $this->assertMatchesRegularExpression('|This <em>is</em> a test.|', $res);
 
         $res = $this->cycleFragment('<a>This <em>is</em> a test.</a>');
-        $this->assertRegExp('|This <em>is</em> a test.|', $res);
+        $this->assertMatchesRegularExpression('|This <em>is</em> a test.|', $res);
     }
 
     public function testUnescaped()
     {
         $res = $this->cycle('<script>2 < 1</script>');
-        $this->assertRegExp('|2 < 1|', $res);
+        $this->assertMatchesRegularExpression('|2 < 1|', $res);
 
         $res = $this->cycle('<style>div>div>div</style>');
-        $this->assertRegExp('|div>div>div|', $res);
+        $this->assertMatchesRegularExpression('|div>div>div|', $res);
 
         $res = $this->cycleFragment('<script>2 < 1</script>');
-        $this->assertRegExp('|2 < 1|', $res);
+        $this->assertMatchesRegularExpression('|2 < 1|', $res);
 
         $res = $this->cycleFragment('<style>div>div>div</style>');
-        $this->assertRegExp('|div>div>div|', $res);
+        $this->assertMatchesRegularExpression('|div>div>div|', $res);
     }
 
     public function testEntities()
     {
         $res = $this->cycle('<a>Apples &amp; bananas.</a>');
-        $this->assertRegExp('|Apples &amp; bananas.|', $res);
+        $this->assertMatchesRegularExpression('|Apples &amp; bananas.|', $res);
 
         $res = $this->cycleFragment('<a>Apples &amp; bananas.</a>');
-        $this->assertRegExp('|Apples &amp; bananas.|', $res);
+        $this->assertMatchesRegularExpression('|Apples &amp; bananas.|', $res);
 
         $res = $this->cycleFragment('<p>R&D</p>');
-        $this->assertRegExp('|R&amp;D|', $res);
+        $this->assertMatchesRegularExpression('|R&amp;D|', $res);
     }
 
     public function testCaseSensitiveTags()
@@ -528,25 +528,25 @@ class Html5Test extends TestCase
             )
         );
         $out = $this->html5->saveHTML($dom);
-        $this->assertRegExp('|<html><body><Button color="red">Error</Button></body></html>|', $out);
+        $this->assertMatchesRegularExpression('|<html><body><Button color="red">Error</Button></body></html>|', $out);
     }
 
     public function testComment()
     {
         $res = $this->cycle('a<!-- This is a test. -->b');
-        $this->assertRegExp('|<!-- This is a test. -->|', $res);
+        $this->assertMatchesRegularExpression('|<!-- This is a test. -->|', $res);
 
         $res = $this->cycleFragment('a<!-- This is a test. -->b');
-        $this->assertRegExp('|<!-- This is a test. -->|', $res);
+        $this->assertMatchesRegularExpression('|<!-- This is a test. -->|', $res);
     }
 
     public function testCDATA()
     {
         $res = $this->cycle('a<![CDATA[ This <is> a test. ]]>b');
-        $this->assertRegExp('|<!\[CDATA\[ This <is> a test\. \]\]>|', $res);
+        $this->assertMatchesRegularExpression('|<!\[CDATA\[ This <is> a test\. \]\]>|', $res);
 
         $res = $this->cycleFragment('a<![CDATA[ This <is> a test. ]]>b');
-        $this->assertRegExp('|<!\[CDATA\[ This <is> a test\. \]\]>|', $res);
+        $this->assertMatchesRegularExpression('|<!\[CDATA\[ This <is> a test\. \]\]>|', $res);
     }
 
     public function testAnchorTargetQueryParam()

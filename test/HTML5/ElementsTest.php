@@ -185,6 +185,7 @@ class ElementsTest extends TestCase
         'feDiffuseLighting',
         'feDisplacementMap',
         'feDistantLight',
+        'feDropShadow',
         'feFlood',
         'feFuncA',
         'feFuncB',
@@ -445,6 +446,7 @@ class ElementsTest extends TestCase
             'altglyph' => 'altGlyph',
             'BAR' => 'bar',
             'fespecularlighting' => 'feSpecularLighting',
+            'fedropshadow' => 'feDropShadow',
             'bAz' => 'baz',
             'foreignobject' => 'foreignObject',
         );

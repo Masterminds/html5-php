@@ -43,7 +43,9 @@ class TraverserTest extends \Masterminds\HTML5\Tests\TestCase
     {
         $class = new \ReflectionClass('\Masterminds\HTML5\Serializer\Traverser');
         $method = $class->getMethod($name);
-        $method->setAccessible(true);
+        if (\PHP_VERSION_ID < 80500) {
+            $method->setAccessible(true);
+        }
 
         return $method;
     }

@@ -397,9 +397,9 @@ class DOMTreeBuilder implements EventHandler
         // When we are on a void tag, we do not need to care about namesapce nesting.
         if ($pushes > 0 && !Elements::isA($name, Elements::VOID_TAG)) {
             // PHP tends to free the memory used by DOM,
-            // to avoid spl_object_hash collisions whe have to avoid garbage collection of $ele storing it into $pushes
+            // to avoid spl_object_id collisions we have to avoid garbage collection of $ele storing it into $pushes
             // see https://bugs.php.net/bug.php?id=67459
-            $this->pushes[spl_object_hash($ele)] = array($pushes, $ele);
+            $this->pushes[spl_object_id($ele)] = array($pushes, $ele);
         }
 
         foreach ($attributes as $aName => $aVal) {
@@ -521,7 +521,7 @@ class DOMTreeBuilder implements EventHandler
             $lname = Elements::normalizeSvgElement($lname);
         }
 
-        $cid = spl_object_hash($this->current);
+        $cid = spl_object_id($this->current);
 
         // XXX: HTML has no parent. What do we do, though,
         // if this element appears in the wrong place?

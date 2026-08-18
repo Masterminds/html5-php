@@ -2,14 +2,37 @@
 
 namespace Masterminds\HTML5\Tests\Serializer;
 
+use Dom\HTMLDocument;
 use Masterminds\HTML5\Serializer\OutputRules;
 use Masterminds\HTML5\Serializer\Traverser;
 
-class OutputRulesTest extends AbstractOutputRulesTest
+class OutputRulesNewDomTest extends AbstractOutputRulesTest
 {
+    public static function setUpBeforeClass(): void
+    {
+        if (PHP_VERSION_ID < 80400) {
+            self::markTestSkipped('New DOM only supports PHP 8.4+');
+        }
+
+        parent::setUpBeforeClass();
+    }
+
     protected function loadHTML($html)
     {
-        return $this->html5->loadHTML($html);
+        return HTMLDocument::createFromString(
+            $html,
+            LIBXML_HTML_NOIMPLIED
+        );
+    }
+
+    protected function createCommentNode($dom, $value)
+    {
+        return $dom->createComment($value);
+    }
+
+    protected function createTextNode($dom, $value)
+    {
+        return $dom->createTextNode($value);
     }
 
     public function testSerializeWithNamespaces()
@@ -20,7 +43,7 @@ class OutputRulesTest extends AbstractOutputRulesTest
 
         $source = '
             <!DOCTYPE html>
-            <html><body id="body" xmlns:x="http://www.prefixed.com">
+            <html><head></head><body id="body" xmlns:x="http://www.prefixed.com">
                     <a id="bar1" xmlns="http://www.prefixed.com/bar1">
                         <b id="bar4" xmlns="http://www.prefixed.com/bar4"><x:prefixed id="prefixed">xy</x:prefixed></b>
                     </a>
@@ -29,13 +52,9 @@ class OutputRulesTest extends AbstractOutputRulesTest
                     <div id="div"></div>
                     <d id="bar3"></d>
                     <xn:d id="bar5" xmlns:xn="http://www.prefixed.com/xn" xmlns="http://www.prefixed.com/bar5_x"><x id="bar5_x">y</x></xn:d>
-                </body>
-            </html>';
+                </body></html>';
 
-        $dom = $this->html5->loadHTML($source, array(
-            'xmlNamespaces' => true,
-        ));
-        $this->assertFalse($this->html5->hasErrors(), print_r($this->html5->getErrors(), 1));
+        $dom = $this->loadHTML($source);
 
         $stream = fopen('php://temp', 'w');
         $r = new OutputRules($stream, $this->html5->getOptions());
@@ -51,51 +70,22 @@ class OutputRulesTest extends AbstractOutputRulesTest
         $this->assertEquals($clear($source), $clear($rendered));
     }
 
-    public function testCData()
-    {
-        $dom = $this->loadHTML('<!doctype html>
-    <html lang="en">
-      <body>
-        <div><![CDATA[bar]]></div>
-      </body>
-    </html>');
-
-        $stream = fopen('php://temp', 'w');
-        $r = new OutputRules($stream, $this->html5->getOptions());
-        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
-
-        $list = $dom->getElementsByTagName('div');
-        $r->cdata($list->item(0)->childNodes->item(0));
-        $this->assertEquals('<![CDATA[bar]]>', stream_get_contents($stream, -1, 0));
-
-        $dom = $this->loadHTML('<!doctype html>
-    <html lang="en">
-      <body>
-        <div id="foo"></div>
-      </body>
-    </html>');
-
-        $dom->getElementById('foo')->appendChild(new \DOMCdataSection(']]>Foo<[![CDATA test ]]>'));
-
-        $stream = fopen('php://temp', 'w');
-        $r = new OutputRules($stream, $this->html5->getOptions());
-        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
-        $list = $dom->getElementsByTagName('div');
-        $r->cdata($list->item(0)->childNodes->item(0));
-
-        $this->assertEquals('<![CDATA[]]]]><![CDATA[>Foo<[![CDATA test ]]]]><![CDATA[>]]>', stream_get_contents($stream, -1, 0));
-    }
-
     public function testProcessorInstruction()
     {
-        $dom = $this->html5->loadHTMLFragment('<?foo bar ?>');
+        $doc = HTMLDocument::createEmpty();
+        $dom = $doc->createProcessingInstruction('foo', 'bar ');
 
         $stream = fopen('php://temp', 'w');
         $r = new OutputRules($stream, $this->html5->getOptions());
         $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
 
-        $r->processorInstruction($dom->firstChild);
+        $r->processorInstruction($dom);
         $content = stream_get_contents($stream, -1, 0);
         $this->assertMatchesRegularExpression('|<\?foo bar \?>|', $content);
+    }
+
+    public function testHandlingInvalidRawContent()
+    {
+        self::markTestSkipped('Currently \Dom\HTMLElement will break invalid HTML so skip this test.');
     }
 }

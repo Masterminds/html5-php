@@ -1,0 +1,607 @@
+<?php
+
+namespace Masterminds\HTML5\Tests\Serializer;
+
+use Masterminds\HTML5;
+use Masterminds\HTML5\Serializer\OutputRules;
+use Masterminds\HTML5\Serializer\Traverser;
+
+abstract class AbstractOutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
+{
+    protected $markup = '<!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title>Test</title>
+      </head>
+      <body>
+        <p>This is a test.</p>
+      </body>
+    </html>';
+
+    /**
+     * @var HTML5
+     */
+    protected $html5;
+
+    /**
+     * @before
+     */
+    public function before()
+    {
+        $this->html5 = $this->getInstance();
+    }
+
+    abstract protected function loadHTML($html);
+
+    protected function createCommentNode($dom, $value)
+    {
+        return new \DOMComment($value);
+    }
+
+    protected function createTextNode($dom, $value)
+    {
+        return new \DOMText($value);
+    }
+
+    /**
+     * Using reflection we make a protected method accessible for testing.
+     *
+     * @param string $name
+     *                     The name of the method on the Traverser class to test
+     *
+     * @return \ReflectionMethod for the specified method
+     */
+    public function getProtectedMethod($name)
+    {
+        $class = new \ReflectionClass('\Masterminds\HTML5\Serializer\OutputRules');
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+
+        return $method;
+    }
+
+    public function getTraverserProtectedProperty($name)
+    {
+        $class = new \ReflectionClass('\Masterminds\HTML5\Serializer\Traverser');
+        $property = $class->getProperty($name);
+        $property->setAccessible(true);
+
+        return $property;
+    }
+
+    public function getOutputRules($options = array())
+    {
+        $options = $options + $this->html5->getOptions();
+        $stream = fopen('php://temp', 'w');
+        $dom = $this->loadHTML($this->markup);
+        $r = new OutputRules($stream, $options);
+        $t = new Traverser($dom, $stream, $r, $options);
+
+        return array(
+            $r,
+            $stream,
+        );
+    }
+
+    public function testDocument()
+    {
+        $dom = $this->loadHTML('<!doctype html><html lang="en"><body>foo</body></html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $r->document($dom);
+        $expected = '<!DOCTYPE html>' . PHP_EOL . '<html lang="en"><body>foo</body></html>' . PHP_EOL;
+        $this->assertEquals($expected, stream_get_contents($stream, -1, 0));
+    }
+
+    public function testEmptyDocument()
+    {
+        $dom = $this->loadHTML('');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $r->document($dom);
+        $expected = '<!DOCTYPE html>' . PHP_EOL;
+        $this->assertEquals($expected, stream_get_contents($stream, -1, 0));
+    }
+
+    public function testDoctype()
+    {
+        $dom = $this->loadHTML('<!doctype html><html lang="en"><body>foo</body></html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $m = $this->getProtectedMethod('doctype');
+        $m->invoke($r, 'foo');
+        $this->assertEquals('<!DOCTYPE html>' . PHP_EOL, stream_get_contents($stream, -1, 0));
+    }
+
+    public function testElement()
+    {
+        $dom = $this->loadHTML(
+            '<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+        <svg width="150" height="100" viewBox="0 0 3 2">
+          <rect width="1" height="2" x="0" fill="#008d46" />
+          <rect width="1" height="2" x="1" fill="#ffffff" />
+          <rect width="1" height="2" x="2" fill="#d2232c" />
+        </svg>
+      </body>
+    </html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $list = $dom->getElementsByTagName('div');
+        $r->element($list->item(0));
+        $this->assertEquals('<div id="foo" class="bar baz">foo bar baz</div>', stream_get_contents($stream, -1, 0));
+    }
+
+    public function testElementWithScript()
+    {
+        $dom = $this->loadHTML(
+            '<!doctype html>
+    <html lang="en">
+      <head>
+        <script>
+          var $jQ = jQuery.noConflict();
+          // Use jQuery via $jQ(...)
+          $jQ(document).ready(function () {
+            $jQ("#mktFrmSubmit").wrap("<div class=\'buttonSubmit\'></div>");
+            $jQ(".buttonSubmit").prepend("<span></span>");
+          });
+        </script>
+      </head>
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+      </body>
+    </html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $script = $dom->getElementsByTagName('script');
+        $r->element($script->item(0));
+        $this->assertEquals(
+            '<script>
+          var $jQ = jQuery.noConflict();
+          // Use jQuery via $jQ(...)
+          $jQ(document).ready(function () {
+            $jQ("#mktFrmSubmit").wrap("<div class=\'buttonSubmit\'></div>");
+            $jQ(".buttonSubmit").prepend("<span></span>");
+          });
+        </script>', stream_get_contents($stream, -1, 0));
+    }
+
+    public function testElementWithStyle()
+    {
+        $dom = $this->loadHTML(
+            '<!doctype html>
+    <html lang="en">
+      <head>
+        <style>
+          body > .bar {
+            display: none;
+          }
+        </style>
+      </head>
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+      </body>
+    </html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $style = $dom->getElementsByTagName('style');
+        $r->element($style->item(0));
+        $this->assertEquals('<style>
+          body > .bar {
+            display: none;
+          }
+        </style>', stream_get_contents($stream, -1, 0));
+    }
+
+    public function testOpenTag()
+    {
+        $dom = $this->loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+      </body>
+    </html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $list = $dom->getElementsByTagName('div');
+        $m = $this->getProtectedMethod('openTag');
+        $m->invoke($r, $list->item(0));
+        $this->assertEquals('<div id="foo" class="bar baz">', stream_get_contents($stream, -1, 0));
+    }
+
+    public function testComment()
+    {
+        $dom = $this->loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div><!-- foo --></div>
+      </body>
+    </html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $list = $dom->getElementsByTagName('div');
+        $r->comment($list->item(0)->childNodes->item(0));
+        $this->assertEquals('<!-- foo -->', stream_get_contents($stream, -1, 0));
+
+        $dom = $this->loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo"></div>
+      </body>
+      </html>');
+        $dom->getElementById('foo')->appendChild($this->createCommentNode($dom, '<!-- --> --> Foo -->'));
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $list = $dom->getElementsByTagName('div');
+        $r->comment($list->item(0)->childNodes->item(0));
+
+        // Could not find more definitive guidelines on what this should be. Went with
+        // what the HTML5 spec says and what \DOMDocument::saveXML() produces.
+        $this->assertEquals('<!--<!-- --> --> Foo -->-->', stream_get_contents($stream, -1, 0));
+    }
+
+    public function testText()
+    {
+        $dom = $this->loadHTML('<!doctype html>
+    <html lang="en">
+      <head>
+        <script>baz();</script>
+      </head>
+    </html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $list = $dom->getElementsByTagName('script');
+        $r->text($list->item(0)->childNodes->item(0));
+        $this->assertEquals('baz();', stream_get_contents($stream, -1, 0));
+
+        $dom = $this->loadHTML('<!doctype html>
+    <html lang="en">
+      <head id="foo"></head>
+    </html>');
+        $foo = $dom->getElementById('foo');
+        $foo->appendChild($this->createTextNode($dom, '<script>alert("hi");</script>'));
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $r->text($foo->firstChild);
+        $this->assertEquals('&lt;script&gt;alert("hi");&lt;/script&gt;', stream_get_contents($stream, -1, 0));
+    }
+
+    public function testNl()
+    {
+        list($o, $s) = $this->getOutputRules();
+
+        $m = $this->getProtectedMethod('nl');
+        $m->invoke($o);
+        $this->assertEquals(PHP_EOL, stream_get_contents($s, -1, 0));
+    }
+
+    public function testWr()
+    {
+        list($o, $s) = $this->getOutputRules();
+
+        $m = $this->getProtectedMethod('wr');
+        $m->invoke($o, 'foo');
+        $this->assertEquals('foo', stream_get_contents($s, -1, 0));
+    }
+
+    public function testWrWithNullNodeValue()
+    {
+        // Namespace nodes with an empty URI (xmlns:w="") can expose a null nodeValue; verify no error on serialization.
+        $this->html5 = $this->getInstance(array('xmlNamespaces' => true));
+        $input = '<!doctype html><html><body><span xmlns:w="" data-x="1"></span></body></html>';
+        $dom = $this->loadHTML($input);
+        $result = $this->html5->saveHTML($dom);
+        $this->assertTrue(false !== strpos($result, 'xmlns:w=""'));
+    }
+
+    public function getEncData()
+    {
+        return array(
+            array(
+                false,
+                '&\'<>"',
+                '&amp;\'&lt;&gt;"',
+                '&amp;&apos;&lt;&gt;&quot;',
+            ),
+            array(
+                false,
+                'This + is. a < test',
+                'This + is. a &lt; test',
+                'This &plus; is&period; a &lt; test',
+            ),
+            array(
+                false,
+                '.+#',
+                '.+#',
+                '&period;&plus;&num;',
+            ),
+
+            array(
+                true,
+                '.+#\'',
+                '.+#\'',
+                '&period;&plus;&num;&apos;',
+            ),
+            array(
+                true,
+                '&".<',
+                '&amp;&quot;.<',
+                '&amp;&quot;&period;&lt;',
+            ),
+            array(
+                true,
+                '&\'<>"',
+                '&amp;\'<>&quot;',
+                '&amp;&apos;&lt;&gt;&quot;',
+            ),
+            array(
+                true,
+                "\xc2\xa0\"'",
+                '&nbsp;&quot;\'',
+                '&nbsp;&quot;&apos;',
+            ),
+        );
+    }
+
+    /**
+     * Test basic encoding of text.
+     *
+     * @dataProvider getEncData
+     */
+    public function testEnc($isAttribute, $test, $expected, $expectedEncoded)
+    {
+        list($o, $s) = $this->getOutputRules();
+        $m = $this->getProtectedMethod('enc');
+
+        $this->assertEquals($expected, $m->invoke($o, $test, $isAttribute));
+
+        list($o, $s) = $this->getOutputRules(array(
+            'encode_entities' => true,
+        ));
+        $m = $this->getProtectedMethod('enc');
+        $this->assertEquals($expectedEncoded, $m->invoke($o, $test, $isAttribute));
+    }
+
+    /**
+     * Test basic encoding of text.
+     *
+     * @dataProvider getEncData
+     */
+    public function testEscape($isAttribute, $test, $expected, $expectedEncoded)
+    {
+        list($o, $s) = $this->getOutputRules();
+        $m = $this->getProtectedMethod('escape');
+
+        $this->assertEquals($expected, $m->invoke($o, $test, $isAttribute));
+    }
+
+    public function booleanAttributes()
+    {
+        return array(
+            array('<img alt="" ismap>'),
+            array('<img alt="">'),
+            array('<input type="radio" readonly>'),
+            array('<input type="radio" checked disabled>'),
+            array('<input type="checkbox" checked disabled>'),
+            array('<input type="radio" value="" checked disabled>'),
+            array('<div data-value=""></div>'),
+            array('<select disabled></select>'),
+            array('<div ng-app></div>'),
+            array('<script defer></script>'),
+        );
+    }
+
+    /**
+     * @dataProvider booleanAttributes
+     */
+    public function testBooleanAttrs($html)
+    {
+        $dom = $this->loadHTML('<!doctype html><html lang="en"><body>' . $html . '</body></html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $node = $dom->getElementsByTagName('body')->item(0)->firstChild;
+
+        $m = $this->getProtectedMethod('attrs');
+        $m->invoke($r, $node);
+
+        $content = stream_get_contents($stream, -1, 0);
+
+        $html = preg_replace('~<[a-z]+(.*)></[a-z]+>~', '\1', $html);
+        $html = preg_replace('~<[a-z]+(.*)/?>~', '\1', $html);
+
+        $this->assertEquals($content, $html);
+    }
+
+    public function testAttrs()
+    {
+        $dom = $this->loadHTML('<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+      </body>
+    </html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $list = $dom->getElementsByTagName('div');
+
+        $m = $this->getProtectedMethod('attrs');
+        $m->invoke($r, $list->item(0));
+
+        $content = stream_get_contents($stream, -1, 0);
+        $this->assertEquals(' id="foo" class="bar baz"', $content);
+    }
+
+    public function testSvg()
+    {
+        $dom = $this->loadHTML(
+            '<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+        <svg width="150" height="100" viewBox="0 0 3 2">
+          <rect width="1" height="2" x="0" fill="#008d46" />
+          <rect width="1" height="2" x="1" fill="#ffffff" />
+          <rect width="1" height="2" x="2" fill="#d2232c" />
+          <rect id="Bar" x="300" y="100" width="300" height="100" fill="rgb(255,255,0)">
+            <animate attributeName="x" attributeType="XML" begin="0s" dur="9s" fill="freeze" from="300" to="0" />
+          </rect>
+        </svg>
+      </body>
+    </html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $list = $dom->getElementsByTagName('svg');
+        $r->element($list->item(0));
+        $contents = stream_get_contents($stream, -1, 0);
+        $this->assertMatchesRegularExpression('|<svg width="150" height="100" viewBox="0 0 3 2">|', $contents);
+        $this->assertMatchesRegularExpression('|<rect width="1" height="2" x="0" fill="#008d46" />|', $contents);
+        $this->assertMatchesRegularExpression('|<rect id="Bar" x="300" y="100" width="300" height="100" fill="rgb\(255,255,0\)">|', $contents);
+    }
+
+    public function testMath()
+    {
+        $dom = $this->loadHTML(
+            '<!doctype html>
+    <html lang="en">
+      <body>
+        <div id="foo" class="bar baz">foo bar baz</div>
+        <math>
+          <mi>x</mi>
+          <csymbol definitionURL="http://www.example.com/mathops/multiops.html#plusminus">
+            <mo>&PlusMinus;</mo>
+          </csymbol>
+          <mi>y</mi>
+        </math>
+      </body>
+    </html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $list = $dom->getElementsByTagName('math');
+        $r->element($list->item(0));
+        $content = stream_get_contents($stream, -1, 0);
+        $this->assertMatchesRegularExpression('|<math>|', $content);
+        $this->assertMatchesRegularExpression('|<csymbol definitionURL="http://www.example.com/mathops/multiops.html#plusminus">|', $content);
+    }
+
+    public function testAddressTag()
+    {
+        $dom = $this->loadHTML(
+            '<!doctype html>
+    <html lang="en">
+      <body>
+        <address>
+            <a href="../People/Raggett/">Dave Raggett</a>,
+            <a href="../People/Arnaud/">Arnaud Le Hors</a>,
+            contact persons for the <a href="Activity">W3C HTML Activity</a>
+        </address>
+      </body>
+    </html>');
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $list = $dom->getElementsByTagName('address');
+        $r->element($list->item(0));
+        $contents = stream_get_contents($stream, -1, 0);
+
+        $this->assertMatchesRegularExpression('|<address>|', $contents);
+        $this->assertMatchesRegularExpression('|<a href="../People/Raggett/">Dave Raggett</a>,|', $contents);
+        $this->assertMatchesRegularExpression('|<a href="../People/Arnaud/">Arnaud Le Hors</a>,|', $contents);
+        $this->assertMatchesRegularExpression('|contact persons for the <a href="Activity">W3C HTML Activity</a>|', $contents);
+        $this->assertMatchesRegularExpression('|</address>|', $contents);
+    }
+
+    /**
+     * Ensure direct DOM manipulation doesn't break TEXT_RAW elements (iframe, script, etc...).
+     */
+    public function testHandlingInvalidRawContent()
+    {
+        $dom = $this->loadHTML(
+    '<!doctype html>
+<html lang="en" id="base">
+    <body>
+       <script id="template" type="x-tmpl-mustache">
+           <h1>Hello!</h1>
+       </script>
+    </body>
+</html>');
+
+        $badNode = $dom->createElement('p', 'Bar');
+
+        // modify the content of the TEXT_RAW element: <script id="template"> appending dom nodes
+        $styleElement = $dom->getElementById('template');
+        $styleElement->appendChild($badNode);
+
+        $contents = $this->html5->saveHTML($dom);
+
+        $this->assertTrue(false !== strpos($contents, '<script id="template" type="x-tmpl-mustache">
+           <h1>Hello!</h1>
+       <p>Bar</p></script>'));
+    }
+
+    public function testSvgAndMathElementsWithoutChildNodesAreHandledAsVoidTags()
+    {
+        $dom = $this->loadHTML(
+            '<!doctype html>
+<html lang="en" id="base">
+    <body>
+       <svg></svg>
+       <math></math>
+    </body>
+</html>');
+
+        $contents = $this->html5->saveHTML($dom);
+
+        self::assertMatchesRegularExpression('|^\h*<svg />$|m', $contents);
+        self::assertMatchesRegularExpression('|^\h*<math />$|m', $contents);
+    }
+}

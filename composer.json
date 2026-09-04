@@ -21,6 +21,7 @@
     ],
     "require" : {
         "ext-dom": "*",
+        "ext-mbstring": "*",
         "php" : ">=7.4"
     },
     "require-dev": {

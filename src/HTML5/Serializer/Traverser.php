@@ -104,6 +104,14 @@ class Traverser
             case XML_COMMENT_NODE:
                 $this->rules->comment($node);
                 break;
+            case XML_ENTITY_REF_NODE:
+                // entityReference() is not on RulesInterface, so a custom rules
+                // implementation keeps the previous behaviour of skipping the node
+                // rather than fataling on a missing method.
+                if ($this->rules instanceof OutputRules) {
+                    $this->rules->entityReference($node);
+                }
+                break;
             // Currently we don't support embedding DTDs.
             default:
                 //print '<!-- Skipped -->';

@@ -278,6 +278,20 @@ class OutputRules implements RulesInterface
         $this->wr($ele->ownerDocument->saveXML($ele));
     }
 
+    /**
+     * Write an entity reference node.
+     *
+     * Such a node carries the entity name only: its nodeValue is null and its
+     * textContent is empty, so it cannot go through text(). saveXML() gives
+     * back the reference as it was written, which is what DOMDocument does.
+     *
+     * @param \DOMEntityReference $ele The entity reference to write.
+     */
+    public function entityReference($ele)
+    {
+        $this->wr($ele->ownerDocument->saveXML($ele));
+    }
+
     public function processorInstruction($ele)
     {
         $this->wr('<?')

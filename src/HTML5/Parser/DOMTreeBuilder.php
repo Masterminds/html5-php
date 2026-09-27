@@ -671,6 +671,20 @@ class DOMTreeBuilder implements EventHandler
 
                 return true;
             }
+
+            // Stop at an ancestor whose own insertion would already have closed
+            // any open <p>. Inserting an AUTOCLOSE_P element calls autoclose('p'),
+            // which moves the insertion point above the <p>, so no <p> can still
+            // be open further up. Without this the walk runs to the document root
+            // on every block-level start tag, making deeply nested markup
+            // quadratic. Elements that are BLOCK_TAG but not AUTOCLOSE_P (table,
+            // address, canvas, dd, hr, noscript, output, tfoot) are NOT boundaries,
+            // because they nest inside a <p> without closing it.
+            if ('p' === $tagName
+                && $working !== $this->current
+                && Elements::isA($working->tagName, Elements::AUTOCLOSE_P)) {
+                return false;
+            }
         } while ($working = $working->parentNode);
 
         return false;

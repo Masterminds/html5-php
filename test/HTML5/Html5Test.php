@@ -38,6 +38,38 @@ class Html5Test extends TestCase
         return $out;
     }
 
+    public function testFormFeedsInQuotedAttributes()
+    {
+        foreach (array('"', "'") as $quote) {
+            $value = "\fbefore &amp;\f after\f";
+            $html = '<img alt=' . $quote . $value . $quote . ' src="foo.png">';
+            $expected = "\fbefore &\f after\f";
+
+            $document = $this->html5->loadHTML($this->wrap($html));
+            $image = $document->getElementsByTagName('img')->item(0);
+            $this->assertSame($expected, $image->getAttribute('alt'));
+            $this->assertSame('foo.png', $image->getAttribute('src'));
+            $this->assertSame(2, $image->attributes->length);
+            $this->assertEmpty($this->html5->getErrors());
+
+            $fragment = $this->html5->loadHTMLFragment($html);
+            $this->assertSame($expected, $fragment->firstChild->getAttribute('alt'));
+            $serialized = $this->html5->saveHTML($fragment);
+            $reparsed = $this->html5->loadHTMLFragment($serialized);
+            $this->assertSame($expected, $reparsed->firstChild->getAttribute('alt'));
+            $this->assertSame('foo.png', $reparsed->firstChild->getAttribute('src'));
+            $this->assertEmpty($this->html5->getErrors());
+        }
+    }
+
+    public function testFormFeedStillSeparatesUnquotedAttributes()
+    {
+        $fragment = $this->html5->loadHTMLFragment("<img alt=before\fsrc=foo.png>");
+        $this->assertSame('before', $fragment->firstChild->getAttribute('alt'));
+        $this->assertSame('foo.png', $fragment->firstChild->getAttribute('src'));
+        $this->assertEmpty($this->html5->getErrors());
+    }
+
     public function testImageTagsInSvg()
     {
         $html = '<!DOCTYPE html>

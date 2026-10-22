@@ -374,7 +374,14 @@ class DOMTreeBuilder implements EventHandler
                 $xml = "<$lname xmlns=\"" . htmlspecialchars($needsWorkaround, ENT_QUOTES | ENT_XML1, 'UTF-8') . '" ' . (strlen($prefix) && isset($this->nsStack[0][$prefix]) ? ("xmlns:$prefix=\"" . htmlspecialchars($this->nsStack[0][$prefix], ENT_QUOTES | ENT_XML1, 'UTF-8') . '"') : '') . '/>';
 
                 $frag = new \DOMDocument('1.0', 'UTF-8');
-                if (!@$frag->loadXML($xml) || null === $frag->documentElement) {
+                $previous = libxml_use_internal_errors(true);
+                try {
+                    $loaded = $frag->loadXML($xml);
+                } finally {
+                    libxml_clear_errors();
+                    libxml_use_internal_errors($previous);
+                }
+                if (!$loaded || null === $frag->documentElement) {
                     throw new \DOMException('Invalid namespace declaration');
                 }
 

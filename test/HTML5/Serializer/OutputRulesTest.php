@@ -366,6 +366,37 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         $this->assertEquals('&lt;script&gt;alert("hi");&lt;/script&gt;', stream_get_contents($stream, -1, 0));
     }
 
+    public function testEntityReference()
+    {
+        $dom = $this->html5->loadHTML('<!doctype html>
+    <html lang="en">
+      <body></body>
+    </html>');
+
+        $body = $dom->getElementsByTagName('body')->item(0);
+        $span = $dom->createElement('span', 'Identit&eacute;');
+        $body->appendChild($span);
+
+        // The entity reference carries the name only: nodeValue is null and
+        // textContent is empty, so it cannot go through text().
+        $reference = $span->lastChild;
+        $this->assertEquals(XML_ENTITY_REF_NODE, $reference->nodeType);
+
+        // The traverser has to dispatch it, otherwise the node is skipped silently
+        // and the reference disappears from the output.
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $t = new Traverser($dom, $stream, $r, $this->html5->getOptions());
+
+        $t->node($span);
+        $this->assertEquals('<span>Identit&eacute;</span>', stream_get_contents($stream, -1, 0));
+
+        $stream = fopen('php://temp', 'w');
+        $r = new OutputRules($stream, $this->html5->getOptions());
+        $r->entityReference($reference);
+        $this->assertEquals('&eacute;', stream_get_contents($stream, -1, 0));
+    }
+
     public function testNl()
     {
         list($o, $s) = $this->getOutputRules();

@@ -181,4 +181,33 @@ class ScannerTest extends \Masterminds\HTML5\Tests\TestCase
         $s->getAsciiAlphaNum();
         $this->assertEquals($string, $s->remainingChars());
     }
+
+    public function testLineAndColumnTrackForwardAndBackward()
+    {
+        $s = new Scanner("ab\nc\xC3\xA9d\n\nz");
+
+        $this->assertSame(1, $s->currentLine());
+        $this->assertSame(0, $s->columnOffset());
+
+        $s->next();
+        $s->next();
+        $s->next();
+        $this->assertSame(2, $s->currentLine());
+        $this->assertSame(0, $s->columnOffset());
+
+        $s->next();
+        $s->next();
+        $s->next();
+        $s->next();
+        $this->assertSame(2, $s->currentLine());
+        $this->assertSame(3, $s->columnOffset());
+
+        $s->unconsume(4);
+        $this->assertSame(2, $s->currentLine());
+        $this->assertSame(0, $s->columnOffset());
+
+        $s->unconsume(3);
+        $this->assertSame(1, $s->currentLine());
+        $this->assertSame(0, $s->columnOffset());
+    }
 }

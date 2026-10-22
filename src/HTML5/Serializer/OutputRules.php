@@ -314,7 +314,7 @@ class OutputRules implements RulesInterface
 
         foreach ($this->xpath->query('namespace::*[not(.=../../namespace::*)]', $ele) as $nsNode) {
             if (!in_array($nsNode->nodeValue, $this->implicitNamespaces)) {
-                $this->wr(' ')->wr($nsNode->nodeName)->wr('="')->wr($nsNode->nodeValue)->wr('"');
+                $this->wr(' ')->wr($nsNode->nodeName)->wr('="')->wr($this->enc((string) $nsNode->nodeValue, true))->wr('"');
             }
         }
     }

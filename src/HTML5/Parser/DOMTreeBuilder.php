@@ -371,10 +371,12 @@ class DOMTreeBuilder implements EventHandler
             $prefix = ($pos = strpos($lname, ':')) ? substr($lname, 0, $pos) : '';
 
             if (false !== $needsWorkaround) {
-                $xml = "<$lname xmlns=\"$needsWorkaround\" " . (strlen($prefix) && isset($this->nsStack[0][$prefix]) ? ("xmlns:$prefix=\"" . $this->nsStack[0][$prefix] . '"') : '') . '/>';
+                $xml = "<$lname xmlns=\"" . htmlspecialchars($needsWorkaround, ENT_QUOTES | ENT_XML1, 'UTF-8') . '" ' . (strlen($prefix) && isset($this->nsStack[0][$prefix]) ? ("xmlns:$prefix=\"" . htmlspecialchars($this->nsStack[0][$prefix], ENT_QUOTES | ENT_XML1, 'UTF-8') . '"') : '') . '/>';
 
                 $frag = new \DOMDocument('1.0', 'UTF-8');
-                $frag->loadXML($xml);
+                if (!@$frag->loadXML($xml) || null === $frag->documentElement) {
+                    throw new \DOMException('Invalid namespace declaration');
+                }
 
                 $ele = $this->doc->importNode($frag->documentElement, true);
             } else {
@@ -385,7 +387,7 @@ class DOMTreeBuilder implements EventHandler
                 }
             }
         } catch (\DOMException $e) {
-            $this->parseError("Illegal tag name: <$lname>. Replaced with <invalid>.");
+            $this->parseError("Illegal tag name or namespace: <$lname>. Replaced with <invalid>.");
             $ele = $this->doc->createElement('invalid');
         }
 

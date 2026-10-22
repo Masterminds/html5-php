@@ -29,6 +29,16 @@ class Scanner
     private $EOF;
 
     /**
+     * Cached byte offset, line and column of the last position lookup.
+     *
+     * Lets currentLine() and columnOffset() advance from the previous lookup
+     * instead of rescanning the input from the start for every parse error.
+     */
+    private $posChar = 0;
+    private $posLine = 1;
+    private $posColumn = 0;
+
+    /**
      * Parse errors.
      */
     public $errors = array();
@@ -246,7 +256,34 @@ class Scanner
 
         // Add one to $this->char because we want the number for the next
         // byte to be processed.
-        return substr_count($this->data, "\n", 0, min($this->char, $this->EOF)) + 1;
+        $this->advancePosition(min($this->char, $this->EOF));
+
+        return $this->posLine;
+    }
+
+    /**
+     * Move the cached line/column forward to the given byte offset.
+     *
+     * @param int $offset
+     */
+    private function advancePosition($offset)
+    {
+        if ($offset < $this->posChar) {
+            $this->posChar = 0;
+            $this->posLine = 1;
+            $this->posColumn = 0;
+        }
+
+        $segment = substr($this->data, $this->posChar, $offset - $this->posChar);
+        $this->posChar = $offset;
+
+        $lastNewline = strrpos($segment, "\n");
+        if (false === $lastNewline) {
+            $this->posColumn += UTF8Utils::countChars($segment);
+        } else {
+            $this->posLine += substr_count($segment, "\n");
+            $this->posColumn = UTF8Utils::countChars(substr($segment, $lastNewline + 1));
+        }
     }
 
     /**
@@ -287,24 +324,9 @@ class Scanner
             return 0;
         }
 
-        // strrpos is weird, and the offset needs to be negative for what we
-        // want (i.e., the last \n before $this->char). This needs to not have
-        // one (to make it point to the next character, the one we want the
-        // position of) added to it because strrpos's behaviour includes the
-        // final offset byte.
-        $backwardFrom = $this->char - 1 - strlen($this->data);
-        $lastLine = strrpos($this->data, "\n", $backwardFrom);
+        $this->advancePosition($this->char);
 
-        // However, for here we want the length up until the next byte to be
-        // processed, so add one to the current byte ($this->char).
-        if (false !== $lastLine) {
-            $findLengthOf = substr($this->data, $lastLine + 1, $this->char - 1 - $lastLine);
-        } else {
-            // After a newline.
-            $findLengthOf = substr($this->data, 0, $this->char);
-        }
-
-        return UTF8Utils::countChars($findLengthOf);
+        return $this->posColumn;
     }
 
     /**

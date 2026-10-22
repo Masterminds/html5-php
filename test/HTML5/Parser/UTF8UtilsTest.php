@@ -25,4 +25,9 @@ class UTF8UtilsTest extends \Masterminds\HTML5\Tests\TestCase
         $errors = UTF8Utils::checkForIllegalCodepoints($data);
         $this->assertContains('null-character', $errors);
     }
+
+    public function testConvertToUTF8ReplacesInvalidBytes()
+    {
+        $this->assertSame("scr\xEF\xBF\xBDipt", UTF8Utils::convertToUTF8("scr\xFFipt"));
+    }
 }

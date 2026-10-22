@@ -85,7 +85,7 @@ class UTF8Utils
         // to our needs, and then change it back when we are done. This feels
         // a little excessive and it would be great if there was a better way.
         $save = mb_substitute_character();
-        mb_substitute_character('none');
+        mb_substitute_character(0xFFFD);
         $data = mb_convert_encoding($data, 'UTF-8', $encoding);
         mb_substitute_character($save);
 

@@ -712,4 +712,13 @@ class OutputRulesTest extends \Masterminds\HTML5\Tests\TestCase
         self::assertMatchesRegularExpression('|^\h*<svg />$|m', $contents);
         self::assertMatchesRegularExpression('|^\h*<math />$|m', $contents);
     }
+
+    public function testNamespaceDeclarationValueIsEscaped()
+    {
+        $dom = $this->html5->loadHTML("<p xmlns:x='a\"><img src=x onerror=alert(1)>'>x</p>");
+
+        $contents = $this->html5->saveHTML($dom->documentElement);
+
+        $this->assertStringContainsString('xmlns:x="a&quot;><img src=x onerror=alert(1)>">', $contents);
+    }
 }

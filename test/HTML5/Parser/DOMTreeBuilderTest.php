@@ -740,4 +740,13 @@ EOM;
         $this->assertSame(1, $dom->getElementsByTagName('br')->item(0)->attributes->length);
         $this->assertSame(0, $dom->getElementsByTagName('br')->item(1)->attributes->length);
     }
+
+    public function testXmlNamespacesWithQuoteInDeclarationDoesNotThrow()
+    {
+        $doc = $this->parse("<p xmlns='a\"/>'>x</p>", array('xmlNamespaces' => true));
+
+        $p = $doc->getElementsByTagName('p')->item(0);
+        $this->assertSame('a"/>', $p->namespaceURI);
+        $this->assertSame('x', $p->textContent);
+    }
 }

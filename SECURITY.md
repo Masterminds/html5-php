@@ -9,6 +9,29 @@ Security fixes are provided for the latest release of the 2.x series.
 | 2.x     | Yes       |
 | < 2.0   | No        |
 
+## Scope
+
+This library parses and serializes HTML5, often from untrusted input.
+
+In scope, for example:
+
+- crashes, hangs or excessive CPU/memory use caused by crafted input
+  (e.g. very deeply nested or very large documents),
+- serializer output that can introduce script execution (XSS) or otherwise
+  does not faithfully represent the parsed document,
+- parsing behaviour that deviates from the HTML5 specification in a way that
+  can be exploited (e.g. mutation-based bypasses of a downstream sanitizer).
+
+Out of scope:
+
+- the library is not an HTML sanitizer: unsanitized input producing
+  unsanitized output is expected, and callers must sanitize untrusted content
+  themselves,
+- issues that require the caller to misuse the API or to already control the
+  PHP environment.
+
+If you are unsure whether something qualifies, report it privately anyway.
+
 ## Reporting a Vulnerability
 
 Please do **not** report security vulnerabilities through public GitHub issues,
